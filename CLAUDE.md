@@ -33,7 +33,7 @@ S15 one skill at a time | S16 a program drives the job step by step (approved; r
 - Paul said go for the Teams transcript skill (29/10/2026). Do not start the NEXT skill until he has trialled this one and says go.
 
 ## Where things are
-- `client-teams-transcript-skill/`: REBUILT (step driver in `scripts/`, rules in `references/`, tests in `tests/`, history and Paul's change list in `history/`). Shared tools in `tools/`. Zip in `releases/` waits for Paul's yes/no list, upload and a real-case trial. Nothing is live until he confirms.
+- `client-teams-transcript-skill/`: REBUILT (step driver in `scripts/`, rules in `references/`, tests in `tests/`, history and Paul's change list in `history/`). Shared tools in `tools/`. Zip in `releases/` (Paul answered the removals list 29/10/2026) waits for his upload and a real-case trial. Nothing is live until he confirms.
 - Paul's current skills (read-only copies, edits there change nothing): `/root/.claude/skills/synced/*/<skill-name>/SKILL.md` in cloud sessions.
 - Skill tracker: section 9 of SKILL-STANDARDS.md. Keep it current.
 

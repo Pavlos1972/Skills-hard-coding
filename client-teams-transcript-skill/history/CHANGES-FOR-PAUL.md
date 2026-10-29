@@ -26,15 +26,15 @@ mistake while editing, and I put them back. The skill's name and its description
 After I built it, a separate reviewer tried to get round it as a careless AI would. It found real weaknesses; I fixed each one and added a test for it:
 an invented fact with an unrelated quote could pass; a run could pass for the wrong client or date; a very careless run could reach PASS; a correction did not re-open the hand-over; the Teams message could go out and the run then fail; some declarations were never cross-checked against the text; and malformed input could crash the checker. All fixed (164 tests now).
 
-## What I removed on purpose (your yes or no for each)
+## What I removed on purpose (your answer, 29/10/2026: yes to 1 to 4, keep the table in 5)
 
-| # | Removed | Why | My advice |
+| # | Removed | Why | Your answer |
 |---|---|---|---|
-| 1 | The long change history at the top of the old skill (six long entries) | History does not belong in the instructions; it is saved in full in the repo | Yes, remove |
-| 2 | The two worked examples that used real client details | Standard S11: no client data. Replaced by an example made from invented data | Yes, remove |
-| 3 | Old rule 1 ("re-load this skill after any compression") and old rule 9 ("use the Update skill card") | Replaced: the program remembers where the job is up to, and skills with programs are changed in Claude Code and uploaded as a zip | Yes, remove |
-| 4 | Dates in brackets after headings, such as "(Paul's rule, 06/10/2026)" | History again. 13 of them, all listed in `history/dated-attributions-removed.txt` | Yes, remove |
-| 5 | The old 21-point checklist as one long sentence | Kept, but as a table that says which points the program checks and which are Claude's judgment | Keep the table |
+| 1 | The long change history at the top of the old skill (six long entries) | History does not belong in the instructions; it is saved in full in the repo | **Yes, remove** |
+| 2 | The two worked examples that used real client details | Standard S11: no client data. Replaced by an example made from invented data | **Yes, remove** |
+| 3 | Old rule 1 ("re-load this skill after any compression") and old rule 9 ("use the Update skill card") | Replaced: the program remembers where the job is up to, and skills with programs are changed in Claude Code and uploaded as a zip | **Yes, remove** |
+| 4 | Dates in brackets after headings, such as "(Paul's rule, 06/10/2026)" | History again. 13 of them, all listed in `history/dated-attributions-removed.txt` | **Yes, remove** |
+| 5 | The old 21-point checklist as one long sentence | Kept, but as a table that says which points the program checks and which are Claude's judgment | **Keep the table** |
 
 ## Your answers of 29/10/2026, all built in
 - **The Sitamah message wording depends on Prospect or Review client.** Built in: (Review Client) or (Prospect) after the name.
