@@ -1,0 +1,267 @@
+{
+  "skill": "client-teams-transcript-skill",
+  "steps": [
+    {
+      "id": "locate",
+      "applies": [
+        "followup",
+        "first",
+        "whatsapp"
+      ],
+      "title": "Get the transcript",
+      "ref": [
+        "01-access-and-locate.md"
+      ],
+      "do": [
+        "Find the transcript for this client and the meeting date Paul gave. Try the three routes IN THIS ORDER and record EVERY attempt, failures too:",
+        "  1  device: the local drive / OneDrive through the device bridge (device_stage_files)",
+        "  2  m365: the Microsoft 365 connector (SharePoint/OneDrive search, or the Teams transcript itself)",
+        "  3  zapier: the Zapier Office 365 tools",
+        "Record each try: python3 {scripts}/run.py access {run} --need transcript --route device|m365|zapier --tool <tool you used> --result ok|fail --detail \"<what happened>\"",
+        "If Paul attached the file, use --route user. If another skill passed it in, use --route passed. Either with --result ok.",
+        "You may say a file cannot be reached ONLY after all three routes failed and are logged. Then record the question with run.py ask (it shows you the exact words to give Paul). Never just say 'I cannot access your files'."
+      ],
+      "proof": "the access log has an ok entry for 'transcript'",
+      "check": "access_transcript"
+    },
+    {
+      "id": "prep",
+      "applies": [
+        "followup",
+        "first",
+        "whatsapp"
+      ],
+      "title": "Prepare and check the transcript is complete",
+      "ref": [
+        "01-access-and-locate.md"
+      ],
+      "do": [
+        "Run: python3 {scripts}/tx.py prep <path to the transcript file> {run}",
+        "For a WhatsApp call whose source is a recap, notes or a recording summary with no timestamps, add --notes (the program then cannot check completeness, so tell Paul that).",
+        "If it prints STOP, tell Paul exactly what is missing and stop. If it says it could not read any timestamps, send Paul the first 15 lines of the file so the reader can be fixed. Use --force only if Paul says to carry on."
+      ],
+      "proof": "state.json exists and the transcript is complete (or forced on Paul's say-so)",
+      "check": "prep_done"
+    },
+    {
+      "id": "context",
+      "applies": [
+        "followup",
+        "whatsapp"
+      ],
+      "title": "Read the client's file",
+      "ref": [
+        "03-context-and-correspondence.md"
+      ],
+      "do": [
+        "Read, from the client's own file, everything below, and record each document you read:",
+        "  python3 {scripts}/run.py source {run} --kind <kind> --path \"<full path>\" --date YYYY-MM-DD --read yes",
+        "  Kinds: Fact Find, Fact Find Summary, Earlier Note (every earlier Follow-Up Notes / WhatsApp summary), Overview (the latest), Quote (every Comparative Quotes folder of a current transaction), Application (every current transaction), Correspondence (Outlook, current transactions only).",
+        "If a kind has nothing on file, say what you searched: python3 {scripts}/run.py source {run} --kind <kind> --none \"searched <where>, none found\"",
+        "Use the access routes in order (device, m365, zapier) for every file and log failures with run.py access. Ask Paul ONLY for what no file holds, with run.py ask."
+      ],
+      "proof": "every kind of client-file source is read, or has a recorded reason",
+      "check": "sources_ok"
+    },
+    {
+      "id": "pass1",
+      "applies": [
+        "followup",
+        "first",
+        "whatsapp"
+      ],
+      "title": "Pass 1: read everything, in order, and keep the ledger",
+      "ref": [
+        "02-reading-lock.md"
+      ],
+      "do": [
+        "Read every chunk in order. The program will not serve chunk 2 before chunk 1.",
+        "{chunk_commands_pass1}",
+        "AFTER EACH CHUNK, record every decision, acceptance, refusal, change of mind, correction, new fact, figure, and every request, instruction or offer either person makes:",
+        "  python3 {scripts}/run.py ledger {run} add --line <line number> --kind <kind> --quote \"<the exact words>\" [--speaker Paul|Client] [--meaning \"<in your words>\"]",
+        "  Kinds: decision, change, request, instruction, offer, acceptance, refusal, hold, fact, figure.",
+        "The program checks your quote against the transcript the moment you add it. A wrong quote is refused."
+      ],
+      "proof": "every chunk served in order, and ledger entries recorded",
+      "check": "pass1_done"
+    },
+    {
+      "id": "pass2",
+      "applies": [
+        "followup",
+        "first",
+        "whatsapp"
+      ],
+      "title": "Pass 2: read everything again",
+      "ref": [],
+      "do": [
+        "Read the WHOLE transcript a second time, chunk by chunk. Check every ledger entry against the actual words. Add anything Pass 1 missed, above all in the closing minutes, the client's questions, anything the client asks Paul or Sitamah to do, offers Paul makes, items left 'for now', and every figure and name.",
+        "{chunk_commands_pass2}",
+        "A keyword scan does not count as a read, and neither does re-reading only the parts that look important."
+      ],
+      "proof": "Pass 2 served every chunk in order",
+      "check": "pass2_done"
+    },
+    {
+      "id": "scan",
+      "applies": [
+        "followup",
+        "first",
+        "whatsapp"
+      ],
+      "title": "Keyword scan",
+      "ref": [],
+      "do": [
+        "Run: python3 {scripts}/tx.py scan {run}",
+        "Every hit marked C (closing minutes) needs a ledger entry within 3 lines, or a recorded review: python3 {scripts}/run.py ledger {run} review --line <n> --reason \"<why nothing was decided here>\""
+      ],
+      "proof": "the scan has been run",
+      "check": "scan_done"
+    },
+    {
+      "id": "content",
+      "applies": [
+        "followup",
+        "first",
+        "whatsapp"
+      ],
+      "title": "Write content.json (the one source for every output)",
+      "ref": [
+        "04-areas-and-quotes.md",
+        "05-accuracy.md"
+      ],
+      "do": [
+        "Write {run}/content.json. Model: {skill_dir}/references/content-example.json. Every bullet and every action carries its source: a transcript line plus the exact words, or a named document plus the exact words.",
+        "Answer EVERY item in the `checks` block (correspondence, owner change, cession, credit life, applications, quotes). None may be left out.",
+        "Then link every ledger entry to the items that cover it: python3 {scripts}/run.py ledger {run} cover <ledger id> <item id> [<item id> ...]   (or: ledger exclude <id> \"reason\" for a plain fact or figure)",
+        "Check: python3 {scripts}/verify.py {run} --stage pre   and fix every FAIL before moving on."
+      ],
+      "proof": "verify --stage pre passes",
+      "check": "verify_pre"
+    },
+    {
+      "id": "build",
+      "applies": [
+        "followup",
+        "first",
+        "whatsapp"
+      ],
+      "title": "Build the outputs",
+      "ref": [
+        "06a-planner-note.md",
+        "06b-pdf-and-filenames.md"
+      ],
+      "do": [
+        "Run: python3 {scripts}/build.py {run}",
+        "It builds the Planner page, the fallback text, the PDF (follow-up and WhatsApp only) and the Teams message from content.json. If it refuses, fix what it says. Never hand-write any of these outputs."
+      ],
+      "proof": "outputs built from the current content.json",
+      "check": "build_fresh"
+    },
+    {
+      "id": "look",
+      "applies": [
+        "followup",
+        "whatsapp"
+      ],
+      "title": "Look at the PDF pages",
+      "ref": [],
+      "do": [
+        "Open every page image in {run}/out (page-1.png, page-2.png ...) and look at them: each area its own bold heading, bullets with hanging indent, nothing cut off, no heading alone at the bottom of a page.",
+        "Then: python3 {scripts}/run.py receipt {run} --set png_visual_check=\"<what you saw on each page>\""
+      ],
+      "proof": "png_visual_check recorded",
+      "check": "receipt_png"
+    },
+    {
+      "id": "planner",
+      "applies": [
+        "followup",
+        "first",
+        "whatsapp"
+      ],
+      "title": "Show the Planner note as a copy-ready page",
+      "ref": [],
+      "do": [
+        "Publish {run}/out/planner_note.html as a private page with the Artifact tool (file_path = that file, do not retype it). Tell Paul in one sentence what the page is. After any correction, rebuild and republish the same page.",
+        "If the page tool is unavailable: say so, show {run}/out/planner_note.txt as formatted chat text (never in a code block), and state that this is the fallback.",
+        "Record it: python3 {scripts}/run.py receipt {run} --set planner_page.mode=artifact --set planner_page.url=<the link returned>",
+        "  or the fallback: --set planner_page.mode=fallback_text --set planner_page.reason=\"<why the page tool was unavailable>\""
+      ],
+      "proof": "planner_page recorded with the returned link",
+      "check": "receipt_planner"
+    },
+    {
+      "id": "pdf",
+      "applies": [
+        "followup",
+        "whatsapp"
+      ],
+      "title": "Send, save and check the PDF",
+      "ref": [],
+      "do": [
+        "1. If the folder /mnt/user-data/outputs exists, copy the PDF there first so it can be presented: cp \"{run}/out/<the PDF file>\" /mnt/user-data/outputs/ . Then send it in the chat for Paul to download (present_files / SendUserFile).",
+        "2. Save the same file into the client's 2. Fact Find folder with device_commit_files (route order as always).",
+        "3. List the folder back and confirm the new file's exact name, size and time.",
+        "Record it: python3 {scripts}/run.py receipt {run} --set pdf_sent_in_chat=true --set saved.tool=device_commit_files --set saved.folder=\"<folder>\" --set saved.filename=\"<exact file name>\" --set saved.tool_result=\"<tool result>\" --set saved.folder_listing_check=\"<the listing line showing the file>\""
+      ],
+      "proof": "PDF sent, saved and listed back, with the real tool output recorded",
+      "check": "receipt_pdf"
+    },
+    {
+      "id": "handoffs",
+      "applies": [
+        "followup",
+        "whatsapp"
+      ],
+      "title": "Hand-offs: applications and revised quotes",
+      "ref": [
+        "06c-handoffs.md"
+      ],
+      "do": [
+        "If applications differ from the meeting (the Applications section), call complete-applications-skill in Correction / Sync mode. If anything is unclear, ask Paul BEFORE any change.",
+        "If an owner or life assured changed, prepare the revised-quote email as a DRAFT and show Paul. Never send without his yes.",
+        "Record: python3 {scripts}/run.py receipt {run} --set applications_handoff=\"complete-applications-skill called: <result>\"   (or \"n/a: <reason>\")",
+        "Then suggest, without doing them: wr-roa-builder if a risk quote was accepted; teams-meeting-setup-skill if a new appointment was agreed."
+      ],
+      "proof": "applications_handoff recorded",
+      "check": "receipt_apps"
+    },
+    {
+      "id": "teams",
+      "applies": [
+        "followup",
+        "first"
+      ],
+      "title": "Teams message to Sitamah (last step, only with Paul's yes)",
+      "ref": [
+        "07-teams-message.md"
+      ],
+      "do": [
+        "{teams_message_block}",
+        "Show Paul the exact message above and the one-line check of why the follow-up sentence is in or out. Send ONLY after his clear yes (he may give it in the reply that approves the deliverables). Never earlier. Never twice for the same meeting. A correction does not trigger a resend unless Paul asks.",
+        "Only after every deliverable is approved and saved.",
+        "Record the result with run.py receipt (see the Zapier steps above): sent, declined or failed."
+      ],
+      "proof": "teams.status recorded as sent, declined or failed, with its evidence",
+      "check": "receipt_teams"
+    },
+    {
+      "id": "final",
+      "applies": [
+        "followup",
+        "first",
+        "whatsapp"
+      ],
+      "title": "Final check",
+      "ref": [],
+      "do": [
+        "Run: python3 {scripts}/verify.py {run}",
+        "Your reply to Paul MUST contain its whole printout, unedited, including the DELIVERY LINE. If RESULT says FAIL you may not say the job is finished: say what failed and fix it first.",
+        "After ANY correction from Paul: edit content.json, run build.py again, redo the hand-over steps for every output that changed, and run verify.py again. A correction re-opens the whole task."
+      ],
+      "proof": "verify.py prints RESULT: PASS",
+      "check": "verify_final"
+    }
+  ]
+}

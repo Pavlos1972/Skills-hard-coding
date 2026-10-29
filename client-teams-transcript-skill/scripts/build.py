@@ -15,6 +15,7 @@ import subprocess
 import sys
 from xml.sax.saxutils import escape
 
+import page
 import verify
 import wrlib as w
 
@@ -24,48 +25,6 @@ GREY = "#666666"
 
 def item_status(it):
     return (it.get("status") or it.get("tag") or "").strip()
-
-
-# ------------------------------------------------------------------ Output 1
-def planner_note(content, names):
-    mt = content["meeting_type"]
-    c = content["client"]
-    lines = ["**%s %s – %s**" % (c["first"], c["surname"], content["meeting_date"])]
-    topic = content["topic"].strip()
-    lines.append("*%s*" % ("WhatsApp call, %s: %s" % (content["meeting_time"], topic) if mt == "whatsapp" else topic))
-    lines.append("")
-    if mt == "first":
-        lines.append("Please view the **%s** PDF in the client's Fact Find folder." % names["ff_summary_stem"])
-    else:
-        lines.append("Please view the **%s** file in the client's Fact Find folder." % names["pdf_stem"])
-
-    def bullet(it, label=None):
-        text, st = it["text"].strip(), item_status(it)
-        if label and not text.lower().startswith(label.lower()):
-            text = "%s: %s" % (label, text)
-        if st.endswith(":"):
-            return "• **%s** %s" % (st, text)
-        return "• %s – **%s**" % (text, st) if st else "• " + text
-
-    by_key = {a["key"]: a.get("bullets") or [] for a in content.get("areas") or []}
-    done = []
-    for key, _, heading in w.AREAS:
-        if heading in done:
-            continue
-        group = [k for k, _, h in w.AREAS if h == heading]
-        rows = []
-        for k in group:
-            label = w.COMBINED_LABEL.get(k) if len(group) > 1 else None
-            rows += [bullet(it, label) for it in by_key.get(k, [])]
-        if rows:
-            lines += ["", "**%s**" % heading, ""] + rows
-        done.append(heading)
-    if content.get("applications"):
-        lines += ["", "**Applications**", ""] + [bullet(it) for it in content["applications"]]
-    if content.get("actions"):
-        lines += ["", "**Actions**", ""] + [bullet(it) for it in content["actions"]]
-    lines += ["", "**Next appointment:** %s" % content["next_appointment"]["text"].strip()]
-    return "\n".join(lines) + "\n"
 
 
 # ------------------------------------------------------------------ Output 2
@@ -117,9 +76,9 @@ def build_pdf(content, names, path):
 
     section("Since the Last Meeting", content.get("since_last"), tagged=True)
     by_key = {a["key"]: a.get("bullets") or [] for a in content.get("areas") or []}
-    for key, pdf_head, _ in w.AREAS:
-        section(pdf_head, by_key.get(key))
-    rest = [h for k, h, _ in w.AREAS if not by_key.get(k)]
+    for key, heading in w.AREAS:
+        section(heading, by_key.get(key))
+    rest = [w.AREA_HEADING[k] for k in w.EIGHT if not by_key.get(k)]
     if rest:
         story.append(Spacer(1, 4))
         story.append(Paragraph("Not discussed this meeting: %s." % escape(", ".join(rest)), body))
@@ -157,13 +116,24 @@ def main():
     names = w.output_names(content)
     out = os.path.join(a.run, w.OUT)
     os.makedirs(out, exist_ok=True)
-    for old in glob.glob(os.path.join(out, "*.pdf")) + glob.glob(os.path.join(out, "planner_note.md")):
+    for old in glob.glob(os.path.join(out, "*.pdf")):
         os.remove(old)
 
-    note = planner_note(content, names)
-    with open(os.path.join(out, "planner_note.md"), "w", encoding="utf-8") as f:
-        f.write(note)
-    build = {"t": w.now(), "content_sha": w.content_hash(content), "note_sha": w.sha256_text(note),
+    model = page.note_model(content, names)
+    files = {
+        names["page"]: page.render_page(model, content),
+        names["note_txt"]: page.render_text(model, markdown=True),
+    }
+    msg = page.teams_message(content)
+    if msg:
+        files[names["teams"]] = msg + "\n"
+    for old in glob.glob(os.path.join(out, "planner_note.*")) + glob.glob(os.path.join(out, "teams_message.txt")):
+        os.remove(old)
+    for fname, body in files.items():
+        with open(os.path.join(out, fname), "w", encoding="utf-8") as f:
+            f.write(body)
+    build = {"t": w.now(), "content_sha": w.content_hash(content),
+             "files": {fname: w.sha256_text(body) for fname, body in files.items()},
              "pdf": None, "pdf_sha": None, "headings": []}
     if content["meeting_type"] != "first":
         pdf = os.path.join(out, names["pdf"])
@@ -174,17 +144,18 @@ def main():
     w.save_json(os.path.join(a.run, w.STATE), st)
 
     print("BUILT from content.json (hash %s...)" % build["content_sha"][:10])
-    print("  Output 1: %s" % os.path.join(out, "planner_note.md"))
+    print("  Planner page (publish this as the Artifact): %s" % os.path.join(out, names["page"]))
+    print("  Planner note, fallback text only if the page tool is unavailable: %s" % os.path.join(out, names["note_txt"]))
     if build["pdf"]:
-        print("  Output 2: %s" % os.path.join(out, build["pdf"]))
+        print("  PDF: %s" % os.path.join(out, build["pdf"]))
         print("  Page images: %s" % ", ".join(sorted(os.path.basename(p) for p in glob.glob(os.path.join(out, "page*.png")))))
     else:
-        print("  Output 2: not produced (first/Fact Find meeting: the Fact Find Summary is that meeting's PDF)")
-    print("\n----- PLANNER NOTE (paste into the chat verbatim as formatted text, never in a code block) -----")
-    print(note)
-    print("----- END PLANNER NOTE -----")
-    print("NEXT: look at every page image, show the note, send the PDF in the chat, save it with device_commit_files, "
-          "write receipt.json, then run verify.py %s" % a.run)
+        print("  PDF: not produced (first/Fact Find meeting: the Fact Find Summary is that meeting's PDF)")
+    if msg:
+        print("  Teams message for Sitamah (needs Paul's yes before sending): %s" % os.path.join(out, names["teams"]))
+        print("    " + msg)
+    else:
+        print("  Teams message: not applicable to a WhatsApp call")
 
 
 if __name__ == "__main__":

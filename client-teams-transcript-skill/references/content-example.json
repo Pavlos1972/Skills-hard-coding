@@ -1,0 +1,242 @@
+{
+  "meeting_type": "followup",
+  "client": {
+    "first": "Sam",
+    "surname": "Testcase"
+  },
+  "meeting_date": "05/10/2026",
+  "topic": "Follow-up appointment: Risk, RA and Tax-Free",
+  "appointment_number": 2,
+  "appointment_number_basis": "Fact Find and one earlier Follow-Up Appointment Summary Notes file are on the client's file",
+  "opening": "This follow-up meeting covered the BrightRock quote, the Optimal RA quote and the Tax-Free investment.",
+  "since_last": [
+    {
+      "id": "s1",
+      "tag": "Changed",
+      "text": "Tax-Free owner changed from Dana to Sam for now",
+      "src": [
+        {
+          "line": 39,
+          "quote": "rather put it in my name for now"
+        }
+      ]
+    }
+  ],
+  "areas": [
+    {
+      "key": "risk",
+      "bullets": [
+        {
+          "id": "b1",
+          "text": "BrightRock Revised Reduced Quote CP 100000001, R1,100.00 p.m.",
+          "status": "ACCEPTED (verbal)",
+          "src": [
+            {
+              "line": 21,
+              "quote": "I'm happy to go ahead with the BrightRock one"
+            },
+            {
+              "line": 12,
+              "quote": "one thousand one hundred rand a month"
+            }
+          ]
+        },
+        {
+          "id": "b2",
+          "text": "Instalment Protector on the Absa home loan: if retrenched, BrightRock pays the instalment to Absa once the home loan is ceded to Absa",
+          "status": "still open",
+          "src": [
+            {
+              "line": 18,
+              "quote": "the home loan must be ceded to Absa for the minimum period"
+            }
+          ]
+        },
+        {
+          "id": "b3",
+          "text": "Credit life on the Absa home loan (about R500 p.m.) to be cancelled once the BrightRock policy is accepted and in force",
+          "status": "still open",
+          "src": [
+            {
+              "line": 24,
+              "quote": "credit life on the Absa home loan costing about five hundred rand a month"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "ra",
+      "bullets": [
+        {
+          "id": "b4",
+          "text": "OM Optimal RA Quote 100000002, R3,000 p.m.: the client will get back to us after speaking to his wife",
+          "status": "on hold",
+          "src": [
+            {
+              "line": 33,
+              "quote": "Let's leave it for now, I'll get back to you on the RA"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "investment",
+      "bullets": [
+        {
+          "id": "b5",
+          "text": "owner now Sam (was Dana), for now",
+          "status": "CHANGED:",
+          "src": [
+            {
+              "line": 39,
+              "quote": "rather put it in my name for now"
+            }
+          ]
+        },
+        {
+          "id": "b6",
+          "text": "Revised Tax-Free quote in Sam's name requested from Alwyn",
+          "status": "awaiting",
+          "src": [
+            {
+              "line": 42,
+              "quote": "We need Alwyn to give us a revised quote in your name"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "will",
+      "bullets": [
+        {
+          "id": "b7",
+          "text": "Will: no change discussed on this call",
+          "status": "still open",
+          "src": [
+            {
+              "doc": "Earlier Note",
+              "ref": "Follow-Up 01.09.26",
+              "quote": "Will with Capital Legacy in progress"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "applications": [],
+  "actions": [
+    {
+      "id": "a1",
+      "text": "Sitamah to put a review of Dana's portfolio in the what's-next email (Sam answered 'Alright, 100%')",
+      "src": [
+        {
+          "line": 57,
+          "quote": "put a review of Dana's portfolio in your what's-next email"
+        },
+        {
+          "line": 63,
+          "quote": "Alright, 100%"
+        }
+      ]
+    },
+    {
+      "id": "a2",
+      "text": "Sitamah to arrange for the Absa home loan to be ceded to Absa and send Sam the cession documents to sign",
+      "src": [
+        {
+          "line": 18,
+          "quote": "We will send you the cession documents to sign"
+        }
+      ]
+    },
+    {
+      "id": "a3",
+      "text": "Sitamah to get the credit-life details from Sam, ask whether he or WR will cancel it, and cancel only once the BrightRock policy is accepted and in force",
+      "src": [
+        {
+          "line": 24,
+          "quote": "We cancel that only once the new policy is accepted and in force"
+        }
+      ]
+    },
+    {
+      "id": "a4",
+      "text": "Sitamah to request the revised Tax-Free quote in Sam's name from Alwyn",
+      "src": [
+        {
+          "line": 42,
+          "quote": "We need Alwyn to give us a revised quote in your name"
+        }
+      ]
+    },
+    {
+      "id": "a5",
+      "text": "Sitamah to keep the old Instant Life policy in place until the BrightRock policy is in force",
+      "src": [
+        {
+          "line": 63,
+          "quote": "please do not cancel the old Instant Life policy"
+        }
+      ]
+    }
+  ],
+  "next_steps": [
+    {
+      "id": "n1",
+      "text": "Sam to speak to Dana and come back on the RA",
+      "src": [
+        {
+          "line": 33,
+          "quote": "I'll get back to you on the RA once I have spoken to Dana"
+        }
+      ]
+    }
+  ],
+  "next_appointment": {
+    "id": "next",
+    "text": "Thu 15/10/2026 at 4pm (RA)",
+    "agreed": true,
+    "check": "Summary and Planner note both show Thu 15/10/2026 at 4pm: an agreed appointment",
+    "src": [
+      {
+        "line": 51,
+        "quote": "Thursday the fifteenth at four in the afternoon"
+      }
+    ]
+  },
+  "checks": {
+    "correspondence": {
+      "done": true,
+      "looked_at": "Outlook: Sam's replies to the proposal emails and the BrightRock quote email"
+    },
+    "owner_change": {
+      "occurred": true,
+      "action_id": "a4"
+    },
+    "cession": {
+      "needed": true,
+      "action_id": "a2"
+    },
+    "credit_life": {
+      "debts_protected": true,
+      "debts": [
+        {
+          "lender": "Absa",
+          "credit_life": "yes"
+        }
+      ],
+      "bullet_id": "b3",
+      "action_ids": [
+        "a3"
+      ]
+    },
+    "applications": {
+      "exist": false
+    },
+    "quotes_matched": true
+  },
+  "_note": "MODEL ONLY, built from invented data. Line numbers refer to the invented sample transcript in the tests. Copy the structure and the habits (every item has a source: line + exact words, or a document + exact words), never the content."
+}

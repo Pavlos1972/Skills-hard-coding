@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Reading lock for the transcript (Step 1, 1b of the skill).
 
-  tx.py prep   <source.docx|.txt|.md> <run_dir> [--force]
+  tx.py prep   <source.docx|.txt|.md> <run_dir> [--force] [--notes]
   tx.py chunk  <run_dir> <pass 1|2> <n>
   tx.py scan   <run_dir>
   tx.py status <run_dir>
@@ -30,27 +30,37 @@ CLOSING_FRACTION = 0.15
 
 TS_ARROW = re.compile(r"^\s*(\d{1,2}):(\d{1,2}):(\d{1,2})(?:[.,]\d+)?\s*-->")
 TS_START = re.compile(r"^\s*(\d{1,2}):(\d{2})(?::(\d{2}))?(?:[.,]\d+)?(?!\d)")
+# some Teams exports put the time after the speaker's name: "Paul Kafentzis   0:05". Only lines that look like a
+# name count, so a spoken time such as "see you at 4:30" is never read as a timestamp.
+NAME_WORD = r"(?:[A-Z][\w'\u2019-]*|van|de|der|den|la|le|du|di|von)"
+TS_END = re.compile(r"^" + NAME_WORD + r"(?:\s+" + NAME_WORD + r"){0,4}\s+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*$")
 DURATION = re.compile(
     r"(?i)duration\W{0,5}(?:(\d+)\s*h\w*)?\s*(?:(\d+)\s*m\w*)?\s*(?:(\d+)\s*s\w*)?")
 CLOSING = re.compile(r"(?i)stopped transcription|transcription stopped|stopped recording|meeting ended")
 
-# Decision / change words from Step 1b item 5 of the skill.
+# Word lists from Step 1b item 5 of the skill. HIGH = decision/change/request words: every hit in the
+# closing minutes must be covered by a ledger entry or a recorded review (verify.py fails otherwise).
+# LOW = the rest of the skill's list (figures, days, products): reported, and warned about in the closing minutes.
 HIGH_WORDS = [
     "change", "changed", "instead", "rather", "actually", "for now", "later",
     "keep it", "leave it", "get back to you", "in your name", "his name", "her name",
-    "owner", "beneficiary", "payer", "spell", "wrong", "correct", "sort that out",
-    "think about", "go ahead", "not happy", "agree", "decline", "cancel", "increase",
-    "reduce", "put it in", "cede", "ceded", "cession", "credit life", "retrench",
-    "protector", "payback", "payout", "on hold", "hold off",
+    "owner", "beneficiary", "payer", "address", "spell", "wrong", "correct", "sort that out", "tomorrow",
+    "think about", "go ahead", "happy", "not happy", "agree", "decline", "cancel", "increase",
+    "reduce", "put it in", "email", "send", "wife", "husband", "partner", "credit life", "retrench",
+    "instalment", "installment", "protector", "cede", "ceded", "cession", "payback", "payout",
+    "on hold", "hold off",
 ]
+LOW_WORDS = ["bank", "bond", "card", "waiting period", "months", "pays", "covers", "date",
+             "monday", "tuesday", "wednesday", "thursday", "friday"]
 HIGH_RE = re.compile(r"\b(?:" + "|".join(re.escape(x) for x in HIGH_WORDS) + r")\w*", re.I)
+LOW_RE = re.compile(r"\b(?:" + "|".join(re.escape(x) for x in LOW_WORDS) + r")\w*|\bR\s?\d|\brands?\b", re.I)
 
 
 def ts_seconds(line):
     m = TS_ARROW.match(line)
     if m:
         return int(m.group(1)) * 3600 + int(m.group(2)) * 60 + int(m.group(3))
-    m = TS_START.match(line)
+    m = TS_START.match(line) or TS_END.match(line)
     if not m:
         return None
     a, b, c = int(m.group(1)), int(m.group(2)), m.group(3)
@@ -113,7 +123,12 @@ def cmd_prep(a):
     with open(os.path.join(a.run, w.TRANSCRIPT), "w", encoding="utf-8") as f:
         f.write("\n".join(lines))
 
-    stamps = [(i, s) for i, s in ((i, ts_seconds(ln)) for i, ln in enumerate(lines, 1)) if s is not None]
+    raw = [(i, sec) for i, sec in ((i, ts_seconds(ln)) for i, ln in enumerate(lines, 1)) if sec is not None]
+    stamps, top = [], -1
+    for i, sec in raw:
+        if sec >= top:
+            stamps.append((i, sec))
+            top = sec
     notes, complete = [], True
     last_ts = stamps[-1][1] if stamps else None
     dur = None
@@ -123,7 +138,13 @@ def cmd_prep(a):
             dur = h * 3600 + mi * 60 + s
             break
     if not stamps:
-        notes.append("WARN: no timestamps found; the duration and gap checks were skipped.")
+        if a.notes:
+            notes.append("WARN: notes or a recap, not a transcript: completeness cannot be checked, so tell Paul that.")
+        else:
+            complete = False
+            notes.append("INCOMPLETE?: no timestamps could be read, so it cannot be checked that the transcript is complete. "
+                         "Tell Paul what the file looks like (the first 15 lines) so the reader can be fixed. "
+                         "If the source is notes or a recap use --notes; use --force only if Paul says to carry on.")
     else:
         if dur is not None and last_ts < dur - TOLERANCE_S:
             complete = False
@@ -225,15 +246,16 @@ def cmd_scan(a):
     total = len(lines)
     closing_from = int(total * (1 - CLOSING_FRACTION)) + 1
     hits = [i for i, ln in enumerate(lines, 1) if HIGH_RE.search(ln)]
-    print("KEYWORD SCAN: %d lines with decision/change words (closing zone = lines %d-%d)"
-          % (len(hits), closing_from, total))
-    for i in hits:
-        mark = "C" if i >= closing_from else " "
+    low = [i for i, ln in enumerate(lines, 1) if i not in set(hits) and LOW_RE.search(ln)]
+    print("KEYWORD SCAN: %d lines with decision/change/request words, %d more with figures/days/products "
+          "(closing zone = lines %d-%d)" % (len(hits), len(low), closing_from, total))
+    for i in sorted(hits + low):
+        mark = ("C" if i >= closing_from else " ") + ("*" if i in hits else " ")
         print("%s %6d  %s" % (mark, i, lines[i - 1].strip()[:150]))
-    st["scan"] = {"t": w.now(), "hits": hits, "closing_from": closing_from}
+    st["scan"] = {"t": w.now(), "hits": hits, "low_hits": low, "closing_from": closing_from}
     w.save_json(os.path.join(a.run, w.STATE), st)
-    print("\nEvery hit marked C must be covered by a ledger entry (within 3 lines) or listed in "
-          "ledger.json scan_reviewed with a reason. Other hits are shown as warnings by verify.py.")
+    print("\nC = closing minutes, * = decision/change/request word. Every hit marked C* must be covered by a ledger entry "
+          "(within 3 lines) or recorded with: run.py ledger RUN review --line N --reason R. Other hits are warnings in verify.py.")
 
 
 def cmd_status(a):
@@ -268,6 +290,7 @@ def main():
     p.add_argument("source")
     p.add_argument("run")
     p.add_argument("--force", action="store_true")
+    p.add_argument("--notes", action="store_true", help="the source is notes or a recap with no timestamps (WhatsApp call)")
     p.set_defaults(fn=cmd_prep)
     p = sub.add_parser("chunk")
     p.add_argument("run")

@@ -1,48 +1,42 @@
-# client-teams-transcript-skill: hard-coded delivery gate (draft, first slice)
+# client-teams-transcript-skill (hard-coded version)
 
-Moves the parts of the skill that must happen every time out of prose and into code.
-The live SKILL.md is untouched. Nothing here changes how the skill behaves until a
-rewritten SKILL.md that calls these scripts is proposed and approved.
+The rebuilt skill. The live skill in Paul's account is unchanged until Paul uploads the zip from `releases/` and confirms.
+The rules for every skill are in `../SKILL-STANDARDS.md`. Plain-language summary of what changed: `history/CHANGES-FOR-PAUL.md`.
 
-## Run protocol (one run = one folder, e.g. `run/`)
+## What is in this folder
 
-| # | Command | What it enforces |
+| Path | What it is | In the upload zip? |
 |---|---|---|
-| 1 | `tx.py prep <transcript.docx> run/` | Converts, checks duration vs last timestamp and gaps (Step 1). Stops if incomplete. |
-| 2 | `tx.py chunk run/ 1 <n>` for n = 1..K | Pass 1: every chunk, in order, none skipped. Logged. |
-| 3 | write `run/ledger.json` | Decision ledger: every entry carries a verbatim quote and a line number. |
-| 4 | `tx.py chunk run/ 2 <n>` for n = 1..K | Pass 2 is refused until Pass 1 is complete. |
-| 5 | `tx.py scan run/` | Keyword scan; refused until both passes are done. |
-| 6 | write `run/content.json` | One source for both outputs. Every item has `src`; the `checks` block answers every conditional rule. |
-| 7 | `build.py run/` | Refuses to draft anything until reading, ledger, source trace and checks pass. Builds the Planner note and the PDF together, names the PDF from the client fields, renders page images. |
-| 8 | hand-over, then write `run/receipt.json` | Chat display, PDF sent in chat, `device_commit_files`, folder listing, image check. |
-| 9 | `verify.py run/` | PASS or FAIL per item. The reply must contain this output unedited. |
+| `SKILL.md` | Short entry page: how to start, what a finished run contains, the standing rules | yes |
+| `steps.json` | The ordered steps the program shows one at a time | yes |
+| `deliverables.json` | Every output, who makes it, how it is handed over and checked | yes |
+| `references/` | The rule pages the program prints at the step where they apply, plus model examples (invented data) | yes |
+| `scripts/` | `run.py` (the step driver), `tx.py` (reading lock), `build.py` + `page.py` (outputs), `verify.py` (PASS/FAIL), `wrlib.py` | yes |
+| `tests/` | 98 tests on invented data, including a full run from start to PASS and the Copy button in a real browser | no |
+| `history/` | The old skill (client names replaced), every change with its reason, every drop with its decision, the coverage report | no |
 
-`verify.py run/ --stage pre|built|final` runs the gate up to that point.
-`tx.py status run/` shows where a run stands, which also covers recovery after the chat is compressed.
+## One run
 
-## What is machine-checked
+`run.py start RUN --type followup|first|whatsapp`, then `run.py next` / `run.py done RUN <step>` until the last step prints the PASS/FAIL checklist.
+Steps: locate (access log) > prep (completeness check) > context (client file read and logged) > pass1 (read + ledger) > pass2 > scan >
+content (content.json, every item sourced, every conditional rule answered) > build (Planner page, PDF, Teams message) > look (page images) >
+planner (publish the page) > pdf (send, save, list back) > handoffs > teams (only with Paul's yes, Zapier only) > final (verify.py).
 
-Both passes served in order; every ledger and source quote found verbatim in the transcript; no item without a source;
-every request, instruction, change and hold in the ledger covered by an item (a change must be marked CHANGED, a hold must not become a task);
-closing-minute keyword hits resolved; every action starts "Sitamah to"; no chase action sourced from "I'll get back to you";
-credit life, cession, owner change, applications and correspondence each answered explicitly, with their consequences present;
-no ID numbers; PDF-safe characters; PDF filename; every item and heading present in the PDF text; no stranded heading;
-outputs not stale against `content.json`; PDF and Planner note not hand-edited; no PDF at a first/Fact Find meeting.
+## What the program proves, and what it cannot
 
-## What is attested, not proven
+Proven by program: both reads served in order; every quote found in the transcript or a named document; every request, decision, change and hold covered;
+closing-minute keyword hits resolved; actions all for Sitamah; the mandatory questions answered (credit life, cession, owner change, applications,
+correspondence); the eight-area headings; outputs built from `content.json` and not edited by hand; the Teams message in its fixed wording.
+Only attested (Claude records the real tool output; the checklist labels these ATTEST): publishing the page, sending and saving the PDF, the Zapier send, the look at the page images.
+Cannot be proven by anyone: that the transcript was understood. Paul stays the final reviewer.
 
-What Claude shows in the chat and what the device bridge saved to the laptop. `receipt.json` records the evidence
-(pasted tool result, folder listing line) and `verify.py` labels those rows ATTEST. The scripts prove the text was put in
-front of Claude twice and that every claim is traceable to the transcript; they cannot prove it was understood.
+## Tools (in `../tools/`)
 
-## Not done yet
+`stamp_skill.py` sets the Athens-time "Last updated" stamp (never typed by hand), `lint_skill.py` checks the skill against the standards,
+`inventory.py` checks that no sentence of the old skill was lost without a record, `package_skill.py` builds the zip only if lint and every test pass,
+then runs the tests again against the unpacked zip.
 
-- Tuned only on a synthetic transcript. The timestamp/duration parser needs one real (anonymised) Teams `.docx`.
-- SKILL.md has not been rewritten to call these scripts (needs Paul's approval; bundled scripts need a zip upload).
-- Other skills (ROA, SROA, Fact Find, applications, proposals) are not converted.
+## Changing this skill
 
-## Tests
-
-`python3 -m unittest discover -s tests`: 47 tests, one passing end-to-end run and the rest each break one thing and
-check the gate fails with the right message. All people and figures in the fixture are invented.
+Only in Claude Code (standard S7): edit, run `stamp_skill.py --change "..."`, run the tests, run `package_skill.py`, give Paul the zip.
+Set `WR_NAME_BLOCKLIST` to a file of client names kept OUTSIDE the repo so lint can scan for them.

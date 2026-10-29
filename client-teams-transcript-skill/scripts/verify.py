@@ -4,7 +4,7 @@
   verify.py <run_dir> [--stage pre|built|final]
 
 Stages (each includes the one before):
-  pre    A reading lock, B ledger and coverage, C source trace, D mandatory checks
+  pre    A reading lock, S client file and access, B ledger and coverage, C source trace, D mandatory checks
   built  + E the outputs on disk match content.json and each other
   final  + F the hand-over receipt (default)
 
@@ -13,6 +13,7 @@ ATTEST rows are things only Claude can do (chat hand-over, saving through the
 device bridge); they are recorded, not machine-proven, and are labelled that way.
 """
 import argparse
+import html
 import os
 import re
 import subprocess
@@ -24,8 +25,10 @@ import wrlib as w
 KINDS_MUST_COVER = {"decision", "change", "request", "instruction", "offer", "acceptance", "refusal", "hold"}
 KINDS_OPTIONAL = {"fact", "figure"}
 MEETING_TYPES = ("followup", "first", "whatsapp")
+GROUP_ORDER = "ASBCDEF"
 GROUP_NAMES = {
     "A": "A. Reading lock",
+    "S": "S. Client file and access (S3, S4)",
     "B": "B. Ledger and coverage",
     "C": "C. Source trace",
     "D": "D. Mandatory checks",
@@ -76,6 +79,79 @@ def check_reading(run, st, R):
         R.add("FAIL", g, "keyword scan not run (`tx.py scan`)")
     if st["forced"]:
         R.add("WARN", g, "reading was FORCED past a completeness warning; Paul must have approved this")
+
+
+# ---------------------------------------------------------------- S client file and access
+ALLOWED_ROUTES = w.ROUTES + ("user", "passed")
+
+
+def meeting_type_of(run, content):
+    if content and content.get("meeting_type") in MEETING_TYPES:
+        return content["meeting_type"]
+    p = os.path.join(run, w.RUN)
+    if os.path.exists(p):
+        return w.load_json(p).get("meeting_type")
+    return None
+
+
+def check_sources(run, mt, R):
+    g = "S"
+    sp, ap, qp = (os.path.join(run, n) for n in (w.SOURCES, w.ACCESS, w.QUESTIONS))
+    sources = w.load_json(sp) if os.path.exists(sp) else []
+    access = w.load_json(ap) if os.path.exists(ap) else []
+    questions = w.load_json(qp) if os.path.exists(qp) else []
+    probs = 0
+
+    def fail(m):
+        nonlocal probs
+        probs += 1
+        R.add("FAIL", g, m)
+
+    # sources: every kind the skill must read is either read or explained
+    need_kinds = w.REQUIRED_SOURCE_KINDS.get(mt, w.SOURCE_KINDS)
+    for e in sources:
+        if e.get("kind") not in w.SOURCE_KINDS:
+            fail("source with unknown kind %r (allowed: %s)" % (e.get("kind"), w.SOURCE_KINDS))
+        elif "none" in e:
+            if len((e.get("none") or "").strip()) < 8:
+                fail("source kind %s: 'none' needs a reason (what was searched and not found)" % e["kind"])
+        elif e.get("read") == "yes":
+            if not (e.get("path") or "").strip() or not (e.get("date") or "").strip():
+                fail("source %s: a document that was read needs its path and date" % e.get("kind"))
+        else:
+            fail("source %s: record read=yes with path and date, or a 'none' reason" % e.get("kind"))
+    have = {e.get("kind") for e in sources if e.get("read") == "yes" or len((e.get("none") or "").strip()) >= 8}
+    missing = [k for k in need_kinds if k not in have]
+    if missing:
+        fail("client-file sources not accounted for: %s (read them from the client's file, or record why none exist; Paul is asked last)" % missing)
+
+    # access: the transcript must have been obtained; a need that never succeeded must have all three routes tried
+    by_need = {}
+    for e in access:
+        if e.get("route") not in ALLOWED_ROUTES or e.get("result") not in ("ok", "fail") or not (e.get("need") or "").strip():
+            fail("access_log entry malformed (need, route in %s, result ok|fail): %s" % (ALLOWED_ROUTES, e))
+            continue
+        by_need.setdefault(e["need"], []).append(e)
+    if "transcript" not in by_need or not any(e["result"] == "ok" for e in by_need["transcript"]):
+        fail("the transcript has no successful access entry (run.py access --need transcript ... --result ok)")
+    asked = {q.get("need") for q in questions}
+    for need, es in by_need.items():
+        if any(e["result"] == "ok" for e in es):
+            continue
+        tried_fail = {e["route"] for e in es if e["result"] == "fail"}
+        untried = [r for r in w.ROUTES if r not in tried_fail]
+        if untried:
+            fail("'%s' could not be fetched but these routes were never tried: %s. Never say 'I cannot access your files' until all three failed" % (need, untried))
+        elif need not in asked:
+            fail("'%s' failed on all three routes but nothing was recorded for Paul: use run.py ask with the errors" % need)
+    for q in questions:
+        if len((q.get("question") or "").strip()) < 8 or len((q.get("searched") or "").strip()) < 8:
+            fail("a question to Paul needs the question and what was searched first: %s" % q)
+        if q.get("need") in by_need and any(e["result"] == "ok" for e in by_need[q["need"]]):
+            R.add("WARN", g, "question about '%s' was recorded although that need was later fetched: do not ask Paul" % q["need"])
+    if not probs:
+        R.add("PASS", g, "client-file sources accounted for (%d read, kinds required: %s); access log has %d entries across %d need(s); %d question(s) to Paul, each with what was searched"
+              % (sum(1 for e in sources if e.get("read") == "yes"), len(need_kinds), len(access), len(by_need), len(questions)))
 
 
 # ---------------------------------------------------------------- helpers for B/C/D
@@ -180,8 +256,12 @@ def check_ledger(run, st, lines, ledger, idx, R):
         if unresolved:
             R.add("WARN", g, "%d earlier keyword-scan hits have no nearby ledger entry (lines %s%s): add entries or list them in scan_reviewed"
                   % (len(unresolved), unresolved[:12], "..." if len(unresolved) > 12 else ""))
+        low_unres = [h for h in st["scan"].get("low_hits", []) if h >= st["scan"]["closing_from"]
+                     and h not in reviewed and not any(abs(h - n) <= 3 for n in near)]
+        if low_unres:
+            R.add("WARN", g, "%d closing-minute lines mention figures/days/products with no nearby ledger entry (lines %s): check them" % (len(low_unres), low_unres[:12]))
         if not closing_unres and not unresolved:
-            R.add("PASS", g, "every keyword-scan hit is covered or reviewed")
+            R.add("PASS", g, "every decision/change/request keyword-scan hit is covered or reviewed")
 
 
 # ---------------------------------------------------------------- C source trace
@@ -224,13 +304,24 @@ def check_content(run, st, lines, content, idx, dup, R):
     if dup:
         R.add("FAIL", g, "duplicate item ids: %s" % sorted(set(dup)))
     keys = [a.get("key") for a in content.get("areas") or []]
-    valid = [k for k, _, _ in w.AREAS]
-    if any(k not in valid for k in keys) or len(keys) != len(set(keys)):
-        R.add("FAIL", g, "areas keys must be unique and from %s (got %s)" % (valid, keys))
+    if any(k not in w.AREA_KEYS for k in keys) or len(keys) != len(set(keys)):
+        R.add("FAIL", g, "areas keys must be unique and from %s (got %s)" % (w.AREA_KEYS, keys))
     if mt == "first" and content.get("since_last"):
         R.add("FAIL", g, "a first/Fact Find meeting has nothing to carry forward: since_last must be empty")
-    if not isinstance(content.get("next_appointment"), dict):
+    na = content.get("next_appointment")
+    if not isinstance(na, dict):
         R.add("FAIL", g, "next_appointment {id, text, src} is required")
+    elif mt != "whatsapp":
+        # the Teams message to Sitamah depends on these (ff-population-transcript Step 8)
+        n = content.get("appointment_number")
+        if not (n == "review" or (isinstance(n, int) and not isinstance(n, bool) and n >= 1)):
+            R.add("FAIL", g, "appointment_number must be 1, 2, 3... or \"review\" (worked out from the client's file, never guessed)")
+        if len((content.get("appointment_number_basis") or "").strip()) < 10:
+            R.add("FAIL", g, "appointment_number_basis: say which earlier meetings/files on the client's file give that number")
+        if not isinstance(na.get("agreed"), bool):
+            R.add("FAIL", g, "next_appointment.agreed must be true (a real agreed/booked follow-up) or false (vague or none)")
+        if len((na.get("check") or "").strip()) < 10:
+            R.add("FAIL", g, "next_appointment.check: one line on what the Summary and the Planner note say about the next appointment, and so why the follow-up sentence is in or out")
 
     n_src, problems, unverifiable = 0, 0, set()
     for name in ("since_last", "applications", "actions", "next_steps"):
@@ -419,6 +510,17 @@ def pdf_pages(path):
     return pages
 
 
+TEAMS_RE = re.compile(
+    r"^(?P<name>.+) \u2013 (?P<kind>(?:\d+(?:st|nd|rd|th)|Review) Teams Appointment) Completed: (?P<date>\d{2}/\d{2}/\d{4}) "
+    r"\u2013 Please see instructions in Client / Prospect Task\.(?P<fu> Please take note of Follow Up Appt\.)?$")
+TAG = re.compile(r"<[^>]+>")
+
+
+def visible_text(page_html):
+    body = page_html.split("<article", 1)[-1].split("</article>", 1)[0]
+    return html.unescape(TAG.sub(" ", body))
+
+
 def check_outputs(run, st, content, R):
     g = "E"
     b = st.get("build")
@@ -426,38 +528,72 @@ def check_outputs(run, st, content, R):
         R.add("FAIL", g, "outputs not built yet (run build.py)")
         return
     if b["content_sha"] != w.content_hash(content):
-        R.add("FAIL", g, "content.json changed after the outputs were built: every correction re-opens the whole task, rebuild both outputs (build.py)")
+        R.add("FAIL", g, "content.json changed after the outputs were built: every correction re-opens the whole task, rebuild every output (build.py)")
         return
     names = w.output_names(content)
     out = os.path.join(run, w.OUT)
-    note_path = os.path.join(out, "planner_note.md")
-    note = open(note_path, encoding="utf-8").read() if os.path.exists(note_path) else None
-    if note is None:
-        R.add("FAIL", g, "Output 1 (planner_note.md) is missing")
-    else:
-        if w.sha256_text(note) != b["note_sha"]:
-            R.add("FAIL", g, "planner_note.md was edited by hand: rebuild it from content.json")
-        if "```" in note:
-            R.add("FAIL", g, "Planner note contains a code fence: it must be formatted text, never a code block")
-        in_note = ("applications", "actions", "next_appointment")
-        miss = [it["id"] for lst, it in w.all_items(content)
-                if (lst in in_note or lst.startswith("areas:")) and w.norm(it["text"]) not in w.norm(note)]
-        if miss:
-            R.add("FAIL", g, "Planner note is missing items: %s" % miss)
-        else:
-            R.add("PASS", g, "Output 1 (Planner note) built from content.json, formatted text, no code fence, all items present")
+    mt = content["meeting_type"]
 
-    if content["meeting_type"] == "first":
+    def read(fname):
+        p = os.path.join(out, fname)
+        if not os.path.exists(p):
+            R.add("FAIL", g, "%s is missing from out/" % fname)
+            return None
+        text = open(p, encoding="utf-8").read()
+        if w.sha256_text(text) != b["files"].get(fname):
+            R.add("FAIL", g, "%s was edited by hand or replaced: rebuild it from content.json (build.py)" % fname)
+            return None
+        return text
+
+    in_note = ("applications", "actions", "next_appointment")
+    note_items = [it for lst, it in w.all_items(content) if lst in in_note or lst.startswith("areas:")]
+    page_html, note_txt = read(names["page"]), read(names["note_txt"])
+    if page_html is not None:
+        miss = [it["id"] for it in note_items if w.norm(it["text"]) not in w.norm(visible_text(page_html))]
+        if 'id="copy-note"' not in page_html:
+            R.add("FAIL", g, "Planner page has no Copy note button")
+        elif miss:
+            R.add("FAIL", g, "Planner page is missing items: %s" % miss)
+        else:
+            R.add("PASS", g, "Planner page built from content.json with a Copy note button; every item present")
+    if note_txt is not None:
+        miss = [it["id"] for it in note_items if w.norm(it["text"]) not in w.norm(note_txt)]
+        if "```" in note_txt:
+            R.add("FAIL", g, "Planner fallback text contains a code fence: never a code block")
+        elif miss:
+            R.add("FAIL", g, "Planner fallback text is missing items: %s" % miss)
+        else:
+            R.add("PASS", g, "Planner fallback text matches the page (used only if the page tool is unavailable)")
+
+    if mt == "whatsapp":
+        if os.path.exists(os.path.join(out, names["teams"])):
+            R.add("FAIL", g, "a WhatsApp call must not produce the Teams appointment message")
+    else:
+        msg = read(names["teams"])
+        if msg is not None:
+            m = TEAMS_RE.match(msg.strip())
+            c = content["client"]
+            if not m:
+                R.add("FAIL", g, "Teams message is not in the fixed Step 8 wording: %r" % msg.strip())
+            elif m["name"] != "%s %s" % (c["first"], c["surname"]) or m["date"] != content["meeting_date"]:
+                R.add("FAIL", g, "Teams message has the wrong client name or date")
+            elif bool(m["fu"]) != (content["next_appointment"].get("agreed") is True):
+                R.add("FAIL", g, "Teams message follow-up sentence does not match next_appointment.agreed")
+            else:
+                R.add("PASS", g, "Teams message to Sitamah built in the fixed wording (%s%s)"
+                      % (m["kind"], ", with follow-up sentence" if m["fu"] else ", no follow-up sentence"))
+
+    if mt == "first":
         stray = [f for f in os.listdir(out) if f.lower().endswith(".pdf")] if os.path.isdir(out) else []
         if stray:
             R.add("FAIL", g, "a first/Fact Find meeting must not produce a Follow-Up PDF (the Fact Find Summary is that meeting's PDF): %s" % stray)
         else:
-            R.add("PASS", g, "no Output 2 for a first/Fact Find meeting (correct)")
+            R.add("PASS", g, "no PDF for a first/Fact Find meeting (correct)")
         return
 
     pdf = os.path.join(out, names["pdf"])
     if not os.path.exists(pdf):
-        R.add("FAIL", g, "Output 2 PDF missing: expected '%s'" % names["pdf"])
+        R.add("FAIL", g, "PDF missing: expected '%s'" % names["pdf"])
         return
     others = [f for f in os.listdir(out) if f.lower().endswith(".pdf") and f != names["pdf"]]
     if others:
@@ -483,7 +619,7 @@ def check_outputs(run, st, content, R):
     if len(pages) > 2:
         R.add("WARN", g, "the PDF is %d pages: the skill aims at two at most" % len(pages))
     if not miss and not heads:
-        R.add("PASS", g, "Output 2 PDF '%s': %d page(s), every heading and item present, no stranded heading" % (names["pdf"], len(pages)))
+        R.add("PASS", g, "PDF '%s': %d page(s), every heading and item present, no stranded heading" % (names["pdf"], len(pages)))
     pngs = sorted(f for f in os.listdir(out) if f.startswith("page") and f.endswith(".png"))
     if len(pngs) != len(pages) or any(os.path.getsize(os.path.join(out, f)) < 3000 for f in pngs):
         R.add("FAIL", g, "page images for the visual check are missing (%d images for %d pages)" % (len(pngs), len(pages)))
@@ -492,14 +628,19 @@ def check_outputs(run, st, content, R):
 
 
 # ---------------------------------------------------------------- F receipt
+def truthy(v):
+    return v is True or (isinstance(v, str) and v.strip().lower() == "true")
+
+
 def check_receipt(run, content, R):
     g = "F"
     p = os.path.join(run, w.RECEIPT)
     if not os.path.exists(p):
-        R.add("FAIL", g, "receipt.json missing: record the hand-over evidence before declaring the run complete")
+        R.add("FAIL", g, "receipt.json missing: record the hand-over evidence before declaring the run complete (run.py receipt)")
         return
     rc = w.load_json(p)
     names = w.output_names(content)
+    mt = content["meeting_type"]
     probs = 0
 
     def fail(m):
@@ -507,35 +648,73 @@ def check_receipt(run, content, R):
         probs += 1
         R.add("FAIL", g, m)
 
-    if rc.get("planner_note_shown_in_chat") is not True:
-        fail("Output 1 must be shown in the chat as formatted text (planner_note_shown_in_chat)")
+    def text(d, *keys, n=1):
+        return all(len(str((d or {}).get(k) or "").strip()) >= n for k in keys)
+
+    # Planner page: published as the right-hand-pane page, or the stated fallback
+    pp = rc.get("planner_page") or {}
+    if pp.get("mode") == "artifact":
+        if not str(pp.get("url") or "").startswith("https://claude.ai/"):
+            fail("planner_page.url must be the link returned by the page (Artifact) tool, starting https://claude.ai/")
+        else:
+            R.add("ATTEST", g, "Planner note published as a page with a Copy button: %s" % pp["url"])
+    elif pp.get("mode") == "fallback_text":
+        if not text(pp, "reason", n=10):
+            fail("planner_page.reason: say why the page tool was unavailable (the fallback must be stated)")
+        else:
+            R.add("ATTEST", g, "Planner note shown as formatted chat text (FALLBACK, page tool unavailable: %s)" % pp["reason"][:60])
     else:
-        R.add("ATTEST", g, "Planner note shown in chat as formatted text")
-    if content["meeting_type"] != "first":
-        if rc.get("pdf_sent_in_chat") is not True:
+        fail("planner_page.mode must be 'artifact' or 'fallback_text'")
+
+    if mt != "first":
+        if not truthy(rc.get("pdf_sent_in_chat")):
             fail("the PDF must be sent in the chat for download (pdf_sent_in_chat)")
         else:
             R.add("ATTEST", g, "PDF sent in the chat")
         sv = rc.get("saved") or {}
-        if not all((sv.get(k) or "").strip() for k in ("tool", "folder", "filename", "tool_result", "folder_listing_check")):
+        if not text(sv, "tool", "folder", "filename", "tool_result", "folder_listing_check"):
             fail("saved{tool, folder, filename, tool_result, folder_listing_check} must all be filled from the real tool output")
         else:
+            before = probs
             if sv["filename"] != names["pdf"]:
                 fail("saved.filename %r is not the expected %r" % (sv["filename"], names["pdf"]))
             if names["pdf"] not in sv["folder_listing_check"]:
                 fail("saved.folder_listing_check does not show the file in the folder listing")
             if "2. Fact Find" not in sv["folder"]:
                 fail("saved.folder is not the client's '2. Fact Find' folder")
-            if not probs:
+            if probs == before:
                 R.add("ATTEST", g, "PDF saved to the client's 2. Fact Find folder via %s and the folder listing checked" % sv["tool"])
-        if len((rc.get("png_visual_check") or "").strip()) < 20:
+        if len(str(rc.get("png_visual_check") or "").strip()) < 20:
             fail("png_visual_check: say what you saw on each page image (layout, headings, bullets)")
         else:
             R.add("ATTEST", g, "page images looked at")
-        if not (rc.get("applications_handoff") or "").strip():
+        if not str(rc.get("applications_handoff") or "").strip():
             fail("applications_handoff: 'complete-applications-skill called' or 'n/a: <reason>'")
         else:
-            R.add("ATTEST", g, "applications hand-off: " + rc["applications_handoff"][:80])
+            R.add("ATTEST", g, "applications hand-off: " + str(rc["applications_handoff"])[:80])
+
+    # Teams message to Sitamah (Step 8): last thing, only with Paul's yes
+    tm = rc.get("teams") or {}
+    status = tm.get("status")
+    if mt == "whatsapp":
+        R.add("ATTEST", g, "Teams message not applicable to a WhatsApp call")
+    elif status == "sent":
+        if not text(tm, "message_id", "sent_time", "approved_by_paul"):
+            fail("teams: status=sent needs message_id and sent_time from Zapier and approved_by_paul (Paul's own words)")
+        else:
+            R.add("ATTEST", g, "Teams message sent to Sitamah via Zapier after Paul's yes (message id %s, %s)" % (tm["message_id"], tm["sent_time"]))
+    elif status == "declined":
+        if not text(tm, "paul_said", n=2):
+            fail("teams: status=declined needs paul_said (his words)")
+        else:
+            R.add("ATTEST", g, "Paul declined the Teams message")
+    elif status == "failed":
+        if not text(tm, "detail", n=8) or not truthy(tm.get("text_given_to_paul")):
+            fail("teams: status=failed needs detail (the error) and text_given_to_paul=true")
+        else:
+            R.add("ATTEST", g, "Teams send failed; message text given to Paul to paste (not claimed as sent)")
+    else:
+        fail("teams.status must be sent, declined or failed: the Teams message to Sitamah is the last step of every Teams meeting")
 
 
 # ---------------------------------------------------------------- driver
@@ -547,6 +726,7 @@ def run_checks(run, stage):
     lp, cp = os.path.join(run, w.LEDGER), os.path.join(run, w.CONTENT)
     ledger = w.load_json(lp) if os.path.exists(lp) else None
     content = w.load_json(cp) if os.path.exists(cp) else None
+    check_sources(run, meeting_type_of(run, content), R)
     if ledger is None:
         R.add("FAIL", "B", "ledger.json missing (record the decision ledger after Pass 1)")
     if content is None:
@@ -569,7 +749,7 @@ def run_checks(run, stage):
 
 def report(R, st, ledger, content, stage):
     print("DELIVERY GATE  (stage: %s)" % stage)
-    for g in "ABCDEF":
+    for g in GROUP_ORDER:
         rows = [r for r in R.rows if r[1] == g]
         if not rows:
             continue

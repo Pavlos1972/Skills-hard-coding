@@ -1,7 +1,7 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
-**Version 1.2 (draft for Paul to review)**
-**Last updated: 2026-10-29 11:22 (Athens time)**
+**Version 1.3 (draft for Paul to review)**
+**Last updated: 2026-10-29 11:53 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
 Every future Claude Code session in this repo must read it before touching any skill
@@ -35,21 +35,21 @@ Claude says it did ("attested").
 | # | Standard | Status |
 |---|---|---|
 | S1 | Follow every instruction strictly; nothing skipped, nothing swapped | Built for 1 skill |
-| S2 | Every skill carries a dated "Last updated" (Athens time), set by a program | TO BUILD |
-| S3 | Client information comes from the client's file first; ask Paul only as a last resort, with proof | TO BUILD |
-| S4 | Always use the access routes (local drive, Microsoft 365, Zapier); never say "I cannot access your files" without proof | TO BUILD |
-| S5 | Instructions are clean, ordered and current; outdated text removed; the skill still works | Process written |
-| S6 | Every output (reports, Planner note, Teams note to Sitamah) is hard-coded and checked | Built for 2 outputs |
-| S7 | Skills are changed only in Claude Code, so scripts and text stay together | Process written |
+| S2 | Every skill carries a dated "Last updated" (Athens time), set by a program | BUILT (`tools/stamp_skill.py`, `tools/lint_skill.py`) |
+| S3 | Client information comes from the client's file first; ask Paul only as a last resort, with proof | Built for 1 skill |
+| S4 | Always use the access routes (local drive, Microsoft 365, Zapier); never say "I cannot access your files" without proof | Built for 1 skill (logged, enforced); untested on real files |
+| S5 | Instructions are clean, ordered and current; outdated text removed; the skill still works | BUILT (`tools/inventory.py`, `tools/lint_skill.py`) |
+| S6 | Every output (reports, Planner note, Teams note to Sitamah) is hard-coded and checked | Built for 1 skill (page, PDF, Teams message) |
+| S7 | Skills are changed only in Claude Code, so scripts and text stay together | BUILT (`tools/package_skill.py`) |
 | S8 | A run leaves its evidence on disk, so it survives a long or compressed chat | Built for 1 skill |
 | S9 | Nothing is invented: every fact traces to the transcript or a named document | Built for 1 skill |
 | S10 | Nothing is sent from Paul's accounts without his yes | Written |
-| S11 | No client data in the repo or in skill text | Written |
+| S11 | No client data in the repo or in skill text | BUILT (lint scans a private name list kept outside the repo) |
 | S12 | Every skill has tests on invented data; every real-life bug becomes a new test | Built for 1 skill |
 | S13 | Same house conventions everywhere (dates, Rand, names, wording) | Written |
 | S14 | Report honestly: say what was checked, what was only attested, and never say "live" until Paul confirms | Written |
 | S15 | One skill at a time, finished and tested on a real case before the next | Written |
-| S16 | A program drives the job step by step and shows the next step only when the last one is proven | APPROVED 29/10/2026, on condition it is proven in a real chat first |
+| S16 | A program drives the job step by step and shows the next step only when the last one is proven | APPROVED 29/10/2026; built for 1 skill; real-chat trial pending |
 
 ---
 
@@ -78,7 +78,7 @@ never in the skill text itself.
 - The lint tool fails a skill if the stamp is missing, badly formatted, or older than the last change to the files.
 - The packaging tool refuses to build the upload zip if lint fails.
 
-**Status.** TO BUILD (`tools/stamp_skill.py`, `tools/lint_skill.py`, `tools/package_skill.py`).
+**Status.** BUILT and tested (`tools/stamp_skill.py`, `tools/lint_skill.py`, `tools/package_skill.py`).
 
 ### S3. Client information comes from the client's file first
 **Rule.** Everything about a client is looked up from the client's own file before anyone asks Paul:
@@ -95,7 +95,7 @@ Paul is asked only for something that is genuinely not in any of those places.
   The checker fails a question with an empty or incomplete `searched` list.
 - Each skill names the sources it must read (its "required sources"). The checker fails if one is missing from `sources.json` without a stated reason.
 
-**Status.** TO BUILD (shared kit). The transcript skill already has this rule in words ("be resourceful before you ask").
+**Status.** BUILT inside the Teams transcript skill (`run.py source`, `run.py ask`, group S of `verify.py`); to be lifted into a shared kit when the second skill is converted.
 
 ### S4. Always use the access routes. Never say "I cannot access your files" without proof
 **Rule.** Claude **has** access to Paul's files and mail. It must use the routes below, in this order, every time:
@@ -127,7 +127,7 @@ live in the chat where the skills run. A Claude Code session can attach a folder
 Remote Control, but that needs his computer on and set up, and has not been tested. The standard forces every
 route to be tried and logged. It cannot open a door that is genuinely locked.
 
-**Status.** TO BUILD (access ladder in the shared kit). Routes 2 and 3 to be tested on the first real run.
+**Status.** BUILT inside the Teams transcript skill (`run.py access`, enforced by `verify.py` group S and `run.py ask`). The routes themselves are untested on real files: routes 1 to 3 are tried for real on the first real-case trial.
 
 ### S5. Instructions are clean, ordered and current. Outdated text is removed. The skill still works
 **Rule.** Each SKILL.md is short, in order, and states each rule once, plainly. It has an Index at the top.
@@ -143,7 +143,7 @@ Anything outdated is removed, but removal is done safely:
 **How it is locked in.** `lint_skill.py` checks the structure (Index, allowed header keys, size, stamp, no client names or ID numbers in examples).
 A separate inventory comparison list is kept per skill in `history/`.
 
-**Status.** Process written. Lint tool TO BUILD.
+**Status.** BUILT: process written, `tools/inventory.py` and `tools/lint_skill.py` working and tested. Used on the Teams transcript skill.
 
 ### S6. Every output is hard-coded, so nothing is skipped
 **Rule.** A skill that makes several things must make **all** of them every time. Typical set:
@@ -161,7 +161,7 @@ A separate inventory comparison list is kept per skill in `history/`.
 - **The page is generated by a program from the same source file as everything else.** Claude's only job is to publish that file and report the link. Today's skills point to a page template that is missing from the Teams transcript skill, so each chat invents its own layout. That ends here.
 - **Teams message to Sitamah** (rule from `ff-population-transcript` Step 8, 09/10/2026): one fixed line, `[Name Surname] - [1st/2nd/3rd...] Teams Appointment Completed: [DD/MM/YYYY] - Please see instructions in Client / Prospect Task.` plus `Please take note of Follow Up Appt.` only when the Summary and the Planner note show a real, agreed follow-up date. Sent through Zapier to the 1:1 chat with Sitamah, in bold and heading size, only after Paul's clear yes, once per meeting, as the very last step. Zapier returns a message id and sent time, which go in the receipt. If the send fails, Claude says so and gives Paul the text to paste; it never claims it was sent.
 
-**Status.** Built and tested for two outputs (Planner note text, PDF) in the transcript skill. TO BUILD: the Planner HTML page with Copy button, and the Teams message text with its Zapier receipt.
+**Status.** Built and tested for two outputs (Planner note text, PDF) in the transcript skill. The Planner HTML page with Copy button (tested in a real browser) and the Teams message text with its Zapier receipt are BUILT. Publishing the page, the Zapier send and the folder save are attested by Claude, not machine-proven.
 
 ### S7. Skills are updated only in Claude Code
 **Rule.** The repo is the one true copy of every skill: the text, the scripts and the tests together.
@@ -176,7 +176,7 @@ split the text from its scripts.
 
 **Replaces.** Rule 9 of the old "Universal operating rules" block, and the "only propose it with the card" guardrail in `correcting-skills`, for any skill that has scripts. Both skills need their wording updated (see section 6).
 
-**Status.** Process written. Packaging tool TO BUILD.
+**Status.** BUILT: `tools/package_skill.py` refuses to package unless lint and all tests pass, and re-runs the tests against the unpacked zip.
 
 ### S8. A run leaves its evidence on disk
 **Rule.** Each run works in its own folder with a state file, so a long or compressed conversation cannot make
@@ -201,7 +201,7 @@ Skill examples use placeholders such as "(Client Name)". Never write ID numbers,
 Client working files stay on Paul's drive and in his Microsoft 365.
 **How it is locked in.** Lint scans for 13-digit numbers and, once Paul supplies a name list, for client names. The commit step checks the same.
 **Known problem.** The current transcript skill's examples contain three real client names. They must go in the rewrite.
-**Status.** Written. Lint TO BUILD.
+**Status.** BUILT: lint scans for 13-digit numbers and, with a private names file kept outside the repo, for client names.
 
 ### S12. Tests on invented data, and every real bug becomes a test
 **Rule.** A skill is not finished until its tests pass. When a real run goes wrong, the first thing done is to add a test that fails the same way, then fix the skill until it passes.
@@ -231,7 +231,7 @@ so a chat can never quietly fall back to a text draft.
 **How it is locked in.** `steps.json` per skill (the ordered steps, the proof each needs); one driver program shared by all skills.
 **Condition set by Paul.** "As long as it works." So: tested here on invented data first, then tried by Paul in a real chat on one
 real client, with the old skill kept as a backup. Nothing is called finished before that real trial passes.
-**Status.** Approved. Not built yet; the checker and reading lock already built become steps in it.
+**Status.** Approved. Built for the Teams transcript skill (`scripts/run.py`, `steps.json`); to be proven in a real chat. The shared parts (access log, sources, questions, receipts) are inside that skill's scripts and will be lifted into a shared kit when the second skill is converted.
 
 ---
 
@@ -260,7 +260,7 @@ real client, with the old skill kept as a backup. Nothing is called finished bef
 skills-hard-coding/
   CLAUDE.md                  read-first memory for Claude Code (points here)
   SKILL-STANDARDS.md         this file
-  tools/                     shared programs (TO BUILD): stamp_skill, lint_skill, package_skill, access ladder
+  tools/                     shared programs (BUILT): stamp_skill, inventory, lint_skill, package_skill
   <skill-name>/
     SKILL.md                 short: Index, Last updated, run protocol, standing rules
     deliverables.json        every output and how it is made, handed over and checked
@@ -333,7 +333,7 @@ Every run (one client, one meeting) keeps in its own run folder:
 
 | Skill | Status |
 |---|---|
-| client-teams-transcript-skill | First slice built and tested (reading lock, source check, PDF + Planner note, checker, 47 tests). SKILL.md rewrite waiting for Paul's OK of this file |
+| client-teams-transcript-skill | REBUILT to these standards (step driver, reading lock, client-file and access logs, Planner page, PDF, Sitamah Teams message, PASS/FAIL checklist; 98 tests; nothing from the old skill lost without a record). Zip ready; waiting for Paul's yes/no list, upload and a real-case trial |
 | client-pipeline-board, complete-applications-skill, fact-find-summary, ff-population-transcript, wr-roa-builder, wr-sroa-builder, rgar-skill, om-optimal-ra-proposal, om-tax-free-skill, investment-comparisons-skill, life-insurer-comparison, life-policy-schedule-analyzer, client-review-notes, client-transcript-download, teams-meeting-setup-skill, outlook-emails-skill, planner-interim-procedure, cameron-short-term-skill, advicetech-website-knowledge, alpha-bank-statements, nedbank-current-account-categorization, paul-email-signature, correcting-skills, master-skill-template | Not started |
 
 ## 10. Changelog (last 5)
@@ -341,5 +341,6 @@ Every run (one client, one meeting) keeps in its own run folder:
 | When (Athens time) | What changed |
 |---|---|
 | 2026-10-29 11:22 | Version 1.2: S16 approved on condition of a real-chat trial; each of the eight areas is its own heading; section 3 explains where the program lives; existing skills with scripts listed |
+| 2026-10-29 11:53 | Version 1.3: Teams transcript skill rebuilt to the standards; tools built (stamp, lint, inventory, package); tracker and status updated |
 | 2026-10-29 (between 11:01 and 11:22; first typed by hand as 12:00 in error) | Version 1.1: Paul's answers recorded (pane, Teams message via Zapier, removal approach, eight areas); Planner page and Teams message rules taken from `ff-population-transcript`; S16 proposed; missing page template recorded as a gap |
 | 2026-10-29 11:01 | Version 1.0 written from Paul's seven rules plus eight additions (S8 to S15); Microsoft 365 permissions recorded; open questions and known gaps listed |

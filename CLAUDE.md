@@ -20,7 +20,7 @@ S7 skills are changed only in Claude Code, then packaged and uploaded as a zip |
 S8 run state on disk | S9 nothing invented, every fact has a source | S10 nothing sent without Paul's yes |
 S11 no client data in the repo | S12 tests on invented data, every real bug becomes a test |
 S13 house conventions (DD/MM/YYYY, R, Athens time, actions owned by Sitamah) | S14 report honestly, never say "live" before Paul confirms |
-S15 one skill at a time
+S15 one skill at a time | S16 a program drives the job step by step (approved; real-chat trial pending)
 
 ## Decisions by Paul, 29/10/2026 (full list: SKILL-STANDARDS.md section 6)
 - Eight planning areas: Risk, RA, Investment, RGAR, EGAR, Medical Aid, Will, Short-Term ("Other" only when notable).
@@ -29,15 +29,17 @@ S15 one skill at a time
 - Each of the eight areas is its own heading in the Planner note and PDF, shown only when discussed or still open.
 - S16 approved: a program drives the job step by step, on condition it is proven in a real chat first (old skill kept as backup). The program lives inside the skill zip; Claude runs it as it is and never rewrites it during a run.
 - Outdated text: drop what is clearly replaced, give Paul a yes/no list for anything uncertain.
-- Do not start rewriting a skill until Paul says go (not given yet for the Teams transcript skill).
+- Paul said go for the Teams transcript skill (29/10/2026). Do not start the NEXT skill until he has trialled this one and says go.
 
 ## Where things are
-- `client-teams-transcript-skill/`: first skill, scripts and tests built; SKILL.md rewrite waits for Paul's OK of the standards.
+- `client-teams-transcript-skill/`: REBUILT (step driver in `scripts/`, rules in `references/`, tests in `tests/`, history and Paul's change list in `history/`). Shared tools in `tools/`. Zip in `releases/` waits for Paul's yes/no list, upload and a real-case trial. Nothing is live until he confirms.
 - Paul's current skills (read-only copies, edits there change nothing): `/root/.claude/skills/synced/*/<skill-name>/SKILL.md` in cloud sessions.
-- Skill tracker: section 8 of SKILL-STANDARDS.md. Keep it current.
+- Skill tracker: section 9 of SKILL-STANDARDS.md. Keep it current.
 
 ## Commands
-- Tests: `python3 -m unittest discover -s client-teams-transcript-skill/tests`
+- Tests: `python3 -m unittest discover -s client-teams-transcript-skill/tests` (98 tests, about 70 seconds)
+- Lint: `WR_NAME_BLOCKLIST=<private names file outside the repo> python3 tools/lint_skill.py client-teams-transcript-skill`
+- After editing a skill: `python3 tools/stamp_skill.py <skill> --change "..."`, then `python3 tools/package_skill.py <skill> --out releases`
 - Athens time for any stamp: `TZ=Europe/Athens date '+%Y-%m-%d %H:%M'`
 
 ## Never

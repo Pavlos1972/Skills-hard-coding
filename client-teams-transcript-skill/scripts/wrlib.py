@@ -16,8 +16,28 @@ STATE = "state.json"
 LEDGER = "ledger.json"
 CONTENT = "content.json"
 RECEIPT = "receipt.json"
+SOURCES = "sources.json"
+ACCESS = "access_log.json"
+QUESTIONS = "questions.json"
+RUN = "run.json"
 OUT = "out"
 DOCS = "docs"
+
+# Access routes in the order they must be tried (SKILL-STANDARDS.md S4).
+ROUTES = ("device", "m365", "zapier")
+ROUTE_NAMES = {
+    "device": "local drive / OneDrive through the device bridge",
+    "m365": "Microsoft 365 connector (SharePoint/OneDrive, Outlook, Teams transcripts)",
+    "zapier": "Zapier (Office 365 and Teams tools)",
+}
+
+# Kinds of client-file source and which meeting types must account for each (S3).
+SOURCE_KINDS = ["Fact Find", "Fact Find Summary", "Earlier Note", "Overview", "Quote", "Application", "Correspondence"]
+REQUIRED_SOURCE_KINDS = {
+    "followup": SOURCE_KINDS,
+    "whatsapp": SOURCE_KINDS,
+    "first": [],
+}
 
 DOC_TYPES = [
     "Overview", "Quote", "Fact Find", "Fact Find Summary", "Earlier Note",
@@ -31,17 +51,34 @@ STATUS_WORDS = [
 ]
 TAG_WORDS = ["resolved", "still open", "new", "changed"]
 
-# area key -> (PDF heading, Planner-note heading)
+# Paul's eight planning areas (29/10/2026) plus "Other" (only when something notable was said).
+# Each is its own heading, in this order, in the Planner note and the PDF.
+# (area key, heading)
 AREAS = [
-    ("risk", "Risk Planning", "Risk"),
-    ("retirement", "Retirement Planning", "Retirement (incl. RGAR)"),
-    ("investment", "Investment Planning", "Investment (incl. EGAR)"),
-    ("medical", "Medical Aid", "Medical Aid / Will / Short-Term"),
-    ("will", "Will", "Medical Aid / Will / Short-Term"),
-    ("short_term", "Short-Term Insurance", "Medical Aid / Will / Short-Term"),
-    ("other", "Other", "Other"),
+    ("risk", "Risk"),
+    ("ra", "RA"),
+    ("investment", "Investment"),
+    ("rgar", "RGAR"),
+    ("egar", "EGAR"),
+    ("medical", "Medical Aid"),
+    ("will", "Will"),
+    ("short_term", "Short-Term"),
+    ("other", "Other"),
 ]
-COMBINED_LABEL = {"medical": "Medical aid", "will": "Will", "short_term": "Short-term"}
+AREA_KEYS = [k for k, _ in AREAS]
+AREA_HEADING = dict(AREAS)
+EIGHT = [k for k, _ in AREAS if k != "other"]
+
+
+def ordinal(n):
+    if n == "review":
+        return "Review"
+    n = int(n)
+    if 10 <= n % 100 <= 20:
+        suf = "th"
+    else:
+        suf = {1: "st", 2: "nd", 3: "rd"}.get(n % 10, "th")
+    return "%d%s" % (n, suf)
 
 
 def now():
@@ -141,4 +178,5 @@ def output_names(content):
     else:
         return None
     ff = "Fact Find Summary - %s - (%s %s)" % (sd, first, sur)
-    return {"pdf_stem": stem, "pdf": (stem + ".pdf") if stem else None, "ff_summary_stem": ff}
+    return {"pdf_stem": stem, "pdf": (stem + ".pdf") if stem else None, "ff_summary_stem": ff,
+            "page": "planner_note.html", "note_txt": "planner_note.txt", "teams": "teams_message.txt"}

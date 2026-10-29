@@ -1,0 +1,386 @@
+[
+ {
+  "file": "01-access-and-locate.md",
+  "kind": "replaced",
+  "old": "## Client File Access (standing rule - every read/save of a client file)\n\n1. **Local machine first** via the device bridge. Check BOTH `life",
+  "new": "## Client File Access (standing rule - every read/save of a client file)\n\nClaude HAS access to Paul's files, mail and Teams. Use these route",
+  "why": "Standard S4 (Paul, 29/10/2026): three access routes in order, every attempt logged, Paul asked only after all three fail. Old rule 3 ('Ask Paul to attach only after both fail') extended from two routes to three.",
+  "needs_paul": false
+ },
+ {
+  "file": "01-access-and-locate.md",
+  "kind": "reworded",
+  "old": "- Stage it with `device_stage_files`, read with `pandoc -t plain --wrap=none`.",
+  "new": "- Stage it with `device_stage_files` (or fetch it through the m365 route), then `tx.py prep` converts it with `pandoc -t plain --wrap=none`.",
+  "why": "The conversion is done by the program (tx.py prep) instead of by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "01-access-and-locate.md",
+  "kind": "reworded",
+  "old": "If that is not possible, ask: \"Please upload this client's Teams Meeting Transcript\".",
+  "new": "If that is not possible (all three routes logged as failed), ask: \"Please upload this client's Teams Meeting Transcript\".",
+  "why": "Standard S4: ask only after all routes failed.",
+  "needs_paul": false
+ },
+ {
+  "file": "01-access-and-locate.md",
+  "kind": "reworded",
+  "old": "If truncated or gapped, say exactly what is missing and stop.",
+  "new": "If truncated or gapped, say exactly what is missing and stop. `tx.py prep` makes this check and stops by itself.",
+  "why": "The check is now done by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "01-access-and-locate.md",
+  "kind": "reworded",
+  "old": "skip the locating, but NOT the two reads: go straight to Step 1b and do both reads there.",
+  "new": "skip the locating (log it with `--route passed`), but NOT the two reads: go straight to Step 1b and do both reads there.",
+  "why": "The access log needs an entry for the transcript.",
+  "needs_paul": false
+ },
+ {
+  "file": "02-reading-lock.md",
+  "kind": "reworded",
+  "old": "Read the converted text in sequential chunks (about 400-450 lines each); never sample, skim, search-only or stop early.",
+  "new": "The program serves the converted text in numbered chunks (`tx.py chunk`, 400 lines or fewer each) and refuses to skip one; never sample, ski",
+  "why": "Chunking and ordering are done by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "02-reading-lock.md",
+  "kind": "reworded",
+  "old": "2. **Keep a decision ledger while reading Pass 1** (internal working list, not saved):",
+  "new": "2. **Keep a decision ledger while reading Pass 1** (`run.py ledger add`, kept in the run folder, never saved to the client's folder):",
+  "why": "The ledger is now a program-checked file so each quote is verified when it is added.",
+  "needs_paul": false
+ },
+ {
+  "file": "02-reading-lock.md",
+  "kind": "reworded",
+  "old": "each with timestamp and speaker.",
+  "new": "each with its line number, the exact words and the speaker.",
+  "why": "The program checks the quote against the transcript line.",
+  "needs_paul": false
+ },
+ {
+  "file": "02-reading-lock.md",
+  "kind": "reworded",
+  "old": "5. **Keyword scan (in addition to, never instead of, the two reads)** - search the transcript for decision and change words -",
+  "new": "5. **Keyword scan (in addition to, never instead of, the two reads)** - `tx.py scan` searches the transcript for decision and change words (",
+  "why": "Scan is run by the program; the word list is unchanged.",
+  "needs_paul": false
+ },
+ {
+  "file": "02-reading-lock.md",
+  "kind": "reworded",
+  "old": "and make sure every hit is reflected in the ledger and outputs.",
+  "new": "and make sure every hit is reflected in the ledger and outputs. Every hit in the closing minutes needs a ledger entry within 3 lines or a re",
+  "why": "Hard-coded gate: closing-minute requests are the easiest to miss.",
+  "needs_paul": false
+ },
+ {
+  "file": "02-reading-lock.md",
+  "kind": "reworded",
+  "old": "identify (internally) the transcript timestamp(s) it comes from, or the named document it comes from",
+  "new": "record the transcript line(s) and the exact words it comes from (`src` in content.json), or the named document and the exact words it comes ",
+  "why": "The source trace is now written into content.json and checked by verify.py (the quote must be found in the transcript).",
+  "needs_paul": false
+ },
+ {
+  "file": "02-reading-lock.md",
+  "kind": "reworded",
+  "old": "**Coverage check before delivery:** walk the ledger entry by entry and confirm each one appears in Output 1 and/or Output 2",
+  "new": "**Coverage check before delivery:** walk the ledger entry by entry (`run.py ledger list`) and cover each one with `run.py ledger cover`; `ve",
+  "why": "Coverage is now enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "02-reading-lock.md",
+  "kind": "reworded",
+  "old": "10. **Say it in the delivery message (one line):** \"Transcript read in full TWICE (Pass 1 and Pass 2, N lines each)\", the number of ledger d",
+  "new": "10. **Say it in the delivery message (one line):** `verify.py` prints it (\"Transcript read in full TWICE (Pass 1 and Pass 2, N lines each)\",",
+  "why": "The delivery line is generated by the checker, so it cannot be claimed without the evidence.",
+  "needs_paul": false
+ },
+ {
+  "file": "03-context-and-correspondence.md",
+  "kind": "reworded",
+  "old": "1. **What to check (Outlook, via the Microsoft 365 tools):**",
+  "new": "1. **What to check (Outlook, via the Microsoft 365 tools; record it with `run.py source --kind Correspondence`):**",
+  "why": "Evidence is logged.",
+  "needs_paul": false
+ },
+ {
+  "file": "03-context-and-correspondence.md",
+  "kind": "reworded",
+  "old": "Inside the client's folder, read in this order (all PDFs; render pages as images if text extraction is empty):",
+  "new": "Inside the client's folder, read in this order (all PDFs; render pages as images if text extraction is empty), and record each document with",
+  "why": "Standard S3: every client-file document read is logged.",
+  "needs_paul": false
+ },
+ {
+  "file": "04-areas-and-quotes.md",
+  "kind": "replaced",
+  "old": "Paul looks at eight areas. They appear under these headings, in this order:\n\n1. **Risk Planning** - life, severe illness/dread disease, disa",
+  "new": "Paul looks at eight areas (confirmed 29/10/2026). Each is its own heading, in this order, in BOTH outputs:\n\n1. **Risk** - life, severe illne",
+  "why": "Paul's decision 29/10/2026: the eight areas are Risk, RA, Investment, RGAR, EGAR, Medical Aid, Will, Short-Term, each its own heading. The old text said 'eight' but listed seven, with RGAR folded under Retirement, EGAR under Investment, and Medical/Will/Short-term under one heading in the Planner note.",
+  "needs_paul": false
+ },
+ {
+  "file": "04-areas-and-quotes.md",
+  "kind": "reworded",
+  "old": "Add a short \"Since the last meeting\" block at the top of Output 2.",
+  "new": "Add a short \"Since the last meeting\" block at the top of Output 2 (`since_last` in content.json, each item tagged).",
+  "why": "Names where it lives.",
+  "needs_paul": false
+ },
+ {
+  "file": "04-areas-and-quotes.md",
+  "kind": "reworded",
+  "old": "Then **call `complete-applications-skill` automatically after the report**",
+  "new": "Then **call `complete-applications-skill` automatically after the report (step `handoffs`)**",
+  "why": "Names the step.",
+  "needs_paul": false
+ },
+ {
+  "file": "06a-planner-note.md",
+  "kind": "reworded",
+  "old": "## Output 1: Planner / AdviceTech chat note (formatted text, NOT a code block)",
+  "new": "## Output 1: Planner / AdviceTech note (a copy-ready page, NOT a code block)",
+  "why": "Paul's standing rule 09/10/2026 (already in ff-population-transcript): the note is a copy-ready page, not chat text.",
+  "needs_paul": false
+ },
+ {
+  "file": "06a-planner-note.md",
+  "kind": "reworded",
+  "old": "Present the note in the chat reply as ordinary formatted text under a plain line such as \"Planner note\".",
+  "new": "`build.py` builds the note as a private page with a **Copy note** button that copies the bold, italics and bullets intact (`planner_note.htm",
+  "why": "The page template was missing from this skill (ff-population-transcript pointed to it); it is now generated by program from content.json.",
+  "needs_paul": false
+ },
+ {
+  "file": "06a-planner-note.md",
+  "kind": "reworded",
+  "old": "- **Sections:** bold plain headings with no colons, in the Step 3 order, only areas discussed or still open: `Risk`, `Retirement (incl. RGAR",
+  "new": "- **Sections:** bold plain headings with no colons, in the Step 3 order, each of the eight its own heading and only if discussed or still op",
+  "why": "Paul's decision 29/10/2026 (each of the eight its own heading; one line for those not discussed).",
+  "needs_paul": false
+ },
+ {
+  "file": "06a-planner-note.md",
+  "kind": "reworded",
+  "old": "- **Pointer line (always, directly under the title):** for a follow-up, `Please view the **Follow-Up Appointment Summary Notes - DD.MM.YY - ",
+  "new": "- **Pointer line (always, directly under the title):** for a follow-up, `Please view the **Follow-Up Appointment Summary Notes - DD.MM.YY - ",
+  "why": "Corrects the first-meeting name order to match the old skill's own first-meeting example (First Surname) and notes the program writes it.",
+  "needs_paul": false
+ },
+ {
+  "file": "06b-pdf-and-filenames.md",
+  "kind": "reworded",
+  "old": "Built with **reportlab** (not Word), navy palette, Helvetica. Verify by rendering to PNG (`pdftoppm`) and looking at it before delivering.",
+  "new": "Built by `build.py` with **reportlab** (not Word), navy palette, Helvetica. It also renders each page to a PNG (`pdftoppm`): look at every i",
+  "why": "The layout lives in code (S6); the spec below describes what the code does.",
+  "needs_paul": false
+ },
+ {
+  "file": "06b-pdf-and-filenames.md",
+  "kind": "reworded",
+  "old": "- Sections, each a bold navy heading followed by short point-form bullets: **Since the Last Meeting**, then the Step 3 areas that apply, the",
+  "new": "- Sections, each a bold navy heading followed by short point-form bullets: **Since the Last Meeting**, then the Step 3 areas that apply (eac",
+  "why": "Paul's decision 29/10/2026.",
+  "needs_paul": false
+ },
+ {
+  "file": "06b-pdf-and-filenames.md",
+  "kind": "reworded",
+  "old": "- Output 1 stays in chat only (formatted text, not saved as a file), for every meeting type including a first/Fact Find meeting.",
+  "new": "- Output 1 (the Planner page) is shown as the Artifact page only and is never saved into the client's folder, for every meeting type includi",
+  "why": "Matches the page rule.",
+  "needs_paul": false
+ },
+ {
+  "file": "06b-pdf-and-filenames.md",
+  "kind": "replaced",
+  "old": "**Hard checklist before delivering:** (1) each area is its own bold navy heading; (2) every bullet is its own Paragraph, short, with hanging",
+  "new": "table: each of the 21 items and who checks it",
+  "why": "Each checklist item is kept; the table says whether the program or Claude's judgment covers it, so nothing is dropped and nothing is claimed as machine-checked that is not.",
+  "needs_paul": false
+ },
+ {
+  "file": "06b-pdf-and-filenames.md",
+  "kind": "moved",
+  "old": "No transcript file exists: ask Paul for his recap/notes or recording and confirm the exact date and TIME of the call before drafting.",
+  "new": "same text, appended here",
+  "why": "Kept word for word; added the run type and a note that the Teams message does not apply (the old skill defines it only for Teams appointments).",
+  "needs_paul": true
+ },
+ {
+  "file": "06c-handoffs.md",
+  "kind": "reworded",
+  "old": "- If a risk quote was accepted: suggest `wr-roa-builder`.",
+  "new": "- If a risk quote was accepted: suggest `wr-roa-builder`.",
+  "why": "unchanged (kept for the record)",
+  "needs_paul": false
+ },
+ {
+  "file": "00-rules.md",
+  "kind": "replaced",
+  "old": "Re-load this skill before you start, and again after any compression.",
+  "new": "The program drives the job; use `status` after any compression.",
+  "why": "Standard S8/S16: re-reading a long skill from memory is exactly what failed; the program remembers where the job is up to.",
+  "needs_paul": false
+ },
+ {
+  "file": "00-rules.md",
+  "kind": "replaced",
+  "old": "Changes to a skill: edit the existing skill, never create a new one.",
+  "new": "Changes only in Claude Code, uploaded by Paul as a zip.",
+  "why": "Standard S7: the card saves the text only and would separate it from the scripts.",
+  "needs_paul": false
+ },
+ {
+  "file": "00-rules.md",
+  "kind": "moved",
+  "old": "Delivery gate for this skill (rules 5 and 6 applied): a run is complete only when ALL of these are done",
+  "new": "'Deliverables of a run' list, enforced by verify.py",
+  "why": "The gate is now code; the list now also names the Planner page and the Teams message.",
+  "needs_paul": false
+ },
+ {
+  "file": "07-teams-message.md",
+  "kind": "added",
+  "old": "(not in the old skill)",
+  "new": "Step 8 of ff-population-transcript, adapted",
+  "why": "Paul 29/10/2026: the follow-up skill also notifies Sitamah in Teams through Zapier, as the Fact Find skill already does.",
+  "needs_paul": true
+ },
+ {
+  "file": "00-rules.md",
+  "kind": "reworded",
+  "old": "**Two deliverables for a follow-up meeting:** Output 1 (Planner note, shown in chat as formatted text) and Output 2",
+  "new": "**Deliverables for a follow-up meeting:** Output 1 (Planner note, shown as a copy-ready page), Output 2 (PDF...) and the Teams message to Sitamah.",
+  "why": "The Planner note is now a copy-ready page; the Teams message to Sitamah is a third deliverable (Paul 29/10/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "00-rules.md",
+  "kind": "reworded",
+  "old": "These rules come before everything else in this skill. They apply from the first message to the last, not just at the start, and they are repeated here at the top",
+  "new": "same lead-in, shortened",
+  "why": "Kept the rule that these rules win; dropped the explanation about repeating the rules at the top (the program now shows them at the start and the status command recovers the position).",
+  "needs_paul": false
+ },
+ {
+  "file": "04-areas-and-quotes.md",
+  "kind": "reworded",
+  "old": "Show only areas that were discussed or still have something open; add one line for the rest. Never pad.",
+  "new": "Show only areas that were discussed or still have something open; the program adds one line naming the rest. Never pad.",
+  "why": "The 'not discussed' line is now written by the program (Paul 29/10/2026: one line naming the areas not discussed).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "tidied",
+  "old": "(changed 07.10.26, reversing the 06.10.26 exception)",
+  "new": "(changed, reversing the exception)",
+  "why": "Dated attribution removed from the live page (standards S5); the original wording stays in history/SKILL.2026-10-08.redacted.md.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "tidied",
+  "old": "(Paul's absolute rule, 08/10/2026 - non-negotiable, there is NO way around it)",
+  "new": "(Paul's absolute rule - non-negotiable, there is NO way around it)",
+  "why": "Dated attribution removed from the live page (standards S5); the original wording stays in history/SKILL.2026-10-08.redacted.md.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "tidied",
+  "old": "(Paul's rule, 06/10/2026)",
+  "new": "(dropped)",
+  "why": "Dated attribution removed from the live page (standards S5); the original wording stays in history/SKILL.2026-10-08.redacted.md.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "tidied",
+  "old": "(confirmed 29/10/2026)",
+  "new": "(dropped)",
+  "why": "Dated attribution removed from the live page (standards S5); the original wording stays in history/SKILL.2026-10-08.redacted.md.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "tidied",
+  "old": "(Paul's rule, 07/10/2026 - never miss a benefit that was explained on the call)",
+  "new": "(Paul's rule - never miss a benefit that was explained on the call)",
+  "why": "Dated attribution removed from the live page (standards S5); the original wording stays in history/SKILL.2026-10-08.redacted.md.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "tidied",
+  "old": "(Paul's rule, 07/10/2026)",
+  "new": "(dropped)",
+  "why": "Dated attribution removed from the live page (standards S5); the original wording stays in history/SKILL.2026-10-08.redacted.md.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "tidied",
+  "old": "(Paul's rule, 07/10/2026 - ALWAYS add it)",
+  "new": "(Paul's rule - ALWAYS add it)",
+  "why": "Dated attribution removed from the live page (standards S5); the original wording stays in history/SKILL.2026-10-08.redacted.md.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "tidied",
+  "old": "(Paul's rule, 06/10/2026)",
+  "new": "(dropped)",
+  "why": "Dated attribution removed from the live page (standards S5); the original wording stays in history/SKILL.2026-10-08.redacted.md.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "tidied",
+  "old": "(Paul's rule, 08/10/2026)",
+  "new": "(dropped)",
+  "why": "Dated attribution removed from the live page (standards S5); the original wording stays in history/SKILL.2026-10-08.redacted.md.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "tidied",
+  "old": "(changed 07.10.26)",
+  "new": "(dropped)",
+  "why": "Dated attribution removed from the live page (standards S5); the original wording stays in history/SKILL.2026-10-08.redacted.md.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "tidied",
+  "old": "(approved by Paul 06/10/2026; extended to first/Fact Find meetings 07/10/2026)",
+  "new": "(approved by Paul; extended to first/Fact Find meetings)",
+  "why": "Dated attribution removed from the live page (standards S5); the original wording stays in history/SKILL.2026-10-08.redacted.md.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "tidied",
+  "old": "(Paul's rule, 09/10/2026 - every Teams meeting, every time)",
+  "new": "(Paul's rule - every Teams meeting, every time)",
+  "why": "Dated attribution removed from the live page (standards S5); the original wording stays in history/SKILL.2026-10-08.redacted.md.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "tidied",
+  "old": "(no ChatMessage.Send permission: 403 confirmed 09/10/2026)",
+  "new": "(no ChatMessage.Send permission: 403 confirmed)",
+  "why": "Dated attribution removed from the live page (standards S5); the original wording stays in history/SKILL.2026-10-08.redacted.md.",
+  "needs_paul": false
+ }
+]

@@ -16,7 +16,18 @@ import tempfile
 import unittest
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-SCRIPTS = os.path.join(os.path.dirname(HERE), "scripts")
+
+
+def spit(path, data, mode="w"):
+    with open(path, mode, **({"encoding": "utf-8"} if "b" not in mode else {})) as f:
+        f.write(data)
+
+
+def slurp(path, mode="r"):
+    with open(path, mode, **({"encoding": "utf-8"} if "b" not in mode else {})) as f:
+        return f.read()
+
+SCRIPTS = os.environ.get("WR_SCRIPTS") or os.path.join(os.path.dirname(HERE), "scripts")
 FIXTURE = os.path.join(HERE, "fixtures", "transcript_sample.txt")
 ENV = dict(os.environ, WR_CHUNK_LINES="20")
 
@@ -41,7 +52,7 @@ class Base(unittest.TestCase):
         return sh("tx.py", "prep", source or self.source, self.run_dir)
 
     def read(self, passes=(1, 2)):
-        k = len(json.load(open(self.p("state.json")))["chunks"])
+        k = len(self.load("state.json")["chunks"])
         for p in passes:
             for n in range(1, k + 1):
                 sh("tx.py", "chunk", self.run_dir, p, n, ok=True)
@@ -50,7 +61,7 @@ class Base(unittest.TestCase):
         return os.path.join(self.run_dir, *a)
 
     def L(self, text):
-        for i, ln in enumerate(open(self.p("transcript.txt"), encoding="utf-8").read().split("\n"), 1):
+        for i, ln in enumerate(slurp(self.p("transcript.txt")).split("\n"), 1):
             if text in ln:
                 return i
         raise AssertionError("fixture text not found: " + text)
@@ -63,7 +74,7 @@ class Base(unittest.TestCase):
             json.dump(data, f, indent=2)
 
     def load(self, name):
-        return json.load(open(self.p(name), encoding="utf-8"))
+        return json.loads(slurp(self.p(name)))
 
     def content(self):
         s = self.src
@@ -72,6 +83,8 @@ class Base(unittest.TestCase):
             "client": {"first": "Sam", "surname": "Testcase"},
             "meeting_date": "05/10/2026",
             "topic": "Follow-up appointment: Risk, RA and Tax-Free",
+            "appointment_number": 2,
+            "appointment_number_basis": "Fact Find and one earlier Follow-Up Appointment Summary Notes file are on the client's file",
             "opening": "This follow-up meeting covered the BrightRock quote, the Optimal RA quote and the Tax-Free investment.",
             "since_last": [
                 {"id": "s1", "tag": "Changed", "text": "Tax-Free owner changed from Dana to Sam for now",
@@ -86,7 +99,7 @@ class Base(unittest.TestCase):
                     {"id": "b3", "text": "Credit life on the Absa home loan (about R500 p.m.) to be cancelled once the BrightRock policy is accepted and in force",
                      "status": "still open", "src": [s("credit life on the Absa home loan costing about five hundred rand a month")]},
                 ]},
-                {"key": "retirement", "bullets": [
+                {"key": "ra", "bullets": [
                     {"id": "b4", "text": "OM Optimal RA Quote 100000002, R3,000 p.m.: the client will get back to us after speaking to his wife",
                      "status": "on hold", "src": [s("Let's leave it for now, I'll get back to you on the RA")]},
                 ]},
@@ -118,7 +131,8 @@ class Base(unittest.TestCase):
                 {"id": "n1", "text": "Sam to speak to Dana and come back on the RA",
                  "src": [s("I'll get back to you on the RA once I have spoken to Dana")]},
             ],
-            "next_appointment": {"id": "next", "text": "Thu 15/10/2026 at 4pm (RA)",
+            "next_appointment": {"id": "next", "text": "Thu 15/10/2026 at 4pm (RA)", "agreed": True,
+                                 "check": "Summary and Planner note both show Thu 15/10/2026 at 4pm: an agreed appointment",
                                  "src": [s("Thursday the fifteenth at four in the afternoon")]},
             "checks": {
                 "correspondence": {"done": True, "looked_at": "Outlook: Sam's replies to the proposal emails and the BrightRock quote email"},
@@ -153,10 +167,24 @@ class Base(unittest.TestCase):
         ]
         return {"entries": entries, "scan_reviewed": []}
 
+    def sources(self):
+        doc = lambda kind, name: {"kind": kind, "path": "C:\\Clients\\Testcase, Sam\\" + name, "date": "2026-10-01", "read": "yes"}
+        return [doc("Fact Find", "2. Fact Find\\Fact Find - Testcase.pdf"), doc("Fact Find Summary", "2. Fact Find\\Fact Find Summary.pdf"),
+                doc("Earlier Note", "2. Fact Find\\Follow-Up Appointment Summary Notes 01.09.26.pdf"),
+                doc("Overview", "1. Overview\\2026\\WR Overview.pdf"), doc("Quote", "Comparative Quotes\\BrightRock.pdf"),
+                {"kind": "Application", "none": "searched the Applications folder of both current transactions: none on file yet"},
+                doc("Correspondence", "Outlook: proposal emails and replies")]
+
+    def access(self):
+        return [{"need": "transcript", "route": "device", "tool": "device_stage_files", "result": "ok", "detail": ""}]
+
     def receipt(self, name=None):
         name = name or "Follow-Up Appointment Summary Notes - 05.10.26 - (Testcase, Sam).pdf"
         return {
-            "planner_note_shown_in_chat": True, "pdf_sent_in_chat": True,
+            "planner_page": {"mode": "artifact", "url": "https://claude.ai/artifact/test-page"},
+            "teams": {"status": "sent", "message_id": "1730200000000", "sent_time": "2026-10-29T11:30:00Z",
+                      "approved_by_paul": "yes, send it"},
+            "pdf_sent_in_chat": True,
             "saved": {"tool": "device_commit_files", "folder": "C:\\Clients\\Testcase, Sam\\2. Fact Find",
                       "filename": name, "tool_result": "committed 1 file",
                       "folder_listing_check": "Listing of 2. Fact Find: Fact Find - Testcase.pdf; %s" % name},
@@ -171,6 +199,9 @@ class Base(unittest.TestCase):
         sh("tx.py", "scan", self.run_dir, ok=True)
         self.write("content.json", content or self.content())
         self.write("ledger.json", ledger or self.ledger())
+        self.write("sources.json", self.sources())
+        self.write("access_log.json", self.access())
+        self.write("questions.json", [])
 
     def to_built(self, **kw):
         self.to_ready(**kw)
@@ -219,14 +250,18 @@ class ReadingLock(Base):
         self.read(passes=(1,))
         self.write("content.json", self.content())
         self.write("ledger.json", self.ledger())
+        self.write("sources.json", self.sources())
+        self.write("access_log.json", self.access())
+        self.write("questions.json", [])
         r = sh("build.py", self.run_dir)
         self.assertFails(r, "Pass 2 has NOT served every chunk", "BUILD REFUSED")
         self.assertFalse(os.path.exists(self.p("out")))
 
     def test_incomplete_transcript_stops(self):
         src = os.path.join(self.tmp, "short.txt")
-        text = open(FIXTURE).read().replace("Duration: 12m 40s", "Duration: 40m 0s")
-        open(src, "w").write(text)
+        text = slurp(FIXTURE).replace("Duration: 12m 40s", "Duration: 40m 0s")
+        with open(src, "w") as f:
+            f.write(text)
         r = self.prep(src)
         self.assertEqual(r.returncode, 2)
         self.assertIn("INCOMPLETE", r.stdout)
@@ -234,14 +269,14 @@ class ReadingLock(Base):
 
     def test_gap_in_transcript_stops(self):
         src = os.path.join(self.tmp, "gap.txt")
-        open(src, "w").write(open(FIXTURE).read().replace("0:05:15 Paul", "0:25:15 Paul"))
+        spit(src, slurp(FIXTURE).replace("0:05:15 Paul", "0:25:15 Paul"))
         r = self.prep(src)
         self.assertEqual(r.returncode, 2)
         self.assertIn("GAP", r.stdout)
 
     def test_force_is_recorded_and_warned(self):
         src = os.path.join(self.tmp, "short.txt")
-        open(src, "w").write(open(FIXTURE).read().replace("Duration: 12m 40s", "Duration: 40m 0s"))
+        spit(src, slurp(FIXTURE).replace("Duration: 12m 40s", "Duration: 40m 0s"))
         sh("tx.py", "prep", src, self.run_dir, "--force", ok=True)
         self.assertTrue(self.load("state.json")["forced"])
 
@@ -261,16 +296,16 @@ class HappyPath(Base):
         self.to_built()
         names = os.listdir(self.p("out"))
         self.assertIn("Follow-Up Appointment Summary Notes - 05.10.26 - (Testcase, Sam).pdf", names)
-        self.assertIn("planner_note.md", names)
+        self.assertIn("planner_note.txt", names)
         self.assertTrue(any(n.startswith("page") and n.endswith(".png") for n in names))
-        note = open(self.p("out", "planner_note.md"), encoding="utf-8").read()
+        note = slurp(self.p("out", "planner_note.txt"))
         self.assertNotIn("```", note)
         self.assertIn("**Sam Testcase \u2013 05/10/2026**", note)
         self.assertIn("**CHANGED:** owner now Sam", note)
         self.assertIn("Will: no change discussed", note)
         pdf = [n for n in names if n.endswith(".pdf")][0]
         text = subprocess.run(["pdftotext", self.p("out", pdf), "-"], capture_output=True, text=True).stdout
-        for needle in ("Since the Last Meeting", "Risk Planning", "Action Points", "Next Steps", "Sitamah to arrange for the Absa home loan"):
+        for needle in ("Since the Last Meeting", "Risk", "RA", "Investment", "Not discussed this meeting: RGAR, EGAR, Medical Aid, Short-Term", "Action Points", "Next Steps", "Sitamah to arrange for the Absa home loan"):
             self.assertIn(needle, text)
 
     def test_first_meeting_has_note_but_no_pdf(self):
@@ -284,14 +319,17 @@ class HappyPath(Base):
         c["checks"]["quotes_matched"] = "n/a: first meeting, nothing quoted yet"
         self.write("content.json", c)
         self.write("ledger.json", self.ledger_for_first(c))
+        self.write("sources.json", [])
+        self.write("access_log.json", self.access())
+        self.write("questions.json", [])
         sh("build.py", self.run_dir, ok=True)
         self.assertEqual([f for f in os.listdir(self.p("out")) if f.endswith(".pdf")], [])
-        note = open(self.p("out", "planner_note.md"), encoding="utf-8").read()
+        note = slurp(self.p("out", "planner_note.txt"))
         self.assertIn("Fact Find Summary - 05.10.26 - (Sam Testcase)", note)
         r = self.verify("built")
         self.assertEqual(r.returncode, 0, r.stdout)
         # a stray follow-up PDF at a first meeting must fail
-        open(self.p("out", "Follow-Up Appointment Summary Notes - 05.10.26 - (Testcase, Sam).pdf"), "wb").write(b"%PDF-1.4")
+        spit(self.p("out", "Follow-Up Appointment Summary Notes - 05.10.26 - (Testcase, Sam).pdf"), b"%PDF-1.4", "wb")
         self.assertFails(self.verify("built"), "must not produce a Follow-Up PDF")
 
     def ledger_for_first(self, c):
@@ -308,9 +346,12 @@ class HappyPath(Base):
         c["meeting_type"], c["meeting_time"] = "whatsapp", "14:30"
         self.write("content.json", c)
         self.write("ledger.json", self.ledger())
+        self.write("sources.json", self.sources())
+        self.write("access_log.json", self.access())
+        self.write("questions.json", [])
         sh("build.py", self.run_dir, ok=True)
         self.assertIn("WhatsApp Call Summary - 05.10.26 - (Testcase, Sam).pdf", os.listdir(self.p("out")))
-        note = open(self.p("out", "planner_note.md"), encoding="utf-8").read()
+        note = slurp(self.p("out", "planner_note.txt"))
         self.assertIn("*WhatsApp call, 14:30: Follow-up appointment", note)
 
 
@@ -340,9 +381,9 @@ class SourceTrace(Base):
     def test_document_quote_is_checked_when_text_is_supplied(self):
         self.to_ready()
         os.makedirs(self.p("docs"))
-        open(self.p("docs", "Follow-Up 01.09.26.txt"), "w").write("Will with Capital Legacy in progress.")
+        spit(self.p("docs", "Follow-Up 01.09.26.txt"), "Will with Capital Legacy in progress.")
         self.assertEqual(self.verify("pre").returncode, 0)
-        open(self.p("docs", "Follow-Up 01.09.26.txt"), "w").write("Something else entirely.")
+        spit(self.p("docs", "Follow-Up 01.09.26.txt"), "Something else entirely.")
         self.assertFails(self.verify("pre"), "quote not found in document")
 
     def test_thirteen_digit_number_fails(self):
@@ -467,7 +508,7 @@ class OutputsAndReceipt(Base):
         for f in os.listdir(self.p("out")):
             if f.endswith(".pdf"):
                 os.remove(self.p("out", f))
-        self.assertFails(self.verify("built"), "Output 2 PDF missing")
+        self.assertFails(self.verify("built"), "PDF missing")
 
     def test_replaced_pdf_fails(self):
         self.to_final()
@@ -477,7 +518,7 @@ class OutputsAndReceipt(Base):
 
     def test_hand_edited_planner_note_fails(self):
         self.to_final()
-        with open(self.p("out", "planner_note.md"), "a", encoding="utf-8") as f:
+        with open(self.p("out", "planner_note.txt"), "a", encoding="utf-8") as f:
             f.write("\nSomething Claude typed by hand\n")
         self.assertFails(self.verify("built"), "edited by hand")
 
@@ -518,8 +559,10 @@ class OutputsAndReceipt(Base):
             c["areas"][0]["bullets"].append({"id": "x%d" % i, "text": "Extra risk point number %d with some words to fill the line" % i,
                                              "status": "still open", "src": [self.src("one thousand one hundred rand a month")]})
         self.write("content.json", c)
-        led = self.ledger()
-        self.write("ledger.json", led)
+        self.write("ledger.json", self.ledger())
+        self.write("sources.json", self.sources())
+        self.write("access_log.json", self.access())
+        self.write("questions.json", [])
         sh("build.py", self.run_dir, ok=True)
         self.assertEqual(self.verify("built").returncode, 0)
 

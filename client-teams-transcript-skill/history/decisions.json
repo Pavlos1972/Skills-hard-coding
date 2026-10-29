@@ -1,0 +1,57 @@
+[
+ {
+  "from_prefix": "UNIVERSAL OPERATING RULES - READ FIRST",
+  "reason": "Heading of the old rules block; the rules now live in references/00-rules.md and are shown by the program when a run starts.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "These rules come before everything else in this skill. They apply from the first message to the last, not just at the start, and they are repeated",
+  "reason": "Lead-in kept in shortened form in 00-rules.md (see changes).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Re-load this skill before you start, and again after any compression.",
+  "reason": "Rule 1 replaced: the program shows each step and `run.py status` recovers the position after a long chat (standards S8/S16).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Changes to a skill: edit the existing skill, never create a new one.",
+  "to_prefix": "Changes to a skill: edit the existing skill, never create a new one.",
+  "reason": "Rule 9 replaced by standard S7: skills with programs are changed only in Claude Code and uploaded as a zip; the review card saves text only.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Delivery gate for this skill (rules 5 and 6 applied)",
+  "reason": "Now enforced by verify.py and listed as 'Deliverables of a run' in 00-rules.md, with the Planner page and Teams message added.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Last updated: 2026-10-08 14:20",
+  "reason": "Replaced by the stamp the program sets (standards S2).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Changelog (last 5 only",
+  "to_prefix": "2026-10-07 10:48 (Athens) - CREDIT LIFE RULE",
+  "reason": "Change history belongs in history/ (redacted archive of the whole old skill is kept there), not in the live skill (standards S2, S5). Every rule these entries introduced is still in the reference pages.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Local machine first via the device bridge.",
+  "to_prefix": "Ask Paul to attach only after both fail.",
+  "reason": "Replaced by the three-route access ladder (standards S4); see references/01-access-and-locate.md.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Paul looks at eight areas.",
+  "to_prefix": "Other - debt, children, health, risk tolerance",
+  "reason": "Replaced by Paul's eight areas confirmed 29/10/2026 (Risk, RA, Investment, RGAR, EGAR, Medical Aid, Will, Short-Term); see references/04-areas-and-quotes.md.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Example ([client A], 05/10/2026, follow-up meeting)",
+  "to_prefix": "Next appointment: Wed 14/10/2026 at 10:00.",
+  "reason": "Two worked examples built on real client details are removed (standards S11, no client data). A model built from invented data replaces them: references/planner-note-example.txt and content-example.json.",
+  "needs_paul": false
+ }
+]

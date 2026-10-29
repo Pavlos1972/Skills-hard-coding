@@ -1,0 +1,22 @@
+{
+  "skill": "client-teams-transcript-skill",
+  "deliverables": [
+    {"name": "Planner note page", "file": "out/planner_note.html", "produced_by": "scripts/build.py (page.py)",
+     "handover": "published as a private page with a Copy note button (Artifact); fallback: out/planner_note.txt as formatted chat text, stated as the fallback",
+     "checked_by": "verify.py group E (page, copy button, every item present, not edited) and group F (planner_page receipt)",
+     "step": "planner", "applies": ["followup", "first", "whatsapp"]},
+    {"name": "Follow-Up Appointment Summary Notes PDF / WhatsApp Call Summary PDF", "file": "out/<name> - DD.MM.YY - (Surname, First Name).pdf",
+     "produced_by": "scripts/build.py", "handover": "sent in the chat; saved into the client's 2. Fact Find folder with device_commit_files; folder listed back",
+     "checked_by": "verify.py group E (headings, every item, no stranded heading, page images) and group F (saved receipt)",
+     "step": "pdf", "applies": ["followup", "whatsapp"]},
+    {"name": "Teams message to Sitamah", "file": "out/teams_message.txt", "produced_by": "scripts/build.py (page.py)",
+     "handover": "shown to Paul with the follow-up check line; sent through Zapier only after his yes; message id and sent time recorded",
+     "checked_by": "verify.py group E (fixed wording) and group F (teams receipt)", "step": "teams", "applies": ["followup", "first"]},
+    {"name": "Hand-offs (applications, revised quote draft, suggestions)", "file": "receipt.json (applications_handoff)",
+     "produced_by": "Claude, following references/06c-handoffs.md", "handover": "complete-applications-skill called; revised-quote email shown as a draft",
+     "checked_by": "verify.py group F (attested)", "step": "handoffs", "applies": ["followup", "whatsapp"]},
+    {"name": "Final PASS/FAIL printout and delivery line", "file": "(printed)", "produced_by": "scripts/verify.py",
+     "handover": "pasted unedited into the reply", "checked_by": "Paul sees it or sees that it is missing", "step": "final",
+     "applies": ["followup", "first", "whatsapp"]}
+  ]
+}
