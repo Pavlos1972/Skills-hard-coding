@@ -17,6 +17,7 @@ sys.path.insert(0, TOOLS)
 import inventory  # noqa: E402
 import lint_skill  # noqa: E402
 import stamp_skill  # noqa: E402
+import wr_stamp  # noqa: E402
 
 
 def tool(name, *args, env=None):
@@ -76,7 +77,7 @@ class Lint(unittest.TestCase):
         self.tmp = tempfile.mkdtemp(prefix="wrlint-")
         self.addCleanup(shutil.rmtree, self.tmp, True)
         self.dir = os.path.join(self.tmp, "demo-skill")
-        shutil.copytree(SKILL, self.dir, ignore=shutil.ignore_patterns("__pycache__", "tests", "history"))
+        shutil.copytree(SKILL, self.dir, ignore=shutil.ignore_patterns("__pycache__", "tests"))
 
     def fails(self):
         return [m for lvl, m in lint_skill.lint(self.dir) if lvl == "FAIL"]
@@ -87,8 +88,8 @@ class Lint(unittest.TestCase):
         open(p, "w", encoding="utf-8").write(fn(t))
 
     def test_the_real_skill_passes(self):
-        # stamp is checked against file times, so restamp the copy first
-        subprocess.run([sys.executable, os.path.join(TOOLS, "stamp_skill.py"), self.dir, "--change", "test"], check=True, capture_output=True)
+        # this test is about the other checks, so make sure the copy is stamped whatever state the repo is in
+        stamp_skill.apply(self.dir, "test", "2026-10-29 12:00", even_if_unchanged=True)
         self.assertEqual(self.fails(), [])
 
     def test_disallowed_frontmatter_key_fails(self):
@@ -107,9 +108,72 @@ class Lint(unittest.TestCase):
         self.edit(lambda t: t + "\n## A new section\n\ntext\n")
         self.assertTrue(any("Index is missing sections" in f for f in self.fails()))
 
-    def test_stale_stamp_fails(self):
-        self.edit(lambda t: re.sub(r"\*\*Last updated:[^*]*\*\*", "**Last updated: 2020-01-01 00:00 (Athens time)**", t, 1))
-        self.assertTrue(any("older than the last change" in f for f in self.fails()))
+    # ---- the date moves with the skill, and only with the skill (S2)
+    def stamped(self):
+        stamp_skill.apply(self.dir, "first stamp", "2026-10-29 12:00", even_if_unchanged=True)
+        self.assertFalse([f for f in self.fails() if "stamp" in f.lower() or "Last updated" in f])
+
+    def test_a_hand_edited_date_fails(self):
+        self.stamped()
+        self.edit(lambda t: re.sub(r"\*\*Last updated:[^*]*\*\*", "**Last updated: 2030-01-01 00:00 (Athens time)**", t, 1))
+        self.assertTrue(any("edited by hand" in f for f in self.fails()))
+
+    def test_no_stamp_record_fails(self):
+        self.stamped()
+        os.remove(os.path.join(self.dir, wr_stamp.RECORD))
+        self.assertTrue(any("no stamp record" in f for f in self.fails()))
+
+    def test_changing_a_shipped_file_without_restamping_fails(self):
+        self.stamped()
+        with open(os.path.join(self.dir, "references", "00-rules.md"), "a", encoding="utf-8") as f:
+            f.write("\nA new rule.\n")
+        self.assertTrue(any("changed after they were stamped" in f for f in self.fails()))
+
+    def test_changing_a_program_file_without_restamping_fails(self):
+        self.stamped()
+        with open(os.path.join(self.dir, "scripts", "page.py"), "a", encoding="utf-8") as f:
+            f.write("\n# edited\n")
+        self.assertTrue(any("changed after they were stamped" in f for f in self.fails()))
+
+    def test_restamping_after_a_change_moves_the_date(self):
+        self.stamped()
+        with open(os.path.join(self.dir, "steps.json"), "a", encoding="utf-8") as f:
+            f.write("\n")
+        self.assertTrue(any("changed after they were stamped" in f for f in self.fails()))
+        stamp_skill.apply(self.dir, "second change", "2026-11-02 09:15")
+        self.assertFalse([f for f in self.fails() if "stamp" in f.lower()])
+        self.assertIn("**Last updated: 2026-11-02 09:15 (Athens time)**", open(os.path.join(self.dir, "SKILL.md"), encoding="utf-8").read())
+        self.assertEqual(wr_stamp.read_record(self.dir)["stamp"], "2026-11-02 09:15")
+
+    def test_the_stamp_will_not_move_when_nothing_changed(self):
+        self.stamped()
+        with self.assertRaises(SystemExit) as ctx:
+            stamp_skill.apply(self.dir, "no real change", "2026-11-02 09:15")
+        self.assertIn("Nothing in the skill has changed", str(ctx.exception))
+        self.assertIn("2026-10-29 12:00", open(os.path.join(self.dir, "SKILL.md"), encoding="utf-8").read())
+
+    def test_files_that_are_not_shipped_do_not_move_the_date(self):
+        self.stamped()
+        with open(os.path.join(self.dir, "README.md"), "a", encoding="utf-8") as f:
+            f.write("\nnote\n")
+        with open(os.path.join(self.dir, "history", "notes.txt"), "w", encoding="utf-8") as f:
+            f.write("history note")
+        self.assertFalse([f for f in self.fails() if "stamp" in f.lower()])
+
+    def test_file_times_do_not_matter(self):
+        # a fresh copy of the repo gives every file a new time; the date must not care
+        self.stamped()
+        later = os.path.getmtime(os.path.join(self.dir, "SKILL.md")) + 86400 * 30
+        for root, _, files in os.walk(self.dir):
+            for f in files:
+                os.utime(os.path.join(root, f), (later, later))
+        self.assertFalse([f for f in self.fails() if "stamp" in f.lower()])
+
+    def test_the_stamp_and_changes_table_themselves_do_not_count_as_a_change(self):
+        self.stamped()
+        before = wr_stamp.fingerprint(self.dir)
+        self.edit(lambda t: t.replace("first stamp", "a reworded change line", 1))
+        self.assertEqual(wr_stamp.fingerprint(self.dir), before)
 
     def test_thirteen_digit_number_fails(self):
         self.edit(lambda t: t + "\nID 8001015009087\n")
@@ -190,7 +254,7 @@ class Package(unittest.TestCase):
         self.addCleanup(shutil.rmtree, tmp, True)
         copy = os.path.join(tmp, "client-teams-transcript-skill")
         shutil.copytree(SKILL, copy, ignore=shutil.ignore_patterns("__pycache__"))      # never touch the real SKILL.md
-        subprocess.run([sys.executable, os.path.join(TOOLS, "stamp_skill.py"), copy, "--change", "packaging test"], check=True, capture_output=True)
+        subprocess.run([sys.executable, os.path.join(TOOLS, "stamp_skill.py"), copy, "--change", "packaging test", "--even-if-unchanged"], check=True, capture_output=True)
         r = tool("package_skill.py", copy, "--out", out, "--skip-tests")
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         z = [f for f in os.listdir(out) if f.endswith(".zip")]

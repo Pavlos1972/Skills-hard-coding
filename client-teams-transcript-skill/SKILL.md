@@ -15,24 +15,24 @@ description: "Summarize a client's Teams meeting transcript (or WhatsApp call) i
 | 4 | When something goes wrong | What to do instead of improvising |
 | 5 | Where the detail lives | The pages the program shows at each step |
 
-**Last updated: 2026-10-29 13:18 (Athens time)**
+**Last updated: 2026-10-29 13:38 (Athens time)**
 
 **Recent changes** (last 5, one line each; full history in the repo `history/` folder)
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-10-29 13:38 | Every run now begins by saying which version it is (read from this stamp), the final checklist repeats it, and the date can only move when the skill's files really change |
 | 2026-10-29 13:18 | The message to Sitamah is now also built, checked and sent for WhatsApp calls ("WhatsApp Call Completed"), as Paul decided |
 | 2026-10-29 13:08 | Teams message now carries (Review Client) or (Prospect) after the name, decided from where the client's folder sits |
 | 2026-10-29 12:29 | Planner page follows the page tool's contract (no own html/head/body, side gutters) and has three ways to copy |
 | 2026-10-29 12:26 | Hardened after an independent review: figures and quotes must support each item, every chunk acknowledged, client and date checked, hand-over re-opens on rebuild, Teams message held back until all else passes |
-| 2026-10-29 11:56 | Reader handles time-after-name layouts and stops when no times can be read (--notes for recaps) |
 
 ## Run it
 
 This skill is a program that walks you through the job one step at a time. You do not work from memory of this page. Everything below is shown again, at the right moment, by the program.
 
 1. Find this skill's folder (the "Base directory" shown when the skill loaded; it contains `scripts/run.py`). If you are unsure: `find /mnt /root /home /opt /tmp -path '*client-teams-transcript-skill/scripts/run.py' 2>/dev/null | head -1`
-2. Choose a new run folder, for example `/tmp/wr-run-<Surname>-<DDMMYY>`, and start: `python3 <skill folder>/scripts/run.py start <run folder> --type followup --client "First Surname" --date DD/MM/YYYY` (use `first` for a Fact Find / first appointment, `whatsapp` for a WhatsApp call). The client and the meeting date are taken exactly from Paul's message; the program checks every later file against them.
+2. Choose a new run folder, for example `/tmp/wr-run-<Surname>-<DDMMYY>`, and start: `python3 <skill folder>/scripts/run.py start <run folder> --type followup --client "First Surname" --date DD/MM/YYYY` (use `first` for a Fact Find / first appointment, `whatsapp` for a WhatsApp call). The client and the meeting date are taken exactly from Paul's message; the program checks every later file against them. The program's first lines give you one sentence to say to Paul before anything else: which version of this skill is running. It comes from the Last updated line above, so it moves with every update.
 3. Do exactly what the step says. When it says you are done, run `python3 <skill folder>/scripts/run.py done <run folder> <step>`. The program checks the proof and only then shows the next step. It refuses to skip a step.
 4. After a long chat or a compression, run `python3 <skill folder>/scripts/run.py status <run folder>`. It tells you where the job is up to.
 5. The last step prints a PASS/FAIL checklist, including a short list of what Paul should glance at. Your reply to Paul must contain that printout, unedited.

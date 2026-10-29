@@ -5,12 +5,12 @@
 
 Set WR_NAME_BLOCKLIST=<file with one client name per line> (kept OUTSIDE the repo) to also scan for client names.
 """
-import datetime as dt
 import json
 import os
 import re
 import sys
-import zoneinfo
+
+import wr_stamp
 
 ALLOWED_KEYS = {"name", "description", "license", "compatibility", "metadata", "allowed-tools"}
 TEXT_EXT = (".md", ".json", ".py", ".js", ".txt", ".html")
@@ -80,15 +80,17 @@ def lint(skill):
     if not sm:
         add("FAIL", "no '**Last updated: YYYY-MM-DD HH:MM (Athens time)**' line (set it with tools/stamp_skill.py)")
     else:
-        stamp = dt.datetime.strptime(sm.group(1) + " " + sm.group(2), "%Y-%m-%d %H:%M").replace(tzinfo=zoneinfo.ZoneInfo("Europe/Athens"))
-        newest = max((os.path.getmtime(f), f) for f in package_files(skill)
-                     if not re.search(r"[/\\](history|tests)[/\\]", f) and not f.endswith((".pyc", "README.md")))
-        newest_dt = dt.datetime.fromtimestamp(newest[0], zoneinfo.ZoneInfo("Europe/Athens"))
-        if newest_dt - stamp > dt.timedelta(minutes=2):
-            add("FAIL", "'Last updated' (%s) is older than the last change to %s (%s): run tools/stamp_skill.py"
-                % (sm.group(0).strip("*"), os.path.relpath(newest[1], skill), newest_dt.strftime("%Y-%m-%d %H:%M")))
+        shown = "%s %s" % (sm.group(1), sm.group(2))
+        rec = wr_stamp.read_record(skill)
+        if rec is None:
+            add("FAIL", "no stamp record (history/stamp.json): run tools/stamp_skill.py")
+        elif rec.get("stamp") != shown:
+            add("FAIL", "the 'Last updated' line (%s) is not the one the stamp tool recorded (%s): it was edited by hand. Run tools/stamp_skill.py"
+                % (shown, rec.get("stamp")))
+        elif rec.get("fingerprint") != wr_stamp.fingerprint(skill):
+            add("FAIL", "the skill's files changed after they were stamped (%s): run tools/stamp_skill.py so the date moves" % shown)
         else:
-            add("PASS", "Last updated stamp is current (%s %s Athens time)" % (sm.group(1), sm.group(2)))
+            add("PASS", "Last updated stamp matches the skill's files (%s Athens time)" % shown)
     sep = next((i for i, l in enumerate(lines) if re.match(r"\|\s*-+\s*\|\s*-+\s*\|", l) and "when" in lines[i - 1].lower()), None)
     if sep is not None:
         n = 0

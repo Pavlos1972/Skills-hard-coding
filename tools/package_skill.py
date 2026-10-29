@@ -17,9 +17,10 @@ import sys
 import tempfile
 import zipfile
 
+import wr_stamp
+
 HERE = os.path.dirname(os.path.abspath(__file__))
-INCLUDE_FILES = ("SKILL.md", "steps.json", "deliverables.json")
-INCLUDE_DIRS = ("scripts", "references")
+INCLUDE_FILES, INCLUDE_DIRS = wr_stamp.INCLUDE_FILES, wr_stamp.INCLUDE_DIRS
 
 
 def run(cmd, **kw):

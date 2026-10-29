@@ -1,6 +1,6 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
-**Version 1.7 (draft for Paul to review)**
+**Version 1.8 (draft for Paul to review)**
 **Last updated: 2026-10-29 13:08 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
@@ -75,8 +75,9 @@ never in the skill text itself.
 
 **How it is locked in.**
 - The stamp is written by a program that reads the Athens clock. Claude never types it by hand.
-- The lint tool fails a skill if the stamp is missing, badly formatted, or older than the last change to the files.
-- The packaging tool refuses to build the upload zip if lint fails.
+- **The date moves with the skill (Paul, 29/10/2026: "every time the skill is updated further, that date must change").** The stamp tool records a fingerprint of every file the zip carries (`history/stamp.json`). The lint tool fails a skill whose files changed after they were stamped, or whose date line was edited by hand, or that has no record. File times are not used (a fresh copy of the repo would make them meaningless). The stamp tool refuses to move the date when nothing changed.
+- The packaging tool refuses to build the upload zip if lint fails, and names the zip after the stamp.
+- **Every run says which version it is.** The skill's program prints one sentence, read from the stamp: "Using <skill name>, last updated DD/MM/YYYY HH:MM (Athens time)". Claude's first words to Paul are that sentence. The checker's final printout repeats it (heading and delivery line), and warns if the skill was updated while the run was in progress. The date is NOT put in the skill's name: names allow only lowercase letters, numbers and hyphens, other skills call this one by name, and a dated name would go stale at the next fix.
 
 **Status.** BUILT and tested (`tools/stamp_skill.py`, `tools/lint_skill.py`, `tools/package_skill.py`).
 
@@ -340,13 +341,14 @@ Every run (one client, one meeting) keeps in its own run folder:
 
 | Skill | Status |
 |---|---|
-| client-teams-transcript-skill | REBUILT to these standards (step driver, reading lock, client-file and access logs, Planner page, PDF, Sitamah Teams message (Teams meetings and WhatsApp calls), PASS/FAIL checklist; 164 tests, hardened after an independent review; nothing from the old skill lost without a record). The Sitamah message also covers WhatsApp calls (Paul's yes). Zip ready (see releases/; the newest one only); Paul has answered the removals list (29/10/2026); waiting for his upload and a real-case trial |
+| client-teams-transcript-skill | REBUILT to these standards (step driver, reading lock, client-file and access logs, Planner page, PDF, Sitamah Teams message (Teams meetings and WhatsApp calls), PASS/FAIL checklist; 176 tests, hardened after an independent review; nothing from the old skill lost without a record). The Sitamah message also covers WhatsApp calls (Paul's yes). Zip ready (see releases/; the newest one only); Paul has answered the removals list (29/10/2026); waiting for his upload and a real-case trial |
 | client-pipeline-board, complete-applications-skill, fact-find-summary, ff-population-transcript, wr-roa-builder, wr-sroa-builder, rgar-skill, om-optimal-ra-proposal, om-tax-free-skill, investment-comparisons-skill, life-insurer-comparison, life-policy-schedule-analyzer, client-review-notes, client-transcript-download, teams-meeting-setup-skill, outlook-emails-skill, planner-interim-procedure, cameron-short-term-skill, advicetech-website-knowledge, alpha-bank-statements, nedbank-current-account-categorization, paul-email-signature, correcting-skills, master-skill-template | Not started |
 
 ## 10. Changelog (last 5)
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-10-29 13:37 | Version 1.8: S2 now makes the date move with the skill (fingerprint record) and requires every run to say its version (Paul's request); built into the Teams transcript skill |
 | 2026-10-29 13:27 | Version 1.7: Paul's yes to removals 1 to 4 and keep the table recorded; no change to the skill |
 | 2026-10-29 13:17 | Version 1.6: Paul's answers recorded (WhatsApp calls also notify Sitamah with "WhatsApp Call Completed"; the true stories in the rules stay; go given for the Teams transcript skill); the skill now builds that message for WhatsApp calls |
 | 2026-10-29 11:22 | Version 1.2: S16 approved on condition of a real-chat trial; each of the eight areas is its own heading; section 3 explains where the program lives; existing skills with scripts listed |

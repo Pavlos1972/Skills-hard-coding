@@ -44,15 +44,6 @@ def steps_file():
     return w.load_json(os.path.join(SKILL_DIR, "steps.json"), "steps.json")
 
 
-def skill_stamp():
-    try:
-        text = open(os.path.join(SKILL_DIR, "SKILL.md"), encoding="utf-8").read()
-    except OSError:
-        return None
-    m = re.search(r"\*\*Last updated:\s*([^*]+?)\*\*", text)
-    return m.group(1).strip() if m else None
-
-
 def p(run, name):
     return os.path.join(run, name)
 
@@ -139,6 +130,7 @@ def preflight(run=None):
     for tool, why, fatal in (("pdftotext", "checks the PDF text", True), ("pdftoppm", "renders the page images", True),
                              ("pandoc", "reads a .docx transcript", True)):
         add(shutil.which(tool) is not None, "%s (%s)" % (tool, why), fatal)
+    add(w.stamp_display(w.skill_stamp()) is not None, "skill has a Last updated stamp (%s)" % w.version_short(), fatal=False)
     try:
         import zoneinfo
         zoneinfo.ZoneInfo("Europe/Athens")
@@ -218,14 +210,16 @@ def cmd_start(a):
     except ValueError:
         w.die("--date must be a real date as DD/MM/YYYY (taken from Paul's message), got %r" % a.date)
     rj = {"skill": "client-teams-transcript-skill", "meeting_type": a.type, "created": w.now(),
-          "skill_stamp": skill_stamp(), "steps": {}, "client": {"first": parts[0], "surname": " ".join(parts[1:])}, "date": a.date}
+          "skill_stamp": w.skill_stamp(), "steps": {}, "client": {"first": parts[0], "surname": " ".join(parts[1:])}, "date": a.date}
     w.save_json(p(a.run, w.RUN), rj)
     for name in (w.SOURCES, w.ACCESS, w.QUESTIONS):
         w.save_json(p(a.run, name), [])
     w.save_json(p(a.run, w.LEDGER), {"entries": [], "scan_reviewed": []})
     w.save_json(p(a.run, w.RECEIPT), {})
+    print("\nSAY THIS TO PAUL FIRST, before anything else in your reply, in exactly these words:\n    %s.\n"
+          "(It comes from the skill's own Last updated stamp, so it changes with every update. The final printout repeats it.)" % w.version_line())
     print("\nRUN STARTED  type: %s   client: %s %s   meeting date: %s   skill version: %s"
-          % (a.type, rj["client"]["first"], rj["client"]["surname"], a.date, rj["skill_stamp"] or "unstamped"))
+          % (a.type, rj["client"]["first"], rj["client"]["surname"], a.date, w.stamp_display(rj["skill_stamp"]) or "unstamped"))
     print("Standing rules for the whole job:\n")
     print(expand(read_ref("00-rules.md"), a.run))
     print()
@@ -244,7 +238,7 @@ def cmd_next(a):
 def cmd_status(a):
     rj = load_run(a.run)
     cur = current_step(rj)
-    print("RUN %s   type: %s   skill version: %s" % (a.run, rj["meeting_type"], rj.get("skill_stamp") or "unstamped"))
+    print("RUN %s   type: %s   skill version: %s" % (a.run, rj["meeting_type"], w.stamp_display(rj.get("skill_stamp")) or "unstamped"))
     for s in applicable(rj):
         state = rj["steps"].get(s["id"], {}).get("state")
         mark = "DONE   " if state == "done" else ("NEXT ->" if cur and s["id"] == cur["id"] else "waiting")

@@ -12,7 +12,7 @@ The rules for every skill are in `../SKILL-STANDARDS.md`. Plain-language summary
 | `deliverables.json` | Every output, who makes it, how it is handed over and checked | yes |
 | `references/` | The rule pages the program prints at the step where they apply, plus model examples (invented data) | yes |
 | `scripts/` | `run.py` (the step driver), `tx.py` (reading lock), `build.py` + `page.py` (outputs), `verify.py` (PASS/FAIL), `wrlib.py` | yes |
-| `tests/` | 164 tests on invented data, including a full run from start to PASS, the Copy button in a real browser, and one test for each weakness an independent review found | no |
+| `tests/` | 176 tests on invented data, including a full run from start to PASS, the Copy button in a real browser, and one test for each weakness an independent review found | no |
 | `history/` | The old skill (client names replaced), every change with its reason, every drop with its decision, the coverage report | no |
 
 ## One run
@@ -32,7 +32,7 @@ Cannot be proven by anyone: that the transcript was understood. Paul stays the f
 
 ## Tools (in `../tools/`)
 
-`stamp_skill.py` sets the Athens-time "Last updated" stamp (never typed by hand), `lint_skill.py` checks the skill against the standards,
+`stamp_skill.py` sets the Athens-time "Last updated" stamp (never typed by hand) and records a fingerprint of the skill's files, so lint and packaging refuse a skill that changed after its stamp (`wr_stamp.py` is the shared helper), `lint_skill.py` checks the skill against the standards,
 `inventory.py` checks that no sentence of the old skill was lost without a record, `package_skill.py` builds the zip only if lint and every test pass,
 then runs the tests again against the unpacked zip.
 

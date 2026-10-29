@@ -11,7 +11,7 @@ here or in a skill disagrees with it, SKILL-STANDARDS.md wins.
 - Say what was checked and what was only attested. Never claim done without the checker's PASS output.
 
 ## The standards in one line each (details in SKILL-STANDARDS.md)
-S1 follow instructions strictly, nothing skipped or swapped | S2 every skill dated in Athens time, stamp set by a program |
+S1 follow instructions strictly, nothing skipped or swapped | S2 every skill dated in Athens time, stamp set by a program, the date moves on every real change and every run says its version first |
 S3 client facts come from the client's file first, ask Paul last, with proof of what was searched |
 S4 always use the access routes (local drive/OneDrive, Microsoft 365, Zapier), never say "I cannot access your files" without a log of all three tried |
 S5 clean, current instructions; archive before removing; the skill must still work |
@@ -38,10 +38,10 @@ S15 one skill at a time | S16 a program drives the job step by step (approved; r
 - Skill tracker: section 9 of SKILL-STANDARDS.md. Keep it current.
 
 ## Commands
-- Tests: `python3 -m unittest discover -s client-teams-transcript-skill/tests` (164 tests, about 2.5 minutes)
+- Tests: `python3 -m unittest discover -s client-teams-transcript-skill/tests` (176 tests, about 2.5 minutes)
 - Lint: `WR_NAME_BLOCKLIST=<private names file outside the repo> python3 tools/lint_skill.py client-teams-transcript-skill`
 - Packaging takes several minutes (it runs every test twice): run it in the background. `WR_NAME_BLOCKLIST` must point at a private names file kept OUTSIDE the repo.
-- After editing a skill: `python3 tools/stamp_skill.py <skill> --change "..."`, then `python3 tools/package_skill.py <skill> --out releases`
+- After editing a skill: `python3 tools/stamp_skill.py <skill> --change "..."`, then `python3 tools/package_skill.py <skill> --out releases`. Lint and packaging refuse a skill whose files changed after the stamp; the stamp refuses to move when nothing changed. Never type the date. Do not put the date in the skill name (names: lowercase letters, numbers, hyphens only; other skills call it by name).
 - Athens time for any stamp: `TZ=Europe/Athens date '+%Y-%m-%d %H:%M'`
 
 ## Never

@@ -5,6 +5,7 @@ Invented people and figures only.
 """
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -189,6 +190,37 @@ class Journey(DriverBase):
         st = drv("status", self.run_dir).stdout
         self.assertIn("teams ", st)
         self.assertNotIn("not applicable", st)
+
+    # ---- the version sentence (Paul, 29/10/2026): it comes from the stamp, so it moves with every update
+    def real_version_sentence(self):
+        stamp = re.search(r"\*\*Last updated: (\d{4})-(\d{2})-(\d{2}) (\d{2}:\d{2})", slurp(os.path.join(os.path.dirname(SCRIPTS), "SKILL.md")))
+        return "Using client-teams-transcript-skill, last updated %s/%s/%s %s (Athens time)" % (stamp.group(3), stamp.group(2), stamp.group(1), stamp.group(4))
+
+    def test_start_tells_claude_to_say_the_version_first(self):
+        r = self.start()
+        self.assertIn("SAY THIS TO PAUL FIRST", r.stdout)
+        self.assertIn(self.real_version_sentence() + ".", r.stdout)
+        self.assertLess(r.stdout.index("SAY THIS TO PAUL FIRST"), r.stdout.index("Standing rules for the whole job"))
+
+    def test_the_version_sentence_follows_the_stamp_and_is_not_written_into_the_program(self):
+        copy = os.path.join(self.tmp, "client-teams-transcript-skill")
+        shutil.copytree(os.path.dirname(SCRIPTS), copy, ignore=shutil.ignore_patterns("__pycache__", "tests", "history"))
+        md = os.path.join(copy, "SKILL.md")
+        spit(md, re.sub(r"\*\*Last updated:[^*]*\*\*", "**Last updated: 2027-01-02 03:04 (Athens time)**", slurp(md), 1))
+        r = subprocess.run([sys.executable, os.path.join(copy, "scripts", "run.py"), "start", os.path.join(self.tmp, "run2"), "--type", "followup", *CLIENT],
+                           capture_output=True, text=True, env=ENV)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+        self.assertIn("Using client-teams-transcript-skill, last updated 02/01/2027 03:04 (Athens time).", r.stdout)
+        self.assertNotIn(self.real_version_sentence(), r.stdout)
+
+    def test_an_unstamped_skill_says_so(self):
+        copy = os.path.join(self.tmp, "client-teams-transcript-skill")
+        shutil.copytree(os.path.dirname(SCRIPTS), copy, ignore=shutil.ignore_patterns("__pycache__", "tests", "history"))
+        md = os.path.join(copy, "SKILL.md")
+        spit(md, re.sub(r"\*\*Last updated:[^*]*\*\*\n", "", slurp(md), 1))
+        r = subprocess.run([sys.executable, os.path.join(copy, "scripts", "run.py"), "start", os.path.join(self.tmp, "run3"), "--type", "followup", *CLIENT],
+                           capture_output=True, text=True, env=ENV)
+        self.assertIn("NOT STAMPED", r.stdout)
 
     def test_starting_twice_does_not_reset_the_run(self):
         self.start()
@@ -512,6 +544,21 @@ class TeamsMessage(Base):
         r = self.verify()
         self.assertEqual(r.returncode, 0, r.stdout)
         self.assertIn("3rd WhatsApp Call", r.stdout)
+        # the final printout carries the skill version, taken from the stamp
+        sentence = re.search(r"\*\*Last updated: (\d{4})-(\d{2})-(\d{2}) (\d{2}:\d{2})", slurp(os.path.join(os.path.dirname(SCRIPTS), "SKILL.md")))
+        shown = "last updated %s/%s/%s %s (Athens time)" % (sentence.group(3), sentence.group(2), sentence.group(1), sentence.group(4))
+        self.assertIn("SKILL VERSION: Using client-teams-transcript-skill, " + shown, r.stdout)
+        self.assertIn("Skill version: client-teams-transcript-skill, " + shown + ". Transcript read in full TWICE", r.stdout)
+
+    def test_a_skill_updated_during_the_run_is_flagged(self):
+        self.whatsapp_built()
+        rj = self.run_json("whatsapp")
+        rj["skill_stamp"] = "2020-01-01 00:00"
+        self.write("run.json", rj)
+        self.write_receipt(self.receipt("WhatsApp Call Summary - 05.10.26 - (Testcase, Sam).pdf"))
+        r = self.verify()
+        self.assertEqual(r.returncode, 0, r.stdout)
+        self.assertIn("the skill was updated while this run was in progress (the run started under 01/01/2020 00:00 (Athens time)", r.stdout)
 
     def test_whatsapp_needs_the_teams_receipt_too(self):
         self.whatsapp_built()

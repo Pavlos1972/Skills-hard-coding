@@ -11,6 +11,8 @@ import sys
 CHUNK_LINES = int(os.environ.get("WR_CHUNK_LINES", "400"))
 CHUNK_CHARS = int(os.environ.get("WR_CHUNK_CHARS", "24000"))
 
+SKILL_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 TRANSCRIPT = "transcript.txt"
 STATE = "state.json"
 LEDGER = "ledger.json"
@@ -102,6 +104,46 @@ def ordinal(n):
 
 def now():
     return dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
+
+
+def skill_stamp():
+    """'YYYY-MM-DD HH:MM' from the Last updated line of SKILL.md (set by tools/stamp_skill.py), or None."""
+    try:
+        with open(os.path.join(SKILL_DIR, "SKILL.md"), encoding="utf-8") as f:
+            text = f.read()
+    except OSError:
+        return None
+    m = re.search(r"\*\*Last updated:\s*(\d{4}-\d{2}-\d{2} \d{2}:\d{2})", text)
+    return m.group(1) if m else None
+
+
+def skill_name():
+    try:
+        with open(os.path.join(SKILL_DIR, "SKILL.md"), encoding="utf-8") as f:
+            m = re.search(r'^name:\s*"?([a-z0-9-]+)"?\s*$', f.read(), re.M)
+        return m.group(1) if m else os.path.basename(SKILL_DIR)
+    except OSError:
+        return os.path.basename(SKILL_DIR)
+
+
+def stamp_display(stamp):
+    """'2026-10-29 13:18' -> '29/10/2026 13:18 (Athens time)' (house style, S13)."""
+    try:
+        return dt.datetime.strptime(stamp, "%Y-%m-%d %H:%M").strftime("%d/%m/%Y %H:%M") + " (Athens time)"
+    except (TypeError, ValueError):
+        return None
+
+
+def version_short():
+    """'client-teams-transcript-skill, last updated 29/10/2026 13:18 (Athens time)': taken from the stamp, never typed."""
+    shown = stamp_display(skill_stamp())
+    if shown:
+        return "%s, last updated %s" % (skill_name(), shown)
+    return "%s, NOT STAMPED (this copy has no valid Last updated line)" % skill_name()
+
+
+def version_line():
+    return "Using " + version_short()
 
 
 def norm(s):

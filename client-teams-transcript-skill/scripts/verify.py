@@ -993,6 +993,10 @@ def check_driver(run, mt, R, skip=()):
     if not isinstance(rj, dict) or not isinstance(rj.get("steps"), dict):
         R.add("FAIL", g, "run.json missing: this run was not driven by run.py (start it with run.py start)")
         return
+    started, now_stamp = rj.get("skill_stamp"), w.skill_stamp()
+    if started and now_stamp and started != now_stamp:
+        R.add("WARN", g, "the skill was updated while this run was in progress (the run started under %s, the skill is now %s): tell Paul"
+              % (w.stamp_display(started), w.stamp_display(now_stamp)))
     pending = [s for s in applicable_steps(mt) if s != "final" and not (s == "teams" and "teams" in skip)
                and (rj["steps"].get(s) or {}).get("state") != "done"]
     if pending:
@@ -1070,6 +1074,7 @@ def summary_lines(run, st, ledger, content):
 
 def report(R, st, ledger, content, stage, run=None):
     print("DELIVERY GATE  (stage: %s)" % stage)
+    print("SKILL VERSION: %s" % w.version_line())
     for g in GROUP_ORDER:
         rows = [r for r in R.rows if r[1] == g]
         if not rows:
@@ -1087,9 +1092,9 @@ def report(R, st, ledger, content, stage, run=None):
         for ln in summary_lines(run or ".", st, ledger, content):
             print("  " + ln)
         print("\nDELIVERY LINE (copy into the reply, unedited):")
-        print("Transcript read in full TWICE (Pass 1 and Pass 2, %d lines each, %d chunks, every chunk acknowledged in the ledger); %d ledger entries; "
+        print("Skill version: %s. Transcript read in full TWICE (Pass 1 and Pass 2, %d lines each, %d chunks, every chunk acknowledged in the ledger); %d ledger entries; "
               "every bullet and action source-traced (%d sources: every quote found in the transcript or a recorded document, every figure traced)."
-              % (st["total_lines"], k, len(ledger["entries"]), n_src))
+              % (w.version_short(), st["total_lines"], k, len(ledger["entries"]), n_src))
         print("Attested by Claude, not machine-proven: chat hand-over, saving to the client's folder, the Zapier send, the visual check of the page images, the independent re-check and the judgment items.")
     elif fails:
         print("\nNOT COMPLETE. You may not tell Paul this run is finished. Fix every FAIL above and re-run.")
