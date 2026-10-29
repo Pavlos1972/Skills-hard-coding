@@ -12,7 +12,7 @@ The rules for every skill are in `../SKILL-STANDARDS.md`. Plain-language summary
 | `deliverables.json` | Every output, who makes it, how it is handed over and checked | yes |
 | `references/` | The rule pages the program prints at the step where they apply, plus model examples (invented data) | yes |
 | `scripts/` | `run.py` (the step driver), `tx.py` (reading lock), `build.py` + `page.py` (outputs), `verify.py` (PASS/FAIL), `wrlib.py` | yes |
-| `tests/` | 176 tests on invented data, including a full run from start to PASS, the Copy button in a real browser, and one test for each weakness an independent review found | no |
+| `tests/` | 183 tests on invented data, including a full run from start to PASS, the Copy button in a real browser, and one test for each weakness an independent review found | no |
 | `history/` | The old skill (client names replaced), every change with its reason, every drop with its decision, the coverage report | no |
 
 ## One run

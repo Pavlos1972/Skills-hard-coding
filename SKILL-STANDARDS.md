@@ -1,6 +1,6 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
-**Version 1.9 (draft for Paul to review)**
+**Version 2.0 (draft for Paul to review)**
 **Last updated: 2026-10-29 13:08 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
@@ -179,13 +179,18 @@ split the text from its scripts.
 
 **Status.** BUILT: `tools/package_skill.py` refuses to package unless lint and all tests pass, and re-runs the tests against the unpacked zip.
 
-**Why Paul uploads by hand (checked 29/10/2026, do not research again unless Anthropic's pages change).**
+**How a new version gets into Paul's claude.ai Skills (checked and observed 29/10/2026; do not research it again unless Anthropic's pages change).**
 - Claude Code (cloud or local) can list and read Paul's claude.ai skills but has no tool that creates or replaces one. The skills folder in a cloud session is a one-way copy made when the session starts.
-- Anthropic's Agent Skills overview says custom skills on claude.ai are uploaded by the user as zip files (Settings > Features, which may be called Customize in the app), are individual to each user, and "do not sync across surfaces" (claude.ai, the API and Claude Code are separate). The Skills API (`/v1/skills`) needs a Console API key and its skills are not available on claude.ai.
-- Paul is on the **Max** plan (an individual plan). The GitHub-repo sync into claude.ai (Organization settings > Plugins & skills) is documented for Team and Enterprise owners only. Nothing found lets an individual plan sync a repo into claude.ai skills.
-- Paul's skills are ordinary skills in his account (each has its own skill id), not plugin skills. Whether uploading a zip with the same name replaces the old one or adds a second copy is not documented: Paul checks the list after each upload and switches the old one off.
-- The upload rules are already enforced by lint: frontmatter keys limited to name, description, license, compatibility, metadata, allowed-tools; name in lowercase letters, numbers and hyphens only.
+- Anthropic's Agent Skills overview says custom skills on claude.ai are uploaded by the user as zip files (Settings > Features, also called Customize), are individual to each user and "do not sync across surfaces". The Skills API (`/v1/skills`) needs a Console API key and its skills are not available on claude.ai. The GitHub-repo sync (Organization settings > Plugins & skills) is documented for Team and Enterprise owners only; Paul is on **Max**.
+- **The method that works (first used 29/10/2026, reported by the Claude-in-Chrome chat):** Paul gives a chat that has Claude in Chrome the upload brief; that chat uploads the zip in his browser. `package_skill.py` writes the brief next to every zip (`<zip name>.upload-brief.md`, made by `tools/make_upload_brief.py` from the zip itself, nothing typed by hand). Make the brief only when Paul has asked for that skill to be uploaded: his request is the approval for the "Upload and replace" button.
+- **Uploading REPLACES the skill.** claude.ai cannot hold two skills with one name. The upload shows a box ("Replace '<name>' skill? ... Earlier versions stay available in the skill's version history. Current: N lines - This file: M lines"). The old version is NOT a separate switched-off entry: it stays in the skill's **version history** (a dropdown of v1, v2 ... on the skill page), and that history is the backup. Switching the old skill off first changes nothing (a disabled skill is switched on again by the upload), so the brief says not to.
+- **The first upload attempt may be refused** ("only files this session is allowed to read can be uploaded", and the Windows path may still be refused). The fix: the chat asks Paul to approve folder access to `Claude Skills - New`, stages the zip into its workspace (`/mnt/user-data/uploads/...`), checks the byte size, and uploads from the staged path. Paul did not have to pick the file himself.
+- **Tested the same way every time:** before and after the upload a fresh chat is asked, with no client information, to quote the skill's "Last updated" line and its first section title; the chat records the old version's line count and "Last updated" line before, and compares after. The expected new values come from the zip.
+- Paul keeps new zips in `C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New` on his Windows computer (his instruction). A cloud session cannot put a file there: Paul saves the zip there himself.
+- Paul's skills are ordinary skills in his account (each has its own skill id), not plugin skills.
+- The upload rules are enforced by lint: frontmatter keys limited to name, description, license, compatibility, metadata, allowed-tools; name in lowercase letters, numbers and hyphens only.
 - Every run says its version first (S2), so Paul sees at once whether the new upload is the one answering.
+- Proven first case: the Teams transcript skill was replaced as version v33 (old SKILL.md 319 lines, new 65 lines plus 11 reference pages and the programs); a fresh chat quoted `Last updated: 2026-10-29 13:38 (Athens time)` and `Index`. This was reported by the Chrome chat, not seen by Claude Code.
 
 ### S8. A run leaves its evidence on disk
 **Rule.** Each run works in its own folder with a state file, so a long or compressed conversation cannot make
@@ -349,13 +354,14 @@ Every run (one client, one meeting) keeps in its own run folder:
 
 | Skill | Status |
 |---|---|
-| client-teams-transcript-skill | REBUILT to these standards (step driver, reading lock, client-file and access logs, Planner page, PDF, Sitamah Teams message (Teams meetings and WhatsApp calls), PASS/FAIL checklist; 176 tests, hardened after an independent review; nothing from the old skill lost without a record). The Sitamah message also covers WhatsApp calls (Paul's yes). Zip ready (see releases/; the newest one only); Paul has answered the removals list (29/10/2026); waiting for his upload and a real-case trial |
+| client-teams-transcript-skill | REBUILT to these standards (step driver, reading lock, client-file and access logs, Planner page, PDF, Sitamah Teams message (Teams meetings and WhatsApp calls), PASS/FAIL checklist; 183 tests, hardened after an independent review; nothing from the old skill lost without a record). The Sitamah message also covers WhatsApp calls (Paul's yes). Uploaded 29/10/2026 by a Claude-in-Chrome chat as version v33 (reported by that chat; a fresh chat quoted the new Last updated line); Paul has answered the removals list; waiting for the real-case trial and Paul's confirmation that it is live |
 | client-pipeline-board, complete-applications-skill, fact-find-summary, ff-population-transcript, wr-roa-builder, wr-sroa-builder, rgar-skill, om-optimal-ra-proposal, om-tax-free-skill, investment-comparisons-skill, life-insurer-comparison, life-policy-schedule-analyzer, client-review-notes, client-transcript-download, teams-meeting-setup-skill, outlook-emails-skill, planner-interim-procedure, cameron-short-term-skill, advicetech-website-knowledge, alpha-bank-statements, nedbank-current-account-categorization, paul-email-signature, correcting-skills, master-skill-template | Not started |
 
 ## 10. Changelog (last 5)
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-10-29 15:46 | Version 2.0: the upload method is recorded as it really works (the Chrome chat uploads, the skill is REPLACED, the old version stays in its version history); the upload brief is now written by a program next to every zip |
 | 2026-10-29 14:23 | Version 1.9: S7 records why the upload is by hand (no write route for Claude Code; Paul is on Max; org sync is Team/Enterprise only) |
 | 2026-10-29 13:38 | Version 1.8: S2 now makes the date move with the skill (fingerprint record) and requires every run to say its version (Paul's request); built into the Teams transcript skill |
 | 2026-10-29 13:27 | Version 1.7: Paul's yes to removals 1 to 4 and keep the table recorded; no change to the skill |

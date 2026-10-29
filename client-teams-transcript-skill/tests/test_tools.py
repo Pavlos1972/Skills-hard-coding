@@ -16,6 +16,7 @@ sys.path.insert(0, TOOLS)
 
 import inventory  # noqa: E402
 import lint_skill  # noqa: E402
+import make_upload_brief  # noqa: E402
 import stamp_skill  # noqa: E402
 import wr_stamp  # noqa: E402
 
@@ -246,6 +247,75 @@ class Inventory(unittest.TestCase):
         self.assertIn("UNACCOUNTED: 0", r.stdout)
 
 
+def tiny_zip(path, stamp="2026-10-29 13:38", first="Index", name="demo-skill", extra=2):
+    md = ('---\nname: "%s"\ndescription: "Does a demo."\n---\n\n# Demo Skill\n\n## %s\n\ntext\n\n**Last updated: %s (Athens time)**\n' % (name, first, stamp))
+    with zipfile.ZipFile(path, "w") as z:
+        z.writestr("%s/SKILL.md" % name, md)
+        for i in range(extra):
+            z.writestr("%s/references/page%d.md" % (name, i), "x")
+
+
+class UploadBrief(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp(prefix="wrbrief-")
+        self.addCleanup(shutil.rmtree, self.tmp, True)
+
+    def make(self, **kw):
+        z = os.path.join(self.tmp, "demo-skill-20261029-1338.zip")
+        tiny_zip(z, **kw)
+        return z, make_upload_brief.build(z)
+
+    def test_every_value_comes_from_the_zip(self):
+        z, text = self.make()
+        self.assertIn("Skill name: demo-skill", text)
+        self.assertIn("demo-skill-20261029-1338.zip (%s bytes, 3 files)" % "{:,}".format(os.path.getsize(z)), text)
+        self.assertIn('the line "Last updated: 2026-10-29 13:38 (Athens time)"', text)
+        self.assertIn('is called "Index"', text)
+        self.assertIn(r"C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New\demo-skill-20261029-1338.zip", text)
+
+    def test_the_brief_follows_the_stamp_and_the_first_section_and_is_not_written_into_the_program(self):
+        _, text = self.make(stamp="2031-02-03 04:05", first="Contents")
+        self.assertIn("Last updated: 2031-02-03 04:05 (Athens time)", text)
+        self.assertIn('is called "Contents"', text)
+        self.assertNotIn("2026-10-29", text)
+
+    def test_the_replace_flow_is_stated_the_way_it_really_works(self):
+        _, text = self.make()
+        for must in ("REPLACES it", "ONE entry before the upload and ONE entry after", "version history", "Upload and replace",
+                     "NEVER delete anything", "only files this session is allowed to read", "folder access", "/mnt/user-data/uploads/",
+                     "BEFORE test", "AFTER test", "Not confirmed live until you confirm", "Do not switch the old skill off or on",
+                     "Current: N lines - This file: M lines"):
+            self.assertIn(must, text)
+        self.assertNotIn("two entries", text.lower().replace("one entry before", ""))
+
+    def test_replace_is_approved_only_for_the_named_skill(self):
+        _, text = self.make()
+        self.assertIn('only if its box names exactly "demo-skill"', text)
+        self.assertIn("names any other skill", text)
+
+    def test_a_folder_can_be_changed(self):
+        z = os.path.join(self.tmp, "demo-skill-1.zip")
+        tiny_zip(z)
+        self.assertIn(r"D:\Zips\demo-skill-1.zip", make_upload_brief.build(z, folder="D:\\Zips\\"))
+
+    def test_no_stamp_or_no_section_is_refused(self):
+        z = os.path.join(self.tmp, "bad.zip")
+        with zipfile.ZipFile(z, "w") as zf:
+            zf.writestr("demo-skill/SKILL.md", '---\nname: "demo-skill"\n---\n\n# Demo\n\n## Index\n')
+        with self.assertRaises(SystemExit):
+            make_upload_brief.build(z)
+        with zipfile.ZipFile(z, "w") as zf:
+            zf.writestr("demo-skill/SKILL.md", '---\nname: "demo-skill"\n---\n\n# Demo\n\n**Last updated: 2026-10-29 13:38 (Athens time)**\n')
+        with self.assertRaises(SystemExit):
+            make_upload_brief.build(z)
+
+    def test_write_puts_the_brief_next_to_the_zip(self):
+        z, _ = self.make()
+        path = make_upload_brief.write(z)
+        self.assertTrue(path.endswith("demo-skill-20261029-1338.upload-brief.md"))
+        self.assertEqual(os.path.dirname(path), os.path.dirname(z))
+
+
 class Package(unittest.TestCase):
     def test_zip_holds_exactly_what_runs_and_nothing_private(self):
         out = tempfile.mkdtemp(prefix="wrpkg-")
@@ -259,6 +329,9 @@ class Package(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
         z = [f for f in os.listdir(out) if f.endswith(".zip")]
         self.assertEqual(len(z), 1)
+        brief = [f for f in os.listdir(out) if f.endswith(".upload-brief.md")]
+        self.assertEqual(brief, [z[0][:-4] + ".upload-brief.md"])
+        self.assertIn("Upload and replace", open(os.path.join(out, brief[0]), encoding="utf-8").read())
         names = zipfile.ZipFile(os.path.join(out, z[0])).namelist()
         top = {n.split("/")[0] for n in names}
         self.assertEqual(top, {"client-teams-transcript-skill"})

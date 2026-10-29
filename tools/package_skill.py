@@ -17,6 +17,7 @@ import sys
 import tempfile
 import zipfile
 
+import make_upload_brief
 import wr_stamp
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -90,6 +91,7 @@ def main():
     print("\nPACKAGED: %s\n  %d files, %d bytes, sha256 %s" % (zpath, len(members), os.path.getsize(zpath), sha))
     for rel in members:
         print("   " + rel)
+    print("\nUPLOAD BRIEF for the Claude-in-Chrome chat (give it to Paul): %s" % make_upload_brief.write(zpath))
 
 
 if __name__ == "__main__":
