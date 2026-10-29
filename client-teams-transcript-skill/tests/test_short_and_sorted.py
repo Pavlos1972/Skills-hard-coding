@@ -42,6 +42,21 @@ class ShortNotes(Base):
         self.assertLess(txt.index("Action Points"), txt.index("Coming up"))
         self.assertLess(txt.index("Coming up"), txt.index("Next Steps"))
 
+    def test_every_bullet_and_action_is_on_its_own_line(self):
+        """Paul: action points must be in point form, one after the other (never run together on one line)."""
+        self.to_built()
+        txt = slurp(self.p("out", "planner_note.txt")).split("\n")
+        bullets = [ln for ln in txt if ln.startswith("\u2022 ")]
+        self.assertTrue(bullets)
+        self.assertTrue(all(ln.count("\u2022") <= 1 for ln in txt), "two bullets on one line")
+        actions = [ln for ln in bullets if "Sitamah to " in ln]
+        self.assertEqual(len(actions), 4)                                       # the four actions for now, one line each
+        page = slurp(self.p("out", "planner_note.html"))
+        shown = page.split("<article", 1)[1].split("</article>", 1)[0]
+        self.assertEqual(shown.count('<p class="b">'), len(bullets))           # in the page too: one paragraph per bullet
+        pdf = pdf_text(self.p("out")).split("Action Points", 1)[1].split("Coming up", 1)[0]
+        self.assertEqual(sum(1 for ln in pdf.split("\n") if ln.startswith("\u2022 Sitamah to ")), 4)
+
     def test_a_planner_one_liner_over_twenty_words_fails(self):
         long = "BrightRock quote CP 100000001 at R1,100.00 p.m. " + "with a lot of extra words that make this much longer than one line " * 2
         r = self.mutate_content(lambda c: c["areas"][0]["bullets"][0].update(short=long))
