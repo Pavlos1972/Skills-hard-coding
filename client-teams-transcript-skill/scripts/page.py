@@ -39,7 +39,7 @@ def planner_view(content):
     by_key = {a["key"]: [one(b) for b in a.get("bullets") or [] if (b.get("short") or "").strip()] for a in content.get("areas") or []}
     sections = [(w.AREA_HEADING[k], by_key[k]) for k in w.AREA_KEYS if by_key.get(k)]
     apps = [one(a) for a in content.get("applications") or [] if (a.get("short") or "").strip()]
-    actions = [a for a in content.get("actions") or [] if a.get("when") == "now"]
+    actions = [dict(a, text=w.action_line(a)) for a in content.get("actions") or [] if a.get("when") == "now"]
     return sections, apps, actions
 
 

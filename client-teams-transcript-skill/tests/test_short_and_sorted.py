@@ -116,18 +116,31 @@ class ShortNotes(Base):
         self.assertIn("Planner note short", r.stdout)
 
 
-def structure(actions=None, next_steps=None):
+def structure(actions=None, next_steps=None, **extra):
     R = verify.Results()
-    verify.check_structure({"meeting_type": "followup", "areas": [], "applications": [], "since_last": [],
-                            "actions": actions or [], "next_steps": next_steps or []}, R)
+    c = {"meeting_type": "followup", "meeting_date": "05/10/2026", "areas": [], "applications": [], "since_last": [],
+         "actions": actions or [], "next_steps": next_steps or []}
+    c.update(extra)
+    verify.check_structure(c, R)
     return R
 
 
-def act(text, when="now", trigger=None, i="a1"):
+def act(text, when="now", trigger=None, i="a1", **kw):
     a = {"id": i, "text": text, "when": when}
     if trigger:
         a["trigger"] = trigger
+    a.update(kw)
     return a
+
+
+def failed(R, needle):
+    return any(needle in m for _, _, m in R.fails)
+
+
+def answered(qid="q1", **kw):
+    q = {"id": qid, "about": "action a1", "question": "Keep this action?", "suggestion": "leave it out", "paul_said": "leave it out"}
+    q.update(kw)
+    return q
 
 
 class SortedActions(Base):
@@ -161,10 +174,11 @@ class SortedActions(Base):
         R = structure([act("Sitamah to set up another evening appointment for early next week")])
         self.assertTrue(any("setting up the next meeting" in m for _, _, m in R.fails), R.rows)
 
-    def test_a_what_if_question_to_a_provider_is_warned_about(self):                                             # 2: remove (no stated reason)
-        R = structure([act("Sitamah to check with the insurer whether the income protector would still pay on a lower income")])
-        self.assertEqual(R.fails, [])
-        self.assertTrue(any(lvl == "WARN" and "what-if" in m for lvl, _, m in R.rows), R.rows)
+    def test_a_what_if_question_to_a_provider_needs_pauls_answer(self):                                          # 2: remove (no stated reason)
+        text = "Sitamah to check with the insurer whether the income protector would still pay on a lower income"
+        self.assertTrue(failed(structure([act(text)]), "what-if question"))
+        R = structure([act(text, asked="q1")], asked_paul=[answered()])
+        self.assertEqual(R.fails, [], R.rows)
 
     def test_the_rules_do_not_catch_ordinary_actions(self):
         for text in ("Sitamah to put a review of Dana's portfolio in the what's-next email",
@@ -212,6 +226,73 @@ class SortedActions(Base):
         self.assertTrue(any('needs owner "client"' in m for _, _, m in R.fails))
         R = structure(next_steps=[{"id": "n1", "text": "Sam to speak to Dana", "owner": "paul"}])
         self.assertTrue(any('needs owner "client"' in m for _, _, m in R.fails))
+
+
+class OrderAskSift(Base):
+    """Paul, 29/10/2026: action points in chronological order, then logical order; sift out what is not relevant; if not sure, ask."""
+
+    def test_the_earliest_deadline_comes_first(self):
+        R = structure([act("Sitamah to get the schedules", due="08/10/2026", i="a1"), act("Sitamah to get the quotes", due="12/10/2026", i="a2")])
+        self.assertEqual(R.fails, [], R.rows)
+        R = structure([act("Sitamah to get the quotes", due="12/10/2026", i="a1"), act("Sitamah to get the schedules", due="08/10/2026", i="a2")])
+        self.assertTrue(failed(R, "put the earlier deadline first"))
+
+    def test_a_due_date_before_the_meeting_or_not_a_date_fails(self):
+        self.assertTrue(failed(structure([act("Sitamah to get the schedules", due="01/10/2026")]), "before the meeting date"))
+        self.assertTrue(failed(structure([act("Sitamah to get the schedules", due="next Thursday")]), "not a real date"))
+
+    def test_nothing_comes_before_what_it_depends_on(self):
+        a, b = act("Sitamah to get the policy schedules", i="a1"), act("Sitamah to check the premium split", i="a2", after=["a1"])
+        self.assertEqual(structure([a, b]).fails, [])
+        self.assertTrue(failed(structure([b, a]), "must be listed after it"))
+        self.assertTrue(failed(structure([act("Sitamah to check the premium split", i="a2", after=["zz"])]), "which is not an action"))
+
+    def test_the_due_date_is_shown_in_the_planner_note_and_the_pdf(self):
+        def f(c):
+            c["actions"][3].update(due="08/10/2026")                 # a4: the revised Tax-Free quote
+        self.to_ready()
+        c = self.content()
+        f(c)
+        self.write("content.json", c)
+        sh("build.py", self.run_dir, ok=True)
+        note = slurp(self.p("out", "planner_note.txt"))
+        self.assertIn("Sitamah to request the revised Tax-Free quote in Sam's name from Alwyn \u2013 due 08/10/2026", note)
+        self.assertIn("due 08/10/2026", " ".join(pdf_text(self.p("out")).split()))
+
+    def test_a_due_date_already_in_the_text_is_not_repeated(self):
+        a = act("Sitamah to get the quotes (due Thursday 08/10/2026)", due="08/10/2026")
+        self.assertEqual(verify.w.action_line(a), "Sitamah to get the quotes (due Thursday 08/10/2026)")
+
+    def test_a_question_paul_has_not_answered_fails(self):
+        R = structure(asked_paul=[answered(paul_said="")])
+        self.assertTrue(failed(R, "Paul has not answered question q1"))
+
+    def test_a_question_needs_a_suggestion_and_an_id(self):
+        self.assertTrue(failed(structure(asked_paul=[answered(suggestion="")]), "needs `about`, `question` and your `suggestion`"))
+        self.assertTrue(failed(structure(asked_paul=[answered(id="")]), "needs its own id"))
+
+    def test_an_answered_question_passes_and_an_unsure_item_must_point_at_one(self):
+        self.assertEqual(structure([act("Sitamah to get the schedules", unsure=True, asked="q1")], asked_paul=[answered()]).fails, [])
+        self.assertTrue(failed(structure([act("Sitamah to get the schedules", unsure=True)]), "is marked unsure"))
+        self.assertTrue(failed(structure([act("Sitamah to get the schedules", asked="q9")], asked_paul=[answered()]), "not in asked_paul"))
+
+    def test_what_was_left_out_must_say_why(self):
+        self.assertEqual(structure(left_out=[{"text": "Sitamah to ask the clients about credit life", "reason": "the clients decide that themselves"}]).fails, [])
+        self.assertTrue(failed(structure(left_out=[{"text": "Sitamah to ask the clients about credit life", "reason": "no"}]), "left_out entry 1 needs"))
+
+    def test_the_final_printout_lists_what_was_left_out_and_what_paul_said(self):
+        self.to_ready()
+        c = self.content()
+        c["left_out"] = [{"text": "Sitamah to send Sam the retirement calculator", "reason": "another step sends the what's-next email"}]
+        c["asked_paul"] = [answered(about="the order of the three information actions", paul_said="quotes first, then schedules")]
+        self.write("content.json", c)
+        sh("build.py", self.run_dir, ok=True)
+        self.write("run.json", self.run_json("followup"))
+        self.write_receipt(self.receipt())
+        r = self.verify()
+        self.assertEqual(r.returncode, 0, r.stdout)
+        self.assertIn("left out as not relevant: Sitamah to send Sam the retirement calculator because another step sends", r.stdout)
+        self.assertIn("asked Paul about the order of the three information actions: he said 'quotes first, then schedules'", r.stdout)
 
 
 class MessageShownWithTheOutputs(Base):

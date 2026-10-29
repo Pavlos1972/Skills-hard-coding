@@ -105,6 +105,21 @@ def words(text):
     return len(str(text or "").split())
 
 
+def parse_date(text):
+    """DD/MM/YYYY -> date, or None."""
+    try:
+        return dt.datetime.strptime((text or "").strip(), "%d/%m/%Y").date()
+    except ValueError:
+        return None
+
+
+def action_line(a):
+    """The action as shown: its text, plus its due date when the text does not already carry it (one place, so both outputs agree)."""
+    t = (a.get("text") or "").strip()
+    due = (a.get("due") or "").strip()
+    return t if not due or due in t else "%s \u2013 due %s" % (t, due)
+
+
 def status_from_paths(sources):
     """Where the client's folder sits decides the label: Company - WR Clients = Review Client; Company - Paul\\New Business = Prospect."""
     paths = " ".join(str(e.get("path") or "") for e in sources if isinstance(e, dict) and e.get("read") == "yes").lower().replace("/", "\\")

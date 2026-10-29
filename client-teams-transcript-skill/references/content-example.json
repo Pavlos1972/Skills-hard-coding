@@ -153,6 +153,29 @@
   "applications": [],
   "actions": [
     {
+      "id": "a4",
+      "text": "Sitamah to request the revised Tax-Free quote in Sam's name from Alwyn",
+      "src": [
+        {
+          "line": 42,
+          "quote": "We need Alwyn to give us a revised quote in your name"
+        }
+      ],
+      "when": "now",
+      "due": "08/10/2026"
+    },
+    {
+      "id": "a3",
+      "text": "Sitamah to get the credit-life details from Sam",
+      "src": [
+        {
+          "line": 24,
+          "quote": "We cancel that only once the new policy is accepted and in force"
+        }
+      ],
+      "when": "now"
+    },
+    {
       "id": "a1",
       "text": "Sitamah to put a review of Dana's portfolio in the what's-next email (Sam answered 'Alright, 100%')",
       "src": [
@@ -168,6 +191,18 @@
       "when": "now"
     },
     {
+      "id": "a5",
+      "text": "Sitamah to keep the old Instant Life policy in place until the BrightRock policy is in force",
+      "src": [
+        {
+          "line": 63,
+          "quote": "please do not cancel the old Instant Life policy"
+        }
+      ],
+      "when": "now",
+      "asked": "q1"
+    },
+    {
       "id": "a2",
       "text": "Sitamah to arrange for the Absa home loan to be ceded to Absa and send Sam the cession documents to sign",
       "src": [
@@ -178,39 +213,6 @@
       ],
       "when": "later",
       "trigger": "once the BrightRock policy is issued"
-    },
-    {
-      "id": "a3",
-      "text": "Sitamah to get the credit-life details from Sam",
-      "src": [
-        {
-          "line": 24,
-          "quote": "We cancel that only once the new policy is accepted and in force"
-        }
-      ],
-      "when": "now"
-    },
-    {
-      "id": "a4",
-      "text": "Sitamah to request the revised Tax-Free quote in Sam's name from Alwyn",
-      "src": [
-        {
-          "line": 42,
-          "quote": "We need Alwyn to give us a revised quote in your name"
-        }
-      ],
-      "when": "now"
-    },
-    {
-      "id": "a5",
-      "text": "Sitamah to keep the old Instant Life policy in place until the BrightRock policy is in force",
-      "src": [
-        {
-          "line": 63,
-          "quote": "please do not cancel the old Instant Life policy"
-        }
-      ],
-      "when": "now"
     }
   ],
   "next_steps": [
@@ -269,5 +271,20 @@
     },
     "quotes_matched": true
   },
-  "_note": "MODEL ONLY, built from invented data. Line numbers refer to the invented sample transcript in the tests. Copy the structure and the habits (every item has a source: line + exact words, or a document + exact words), never the content."
+  "_note": "MODEL ONLY, built from invented data. Line numbers refer to the invented sample transcript in the tests. Copy the structure and the habits (every item has a source: line + exact words, or a document + exact words), never the content.",
+  "asked_paul": [
+    {
+      "id": "q1",
+      "about": "action a5 (keep the old Instant Life policy in place)",
+      "question": "Is this an action for Sitamah, or only something to remember?",
+      "suggestion": "keep it as an action: Sam asked for it on the call",
+      "paul_said": "yes, keep it as an action"
+    }
+  ],
+  "left_out": [
+    {
+      "text": "Sitamah to send Sam the retirement calculator",
+      "reason": "Sam did not ask for it, and another step sends the what's-next email"
+    }
+  ]
 }

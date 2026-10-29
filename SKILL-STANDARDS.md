@@ -1,6 +1,6 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
-**Version 2.3 (draft for Paul to review)**
+**Version 2.4 (draft for Paul to review)**
 **Last updated: 2026-10-29 13:08 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
@@ -335,7 +335,7 @@ Every run (one client, one meeting) keeps in its own run folder:
 11. **The five removals (Paul, 29/10/2026: "Yes to removals 1-4, keep the table")**: the long change history, the two worked examples with real client details, old rules 1 and 9, and the dated attributions after headings are removed for good; the 21-point checklist stays as a table. Nothing further to change in the skill.
 
 12. **Structure after the first real-case trial (Paul, 29/10/2026).** Planner note: per area 1 to 3 one-line bullets (at most 20 words), the actions for now (at most 8), nothing else; the PDF: at most 4 bullets per area (45 words each), two pages at most, the actions for now under Action Points, the waiting ones under Coming up with their trigger, Next Steps for the client only. Paul's answers on the ten actions of his trial: follow up with a third party (yes), get full policy schedules (yes), get credit-life details (yes), get updated quotes (yes); cession (after the policy is issued, so later); remove: what-if question to a provider, asking the clients what they want to do about credit life, cancelling credit life, sending the updated quotes ("she will do that in another step"), setting up the next appointment. The message to Sitamah is shown with the outputs in one reply with one question.
-13. **Checklist items and action points must be thought about intelligently (Paul, 29/10/2026).** Put them in chronological order, then logical order (what must happen first comes first); sift out what is not relevant; and if the skill is not sure, it ASKS Paul instead of deciding. Understood as applying to this skill's action points, which feed the client's Planner Task checklist; the checklist itself (100-character lines, 20-item cap, prefixes, tick markers) belongs to `planner-interim-procedure` and gets the same three rules when that skill is converted. Not built yet: design proposed to Paul first.
+13. **Action points (Sitamah's checklist) must be thought about intelligently (Paul, 29/10/2026).** Chronological order (earliest deadline first), then logical order (what must happen first comes first); sift out what is not relevant and show what was left out; and when the skill is not sure it ASKS Paul instead of deciding. Paul said to forget the separate skill `planner-interim-procedure`: the rules apply to this skill's action points only.
 
 **Still open**
 1. Which skill comes after the Teams transcript skill (only after Paul's trial and his go)?
@@ -363,13 +363,15 @@ Every run (one client, one meeting) keeps in its own run folder:
 
 | Skill | Status |
 |---|---|
-| client-teams-transcript-skill | REBUILT to these standards (step driver, reading lock, client-file and access logs, Planner page, PDF, Sitamah Teams message (Teams meetings and WhatsApp calls), PASS/FAIL checklist; 216 tests, hardened after an independent review; nothing from the old skill lost without a record). The Sitamah message also covers WhatsApp calls (Paul's yes). Uploaded 29/10/2026 by a Claude-in-Chrome chat as version v33 (reported by that chat). First real-case trial found the notes too long, the actions unsorted and the Teams message not offered; REBUILT the same day to Paul's answers (short Planner note, sorted actions, message shown with the outputs; zip pending his upload); waiting for his confirmation that it is live |
-| client-pipeline-board, complete-applications-skill, fact-find-summary, ff-population-transcript, wr-roa-builder, wr-sroa-builder, rgar-skill, om-optimal-ra-proposal, om-tax-free-skill, investment-comparisons-skill, life-insurer-comparison, life-policy-schedule-analyzer, client-review-notes, client-transcript-download, teams-meeting-setup-skill, outlook-emails-skill, planner-interim-procedure, cameron-short-term-skill, advicetech-website-knowledge, alpha-bank-statements, nedbank-current-account-categorization, paul-email-signature, correcting-skills, master-skill-template | Not started |
+| client-teams-transcript-skill | REBUILT to these standards (step driver, reading lock, client-file and access logs, Planner page, PDF, Sitamah Teams message (Teams meetings and WhatsApp calls), PASS/FAIL checklist; 226 tests, hardened after an independent review; nothing from the old skill lost without a record). The Sitamah message also covers WhatsApp calls (Paul's yes). Uploaded 29/10/2026 by a Claude-in-Chrome chat as version v33 (reported by that chat). First real-case trial found the notes too long, the actions unsorted and the Teams message not offered; REBUILT the same day to Paul's answers (short Planner note, sorted actions, message shown with the outputs; zip pending his upload); waiting for his confirmation that it is live |
+| client-pipeline-board, complete-applications-skill, fact-find-summary, ff-population-transcript, wr-roa-builder, wr-sroa-builder, rgar-skill, om-optimal-ra-proposal, om-tax-free-skill, investment-comparisons-skill, life-insurer-comparison, life-policy-schedule-analyzer, client-review-notes, client-transcript-download, teams-meeting-setup-skill, outlook-emails-skill, cameron-short-term-skill, advicetech-website-knowledge, alpha-bank-statements, nedbank-current-account-categorization, paul-email-signature, correcting-skills, master-skill-template | Not started |
+| planner-interim-procedure | FORGET (Paul, 29/10/2026): an interim skill, retired with AdviceTech. Do not convert it, consider it, or build rules for it |
 
 ## 10. Changelog (last 5)
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-10-29 17:47 | Version 2.4: planner-interim-procedure forgotten at Paul's word; decision 13 narrowed to this skill's action points |
 | 2026-10-29 17:42 | Version 2.3: Paul's request recorded (decision 13): action points and checklist items ordered chronologically then logically, irrelevant ones sifted out, the skill asks when unsure; not built yet |
 | 2026-10-29 17:21 | Version 2.2: the skill rebuilt to Paul's answers after the first real-case trial (short Planner note, PDF limits, actions sorted now/later, message to Sitamah shown with the outputs); decision 12 recorded |
 | 2026-10-29 16:57 | Version 2.1: findings of the first real-case trial recorded in section 8 (notes too long, actions not sorted, Teams message not offered); structure to be agreed with Paul |

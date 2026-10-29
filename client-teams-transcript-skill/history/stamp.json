@@ -1,5 +1,5 @@
 {
- "stamp": "2026-10-29 17:22",
- "fingerprint": "510e7de7fc15b4ed87757829eb506192830e677c0562d3219b88937fa2911816",
- "change": "Dated notes taken out of the live pages (the dates stay in the history files)"
+ "stamp": "2026-10-29 17:53",
+ "fingerprint": "fae5156dc7c6e11cd1bc2ae90c3a5738dea3b896f5d594151fb015f5be6247b1",
+ "change": "Action points are put in order (earliest deadline first, then logical), what is not relevant is left out and listed, and the skill asks Paul in one message when it is not sure"
 }

@@ -14,7 +14,7 @@
 
 10. **Say which version is running.** The first words of your first reply to Paul are the sentence the program prints under "SAY THIS TO PAUL FIRST" (this skill's name and its Last updated date and time, Athens time). It comes from the skill's own stamp, so it changes with every update; never type a date yourself. The final printout repeats it. If the sentence says NOT STAMPED, tell Paul.
 
-11. **Short means short (Paul's rule).** The Planner note is one-line bullets and the actions for now; the PDF is two pages at most; every action is sorted `now` or `later`. The checker fails anything longer or unsorted.
+11. **Short means short (Paul's rule).** The Planner note is one-line bullets and the actions for now; the PDF is two pages at most; every action is sorted `now` or `later` and put in order. The checker fails anything longer, unsorted or out of order. When you are not sure about an action, ask Paul (one message, every question with your suggestion) and record his words.
 
 The names Step 1b, Step 4c, Step 6 and so on in these pages are the rule names from the original skill. The program's own numbering (STEP 3 of 14) is separate.
 

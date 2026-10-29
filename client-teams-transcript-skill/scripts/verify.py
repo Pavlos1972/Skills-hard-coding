@@ -410,6 +410,9 @@ def validate_shape(content):
         v = content.get(name, [])
         if not dict_list(v):
             errs.append("%s must be a list of {id, text, src} objects" % name)
+    for name in ("asked_paul", "left_out"):
+        if not dict_list(content.get(name, [])):
+            errs.append("%s must be a list of objects" % name)
     areas = content.get("areas", [])
     if not isinstance(areas, list) or not all(isinstance(a, dict) and isinstance(a.get("key"), str) and dict_list(a.get("bullets", [])) for a in areas):
         errs.append('areas must be a LIST like [{"key": "risk", "bullets": [{id, text, src}]}], not an object')
@@ -419,9 +422,13 @@ def validate_shape(content):
     for lst, it in (w.all_items(content) if not errs else []):
         if not isinstance(it.get("id", ""), str) or not isinstance(it.get("text", ""), str):
             errs.append("every item needs text and an id as plain text (%s)" % lst)
-        for fld in ("status", "tag", "short", "when", "trigger", "owner"):
+        for fld in ("status", "tag", "short", "when", "trigger", "owner", "due", "asked"):
             if fld in it and not isinstance(it[fld], str):
                 errs.append("%s of item %s must be text" % (fld, it.get("id")))
+        if "after" in it and not (isinstance(it["after"], list) and all(isinstance(x, str) for x in it["after"])):
+            errs.append("after of item %s must be a list of action ids" % it.get("id"))
+        if "unsure" in it and not isinstance(it["unsure"], bool):
+            errs.append("unsure of item %s must be true or false" % it.get("id"))
         src = it.get("src", [])
         if not dict_list(src):
             errs.append('src of item %s must be a list like [{"line": 12, "quote": "exact words"}]' % it.get("id"))
@@ -719,8 +726,54 @@ def check_structure(content, R):
         for name, rx, why in ACTION_BANS:
             if rx.search(text):
                 fail("action %s is %s: %s (Paul's rule): %r" % (aid, name, why, text[:70]))
-        if WHAT_IF.search(text):
-            R.add("WARN", g, "action %s asks a provider a what-if question: Paul removed one like it. Keep it only if Paul or the client asked for it" % aid)
+        if WHAT_IF.search(text) and not S(a.get("asked")).strip():
+            fail("action %s asks a provider a what-if question: Paul removed one like it, so ask him whether to keep it (suggest: leave it out) and refer to his answer in `asked`" % aid)
+    # ORDER (Paul): the earliest deadline first, and nothing before what it depends on
+    pos = {a.get("id"): n for n, a in enumerate(actions)}
+    meeting = w.parse_date(S(content.get("meeting_date")))
+    last = None
+    for n, a in enumerate(actions):
+        aid, due = a.get("id"), S(a.get("due")).strip()
+        if due:
+            d = w.parse_date(due)
+            if d is None:
+                fail("action %s: due %r is not a real date (DD/MM/YYYY)" % (aid, due))
+            else:
+                if meeting and d < meeting:
+                    fail("action %s: due %s is before the meeting date %s" % (aid, due, content.get("meeting_date")))
+                if last and d < last[0]:
+                    fail("action %s (due %s) is listed after %s (due %s): put the earlier deadline first" % (aid, due, last[1], last[2]))
+                last = (d, aid, due)
+        for pid in a.get("after") or []:
+            if pid not in pos:
+                fail("action %s: `after` names %r, which is not an action" % (aid, pid))
+            elif pos[pid] >= n:
+                fail("action %s depends on %s, so it must be listed after it" % (aid, pid))
+
+    # ASK (Paul): when the skill is not sure, Paul decides, and his own words are recorded
+    asked = {}
+    for q in content.get("asked_paul") or []:
+        qid = S(q.get("id")).strip()
+        if not qid or qid in asked:
+            fail("asked_paul: every question needs its own id")
+            continue
+        asked[qid] = q
+        if len(S(q.get("about")).strip()) < 3 or len(S(q.get("question")).strip()) < 10 or len(S(q.get("suggestion")).strip()) < 3:
+            fail("asked_paul %s needs `about`, `question` and your `suggestion`" % qid)
+        elif len(S(q.get("paul_said")).strip()) < 2:
+            fail("Paul has not answered question %s (%s): ask him, in ONE message listing every open question with your suggested answer, and write his own words in `paul_said`" % (qid, q["about"]))
+    for lst, it in w.all_items(content):
+        ref = S(it.get("asked")).strip()
+        if ref and ref not in asked:
+            fail("item %s: `asked` names question %r, which is not in asked_paul" % (it.get("id"), ref))
+        if it.get("unsure") is True and not ref:
+            fail("item %s is marked unsure: ask Paul and refer to the answered question in `asked`" % it.get("id"))
+
+    # SIFT (Paul): what was left out as not relevant is listed with its reason, so he can see it
+    for n, x in enumerate(content.get("left_out") or [], 1):
+        if len(S(x.get("text")).strip()) < 6 or len(S(x.get("reason")).strip()) < 8:
+            fail("left_out entry %d needs `text` and a `reason` (at least 8 characters): say what was left out and why it is not relevant" % n)
+
     now = [a for a in actions if a.get("when") == "now"]
     if len(now) > lim["planner_actions"]:
         fail("%d actions for now, at most %d: the Planner note lists only what Sitamah does now" % (len(now), lim["planner_actions"]))
@@ -731,7 +784,7 @@ def check_structure(content, R):
         elif OWNER_BAD.search(S(n.get("text"))):
             fail("next step %s names Paul as the owner: leave it out, Next Steps lists only what the client must do" % n.get("id"))
     if not probs:
-        R.add("PASS", g, "Planner note short (one-liners, %d actions for now), PDF within its limits, every action sorted now or later, none of the removed kinds of action, next steps are the client's only" % len(now))
+        R.add("PASS", g, "Planner note short (one-liners, %d actions for now), PDF within its limits, every action sorted now or later and in order, none of the removed kinds of action, every open question answered by Paul, next steps are the client's only" % len(now))
 
 
 # ---------------------------------------------------------------- D mandatory checks
@@ -1166,6 +1219,10 @@ def summary_lines(run, st, ledger, content):
                % (len(ents), p1, len(ents) - p1, len(excl), rev))
     for e in excl:
         out.append("   left out: line %s %r because %s" % (e.get("line"), str(e.get("quote"))[:50], str(e.get("excluded"))[:80]))
+    for x in (content or {}).get("left_out") or []:
+        out.append("   left out as not relevant: %s because %s" % (S(x.get("text"))[:70], S(x.get("reason"))[:90]))
+    for q in (content or {}).get("asked_paul") or []:
+        out.append("   asked Paul about %s: he said %r" % (S(q.get("about"))[:50], S(q.get("paul_said"))[:80]))
     return out
 
 
