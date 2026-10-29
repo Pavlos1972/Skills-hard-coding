@@ -1,0 +1,288 @@
+#!/usr/bin/env python3
+"""Reading lock for the transcript (Step 1, 1b of the skill).
+
+  tx.py prep   <source.docx|.txt|.md> <run_dir> [--force]
+  tx.py chunk  <run_dir> <pass 1|2> <n>
+  tx.py scan   <run_dir>
+  tx.py status <run_dir>
+
+prep    converts the source, checks it is complete, and plans the chunks.
+chunk   prints one numbered chunk and logs the read. Chunks are served in order;
+        Pass 2 is refused until Pass 1 has served every chunk.
+scan    the keyword scan from Step 1b. Refused until both passes are done.
+status  what has been read and what the next required step is.
+
+The log proves each chunk was put in front of Claude, in order, twice. It cannot
+prove the text was understood; the ledger and source-trace checks in verify.py
+are what test that.
+"""
+import argparse
+import os
+import re
+import subprocess
+import sys
+
+import wrlib as w
+
+TOLERANCE_S = 120   # last timestamp may fall this far short of the stated duration
+JUMP_S = 600        # a silent jump bigger than this is treated as a gap
+CLOSING_FRACTION = 0.15
+
+TS_ARROW = re.compile(r"^\s*(\d{1,2}):(\d{1,2}):(\d{1,2})(?:[.,]\d+)?\s*-->")
+TS_START = re.compile(r"^\s*(\d{1,2}):(\d{2})(?::(\d{2}))?(?:[.,]\d+)?(?!\d)")
+DURATION = re.compile(
+    r"(?i)duration\W{0,5}(?:(\d+)\s*h\w*)?\s*(?:(\d+)\s*m\w*)?\s*(?:(\d+)\s*s\w*)?")
+CLOSING = re.compile(r"(?i)stopped transcription|transcription stopped|stopped recording|meeting ended")
+
+# Decision / change words from Step 1b item 5 of the skill.
+HIGH_WORDS = [
+    "change", "changed", "instead", "rather", "actually", "for now", "later",
+    "keep it", "leave it", "get back to you", "in your name", "his name", "her name",
+    "owner", "beneficiary", "payer", "spell", "wrong", "correct", "sort that out",
+    "think about", "go ahead", "not happy", "agree", "decline", "cancel", "increase",
+    "reduce", "put it in", "cede", "ceded", "cession", "credit life", "retrench",
+    "protector", "payback", "payout", "on hold", "hold off",
+]
+HIGH_RE = re.compile(r"\b(?:" + "|".join(re.escape(x) for x in HIGH_WORDS) + r")\w*", re.I)
+
+
+def ts_seconds(line):
+    m = TS_ARROW.match(line)
+    if m:
+        return int(m.group(1)) * 3600 + int(m.group(2)) * 60 + int(m.group(3))
+    m = TS_START.match(line)
+    if not m:
+        return None
+    a, b, c = int(m.group(1)), int(m.group(2)), m.group(3)
+    if c is None:                      # M:SS
+        return a * 60 + b
+    return a * 3600 + b * 60 + int(c)  # H:MM:SS
+
+
+def fmt(sec):
+    sec = int(sec)
+    return "%d:%02d:%02d" % (sec // 3600, sec % 3600 // 60, sec % 60)
+
+
+def read_source(path):
+    if path.lower().endswith((".docx", ".doc", ".rtf", ".odt")):
+        r = subprocess.run(["pandoc", "-t", "plain", "--wrap=none", path],
+                           capture_output=True, text=True)
+        if r.returncode:
+            w.die("pandoc failed: " + r.stderr.strip())
+        return r.stdout
+    with open(path, encoding="utf-8", errors="replace") as f:
+        return f.read()
+
+
+def plan_chunks(lines):
+    """Greedy chunks of <= CHUNK_LINES lines / CHUNK_CHARS characters, ending at a blank
+    line when one sits in the back half of the chunk (keeps a speaker with their words)."""
+    chunks, start, chars = [], 1, 0
+    for i, ln in enumerate(lines, 1):
+        n = i - start + 1
+        if n > w.CHUNK_LINES or (chars + len(ln) > w.CHUNK_CHARS and n > 1):
+            end = i - 1
+            for j in range(end, start + (end - start) // 2, -1):
+                if not lines[j - 1].strip():
+                    end = j
+                    break
+            chunks.append([start, end])
+            start = end + 1
+            chars = sum(len(x) + 8 for x in lines[start - 1:i])
+            continue
+        chars += len(ln) + 8
+    chunks.append([start, len(lines)])
+    return chunks
+
+
+def load_state(run):
+    return w.load_json(os.path.join(run, w.STATE), "state.json (run `tx.py prep` first)")
+
+
+def cmd_prep(a):
+    if not os.path.exists(a.source):
+        w.die("Source not found: " + a.source)
+    text = read_source(a.source).replace("\r\n", "\n").replace("\r", "\n")
+    lines = [ln.rstrip() for ln in text.split("\n")]
+    while lines and not lines[-1]:
+        lines.pop()
+    if not lines:
+        w.die("STOP: the source is empty.")
+    os.makedirs(a.run, exist_ok=True)
+    with open(os.path.join(a.run, w.TRANSCRIPT), "w", encoding="utf-8") as f:
+        f.write("\n".join(lines))
+
+    stamps = [(i, s) for i, s in ((i, ts_seconds(ln)) for i, ln in enumerate(lines, 1)) if s is not None]
+    notes, complete = [], True
+    last_ts = stamps[-1][1] if stamps else None
+    dur = None
+    for m in DURATION.finditer(text):
+        h, mi, s = (int(x) if x else 0 for x in m.groups())
+        if h or mi or s:
+            dur = h * 3600 + mi * 60 + s
+            break
+    if not stamps:
+        notes.append("WARN: no timestamps found; the duration and gap checks were skipped.")
+    else:
+        if dur is not None and last_ts < dur - TOLERANCE_S:
+            complete = False
+            notes.append("INCOMPLETE: stated duration %s but the last timestamp is %s (%s missing)."
+                         % (fmt(dur), fmt(last_ts), fmt(dur - last_ts)))
+        elif dur is None:
+            notes.append("WARN: no stated duration found; only the gap check was run.")
+        for (i1, t1), (i2, t2) in zip(stamps, stamps[1:]):
+            if t2 - t1 > JUMP_S:
+                complete = False
+                notes.append("GAP: %s between line %d (%s) and line %d (%s)."
+                             % (fmt(t2 - t1), i1, fmt(t1), i2, fmt(t2)))
+    closing = [i for i, ln in enumerate(lines, 1) if CLOSING.search(ln)]
+    if not closing:
+        notes.append("WARN: no closing marker ('stopped transcription') found near the end.")
+
+    forced = False
+    if not complete and a.force:
+        forced, complete = True, True
+        notes.append("FORCED past the warnings above (Paul told us to continue).")
+
+    chunks = plan_chunks(lines)
+    state = {
+        "source": os.path.basename(a.source), "created": w.now(),
+        "total_lines": len(lines), "sha256": w.sha256_text("\n".join(lines)),
+        "chunks": chunks, "complete": complete, "forced": forced, "notes": notes,
+        "first_ts": fmt(stamps[0][1]) if stamps else None,
+        "last_ts": fmt(last_ts) if stamps else None,
+        "stated_duration": fmt(dur) if dur is not None else None,
+        "closing_marker_line": closing[-1] if closing else None,
+        "reads": [], "scan": None, "build": None,
+    }
+    w.save_json(os.path.join(a.run, w.STATE), state)
+
+    print("PREP  %s  ->  %s" % (a.source, a.run))
+    print("  lines: %d   chunks: %d   timestamps: %s -> %s   stated duration: %s"
+          % (len(lines), len(chunks), state["first_ts"], state["last_ts"], state["stated_duration"]))
+    for n in notes:
+        print("  " + n)
+    if not complete:
+        print("\nSTOP. Tell Paul exactly what is missing (above) and do not continue. "
+              "Re-run with --force only if Paul says to carry on.")
+        sys.exit(2)
+    print("\nNEXT: read Pass 1, chunks 1..%d in order:  tx.py chunk %s 1 1" % (len(chunks), a.run))
+
+
+def cmd_chunk(a):
+    st = load_state(a.run)
+    if not st["complete"]:
+        w.die("STOP: the transcript is incomplete (see `tx.py status`).", 2)
+    p, n, k = a.pass_, a.n, len(st["chunks"])
+    if p not in (1, 2):
+        w.die("pass must be 1 or 2")
+    if not 1 <= n <= k:
+        w.die("chunk must be 1..%d" % k)
+    lines = w.read_lines(a.run)
+    if w.sha256_text("\n".join(lines)) != st["sha256"]:
+        w.die("STOP: transcript.txt changed since prep. Re-run prep.", 2)
+    done = {r["chunk"] for r in st["reads"] if r["pass"] == p}
+    if p == 2:
+        missing = [c for c in range(1, k + 1) if c not in {r["chunk"] for r in st["reads"] if r["pass"] == 1}]
+        if missing:
+            w.die("REFUSED: Pass 2 cannot start until Pass 1 has read every chunk. "
+                  "Pass 1 still needs: %s" % missing, 3)
+    if n > 1 and (n - 1) not in done:
+        w.die("REFUSED: read chunk %d of Pass %d first. Chunks are read in order, none skipped." % (n - 1, p), 3)
+
+    s, e = st["chunks"][n - 1]
+    body = "\n".join("%6d  %s" % (i, lines[i - 1]) for i in range(s, e + 1))
+    print("===== PASS %d  CHUNK %d/%d  lines %d-%d of %d =====" % (p, n, k, s, e, len(lines)))
+    print(body)
+    print("===== END OF CHUNK %d/%d (pass %d) =====" % (n, k, p))
+    if n not in done:
+        st["reads"].append({"pass": p, "chunk": n, "t": w.now(), "lines": [s, e],
+                            "sha256": w.sha256_text(body)})
+        w.save_json(os.path.join(a.run, w.STATE), st)
+    if n < k:
+        print("NEXT: tx.py chunk %s %d %d" % (a.run, p, n + 1))
+    elif p == 1:
+        print("PASS 1 COMPLETE (all %d chunks). Write ledger.json entries now, then read Pass 2: "
+              "tx.py chunk %s 2 1" % (k, a.run))
+    else:
+        print("PASS 2 COMPLETE (all %d chunks). Check every ledger entry against the words, add "
+              "anything Pass 1 missed, then run: tx.py scan %s" % (k, a.run))
+
+
+def passes_done(st):
+    k = len(st["chunks"])
+    return [all(c in {r["chunk"] for r in st["reads"] if r["pass"] == p} for c in range(1, k + 1))
+            for p in (1, 2)]
+
+
+def cmd_scan(a):
+    st = load_state(a.run)
+    if not all(passes_done(st)):
+        w.die("REFUSED: the keyword scan runs in addition to the two reads, not instead of them. "
+              "Finish Pass 1 and Pass 2 first.", 3)
+    lines = w.read_lines(a.run)
+    total = len(lines)
+    closing_from = int(total * (1 - CLOSING_FRACTION)) + 1
+    hits = [i for i, ln in enumerate(lines, 1) if HIGH_RE.search(ln)]
+    print("KEYWORD SCAN: %d lines with decision/change words (closing zone = lines %d-%d)"
+          % (len(hits), closing_from, total))
+    for i in hits:
+        mark = "C" if i >= closing_from else " "
+        print("%s %6d  %s" % (mark, i, lines[i - 1].strip()[:150]))
+    st["scan"] = {"t": w.now(), "hits": hits, "closing_from": closing_from}
+    w.save_json(os.path.join(a.run, w.STATE), st)
+    print("\nEvery hit marked C must be covered by a ledger entry (within 3 lines) or listed in "
+          "ledger.json scan_reviewed with a reason. Other hits are shown as warnings by verify.py.")
+
+
+def cmd_status(a):
+    st = load_state(a.run)
+    k = len(st["chunks"])
+    p1, p2 = passes_done(st)
+    r1 = sorted(r["chunk"] for r in st["reads"] if r["pass"] == 1)
+    r2 = sorted(r["chunk"] for r in st["reads"] if r["pass"] == 2)
+    print("RUN %s   source: %s   lines: %d   chunks: %d" % (a.run, st["source"], st["total_lines"], k))
+    print("  complete: %s%s" % (st["complete"], "  (FORCED)" if st["forced"] else ""))
+    print("  Pass 1 read: %s  %s" % (r1, "DONE" if p1 else "NOT DONE"))
+    print("  Pass 2 read: %s  %s" % (r2, "DONE" if p2 else "NOT DONE"))
+    print("  keyword scan: %s" % ("run, %d hits" % len(st["scan"]["hits"]) if st["scan"] else "NOT RUN"))
+    print("  outputs built: %s" % ("yes" if st["build"] else "no"))
+    if not p1:
+        nxt = "tx.py chunk %s 1 %d" % (a.run, (max(r1) + 1) if r1 else 1)
+    elif not p2:
+        nxt = "tx.py chunk %s 2 %d" % (a.run, (max(r2) + 1) if r2 else 1)
+    elif not st["scan"]:
+        nxt = "tx.py scan %s" % a.run
+    elif not st["build"]:
+        nxt = "write ledger.json and content.json, then build.py %s" % a.run
+    else:
+        nxt = "verify.py %s" % a.run
+    print("NEXT: " + nxt)
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    sub = ap.add_subparsers(dest="cmd", required=True)
+    p = sub.add_parser("prep")
+    p.add_argument("source")
+    p.add_argument("run")
+    p.add_argument("--force", action="store_true")
+    p.set_defaults(fn=cmd_prep)
+    p = sub.add_parser("chunk")
+    p.add_argument("run")
+    p.add_argument("pass_", type=int, metavar="pass")
+    p.add_argument("n", type=int)
+    p.set_defaults(fn=cmd_chunk)
+    p = sub.add_parser("scan")
+    p.add_argument("run")
+    p.set_defaults(fn=cmd_scan)
+    p = sub.add_parser("status")
+    p.add_argument("run")
+    p.set_defaults(fn=cmd_status)
+    a = ap.parse_args()
+    a.fn(a)
+
+
+if __name__ == "__main__":
+    main()
