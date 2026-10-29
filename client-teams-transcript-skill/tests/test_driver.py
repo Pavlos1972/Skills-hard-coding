@@ -154,7 +154,7 @@ class Journey(DriverBase):
         self.handover_receipts()
         # Teams: shows the exact message and the Zapier route, only now that everything else passes
         shown = drv("next", self.run_dir).stdout
-        self.assertIn("2nd Teams Appointment Completed: 05/10/2026", shown)
+        self.assertIn("Sam Testcase (Review Client) \u2013 2nd Teams Appointment Completed: 05/10/2026", shown)
         self.assertIn("Please take note of Follow Up Appt.", shown)
         self.assertIn("mcp__Zapier__microsoft_teams_send_chat_message", shown)
         self.assertIn("(1:1 Chat) Paul Kafentzis, Sitamah Nathoo", shown)
@@ -394,7 +394,7 @@ class TeamsMessage(Base):
     def test_wording_and_follow_up_sentence(self):
         self.built()
         self.assertEqual(self.message(),
-                         "Sam Testcase \u2013 2nd Teams Appointment Completed: 05/10/2026 \u2013 Please see instructions in Client / Prospect Task. Please take note of Follow Up Appt.")
+                         "Sam Testcase (Review Client) \u2013 2nd Teams Appointment Completed: 05/10/2026 \u2013 Please see instructions in Client / Prospect Task. Please take note of Follow Up Appt.")
 
     def test_vague_next_appointment_leaves_the_sentence_out(self):
         self.built(lambda c: c["next_appointment"].update(agreed=False, text="Early next month, date to be set",
@@ -409,12 +409,35 @@ class TeamsMessage(Base):
         self.write("content.json", c)
         self.assertFails(self.verify("pre"), "does not show a specific agreed date/time")
 
-    def test_review_wording_and_third_appointment(self):
-        self.built(lambda c: c.update(appointment_number="review"))
-        self.assertIn("Review Teams Appointment Completed", self.message())
-        shutil.rmtree(self.run_dir, ignore_errors=True)
-        self.built(lambda c: c.update(appointment_number=3))
-        self.assertIn("3rd Teams Appointment", self.message())
+    def test_a_prospect_gets_the_prospect_label_and_the_count_is_a_plain_number(self):
+        self.built(lambda c: c.update(client_status="Prospect", client_status_basis="the client's folder sits in Company - Paul\\New Business\\Testcase, Sam", appointment_number=3))
+        self.assertIn("Sam Testcase (Prospect) \u2013 3rd Teams Appointment Completed", self.message())
+
+    def test_the_label_is_required_and_must_be_one_of_the_two(self):
+        self.to_ready()
+        c = self.content()
+        c["client_status"] = "Client"
+        self.write("content.json", c)
+        self.assertFails(self.verify("pre"), 'client_status must be "Review Client" or "Prospect"')
+        c = self.content()
+        del c["client_status_basis"]
+        self.write("content.json", c)
+        self.assertFails(self.verify("pre"), "client_status_basis")
+
+    def test_the_label_is_checked_against_where_the_clients_folder_sits(self):
+        self.to_ready()
+        srcs = self.sources()
+        for e in srcs:
+            if e.get("read") == "yes":
+                e["path"] = "C:\\Users\\Paul\\OneDrive\\Company - WR Clients\\Paul Kafentzis (Client Files)\\Testcase, Sam\\" + e["ref"] + ".pdf"
+        self.write("sources.json", srcs)
+        c = self.content()
+        c.update(client_status="Prospect", client_status_basis="the client is new this month, so a prospect")
+        self.write("content.json", c)
+        self.assertFails(self.verify("pre"), "client_status is Prospect but the folders read for this client sit where a Review Client's would")
+        c.update(client_status="Review Client")
+        self.write("content.json", c)
+        self.assertEqual(self.verify("pre").returncode, 0, self.verify("pre").stdout)
 
     def test_appointment_number_must_be_justified_and_valid(self):
         self.to_ready()
@@ -423,6 +446,10 @@ class TeamsMessage(Base):
         c["appointment_number_basis"] = "x"
         self.write("content.json", c)
         self.assertFails(self.verify("pre"), "appointment_number must be", "appointment_number_basis")
+        c["appointment_number"] = "review"
+        c["appointment_number_basis"] = "the label says it is a review, so no number is needed"
+        self.write("content.json", c)
+        self.assertFails(self.verify("pre"), "appointment_number must be 1, 2, 3")
 
     def test_appointment_number_cannot_exceed_what_the_file_supports(self):
         self.to_ready()

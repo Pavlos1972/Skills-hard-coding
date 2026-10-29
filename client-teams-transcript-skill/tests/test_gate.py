@@ -105,6 +105,8 @@ class Base(unittest.TestCase):
             "meeting_date": "05/10/2026",
             "topic": "Follow-up appointment: Risk, RA and Tax-Free",
             "appointment_number": 2,
+            "client_status": "Review Client",
+            "client_status_basis": "the client's folder sits in Company - WR Clients\\Paul Kafentzis (Client Files)\\Testcase, Sam",
             "appointment_number_basis": "Fact Find and one earlier Follow-Up Appointment Summary Notes file are on the client's file",
             "opening": "This follow-up meeting covered the BrightRock quote, the Optimal RA quote and the Tax-Free investment.",
             "since_last": [

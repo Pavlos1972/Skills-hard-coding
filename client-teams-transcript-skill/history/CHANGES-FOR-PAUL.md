@@ -16,7 +16,7 @@ mistake while editing, and I put them back. The skill's name and its description
 - **Your eight areas** each have their own heading, in your order, in the Planner note and the PDF: Risk, RA, Investment, RGAR, EGAR, Medical Aid, Will, Short-Term. "Other" appears only when something notable was said. One line names the areas not discussed.
 - **The Planner note is a copy-ready page** with a Copy note button, made by the program, the same every time. Tested in a real browser: it copies bold text and bullets, no stray asterisks, and the page fits a phone.
 - **The PDF is built and named by the program**, so a text draft cannot take its place.
-- **The Teams message to Sitamah** is the one from your Fact Find skill, sent through Zapier only. The program shows it only when everything else has passed, so it can never go out and then the run fail. It records what Zapier stored, and your own words of yes.
+- **The Teams message to Sitamah** is the `fact-find-summary` one, with (Review Client) or (Prospect) after the name as you said, decided from where the client's folder sits (and checked against the folders Claude actually read). Sent through Zapier only. The program shows it only when everything else has passed, so it can never go out and then the run fail. It records what Zapier stored, and your own words of yes.
 - **Client file first, then Paul.** Every document read is logged, with a text copy so quotes can be checked. "Nothing on file" is accepted only after the searches are logged. Claude can ask you only after all three routes failed, and the program hands it the exact words.
 - **A correction re-opens everything.** If anything is rebuilt, the page, PDF, checks and hand-over must all be done again; old receipts no longer count.
 - **A self-test at the start.** If the chat is missing something it needs (including the tool that reads Word transcripts), it stops and tells you.
@@ -36,10 +36,10 @@ an invented fact with an unrelated quote could pass; a run could pass for the wr
 | 4 | Dates in brackets after headings, such as "(Paul's rule, 06/10/2026)" | History again. 13 of them, all listed in `history/dated-attributions-removed.txt` | Yes, remove |
 | 5 | The old 21-point checklist as one long sentence | Kept, but as a table that says which points the program checks and which are Claude's judgment | Keep the table |
 
-## Three things I need you to decide
-1. **The Teams message wording.** Your two skills word it differently. `ff-population-transcript` (updated 28/10) has no label after the name; `fact-find-summary` (14/10) adds "(Review Client)" or "(Prospect)" after the name. I used the `ff-population-transcript` wording because that is the one you pointed me to. Which should every skill use?
-2. **WhatsApp calls.** The message is defined only for Teams appointments ("Teams Appointment Completed"). I left it out for WhatsApp calls. Should a WhatsApp call also notify Sitamah, and in what words?
-3. **Old stories inside the rules.** Some rules still carry a short "named precedent" story about a past client (names removed). They help Claude see what a mistake looks like. Keep them, or remove them?
+## Decided, and two questions still open
+- **Decided (your answer 29/10/2026): the Teams message wording depends on Prospect or Review client.** Built in.
+- **Open: WhatsApp calls.** A WhatsApp call is when you speak to a client on WhatsApp instead of in a Teams meeting; then there is no Teams transcript, so you give Claude your own recap and the skill makes a "WhatsApp Call Summary" PDF. The Sitamah message is defined only for Teams appointments, so I left it out for those calls. My recommendation: send Sitamah the same message with the words "WhatsApp Call Completed" instead of "Teams Appointment Completed". Yes or no?
+- **Open: the old stories inside the rules.** Some rules end with a short true story of a mistake made before (names removed), such as two requests written as if one waited on the other. My recommendation: keep them, because they help Claude recognise the mistake. Keep or remove?
 
 ## What to expect, and what I could not do
 - **It asks more of Claude than the old skill did.** The first real run will feel longer: a text copy of each document, a note per chunk, a reason for each dismissed keyword. That is the price of checking; if it is too heavy, tell me which part and I will ease it without losing the check.

@@ -7,6 +7,8 @@
   "meeting_date": "05/10/2026",
   "topic": "Follow-up appointment: Risk, RA and Tax-Free",
   "appointment_number": 2,
+  "client_status": "Review Client",
+  "client_status_basis": "the client's folder sits in Company - WR Clients\\Paul Kafentzis (Client Files)\\Testcase, Sam",
   "appointment_number_basis": "Fact Find and one earlier Follow-Up Appointment Summary Notes file are on the client's file",
   "opening": "This follow-up meeting covered the BrightRock quote, the Optimal RA quote and the Tax-Free investment.",
   "since_last": [
@@ -38,6 +40,11 @@
             {
               "line": 12,
               "quote": "one thousand one hundred rand a month"
+            },
+            {
+              "doc": "Quote",
+              "ref": "BrightRock quote 100000001",
+              "quote": "CP 100000001, R1,100.00 p.m."
             }
           ]
         },
@@ -60,6 +67,11 @@
             {
               "line": 24,
               "quote": "credit life on the Absa home loan costing about five hundred rand a month"
+            },
+            {
+              "doc": "Fact Find Summary",
+              "ref": "Fact Find Summary",
+              "quote": "Absa home loan credit life R500 p.m."
             }
           ]
         }
@@ -76,6 +88,11 @@
             {
               "line": 33,
               "quote": "Let's leave it for now, I'll get back to you on the RA"
+            },
+            {
+              "doc": "Quote",
+              "ref": "OM Optimal RA quote 100000002",
+              "quote": "OM Optimal RA Quote 100000002, R3,000 p.m."
             }
           ]
         }

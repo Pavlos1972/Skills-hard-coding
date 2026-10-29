@@ -498,13 +498,22 @@ def check_content(run, st, lines, content, idx, dup, refs, R):
     elif mt != "whatsapp":
         # the Teams message to Sitamah depends on these (ff-population-transcript Step 8)
         n = content.get("appointment_number")
-        if not (n == "review" or (isinstance(n, int) and not isinstance(n, bool) and n >= 1)):
-            R.add("FAIL", g, "appointment_number must be 1, 2, 3... or \"review\" (worked out from the client's file, never guessed)")
-        elif isinstance(n, int):
-            earlier = sum(1 for e in load(os.path.join(run, w.SOURCES), []) if isinstance(e, dict) and e.get("kind") == "Earlier Note" and e.get("read") == "yes")
-            limit = 1 if mt == "first" else earlier + 2
-            if n > limit:
-                R.add("FAIL", g, "appointment_number %d is more than the client's file supports (%d earlier note(s) read, so at most %d)" % (n, earlier, limit))
+        srcs = load(os.path.join(run, w.SOURCES), [])
+        if not (isinstance(n, int) and not isinstance(n, bool) and n >= 1):
+            R.add("FAIL", g, "appointment_number must be 1, 2, 3... (count the Teams meetings with this client on file, plus this one; never guess)")
+        else:
+            earlier = sum(1 for e in srcs if isinstance(e, dict) and e.get("kind") == "Earlier Note" and e.get("read") == "yes")
+            if n > earlier + 2:
+                R.add("FAIL", g, "appointment_number %d is more than the client's file supports (%d earlier note(s) read, so at most %d)" % (n, earlier, earlier + 2))
+        status = content.get("client_status")
+        if status not in w.CLIENT_STATUSES:
+            R.add("FAIL", g, "client_status must be \"Review Client\" or \"Prospect\": decide it from where the client's folder sits (Company - WR Clients\\Paul Kafentzis (Client Files) = Review Client; Company - Paul\\New Business = Prospect); if unclear, ask Paul")
+        else:
+            seen = w.status_from_paths(srcs if isinstance(srcs, list) else [])
+            if len(S(content.get("client_status_basis")).strip()) < 10:
+                R.add("FAIL", g, "client_status_basis: say where the client's folder sits (the path), so the label can be checked")
+            elif seen and seen != status:
+                R.add("FAIL", g, "client_status is %s but the folders read for this client sit where a %s's would: if it is unclear, ask Paul (run.py ask)" % (status, seen))
         if len(S(content.get("appointment_number_basis")).strip()) < 10:
             R.add("FAIL", g, "appointment_number_basis: say which earlier meetings/files on the client's file give that number")
         agreed = na.get("agreed")
@@ -733,7 +742,7 @@ def check_declared(run, content, idx, ledger, R):
 
 # ---------------------------------------------------------------- E outputs
 TEAMS_RE = re.compile(
-    r"^(?P<name>.+) – (?P<kind>(?:\d+(?:st|nd|rd|th)|Review) Teams Appointment) Completed: (?P<date>\d{2}/\d{2}/\d{4}) "
+    r"^(?P<name>.+) \((?P<label>Review Client|Prospect)\) \u2013 (?P<kind>\d+(?:st|nd|rd|th) Teams Appointment) Completed: (?P<date>\d{2}/\d{2}/\d{4}) "
     r"– Please see instructions in Client / Prospect Task\.(?P<fu> Please take note of Follow Up Appt\.)?$")
 TAG = re.compile(r"<[^>]+>")
 
@@ -797,8 +806,8 @@ def check_outputs(run, st, content, R):
         c = content["client"]
         if not m:
             R.add("FAIL", g, "Teams message is not in the fixed Step 8 wording: %r" % msg.strip())
-        elif m["name"] != "%s %s" % (c["first"], c["surname"]) or m["date"] != content["meeting_date"]:
-            R.add("FAIL", g, "Teams message has the wrong client name or date")
+        elif m["name"] != "%s %s" % (c["first"], c["surname"]) or m["date"] != content["meeting_date"] or m["label"] != content.get("client_status"):
+            R.add("FAIL", g, "Teams message has the wrong client name, label or date")
         elif os.path.exists(os.path.join(out, names["teams"])):
             R.add("PASS", g, "Teams message to Sitamah is exactly the fixed wording (%s%s)" % (m["kind"], ", with follow-up sentence" if m["fu"] else ", no follow-up sentence"))
 

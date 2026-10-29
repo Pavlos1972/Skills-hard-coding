@@ -1,7 +1,7 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
-**Version 1.4 (draft for Paul to review)**
-**Last updated: 2026-10-29 12:27 (Athens time)**
+**Version 1.5 (draft for Paul to review)**
+**Last updated: 2026-10-29 13:08 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
 Every future Claude Code session in this repo must read it before touching any skill
@@ -314,6 +314,7 @@ Every run (one client, one meeting) keeps in its own run folder:
 4. **The eight planning areas**: Risk, RA, Investment, RGAR, EGAR, Medical Aid, Will, Short-Term. "Other" (debt, children, health, general) is shown only when something notable was said.
 5. **Headings**: each of the eight is its own heading, in that order, in the Planner note and the PDF, shown only when discussed or still open, with one line naming the ones not discussed.
 6. **S16 approved** (program drives the job step by step), on condition that it works in a real chat first.
+7. **Teams message wording (Paul, 29/10/2026: "it depends on whether it is a Prospect or a Review client")**: the `fact-find-summary` wording, with `(Review Client)` or `(Prospect)` after the name, decided from where the client's folder sits (Company - WR Clients\Paul Kafentzis (Client Files) = Review Client; Company - Paul\New Business = Prospect; ask Paul if unclear), and a plain count (1st, 2nd, 3rd) of the Teams meetings with that client.
 
 **Still open**
 1. Which skill comes after the Teams transcript skill?
@@ -324,7 +325,7 @@ Every run (one client, one meeting) keeps in its own run folder:
 - Step 3 says "eight areas" but lists seven. Resolved: the eight are Risk, RA, Investment, RGAR, EGAR, Medical Aid, Will, Short-Term (decision 4).
 - No Teams message to Sitamah deliverable. Resolved: add the Step 8 message from `ff-population-transcript` (decision 2).
 - **Missing page template.** `ff-population-transcript` Step 7b says to use the Planner page template and publishing steps in this skill's Output 1 section. They are not there. Each chat invents its own page. The rewrite generates the page by program.
-- **Divergent Teams message.** `ff-population-transcript` (28/10) and `fact-find-summary` (14/10) word the Sitamah message differently (the second adds "(Review Client)" or "(Prospect)" after the name) and both send it for a first meeting, "once per meeting". Paul to decide one wording; the Teams transcript skill uses the `ff-population-transcript` one and records `already_sent`.
+- **Teams message wording differs between two skills.** Paul decided on 29/10/2026 that the label (Review Client / Prospect) belongs in the message. `fact-find-summary` already has it; `ff-population-transcript` Step 8 does not and still says `Review Teams Appointment` for a review. To be aligned when that skill is converted. Both send it for a first meeting, "once per meeting"; the Teams transcript skill records `already_sent`.
 - `ff-population-transcript` Step 7b still names the old combined Planner-note headings (Retirement incl. RGAR, Investment incl. EGAR, Medical Aid / Will / Short-Term). To be aligned when that skill is converted.
 - Other skills already carry scripts: `alpha-bank-statements`, `complete-applications-skill`, `fact-find-summary`, `ff-population-transcript` (JavaScript), `om-tax-free-skill`, `rgar-skill`, `wr-roa-builder`, `wr-sroa-builder`. The standard must work with these; it does not start from zero. Several treat the script as a template Claude may adapt, which the new standard does not allow during a run.
 - Examples contain real client names (S11).
@@ -343,6 +344,7 @@ Every run (one client, one meeting) keeps in its own run folder:
 | When (Athens time) | What changed |
 |---|---|
 | 2026-10-29 11:22 | Version 1.2: S16 approved on condition of a real-chat trial; each of the eight areas is its own heading; section 3 explains where the program lives; existing skills with scripts listed |
+| 2026-10-29 13:08 | Version 1.5: Teams message gets the (Review Client)/(Prospect) label, decided from where the client's folder sits (Paul's answer); known gaps updated |
 | 2026-10-29 12:27 | Version 1.4: Teams transcript skill hardened after an independent review (157 tests); divergent Teams message wording and sibling-skill headings recorded as gaps |
 | 2026-10-29 11:53 | Version 1.3: Teams transcript skill rebuilt to the standards; tools built (stamp, lint, inventory, package); tracker and status updated |
 | 2026-10-29 (between 11:01 and 11:22; first typed by hand as 12:00 in error) | Version 1.1: Paul's answers recorded (pane, Teams message via Zapier, removal approach, eight areas); Planner page and Teams message rules taken from `ff-population-transcript`; S16 proposed; missing page template recorded as a gap |

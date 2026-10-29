@@ -137,6 +137,7 @@
       "do": [
         "Write {run}/content.json. Model: {skill_dir}/references/content-example.json. `areas` is a LIST of {\"key\": ..., \"bullets\": [...]}. Every bullet and every action carries its source: a transcript line plus the exact words (at least 10 characters), or a document you recorded in the context step (cite its --ref and the exact words). Every figure in an item (money, quote or policy number, percentage) must appear in one of its sources.",
         "Answer EVERY item in the `checks` block (correspondence, owner change, cession, credit life, applications, quotes). None may be left out, and each is cross-checked against your text.",
+        "For a Teams meeting also set `client_status` (\"Review Client\" or \"Prospect\") and `client_status_basis` (the folder path it comes from): a client in Company - WR Clients\\Paul Kafentzis (Client Files) is a Review Client; a client in Company - Paul\\New Business is a Prospect. If it is unclear, ask Paul with run.py ask. Never guess. Also `appointment_number` (the Teams meetings on file with this client, plus this one) and its basis.",
         "Then link every ledger entry to the items that cover it: python3 {scripts}/run.py ledger {run} cover <ledger id> <item id> [<item id> ...]   (or: ledger exclude <id> \"reason\" for a plain fact or figure). The covering item must cite the transcript close to that ledger line.",
         "Check: python3 {scripts}/verify.py {run} --stage pre   and fix every FAIL before moving on."
       ],

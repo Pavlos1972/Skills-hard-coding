@@ -189,10 +189,9 @@ def teams_message(content):
     if content["meeting_type"] == "whatsapp":
         return None
     c = content["client"]
-    n = content["appointment_number"]
-    kind = "Review Teams Appointment" if n == "review" else "%s Teams Appointment" % w.ordinal(n)
-    text = "%s %s %s %s Completed: %s %s Please see instructions in Client / Prospect Task." % (
-        c["first"], c["surname"], DASH, kind, content["meeting_date"], DASH)
+    kind = "%s Teams Appointment" % w.ordinal(content["appointment_number"])
+    text = "%s %s (%s) %s %s Completed: %s %s Please see instructions in Client / Prospect Task." % (
+        c["first"], c["surname"], content["client_status"], DASH, kind, content["meeting_date"], DASH)
     if content["next_appointment"].get("agreed") is True:
         text += " " + FOLLOW_UP_SENTENCE
     return text

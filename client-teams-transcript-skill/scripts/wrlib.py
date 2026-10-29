@@ -80,9 +80,18 @@ AREA_HEADING = dict(AREAS)
 EIGHT = [k for k, _ in AREAS if k != "other"]
 
 
+CLIENT_STATUSES = ("Review Client", "Prospect")
+
+
+def status_from_paths(sources):
+    """Where the client's folder sits decides the label: Company - WR Clients = Review Client; Company - Paul\\New Business = Prospect."""
+    paths = " ".join(str(e.get("path") or "") for e in sources if isinstance(e, dict) and e.get("read") == "yes").lower().replace("/", "\\")
+    review = "company - wr clients" in paths or "paul kafentzis (client files)" in paths
+    prospect = "company - paul" in paths and "new business" in paths
+    return "Review Client" if review and not prospect else ("Prospect" if prospect and not review else None)
+
+
 def ordinal(n):
-    if n == "review":
-        return "Review"
     n = int(n)
     if 10 <= n % 100 <= 20:
         suf = "th"
