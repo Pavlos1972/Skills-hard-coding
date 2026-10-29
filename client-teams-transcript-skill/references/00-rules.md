@@ -18,7 +18,7 @@ The names Step 1b, Step 4c, Step 6 and so on in these pages are the rule names f
 
 1. The **Planner note** as a copy-ready page (Artifact, with a Copy note button). Every meeting type.
 2. The **PDF**: Follow-Up Appointment Summary Notes (Teams follow-up) or WhatsApp Call Summary. Sent in the chat, saved into the client's `2. Fact Find` folder, and the saved file listed back. Not for a first/Fact Find meeting (that meeting's PDF is the Fact Find Summary, made by `fact-find-summary`).
-3. The **Teams message to Sitamah**, shown to Paul, sent through Zapier only after his yes. Teams meetings only (not WhatsApp calls).
+3. The **message to Sitamah** in Teams ("Teams Appointment Completed", or "WhatsApp Call Completed" for a WhatsApp call), shown to Paul, sent through Zapier only after his yes.
 4. The checks: both reads, the source trace, the mandatory questions, and the final `verify.py` printout, pasted unedited into the reply.
 
 After ANY correction, repeat the build and every hand-over for each output that changed, then run `verify.py` again.

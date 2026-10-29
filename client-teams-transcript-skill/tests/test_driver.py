@@ -183,10 +183,12 @@ class Journey(DriverBase):
         self.assertIn("teams", st.split("not applicable")[0])
         self.assertIn("check", st.split("not applicable")[0])
 
-    def test_whatsapp_has_no_teams_step(self):
+    def test_whatsapp_has_the_teams_step(self):
+        # Paul, 29/10/2026: a WhatsApp call also notifies Sitamah
         self.start("whatsapp")
         st = drv("status", self.run_dir).stdout
-        self.assertIn("teams", st.split("not applicable")[1])
+        self.assertIn("teams ", st)
+        self.assertNotIn("not applicable", st)
 
     def test_starting_twice_does_not_reset_the_run(self):
         self.start()
@@ -471,17 +473,52 @@ class TeamsMessage(Base):
         spit(self.p("out", "teams_message.txt"), "Sam Testcase \u2013 1st Teams Appointment Completed: 05/10/2026 \u2013 Please see instructions in Client / Prospect Task.\n")
         self.assertFails(self.verify("built"), "teams_message.txt is not what content.json produces")
 
-    def test_whatsapp_produces_no_teams_message(self):
+    def whatsapp_built(self, status="Review Client", number=3):
         self.prep()
         self.read()
         sh("tx.py", "scan", self.run_dir, ok=True)
         c = self.content()
-        c.update(meeting_type="whatsapp", meeting_time="14:30")
+        c.update(meeting_type="whatsapp", meeting_time="14:30", client_status=status, appointment_number=number)
         self.write("content.json", c)
         self.write("ledger.json", self.ledger())
         self.write_support("whatsapp")
         sh("build.py", self.run_dir, ok=True)
-        self.assertFalse(os.path.exists(self.p("out", "teams_message.txt")))
+
+    def test_whatsapp_message_says_whatsapp_call_completed(self):
+        self.whatsapp_built()
+        msg = slurp(self.p("out", "teams_message.txt")).strip()
+        self.assertEqual(msg, "Sam Testcase (Review Client) \u2013 3rd WhatsApp Call Completed: 05/10/2026 \u2013 Please see instructions in Client / Prospect Task. Please take note of Follow Up Appt.")
+        self.assertNotIn("Teams Appointment", msg)
+
+    def test_whatsapp_message_for_a_prospect_keeps_the_label(self):
+        self.whatsapp_built("Prospect", 2)
+        self.assertIn("Sam Testcase (Prospect) \u2013 2nd WhatsApp Call Completed:", slurp(self.p("out", "teams_message.txt")))
+
+    def test_a_whatsapp_run_with_the_teams_wording_fails(self):
+        self.whatsapp_built()
+        spit(self.p("out", "teams_message.txt"), "Sam Testcase (Review Client) \u2013 3rd Teams Appointment Completed: 05/10/2026 \u2013 Please see instructions in Client / Prospect Task.\n")
+        self.assertFails(self.verify("built"), "teams_message.txt is not what content.json produces")
+
+    def test_a_teams_meeting_cannot_use_the_whatsapp_wording(self):
+        self.built()
+        spit(self.p("out", "teams_message.txt"), "Sam Testcase (Review Client) \u2013 1st WhatsApp Call Completed: 05/10/2026 \u2013 Please see instructions in Client / Prospect Task.\n")
+        self.assertFails(self.verify("built"), "teams_message.txt is not what content.json produces")
+
+    def test_a_whatsapp_run_reaches_pass_with_the_message_sent(self):
+        self.whatsapp_built()
+        name = "WhatsApp Call Summary - 05.10.26 - (Testcase, Sam).pdf"
+        self.write("run.json", self.run_json("whatsapp"))   # a build re-opens the hand-over steps; the driver then redoes them
+        self.write_receipt(self.receipt(name))
+        r = self.verify()
+        self.assertEqual(r.returncode, 0, r.stdout)
+        self.assertIn("3rd WhatsApp Call", r.stdout)
+
+    def test_whatsapp_needs_the_teams_receipt_too(self):
+        self.whatsapp_built()
+        rc = self.receipt("WhatsApp Call Summary - 05.10.26 - (Testcase, Sam).pdf")
+        del rc["teams"]
+        self.write_receipt(rc)
+        self.assertFails(self.verify(), "teams.status must be sent")
 
     def receipt_with(self, **teams):
         self.to_built()

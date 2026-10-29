@@ -185,11 +185,10 @@ CHAT_LABEL = "(1:1 Chat) Paul Kafentzis, Sitamah Nathoo"
 
 
 def teams_message(content):
-    """The one-line message (ff-population-transcript Step 8). None for a WhatsApp call."""
-    if content["meeting_type"] == "whatsapp":
-        return None
+    """The one-line message to Sitamah (fact-find-summary / ff-population-transcript Step 8). A WhatsApp call says
+    "WhatsApp Call Completed" in place of "Teams Appointment Completed" (Paul, 29/10/2026)."""
     c = content["client"]
-    kind = "%s Teams Appointment" % w.ordinal(content["appointment_number"])
+    kind = "%s %s" % (w.ordinal(content["appointment_number"]), "WhatsApp Call" if content["meeting_type"] == "whatsapp" else "Teams Appointment")
     text = "%s %s (%s) %s %s Completed: %s %s Please see instructions in Client / Prospect Task." % (
         c["first"], c["surname"], content["client_status"], DASH, kind, content["meeting_date"], DASH)
     if content["next_appointment"].get("agreed") is True:

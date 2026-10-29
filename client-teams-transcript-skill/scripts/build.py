@@ -125,8 +125,7 @@ def main():
         names["note_txt"]: page.render_text(model, markdown=True),
     }
     msg = page.teams_message(content)
-    if msg:
-        files[names["teams"]] = msg + "\n"
+    files[names["teams"]] = msg + "\n"
     for old in glob.glob(os.path.join(out, "planner_note.*")) + glob.glob(os.path.join(out, "teams_message.txt")):
         os.remove(old)
     for fname, body in files.items():
@@ -160,11 +159,8 @@ def main():
         print("  Page images: %s" % ", ".join(sorted(os.path.basename(p) for p in glob.glob(os.path.join(out, "page*.png")))))
     else:
         print("  PDF: not produced (first/Fact Find meeting: the Fact Find Summary is that meeting's PDF)")
-    if msg:
-        print("  Teams message for Sitamah (needs Paul's yes before sending): %s" % os.path.join(out, names["teams"]))
-        print("    " + msg)
-    else:
-        print("  Teams message: not applicable to a WhatsApp call")
+    print("  Message to Sitamah (needs Paul's yes before sending): %s" % os.path.join(out, names["teams"]))
+    print("    " + msg)
 
 
 if __name__ == "__main__":

@@ -212,8 +212,8 @@
   "kind": "moved",
   "old": "No transcript file exists: ask Paul for his recap/notes or recording and confirm the exact date and TIME of the call before drafting.",
   "new": "same text, appended here",
-  "why": "Kept word for word; added the run type and a note that the Teams message does not apply (the old skill defines it only for Teams appointments).",
-  "needs_paul": true
+  "why": "Kept word for word; added the run type and a note that the message to Sitamah is sent for a WhatsApp call too, worded 'WhatsApp Call Completed' (Paul, 29/10/2026).",
+  "needs_paul": false
  },
  {
   "file": "06c-handoffs.md",

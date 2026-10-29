@@ -495,8 +495,8 @@ def check_content(run, st, lines, content, idx, dup, refs, R):
     na = content.get("next_appointment")
     if not isinstance(na, dict):
         R.add("FAIL", g, "next_appointment {id, text, src} is required")
-    elif mt != "whatsapp":
-        # the Teams message to Sitamah depends on these (ff-population-transcript Step 8)
+    else:
+        # the message to Sitamah depends on these (fact-find-summary / ff-population-transcript Step 8)
         n = content.get("appointment_number")
         srcs = load(os.path.join(run, w.SOURCES), [])
         if not (isinstance(n, int) and not isinstance(n, bool) and n >= 1):
@@ -742,7 +742,7 @@ def check_declared(run, content, idx, ledger, R):
 
 # ---------------------------------------------------------------- E outputs
 TEAMS_RE = re.compile(
-    r"^(?P<name>.+) \((?P<label>Review Client|Prospect)\) \u2013 (?P<kind>\d+(?:st|nd|rd|th) Teams Appointment) Completed: (?P<date>\d{2}/\d{2}/\d{4}) "
+    r"^(?P<name>.+) \((?P<label>Review Client|Prospect)\) \u2013 (?P<kind>\d+(?:st|nd|rd|th) (?:Teams Appointment|WhatsApp Call)) Completed: (?P<date>\d{2}/\d{2}/\d{4}) "
     r"– Please see instructions in Client / Prospect Task\.(?P<fu> Please take note of Follow Up Appt\.)?$")
 TAG = re.compile(r"<[^>]+>")
 
@@ -780,8 +780,6 @@ def check_outputs(run, st, content, R):
     msg = page.teams_message(content)
     if msg:
         expected[names["teams"]] = msg + "\n"
-    elif os.path.exists(os.path.join(out, names["teams"])):
-        R.add("FAIL", g, "a WhatsApp call must not produce the Teams appointment message")
 
     for fname, want in expected.items():
         p = os.path.join(out, fname)
@@ -808,6 +806,8 @@ def check_outputs(run, st, content, R):
             R.add("FAIL", g, "Teams message is not in the fixed Step 8 wording: %r" % msg.strip())
         elif m["name"] != "%s %s" % (c["first"], c["surname"]) or m["date"] != content["meeting_date"] or m["label"] != content.get("client_status"):
             R.add("FAIL", g, "Teams message has the wrong client name, label or date")
+        elif ("WhatsApp Call" in m["kind"]) != (mt == "whatsapp"):
+            R.add("FAIL", g, "the message says %r but this meeting is a %s" % (m["kind"], "WhatsApp call" if mt == "whatsapp" else "Teams meeting"))
         elif os.path.exists(os.path.join(out, names["teams"])):
             R.add("PASS", g, "Teams message to Sitamah is exactly the fixed wording (%s%s)" % (m["kind"], ", with follow-up sentence" if m["fu"] else ", no follow-up sentence"))
 
@@ -959,9 +959,7 @@ def check_receipt(run, st, content, ledger, R, skip=()):
     if "teams" not in skip:
         tm = rc.get("teams") if isinstance(rc.get("teams"), dict) else {}
         status = tm.get("status")
-        if mt == "whatsapp":
-            R.add("ATTEST", g, "Teams message not applicable to a WhatsApp call")
-        elif status == "sent":
+        if status == "sent":
             msg = page.teams_message(content)
             body = w.norm(html.unescape(TAG.sub(" ", str(tm.get("body_as_stored") or ""))))
             if not text(tm, "message_id", "sent_time", "approved_by_paul", n=3) or len(body) < 20:
@@ -986,7 +984,7 @@ def check_receipt(run, st, content, ledger, R, skip=()):
             else:
                 R.add("ATTEST", g, "Teams send failed; message text given to Paul to paste (not claimed as sent)")
         else:
-            fail("teams.status must be sent, already_sent, declined or failed: the Teams message to Sitamah is the last step of every Teams meeting")
+            fail("teams.status must be sent, already_sent, declined or failed: the Teams message to Sitamah is the last step of every run")
 
 
 def check_driver(run, mt, R, skip=()):

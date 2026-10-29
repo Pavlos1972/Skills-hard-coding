@@ -1,6 +1,6 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
-**Version 1.5 (draft for Paul to review)**
+**Version 1.6 (draft for Paul to review)**
 **Last updated: 2026-10-29 13:08 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
@@ -315,10 +315,13 @@ Every run (one client, one meeting) keeps in its own run folder:
 5. **Headings**: each of the eight is its own heading, in that order, in the Planner note and the PDF, shown only when discussed or still open, with one line naming the ones not discussed.
 6. **S16 approved** (program drives the job step by step), on condition that it works in a real chat first.
 7. **Teams message wording (Paul, 29/10/2026: "it depends on whether it is a Prospect or a Review client")**: the `fact-find-summary` wording, with `(Review Client)` or `(Prospect)` after the name, decided from where the client's folder sits (Company - WR Clients\Paul Kafentzis (Client Files) = Review Client; Company - Paul\New Business = Prospect; ask Paul if unclear), and a plain count (1st, 2nd, 3rd) of the Teams meetings with that client.
+8. **WhatsApp calls also notify Sitamah (Paul, 29/10/2026: "Yes")**: same message, with "WhatsApp Call Completed" in place of "Teams Appointment Completed". Assumption stated to Paul: the count (1st, 2nd, 3rd) is every meeting and call on file plus this one; built in until he says otherwise. A WhatsApp call is a call on WhatsApp instead of a Teams meeting; there is no Teams transcript, so Paul gives his own recap.
+9. **The short true stories ("named precedents") inside the rules stay (Paul, 29/10/2026: "Keep")**: they help Claude recognise the mistake. Names are removed from them (S11).
+10. **Go for the Teams transcript skill given (29/10/2026).** The NEXT skill does not start until Paul has trialled this one and says go.
 
 **Still open**
-1. Which skill comes after the Teams transcript skill?
-2. Paul's "go" to start the rewrite of the Teams transcript skill (not given yet).
+1. Which skill comes after the Teams transcript skill (only after Paul's trial and his go)?
+2. Paul's yes/no on the five removals listed in `client-teams-transcript-skill/history/CHANGES-FOR-PAUL.md`, the upload of the zip and the result of the real-case trial.
 
 ## 8. Known gaps found in the Teams transcript skill (to fix in its rewrite)
 
@@ -336,13 +339,14 @@ Every run (one client, one meeting) keeps in its own run folder:
 
 | Skill | Status |
 |---|---|
-| client-teams-transcript-skill | REBUILT to these standards (step driver, reading lock, client-file and access logs, Planner page, PDF, Sitamah Teams message, PASS/FAIL checklist; 157 tests, hardened after an independent review; nothing from the old skill lost without a record). Zip ready (releases/client-teams-transcript-skill-20261029-1229.zip); waiting for Paul's yes/no list, upload and a real-case trial |
+| client-teams-transcript-skill | REBUILT to these standards (step driver, reading lock, client-file and access logs, Planner page, PDF, Sitamah Teams message (Teams meetings and WhatsApp calls), PASS/FAIL checklist; 164 tests, hardened after an independent review; nothing from the old skill lost without a record). The Sitamah message also covers WhatsApp calls (Paul's yes). Zip ready (see releases/; the newest one only); waiting for Paul's yes/no list, upload and a real-case trial |
 | client-pipeline-board, complete-applications-skill, fact-find-summary, ff-population-transcript, wr-roa-builder, wr-sroa-builder, rgar-skill, om-optimal-ra-proposal, om-tax-free-skill, investment-comparisons-skill, life-insurer-comparison, life-policy-schedule-analyzer, client-review-notes, client-transcript-download, teams-meeting-setup-skill, outlook-emails-skill, planner-interim-procedure, cameron-short-term-skill, advicetech-website-knowledge, alpha-bank-statements, nedbank-current-account-categorization, paul-email-signature, correcting-skills, master-skill-template | Not started |
 
 ## 10. Changelog (last 5)
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-10-29 13:17 | Version 1.6: Paul's answers recorded (WhatsApp calls also notify Sitamah with "WhatsApp Call Completed"; the true stories in the rules stay; go given for the Teams transcript skill); the skill now builds that message for WhatsApp calls |
 | 2026-10-29 11:22 | Version 1.2: S16 approved on condition of a real-chat trial; each of the eight areas is its own heading; section 3 explains where the program lives; existing skills with scripts listed |
 | 2026-10-29 13:08 | Version 1.5: Teams message gets the (Review Client)/(Prospect) label, decided from where the client's folder sits (Paul's answer); known gaps updated |
 | 2026-10-29 12:27 | Version 1.4: Teams transcript skill hardened after an independent review (157 tests); divergent Teams message wording and sibling-skill headings recorded as gaps |

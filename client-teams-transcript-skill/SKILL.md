@@ -15,17 +15,17 @@ description: "Summarize a client's Teams meeting transcript (or WhatsApp call) i
 | 4 | When something goes wrong | What to do instead of improvising |
 | 5 | Where the detail lives | The pages the program shows at each step |
 
-**Last updated: 2026-10-29 13:08 (Athens time)**
+**Last updated: 2026-10-29 13:18 (Athens time)**
 
 **Recent changes** (last 5, one line each; full history in the repo `history/` folder)
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-10-29 13:18 | The message to Sitamah is now also built, checked and sent for WhatsApp calls ("WhatsApp Call Completed"), as Paul decided |
 | 2026-10-29 13:08 | Teams message now carries (Review Client) or (Prospect) after the name, decided from where the client's folder sits |
 | 2026-10-29 12:29 | Planner page follows the page tool's contract (no own html/head/body, side gutters) and has three ways to copy |
 | 2026-10-29 12:26 | Hardened after an independent review: figures and quotes must support each item, every chunk acknowledged, client and date checked, hand-over re-opens on rebuild, Teams message held back until all else passes |
 | 2026-10-29 11:56 | Reader handles time-after-name layouts and stops when no times can be read (--notes for recaps) |
-| 2026-10-29 11:52 | Teams route text no longer carries a date |
 
 ## Run it
 
@@ -43,7 +43,7 @@ Never rewrite, shorten or "improve" the programs during a run, and never replace
 
 - The **Planner note** as a copy-ready page with a Copy note button (every meeting type).
 - The **PDF**: Follow-Up Appointment Summary Notes, or WhatsApp Call Summary. Sent in the chat, saved into the client's `2. Fact Find` folder, and listed back. Not for a first/Fact Find meeting.
-- The **Teams message to Sitamah**, shown to Paul and sent through Zapier only after his yes (Teams meetings only).
+- The **message to Sitamah** in Teams ("Teams Appointment Completed" or, for a WhatsApp call, "WhatsApp Call Completed"), shown to Paul and sent through Zapier only after his yes.
 - The final printout saying `RESULT: PASS`. No PASS in your reply means the job is not finished: say so.
 
 ## Standing rules

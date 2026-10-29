@@ -98,7 +98,7 @@ def teams_block(run):
     content = w.load_json(cp)
     msg = page.teams_message(content)
     if not msg:
-        return "(not applicable to a WhatsApp call)"
+        return "(no message could be built: check content.json)"
     R, *_ = verify.run_checks(run, "final", ("teams",))
     if R.fails:
         return ("NOT YET. The message must not be shown or sent until every other check passes. Fix these first:\n" +
