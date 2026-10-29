@@ -115,46 +115,50 @@ class Base(unittest.TestCase):
             ],
             "areas": [
                 {"key": "risk", "bullets": [
-                    {"id": "b1", "text": "BrightRock Revised Reduced Quote CP 100000001, R1,100.00 p.m.", "status": "ACCEPTED (verbal)",
+                    {"id": "b1", "text": "BrightRock Revised Reduced Quote CP 100000001, R1,100.00 p.m.", "short": "BrightRock Revised Reduced Quote CP 100000001, R1,100.00 p.m.", "status": "ACCEPTED (verbal)",
                      "src": [s("I'm happy to go ahead with the BrightRock one"), s("one thousand one hundred rand a month"),
                              d("BrightRock quote 100000001", "CP 100000001, R1,100.00 p.m.")]},
                     {"id": "b2", "text": "Instalment Protector on the Absa home loan: if retrenched, BrightRock pays the instalment to Absa once the home loan is ceded to Absa",
+                     "short": "Instalment Protector on the Absa home loan, once the loan is ceded to Absa",
                      "status": "still open", "src": [s("the home loan must be ceded to Absa for the minimum period")]},
-                    {"id": "b3", "text": "Credit life on the Absa home loan (about R500 p.m.) to be cancelled once the BrightRock policy is accepted and in force",
+                    {"id": "b3", "text": "Credit life on the Absa home loan (about R500 p.m.): the details are still to be obtained from Sam",
+                     "short": "Credit life on the Absa home loan, about R500 p.m.",
                      "status": "still open", "src": [s("credit life on the Absa home loan costing about five hundred rand a month"),
                                                      d("Fact Find Summary", "Absa home loan credit life R500 p.m.")]},
                 ]},
                 {"key": "ra", "bullets": [
                     {"id": "b4", "text": "OM Optimal RA Quote 100000002, R3,000 p.m.: the client will get back to us after speaking to his wife",
+                     "short": "OM Optimal RA Quote 100000002, R3,000 p.m.: client will get back to us",
                      "status": "on hold", "src": [s("Let's leave it for now, I'll get back to you on the RA"),
                                                   d("OM Optimal RA quote 100000002", "OM Optimal RA Quote 100000002, R3,000 p.m.")]},
                 ]},
                 {"key": "investment", "bullets": [
-                    {"id": "b5", "text": "owner now Sam (was Dana), for now", "status": "CHANGED:",
+                    {"id": "b5", "text": "owner now Sam (was Dana), for now", "short": "owner now Sam (was Dana), for now", "status": "CHANGED:",
                      "src": [s("rather put it in my name for now")]},
-                    {"id": "b6", "text": "Revised Tax-Free quote in Sam's name requested from Alwyn", "status": "awaiting",
+                    {"id": "b6", "text": "Revised Tax-Free quote in Sam's name requested from Alwyn", "short": "Revised Tax-Free quote in Sam's name requested from Alwyn", "status": "awaiting",
                      "src": [s("We need Alwyn to give us a revised quote in your name")]},
                 ]},
                 {"key": "will", "bullets": [
-                    {"id": "b7", "text": "Will: no change discussed on this call", "status": "still open",
+                    {"id": "b7", "text": "Will: no change discussed on this call", "short": "Will: no change discussed on this call", "status": "still open",
                      "src": [d("Follow-Up 01.09.26", "Will with Capital Legacy in progress")]},
                 ]},
             ],
             "applications": [],
             "actions": [
-                {"id": "a1", "text": "Sitamah to put a review of Dana's portfolio in the what's-next email (Sam answered 'Alright, 100%')",
+                {"id": "a1", "when": "now", "text": "Sitamah to put a review of Dana's portfolio in the what's-next email (Sam answered 'Alright, 100%')",
                  "src": [s("put a review of Dana's portfolio in your what's-next email"), s("Alright, 100%")]},
-                {"id": "a2", "text": "Sitamah to arrange for the Absa home loan to be ceded to Absa and send Sam the cession documents to sign",
+                {"id": "a2", "when": "later", "trigger": "once the BrightRock policy is issued",
+                 "text": "Sitamah to arrange for the Absa home loan to be ceded to Absa and send Sam the cession documents to sign",
                  "src": [s("We will send you the cession documents to sign")]},
-                {"id": "a3", "text": "Sitamah to get the credit-life details from Sam, ask whether he or WR will cancel it, and cancel only once the BrightRock policy is accepted and in force",
+                {"id": "a3", "when": "now", "text": "Sitamah to get the credit-life details from Sam",
                  "src": [s("We cancel that only once the new policy is accepted and in force")]},
-                {"id": "a4", "text": "Sitamah to request the revised Tax-Free quote in Sam's name from Alwyn",
+                {"id": "a4", "when": "now", "text": "Sitamah to request the revised Tax-Free quote in Sam's name from Alwyn",
                  "src": [s("We need Alwyn to give us a revised quote in your name")]},
-                {"id": "a5", "text": "Sitamah to keep the old Instant Life policy in place until the BrightRock policy is in force",
+                {"id": "a5", "when": "now", "text": "Sitamah to keep the old Instant Life policy in place until the BrightRock policy is in force",
                  "src": [s("please do not cancel the old Instant Life policy")]},
             ],
             "next_steps": [
-                {"id": "n1", "text": "Sam to speak to Dana and come back on the RA",
+                {"id": "n1", "owner": "client", "text": "Sam to speak to Dana and come back on the RA",
                  "src": [s("I'll get back to you on the RA once I have spoken to Dana")]},
             ],
             "next_appointment": {"id": "next", "text": "Thu 15/10/2026 at 4pm (RA)", "agreed": True,
@@ -432,7 +436,7 @@ class SourceTrace(Base):
 
     def test_asking_paul_to_approve_is_not_paul_owning_the_action(self):
         r = self.mutate_content(lambda c: c["actions"].append(
-            {"id": "a9", "text": "Sitamah to ask Paul to approve the draft email before it goes out",
+            {"id": "a9", "when": "now", "text": "Sitamah to ask Paul to approve the draft email before it goes out",
              "src": [self.src("put a review of Dana's portfolio in your what's-next email")]}))
         self.assertEqual(r.returncode, 0, r.stdout)
 
@@ -576,13 +580,18 @@ class MandatoryChecks(Base):
         r = self.mutate_content(lambda c: c["checks"].update(owner_change={"occurred": False}))
         self.assertFails(r, "owner_change.occurred is false")
 
-    def test_credit_life_declared_without_in_force_condition_fails(self):
+    def test_a_cancel_credit_life_action_is_refused(self):
+        # Paul, 29/10/2026 (answer 7): cancelling credit life is not an action of this skill
         r = self.mutate_content(lambda c: c["actions"][2].update(text="Sitamah to cancel the credit life on the Absa home loan"))
-        self.assertFails(r, "in force")
+        self.assertFails(r, "cancelling credit life", "the one credit-life action")
 
-    def test_credit_life_needs_all_three_actions(self):
-        r = self.mutate_content(lambda c: c["actions"][2].update(text="Sitamah to cancel the credit life only once the BrightRock policy is accepted and in force"))
-        self.assertFails(r, "(a) get the credit-life details", "(b) ask the client")
+    def test_credit_life_needs_the_get_details_action(self):
+        r = self.mutate_content(lambda c: c["actions"][2].update(text="Sitamah to email the Absa credit department"))
+        self.assertFails(r, "the one credit-life action is")
+
+    def test_credit_life_details_are_for_now(self):
+        r = self.mutate_content(lambda c: c["actions"][2].update(when="later", trigger="once the policy is issued"))
+        self.assertFails(r, "getting the credit-life details is for now")
 
     def test_credit_life_not_applicable_needs_a_reason(self):
         r = self.mutate_content(lambda c: c["checks"].update(credit_life={"debts_protected": False}))
@@ -682,9 +691,12 @@ class OutputsAndReceipt(Base):
     def test_many_bullets_do_not_strand_a_heading(self):
         self.to_ready()
         c = self.content()
-        for i in range(22):
-            c["areas"][0]["bullets"].append({"id": "x%d" % i, "text": "Extra risk point number with some words to fill the line (%d)" % i,
-                                             "status": "still open", "src": [self.src("one thousand one hundred rand a month")]})
+        filler = "Extra point with plenty of plain words so that every bullet fills a good part of the line and the page fills up quickly (%s)"
+        c["areas"][0]["bullets"][0]["short"] = c["areas"][0]["bullets"][0]["text"]
+        for key in ("rgar", "egar", "medical", "short_term", "other"):
+            c["areas"].append({"key": key, "bullets": [
+                dict({"id": "%s%d" % (key, i), "text": filler % i, "status": "still open", "src": [self.src("one thousand one hundred rand a month")]},
+                     **({"short": "Extra point number %d" % i} if i < 3 else {})) for i in range(4)]})
         self.write("content.json", c)
         sh("build.py", self.run_dir, ok=True)
         r = self.verify("built")

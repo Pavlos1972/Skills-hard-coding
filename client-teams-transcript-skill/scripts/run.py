@@ -97,7 +97,7 @@ def teams_block(run):
                 "\nThen run `python3 %s/run.py next %s` again." % (SCRIPTS, run))
     lines = ["BEFORE SENDING: if this meeting's message was already sent by ff-population-transcript or fact-find-summary in this chat, "
              "record teams.status=already_sent with teams.already_sent_evidence (which skill, when, message id) and do NOT send again.", "",
-             "MESSAGE TO SEND, exactly this:", "  " + msg, "",
+             "THE MESSAGE TO SITAMAH, exactly this (show it to Paul in your reply with the page and the PDF; send it ONLY after his yes):", "  " + msg, "",
              "WHY THE FOLLOW-UP SENTENCE IS %s: %s" % (
                  "IN" if content["next_appointment"].get("agreed") else "OUT", content["next_appointment"].get("check", "")),
              "", "THE ZAPIER ROUTE (hard-coded, use exactly this):"]

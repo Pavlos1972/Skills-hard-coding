@@ -29,12 +29,13 @@ import wrlib as w
 KINDS_MUST_COVER = {"decision", "change", "request", "instruction", "offer", "acceptance", "refusal", "hold"}
 KINDS_OPTIONAL = {"fact", "figure"}
 MEETING_TYPES = ("followup", "first", "whatsapp")
-GROUP_ORDER = "ASBCDEF"
+GROUP_ORDER = "ASBCLDEF"
 GROUP_NAMES = {
     "A": "A. Reading lock",
     "S": "S. Client file and access (S3, S4)",
     "B": "B. Ledger and coverage",
     "C": "C. Source trace",
+    "L": "L. Short notes and sorted actions (Paul's rules)",
     "D": "D. Mandatory checks",
     "E": "E. Outputs",
     "F": "F. Hand-over (attested by Claude, not machine-proven) and the step driver",
@@ -418,7 +419,7 @@ def validate_shape(content):
     for lst, it in (w.all_items(content) if not errs else []):
         if not isinstance(it.get("id", ""), str) or not isinstance(it.get("text", ""), str):
             errs.append("every item needs text and an id as plain text (%s)" % lst)
-        for fld in ("status", "tag"):
+        for fld in ("status", "tag", "short", "when", "trigger", "owner"):
             if fld in it and not isinstance(it[fld], str):
                 errs.append("%s of item %s must be text" % (fld, it.get("id")))
         src = it.get("src", [])
@@ -600,6 +601,10 @@ def check_content(run, st, lines, content, idx, dup, refs, R):
             if lost:
                 R.add("FAIL", g, "item %s states figures %s that appear in none of its sources: cite the transcript or the document that shows them" % (iid, lost))
                 problems += 1
+            lost = sorted(t for t in figures(S(it.get("short"))) if t not in have)
+            if lost:
+                R.add("FAIL", g, "item %s: its Planner one-liner (short) states figures %s that appear in none of its sources" % (iid, lost))
+                problems += 1
 
         if lst == "actions":
             if not it["text"].startswith("Sitamah to "):
@@ -639,6 +644,94 @@ def check_content(run, st, lines, content, idx, dup, refs, R):
         R.add("WARN", g, "document source '%s' (items %s) cannot be machine-checked: no text copy was recorded (run.py source --text-file ...). Paul should glance at those items" % (ref, sorted(ids)))
     if not problems:
         R.add("PASS", g, "%d items, %d sources: every quote found, every figure traced to a source, every action starts 'Sitamah to', no ID numbers, PDF-safe characters" % (len(idx), n_src))
+
+
+# ---------------------------------------------------------------- L short notes and sorted actions
+# Paul's answers on his first real-case trial. Each rule below is a thing he removed or asked for.
+ACTION_BANS = (
+    ("what the client decides", re.compile(r"\bask\b[^.]{0,60}\b(what|whether|if)\b[^.]{0,40}\b(want\w*|wish\w*|prefer\w*|decide\w*|do about|would like)", re.I),
+     "what the client decides is not an action: show it as a status line (PENDING - client deciding)"),
+    ("cancelling credit life", re.compile(r"\bcancel\w*\b[^.]{0,60}\bcredit[- ]life\b|\bcredit[- ]life\b[^.]{0,60}\bcancel", re.I),
+     "cancelling credit life is not an action of this skill"),
+    ("sending quotes or the what's-next email", re.compile(
+        r"\b(send|forward|mail|deliver)\w*\b[^.]{0,60}\b(quotes?(?!\s+request)|proposals?)\b"
+        r"|\bemail\w*\b[^.]{0,30}\b(proposals?|(?:updated |revised |new )?quotes? to)\b"
+        r"|\b(send|email)\w*\b[^.]{0,40}\bwhat'?s[- ]next\b", re.I),
+     "sending quotes, proposals and the what's-next email is done in another step: leave it out (a request to a provider, such as 'request the revised quote from Alwyn', is fine)"),
+    ("setting up the next meeting", re.compile(r"\b(set up|arrange|book|schedule|diarise|diarize|organi[sz]e)\b[^.]{0,40}\b(appointment|meeting|invite)\b|\b(meeting|calendar) invite\b", re.I),
+     "setting up the next meeting is done in another step (teams-meeting-setup-skill): leave it out, the Next appointment line shows it"),
+)
+WHAT_IF = re.compile(r"\bcheck with\b[^.]{0,60}\b(whether|if|would)\b", re.I)
+
+
+def check_structure(content, R):
+    g = "L"
+    lim, probs = w.LIMITS, 0
+    mt = content.get("meeting_type")
+    pdf = mt != "first"            # a first/Fact Find meeting has no PDF of its own
+
+    def fail(msg):
+        nonlocal probs
+        probs += 1
+        R.add("FAIL", g, msg)
+
+    for a in content.get("areas") or []:
+        head = w.AREA_HEADING.get(a.get("key"), a.get("key"))
+        bullets = a.get("bullets") or []
+        shorts = [b for b in bullets if S(b.get("short")).strip()]
+        if bullets and not shorts:
+            fail("%s: no Planner one-liner. Give 1 to %d of its bullets a `short` (one line, %d words at most): the Planner note shows only those" % (head, lim["planner_bullets"], lim["planner_words"]))
+        if len(shorts) > lim["planner_bullets"]:
+            fail("%s: %d Planner one-liners, at most %d: keep the ones that matter, the rest stay in the PDF" % (head, len(shorts), lim["planner_bullets"]))
+        for b in shorts:
+            if w.words(b["short"]) > lim["planner_words"]:
+                fail("%s: Planner one-liner %s is %d words, at most %d (one line): %r" % (head, b.get("id"), w.words(b["short"]), lim["planner_words"], b["short"][:60]))
+        if pdf:
+            if len(bullets) > lim["pdf_bullets"]:
+                fail("%s: %d bullets in the PDF, at most %d: merge them (several sources can support one bullet)" % (head, len(bullets), lim["pdf_bullets"]))
+            for b in bullets:
+                if w.words(b.get("text")) > lim["pdf_words"]:
+                    fail("%s: PDF bullet %s is %d words, at most %d: shorten it, the detail lives in the Overview and quotes" % (head, b.get("id"), w.words(b["text"]), lim["pdf_words"]))
+
+    for it in content.get("applications") or []:
+        if not S(it.get("short")).strip():
+            fail("application %s needs a `short` (the Planner note shows each application in one line)" % it.get("id"))
+        elif w.words(it["short"]) > lim["planner_words"]:
+            fail("application %s: Planner one-liner is %d words, at most %d" % (it.get("id"), w.words(it["short"]), lim["planner_words"]))
+        if pdf and w.words(it.get("text")) > lim["application_words"]:
+            fail("application %s is %d words, at most %d" % (it.get("id"), w.words(it["text"]), lim["application_words"]))
+    if pdf:
+        for it in content.get("since_last") or []:
+            if w.words(it.get("text")) > lim["since_words"]:
+                fail("since_last %s is %d words, at most %d" % (it.get("id"), w.words(it["text"]), lim["since_words"]))
+        if w.words(content.get("opening")) > lim["opening_words"]:
+            fail("the opening sentence is %d words, at most %d" % (w.words(content.get("opening")), lim["opening_words"]))
+
+    actions = content.get("actions") or []
+    for a in actions:
+        aid, text, when = a.get("id"), S(a.get("text")), a.get("when")
+        if when not in w.ACTION_WHEN:
+            fail("action %s must say when: \"now\" (Sitamah can do it today) or \"later\" (it waits for something, named in `trigger`)" % aid)
+        elif when == "later" and len(S(a.get("trigger")).strip()) < 6:
+            fail("action %s is for later: say what it waits for in `trigger` (for example \"once the policy is issued\")" % aid)
+        if w.words(text) > lim["action_words"]:
+            fail("action %s is %d words, at most %d" % (aid, w.words(text), lim["action_words"]))
+        for name, rx, why in ACTION_BANS:
+            if rx.search(text):
+                fail("action %s is %s: %s (Paul's rule): %r" % (aid, name, why, text[:70]))
+        if WHAT_IF.search(text):
+            R.add("WARN", g, "action %s asks a provider a what-if question: Paul removed one like it. Keep it only if Paul or the client asked for it" % aid)
+    now = [a for a in actions if a.get("when") == "now"]
+    if len(now) > lim["planner_actions"]:
+        fail("%d actions for now, at most %d: the Planner note lists only what Sitamah does now" % (len(now), lim["planner_actions"]))
+
+    for n in content.get("next_steps") or []:
+        if n.get("owner") != "client":
+            fail("next step %s needs owner \"client\": Next Steps lists only what the client must do (Paul is never an owner, and what Sitamah does is an action)" % n.get("id"))
+        elif OWNER_BAD.search(S(n.get("text"))):
+            fail("next step %s names Paul as the owner: leave it out, Next Steps lists only what the client must do" % n.get("id"))
+    if not probs:
+        R.add("PASS", g, "Planner note short (one-liners, %d actions for now), PDF within its limits, every action sorted now or later, none of the removed kinds of action, next steps are the client's only" % len(now))
 
 
 # ---------------------------------------------------------------- D mandatory checks
@@ -694,6 +787,8 @@ def check_declared(run, content, idx, ledger, R):
         t = action_text(s.get("action_id"))
         if not t or not CESSION.search(t):
             fail("cession needed: action_id must name a Sitamah action to arrange the cession and send the documents")
+        elif idx[s["action_id"]][1].get("when") != "later":
+            fail("cession: the cession action is for AFTER the policy is issued (Paul's rule), so it must have when \"later\" and a trigger such as \"once the policy is issued\"")
     elif any(CESSION.search(S(i.get("text"))) and "ceded to" in S(i.get("text")).lower() for i in items if i.get("status") != "resolved"):
         R.add("WARN", g, "an item talks about a debt being ceded but checks.cession.needed is false: confirm no cession action is needed")
 
@@ -711,14 +806,14 @@ def check_declared(run, content, idx, ledger, R):
             fail("credit_life: bullet_id must be a report bullet that mentions credit life")
         if not acts or any(a is None for a in acts):
             fail("credit_life: action_ids must name Sitamah actions")
-        else:
-            joined = " ".join(acts)
-            if not (re.search(r"\b(get|obtain|request)\b.*\bdetails?\b", joined, re.I) and re.search(r"\bask\b", joined, re.I) and re.search(r"in force", joined, re.I)):
-                fail("credit_life: the actions must (a) get the credit-life details from the client, (b) ask the client what he wants to do, and (c) cancel ONLY once the new policy is accepted and in force")
+        elif not any(re.search(r"\b(get|obtain|request)\b.*\bdetails?\b", a, re.I) for a in acts):
+            fail("credit_life: the one credit-life action is: Sitamah gets the credit-life details from the client (asking the client what to do, and cancelling, are not actions: Paul, 29/10/2026)")
+        elif any(idx[a][1].get("when") != "now" for a in ids):
+            fail("credit_life: getting the credit-life details is for now (when \"now\")")
     elif len(S(cl.get("reason")).strip()) < 10:
         fail("credit_life.debts_protected is false: give the reason (which cover, why no debt is protected)")
     elif credit_items:
-        fail("checks.credit_life.debts_protected is false but item %s mentions credit life: declare it and add the three actions" % credit_items[0].get("id"))
+        fail("checks.credit_life.debts_protected is false but item %s mentions credit life: declare it and add the action to get the details" % credit_items[0].get("id"))
 
     ap = ck.get("applications")
     if not isinstance(ap, dict) or "exist" not in ap:
@@ -790,9 +885,10 @@ def check_outputs(run, st, content, R):
     page_html, note_txt = expected[names["page"]], expected[names["note_txt"]]
     if all(os.path.exists(os.path.join(out, f)) for f in (names["page"], names["note_txt"])) and \
             not any(r[0] == "FAIL" and "planner_note" in r[2] for r in R.rows):
-        in_note = ("applications", "actions", "next_appointment")
-        note_items = [it for lst, it in w.all_items(content) if lst in in_note or lst.startswith("areas:")]
-        miss = [it["id"] for it in note_items if w.norm(it["text"]) not in w.norm(visible_text(page_html))]
+        sections, apps, acts = page.planner_view(content)
+        shown = [it["text"] for _, items in sections for it in items] + [a["text"] for a in apps] + [a["text"] for a in acts]
+        shown.append(content["next_appointment"]["text"])
+        miss = [t[:40] for t in shown if w.norm(t) not in w.norm(visible_text(page_html))]
         if 'id="copy-note"' not in page_html:
             R.add("FAIL", g, "Planner page has no Copy note button")
         elif miss or "```" in note_txt:
@@ -844,8 +940,8 @@ def check_outputs(run, st, content, R):
         ls = [x.strip() for x in pg.split("\n") if x.strip()]
         if ls and w.norm(ls[-1]) in hn:
             R.add("FAIL", g, "heading '%s' is stranded at the bottom of page %d" % (ls[-1], i))
-    if len(pages) > 2:
-        R.add("WARN", g, "the PDF is %d pages: the skill aims at two at most" % len(pages))
+    if len(pages) > w.LIMITS["pdf_pages"]:
+        R.add("FAIL", g, "the PDF is %d pages: Paul wants at most %d. Make the bullets shorter (the limits are in group L)" % (len(pages), w.LIMITS["pdf_pages"]))
     R.add("PASS", g, "PDF '%s': %d page(s), text identical to what content.json produces, every heading and item present" % (names["pdf"], len(pages)))
     pngs = sorted(f for f in os.listdir(out) if f.startswith("page") and f.endswith(".png"))
     if len(pngs) != len(pages) or any(os.path.getsize(os.path.join(out, f)) < 3000 for f in pngs):
@@ -1036,6 +1132,7 @@ def run_checks(run, stage, skip=()):
         idx, dup = item_index(content)
         guarded(R, "B", "ledger", check_ledger, run, st, lines, ledger, idx, R)
         guarded(R, "C", "source trace", check_content, run, st, lines, content, idx, dup, refs, R)
+        guarded(R, "L", "short notes and sorted actions", check_structure, content, R)
         guarded(R, "D", "mandatory checks", check_declared, run, content, idx, ledger, R)
         if stage in ("built", "final") and not R.fails:
             guarded(R, "E", "outputs", check_outputs, run, st, content, R)

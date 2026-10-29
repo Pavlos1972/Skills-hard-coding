@@ -1,5 +1,5 @@
 {
- "stamp": "2026-10-29 13:38",
- "fingerprint": "833947416fe8a6adff8a39056c43c2448b118c4b26932a5bf33af9be7ec9c2dc",
- "change": "Every run now begins by saying which version it is (read from this stamp), the final checklist repeats it, and the date can only move when the skill's files really change"
+ "stamp": "2026-10-29 17:22",
+ "fingerprint": "510e7de7fc15b4ed87757829eb506192830e677c0562d3219b88937fa2911816",
+ "change": "Dated notes taken out of the live pages (the dates stay in the history files)"
 }

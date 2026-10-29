@@ -84,6 +84,26 @@ EIGHT = [k for k, _ in AREAS if k != "other"]
 
 CLIENT_STATUSES = ("Review Client", "Prospect")
 
+# How short the outputs must be (Paul, after his first real-case trial: the Planner note was far too long).
+# The Planner note shows only each bullet's one-line `short` text; the PDF shows its full `text`. verify.py fails a run that exceeds these.
+LIMITS = {
+    "planner_words": 20,        # words in one Planner one-liner (`short`), not counting its status word
+    "planner_bullets": 3,       # one-liners per area in the Planner note
+    "planner_actions": 8,       # actions for now in the Planner note
+    "action_words": 25,         # words in one action
+    "pdf_bullets": 4,           # bullets per area in the PDF
+    "pdf_words": 45,            # words in one PDF bullet
+    "since_words": 25,          # words in one "Since the last meeting" line
+    "application_words": 30,    # words in one application line
+    "opening_words": 40,        # words in the PDF's opening sentence
+    "pdf_pages": 2,
+}
+ACTION_WHEN = ("now", "later")   # an action is for now, or it waits for something (its `trigger`)
+
+
+def words(text):
+    return len(str(text or "").split())
+
 
 def status_from_paths(sources):
     """Where the client's folder sits decides the label: Company - WR Clients = Review Client; Company - Paul\\New Business = Prospect."""

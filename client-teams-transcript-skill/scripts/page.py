@@ -25,6 +25,24 @@ def item_parts(it):
     return "", text, st
 
 
+def planner_view(content):
+    """What the Planner note shows (Paul: one-liners and the actions for now, nothing else).
+
+    Returns (sections, applications, actions): the area bullets that carry a one-line `short` text, the applications
+    (one line each) and the actions whose `when` is "now". Each item is a copy whose `text` is the line shown.
+    """
+    def one(it):
+        d = dict(it)
+        d["text"] = (it.get("short") or "").strip()
+        return d
+
+    by_key = {a["key"]: [one(b) for b in a.get("bullets") or [] if (b.get("short") or "").strip()] for a in content.get("areas") or []}
+    sections = [(w.AREA_HEADING[k], by_key[k]) for k in w.AREA_KEYS if by_key.get(k)]
+    apps = [one(a) for a in content.get("applications") or [] if (a.get("short") or "").strip()]
+    actions = [a for a in content.get("actions") or [] if a.get("when") == "now"]
+    return sections, apps, actions
+
+
 def note_model(content, names):
     mt, c = content["meeting_type"], content["client"]
     topic = content["topic"].strip()
@@ -34,13 +52,13 @@ def note_model(content, names):
         pointer = ("Please view the ", names["ff_summary_stem"], " PDF in the client's Fact Find folder.")
     else:
         pointer = ("Please view the ", names["pdf_stem"], " file in the client's Fact Find folder.")
-    by_key = {a["key"]: a.get("bullets") or [] for a in content.get("areas") or []}
-    sections = [(w.AREA_HEADING[k], by_key[k]) for k in w.AREA_KEYS if by_key.get(k)]
-    not_discussed = [w.AREA_HEADING[k] for k in w.EIGHT if not by_key.get(k)]
+    sections, apps, actions = planner_view(content)
+    shown = {h for h, _ in sections}
+    not_discussed = [w.AREA_HEADING[k] for k in w.EIGHT if w.AREA_HEADING[k] not in shown]
     return {
         "title": "%s %s %s %s" % (c["first"], c["surname"], DASH, content["meeting_date"]),
         "topic": topic, "pointer": pointer, "sections": sections, "not_discussed": not_discussed,
-        "applications": content.get("applications") or [], "actions": content.get("actions") or [],
+        "applications": apps, "actions": actions,
         "next": content["next_appointment"]["text"].strip(),
     }
 
@@ -186,7 +204,7 @@ CHAT_LABEL = "(1:1 Chat) Paul Kafentzis, Sitamah Nathoo"
 
 def teams_message(content):
     """The one-line message to Sitamah (fact-find-summary / ff-population-transcript Step 8). A WhatsApp call says
-    "WhatsApp Call Completed" in place of "Teams Appointment Completed" (Paul, 29/10/2026)."""
+    "WhatsApp Call Completed" in place of "Teams Appointment Completed" (Paul's rule)."""
     c = content["client"]
     kind = "%s %s" % (w.ordinal(content["appointment_number"]), "WhatsApp Call" if content["meeting_type"] == "whatsapp" else "Teams Appointment")
     text = "%s %s (%s) %s %s Completed: %s %s Please see instructions in Client / Prospect Task." % (

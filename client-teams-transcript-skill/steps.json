@@ -136,6 +136,8 @@
       ],
       "do": [
         "Write {run}/content.json. Model: {skill_dir}/references/content-example.json. `areas` is a LIST of {\"key\": ..., \"bullets\": [...]}. Every bullet and every action carries its source: a transcript line plus the exact words (at least 10 characters), or a document you recorded in the context step (cite its --ref and the exact words). Every figure in an item (money, quote or policy number, percentage) must appear in one of its sources.",
+        "TWO LENGTHS, ONE SET OF FACTS (Paul: the Planner note must be short). Every bullet has a `text`: the PDF line, at most 45 words. The 1 to 3 most important bullets of each area ALSO have a `short`: the Planner one-liner, one line, at most 20 words. The PDF shows at most 4 bullets per area and must fit two pages; the Planner note shows only the `short` lines. Merge bullets: one bullet can cite several sources. Each application also needs a `short`. Quote numbers, premiums and the status word go in the one-liner; the rest of the detail stays in the PDF or is left to the Overview and the quotes.",
+        "EVERY ACTION SAYS WHEN. `\"when\": \"now\"` = Sitamah can do it today. `\"when\": \"later\"` = it waits for something, named in `\"trigger\"` (for example \"once the policy is issued\"). Only the 'now' actions go in the Planner note and the PDF's Action Points; the 'later' ones go in the PDF under Coming up. NEVER write these as actions (Paul's rule): what the client decides (report it as PENDING - client deciding); cancelling credit life; sending quotes, proposals or the what's-next email, and setting up the next meeting (other steps of the pipeline do those); Paul's own steps. The ONLY credit-life action is: Sitamah to get the credit-life details from the client (when now). A cession is a 'later' action (once the policy is issued). `next_steps` lists only what the CLIENT must do, each with \"owner\": \"client\".",
         "Answer EVERY item in the `checks` block (correspondence, owner change, cession, credit life, applications, quotes). None may be left out, and each is cross-checked against your text.",
         "In every run (Teams meeting or WhatsApp call) also set `client_status` (\"Review Client\" or \"Prospect\") and `client_status_basis` (the folder path it comes from): a client in Company - WR Clients\\Paul Kafentzis (Client Files) is a Review Client; a client in Company - Paul\\New Business is a Prospect. If it is unclear, ask Paul with run.py ask. Never guess. Also `appointment_number` and its basis: the Teams meetings on file with this client plus this one; for a WhatsApp call, every meeting and call on file plus this one.",
         "Then link every ledger entry to the items that cover it: python3 {scripts}/run.py ledger {run} cover <ledger id> <item id> [<item id> ...]   (or: ledger exclude <id> \"reason\" for a plain fact or figure). The covering item must cite the transcript close to that ledger line.",
@@ -194,6 +196,7 @@
       "title": "Show the Planner note as a copy-ready page",
       "ref": [],
       "do": [
+        "Do NOT end your reply here and do not ask Paul anything yet: Paul is asked ONCE, at the last step, about all three outputs together (the Planner page, the PDF and the message to Sitamah). Record this step and go straight on with `run.py next`. ",
         "Publish {run}/out/planner_note.html as a private page with the Artifact tool (file_path = that file, do not retype it). Tell Paul in one sentence what the page is. After any correction, rebuild and republish the same page.",
         "If the page tool is unavailable: say so, show {run}/out/planner_note.txt as formatted chat text (never in a code block), and state that this is the fallback.",
         "Record it: python3 {scripts}/run.py receipt {run} --set planner_page.mode=artifact --set planner_page.url=<the link returned>",
@@ -211,6 +214,7 @@
       "title": "Send, save and check the PDF",
       "ref": [],
       "do": [
+        "Do NOT end your reply here and do not ask Paul anything yet: Paul is asked ONCE, at the last step, about all three outputs together (the Planner page, the PDF and the message to Sitamah). Record this step and go straight on with `run.py next`. ",
         "1. If the folder /mnt/user-data/outputs exists, copy the PDF there first so it can be presented: cp \"{run}/out/<the PDF file>\" /mnt/user-data/outputs/ . Then send it in the chat for Paul to download (present_files / SendUserFile).",
         "2. Save the same file into the client's 2. Fact Find folder with device_commit_files (route order as always).",
         "3. List the folder back and confirm the new file's exact name, size and time.",
@@ -230,6 +234,7 @@
         "06c-handoffs.md"
       ],
       "do": [
+        "Do NOT end your reply here and do not ask Paul anything yet: Paul is asked ONCE, at the last step, about all three outputs together (the Planner page, the PDF and the message to Sitamah). Record this step and go straight on with `run.py next`. ",
         "If applications differ from the meeting (the Applications section), call complete-applications-skill in Correction / Sync mode. If anything is unclear, ask Paul BEFORE any change.",
         "If an owner or life assured changed, prepare the revised-quote email as a DRAFT and show Paul. Never send without his yes. Record what you showed: --set revised_quote_draft=\"shown to Paul: <what, when>\"",
         "Record: python3 {scripts}/run.py receipt {run} --set applications_handoff=\"complete-applications-skill called: <result>\"   (or \"n/a: <reason>\")",
@@ -245,14 +250,14 @@
         "first",
         "whatsapp"
       ],
-      "title": "Message to Sitamah in Teams (last step, only with Paul's yes)",
+      "title": "Show Paul everything and ask once; send the message to Sitamah only with his yes",
       "ref": [
         "07-teams-message.md"
       ],
       "do": [
         "{teams_message_block}",
-        "Show Paul the exact message above and the one-line check of why the follow-up sentence is in or out. Send ONLY after his clear yes (he may give it in the reply that approves the deliverables). Never earlier. Never twice for the same meeting. A correction does not trigger a resend unless Paul asks.",
-        "Only after every deliverable is approved and saved. Then record the result (sent, already_sent, declined or failed) with the receipt command shown above, including Paul's own words."
+        "NOW WRITE YOUR REPLY TO PAUL. It holds all three outputs together: (1) the link to the Planner page, (2) the PDF, sent in the chat, (3) the exact message to Sitamah shown above, with the one-line check of why the follow-up sentence is in or out. End the reply with ONE question: \"Shall I post this message to Sitamah in Teams?\". Paul approves the page, the PDF and the message together. Then wait for his answer. Never end a reply without the message in it.",
+        "After his answer: if he says yes, send it exactly as shown, through Zapier only. Never send without his yes. Never twice for the same meeting. A correction does not trigger a resend unless Paul asks. Then record the result (sent, already_sent, declined or failed) with the receipt command shown above, including Paul's own words."
       ],
       "proof": "teams.status recorded as sent, declined or failed, with its evidence",
       "check": "receipt_teams"

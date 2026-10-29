@@ -1,8 +1,8 @@
 ## Message to Sitamah (Paul's rule - every Teams meeting and every WhatsApp call, every time)
 
-Rule taken from `fact-find-summary` / `ff-population-transcript` Step 8 so the follow-up skill sends the same message. **It applies to a WhatsApp call too (Paul, 29/10/2026): the words "Teams Appointment Completed" become "WhatsApp Call Completed"; everything else is the same.** Example: *First Last (Review Client) – 3rd WhatsApp Call Completed: 05/11/2026 – Please see instructions in Client / Prospect Task.*
+Rule taken from `fact-find-summary` / `ff-population-transcript` Step 8 so the follow-up skill sends the same message. **It applies to a WhatsApp call too (Paul's rule): the words "Teams Appointment Completed" become "WhatsApp Call Completed"; everything else is the same.** Example: *First Last (Review Client) – 3rd WhatsApp Call Completed: 05/11/2026 – Please see instructions in Client / Prospect Task.*
 
-**When:** only AFTER the Planner page, the PDF (follow-up only) and the hand-offs are produced, checked, approved by Paul and SAVED (saved files confirmed by listing the folder back). It is the very last thing in the run. If any output is still being corrected, do not send.
+**When it is SHOWN and when it is SENT (Paul's rule).** It is SHOWN in the same reply as the Planner page and the PDF (follow-up only), once they and the hand-offs are produced, checked and SAVED (saved files confirmed by listing the folder back): one reply, one question ("Shall I post this message to Sitamah in Teams?"), so Paul approves all three together. Never end a reply without the message in it. It is SENT only after his yes. If any output is still being corrected, do not send.
 
 **The message** (one message to Sitamah in Teams, BOLD and in a much larger font than normal chat). `build.py` writes it to `out/teams_message.txt`; use it exactly as built:
 
@@ -24,4 +24,4 @@ Rule taken from `fact-find-summary` / `ff-population-transcript` Step 8 so the f
 
 **Check and report:** Zapier returns a message id and sent time; report both in one line ("Sent to Sitamah in Teams at HH:MM, message id ..."). Treat the send as unconfirmed until that result is seen. Record it with `run.py receipt`: `teams.status=sent`, `teams.message_id`, `teams.sent_time`, `teams.approved_by_paul` (his own words of yes). If Paul says no: `teams.status=declined`, `teams.paul_said`. If it fails: `teams.status=failed`, `teams.detail`, `teams.text_given_to_paul=true`.
 
-**Permission:** sending a message for Paul needs his clear yes each time. Show him the exact message and send it only after his yes - he may give that yes in the same reply that approves the deliverables. Never send earlier, never twice for the same meeting (a correction does NOT trigger a resend unless Paul asks), and never for a client whose documents are not all saved.
+**Permission:** sending a message for Paul needs his clear yes each time. Show him the exact message in the reply that presents the deliverables and send it only after his yes to the one question. Never send earlier, never twice for the same meeting (a correction does NOT trigger a resend unless Paul asks), and never for a client whose documents are not all saved.

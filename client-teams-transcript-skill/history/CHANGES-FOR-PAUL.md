@@ -2,6 +2,15 @@
 
 For Paul. Uploaded on 29/10/2026 as version v33 (reported by the Chrome chat). Nothing is called live until you have tried it on a real meeting and told me.
 
+## After your first real-case trial (29/10/2026): what I changed, in plain words
+You ran the skill on two real clients and told me four things. Here is what is now different. This version is **not uploaded yet**: you have the sample to look at first.
+
+1. **The Planner note is short.** Each area you discussed has 1 to 3 one-line bullets (about 20 words at most), and only the actions for now. The detail stays in the PDF. If a note is longer, the program refuses it and the chat has to shorten it.
+2. **The PDF has limits too:** at most 4 bullets per area, each at most 45 words, and two pages at most. I tested this on the content of your household PDF: it fits in two pages.
+3. **Actions are sorted, using your ten answers.** An action is for **now** (Sitamah can do it today), or for **later** with what it waits for (a cession waits until the policy is issued; it is listed in the PDF under "Coming up", not in the Planner note). These are never actions, and the program refuses them: what the client decides (it is shown as "PENDING - client deciding"), cancelling credit life, sending quotes or the what's-next email, setting up the next meeting, and Paul's own steps. The one credit-life action left is "get the credit-life details". Your row 2 (checking with Liberty what the income protector would pay) I could not turn into a rule because you gave no reason, so the program only warns about that kind of action; tell me if you want it banned too.
+4. **"Next Steps" in the PDF lists only what the client must do.** Before, it also said "Paul will send the updated quotes" while Sitamah had the same action.
+5. **The message to Sitamah is now shown together with the Planner page and the PDF, in one reply, with one question:** "Shall I post this message to Sitamah in Teams?". I found why it was never offered: my own instructions said to show it only after you had approved everything else. That is gone, and the steps now tell the chat not to end its reply before the message is in it. I could not see the end of that chat, so I cannot tell if it also skipped the step.
+
 ## What stayed the same
 Every rule the old skill had is still there, in the step where it applies. A program (`tools/inventory.py`) went through all 466
 sentences of the old skill and checked each one: 290 are still there word for word, 46 are reworded (each with a recorded reason),
@@ -25,7 +34,7 @@ mistake while editing, and I put them back. The skill's name and its description
 
 ## An independent review, and what I did about it
 After I built it, a separate reviewer tried to get round it as a careless AI would. It found real weaknesses; I fixed each one and added a test for it:
-an invented fact with an unrelated quote could pass; a run could pass for the wrong client or date; a very careless run could reach PASS; a correction did not re-open the hand-over; the Teams message could go out and the run then fail; some declarations were never cross-checked against the text; and malformed input could crash the checker. All fixed (176 tests now).
+an invented fact with an unrelated quote could pass; a run could pass for the wrong client or date; a very careless run could reach PASS; a correction did not re-open the hand-over; the Teams message could go out and the run then fail; some declarations were never cross-checked against the text; and malformed input could crash the checker. All fixed (215 tests now).
 
 ## What I removed on purpose (your answer, 29/10/2026: yes to 1 to 4, keep the table in 5)
 
@@ -46,7 +55,7 @@ an invented fact with an unrelated quote could pass; a run could pass for the wr
 - **It asks more of Claude than the old skill did.** The first real run will feel longer: a text copy of each document, a note per chunk, a reason for each dismissed keyword. That is the price of checking; if it is too heavy, tell me which part and I will ease it without losing the check.
 - **A document without a text copy** is not blocked; it is flagged to you at the end, and the checks on its quotes and figures are skipped. Better than refusing outright when a PDF is only a scan, but it means you should glance at those items.
 - **I cannot save into your Skills, so a chat with Claude in Chrome uploads it for you.** From this session I can only list and read your skills. What works (first done 29/10/2026): you give that chat the upload instructions that the packaging program now writes next to every zip. **Uploading replaces the skill. It does not make a second copy.** Your old version stays in the skill's version history (a dropdown of v32, v31 and so on), and that history is the backup. So there is nothing to switch off. Your first upload became version v33, and a fresh chat quoted the new "Last updated" line, which proves the new version is the one answering. The Chrome chat reported this; I did not see it myself.
-- **I cannot run it inside your chat.** I tested everything here on invented data (176 tests, including a full run from start to PASS and the Copy button in a real browser). The first real use is the trial: run it on a meeting you already have a note for, and compare.
+- **I cannot run it inside your chat.** I tested everything here on invented data (215 tests, including a full run from start to PASS and the Copy button in a real browser). The first real use is the trial: run it on a meeting you already have a note for, and compare.
 - **I have not seen a real Teams transcript file.** The program reads the usual layouts (time before the name, time after the name, `0:00:05.000 -->` style) and stops loudly if it cannot read any times. If your real file looks different, I need the first 15 lines to fix the reader.
 - **Try the Copy button yourself.** I published a sample Planner note, made by the new program from invented data, as a private page: https://claude.ai/artifact/UXLdZN66XernnbTBXV4Yej . Click Copy note, then paste into the Planner / AdviceTech task chat (or Word) and tell me if the bold and bullets came through. The page tool accepted the program's page, so publishing works. The page window may restrict rich copying, so the page has three ways to copy, best first (bold and bullets; select-and-copy; plain text), and it says which one worked. The note can also be shown as plain formatted text if the page tool is unavailable.
 - **Two sibling skills still use the old headings.** `ff-population-transcript` (its Planner-note instructions) still names the old combined headings. They will be brought in line when those skills are converted.

@@ -83,7 +83,10 @@ def build_pdf(content, names, path):
         story.append(Spacer(1, 4))
         story.append(Paragraph("Not discussed this meeting: %s." % escape(", ".join(rest)), body))
     section("Applications", content.get("applications"))
-    section("Action Points", content.get("actions"))
+    actions = content.get("actions") or []
+    section("Action Points", [a for a in actions if a.get("when") == "now"])
+    # an action that waits for something (Paul's rule) is listed with what it waits for, never as a task for now
+    section("Coming up", [dict(a, status=a.get("trigger") or "") for a in actions if a.get("when") == "later"])
     nxt = list(content.get("next_steps") or [])
     nxt.append({"text": "Next appointment: " + content["next_appointment"]["text"].strip()})
     section("Next Steps", nxt)

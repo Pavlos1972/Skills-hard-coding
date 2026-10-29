@@ -4,11 +4,11 @@ Built by `build.py` with **reportlab** (not Word), navy palette, Helvetica. It a
 
 - Title: `Follow-Up Appointment Summary Notes - DD.MM.YY - (Surname, First Name)`, navy `#1F3A5F` ~17-20pt. Subtitle (grey ~10pt): `[Client Name]   |   Wealth Revolution   |   Advisor: Paul Kafentzis   |   Meeting Date: DD/MM/YYYY`, then a navy `HRFlowable`.
 - One plain opening sentence on what the meeting was and which quotes/areas it covered.
-- Sections, each a bold navy heading followed by short point-form bullets: **Since the Last Meeting**, then the Step 3 areas that apply (each of the eight its own heading, followed by one line naming those not discussed), then **Applications** (only if Step 6 found differences), then **Action Points** and **Next Steps**.
-- Inside each area: bullet 1 = the quote referenced or the topic; then 1-3 short bullets on what it does; then a status bullet.
+- Sections, each a bold navy heading followed by short point-form bullets: **Since the Last Meeting**, then the Step 3 areas that apply (each of the eight its own heading, followed by one line naming those not discussed), then **Applications** (only if Step 6 found differences), then **Action Points**, **Coming up** (only if something waits) and **Next Steps**.
+- Inside each area, at most 4 bullets of at most 45 words each (Paul's rule): bullet 1 = the quote referenced or the topic; then short bullets on what it does, merged where they can be; each bullet carries its own status word. The opening sentence is at most 40 words.
 - **Applications:** one bullet per application stating what differs or is missing. No ID, account or tax numbers.
-- **Action Points:** every one assigned to **Sitamah**. **Next Steps:** what the client must do and the next appointment.
-- No tables, no nested bullets, no characters outside WinAnsi. Aim for two pages at most.
+- **Action Points:** the actions for now, every one assigned to **Sitamah**. **Coming up:** the actions that wait for something, each with what it waits for (a cession, for example, waits until the policy is issued). **Next Steps:** what the client must do and the next appointment - never Paul's own steps (Paul's rule).
+- No tables, no nested bullets, no characters outside WinAnsi. Two pages at most: the program fails a longer PDF.
 
 **Checklist before delivering - who checks each item now.** `verify.py` checks the ones marked PROGRAM; the rest are Claude's own judgment, shown to Paul for review.
 
@@ -27,7 +27,7 @@ Built by `build.py` with **reportlab** (not Word), navy palette, Helvetica. It a
 | 11 | verification pass of the drafted outputs done | PROGRAM (every quote found) + independent subagent re-check for acceptances, owner changes and money |
 | 12 | current correspondence checked and any owner change has a revised-quote action | PROGRAM (checks block) |
 | 13 | the Planner note is the copy-ready page with the correct pointer line | PROGRAM |
-| 14 | every benefit explained is described from the actual quote and every cession has a `Sitamah to ...` action | Claude (benefit wording) + PROGRAM (cession action) |
+| 14 | every benefit explained is described from the actual quote and every cession has a `Sitamah to ...` action (a later one) | Claude (benefit wording) + PROGRAM (cession action) |
 | 15 | credit life on every debt the new cover protects is reported | PROGRAM (checks block, always) |
 | 16 | no "to confirm" left for a detail that is on file | Claude (judgment); PROGRAM logs what was searched |
 | 17 | no two independent actions worded as one waiting on the other | PROGRAM warns on dependent wording; Claude decides |
@@ -35,8 +35,12 @@ Built by `build.py` with **reportlab** (not Word), navy palette, Helvetica. It a
 | 19 | every bullet and every action has a source - no inferred facts, no invented actions, no chase actions for items left with the client | PROGRAM |
 | 20 | every request or instruction made on the call is captured exactly as the client/Paul answered it | PROGRAM (ledger coverage) + Claude (wording) |
 | 21 | no garbled line has been turned into a fact - ambiguous ones are flagged to Paul | Claude (judgment); the ledger records the line as excluded with a reason |
+| 22 | the Planner note is short: 1-3 one-liners of at most 20 words per area, at most 8 actions for now | PROGRAM (group L) |
+| 23 | the PDF is short: at most 4 bullets of at most 45 words per area, two pages at most | PROGRAM (group L, and the page count) |
+| 24 | every action is sorted `now` or `later` (with its trigger), and none is a client decision, a credit-life cancellation, a quote or what's-next email, or a meeting set-up | PROGRAM (group L) |
+| 25 | Next Steps lists only what the client must do | PROGRAM (group L) |
 
-**Anti-pattern (wrong):** one long paragraph with typed bullets, granular quote breakdowns, topics blended into one block, a quote described without its insurer/type/number, reporting an earlier-in-the-call state as final when the client changed it later, giving Paul an action point, putting the Planner note in a code block, leaving out a benefit/cession explained on the call, telling Sitamah/Paul to "confirm" something already on file, leaving out credit life, wording two independent actions as one gated on the other (e.g. "request the FNA once the psychiatric report is received" when the two are actually independent), reverting - for a first/Fact Find meeting - to the old fixed 6-part layout instead of this skill's own planning-area structure, **or: producing a report after a single read, keyword-searching instead of reading, writing a garbled line up as a fact (e.g. a health condition the client may not have), inventing a chase action for something the client said he would get back to us on, writing "not agreed" when the client said yes, or missing a request made in the closing minutes (e.g. the client asking for his wife's portfolio review to be put in the what's-next email).**
+**Anti-pattern (wrong):** one long paragraph with typed bullets, granular quote breakdowns, topics blended into one block, a quote described without its insurer/type/number, reporting an earlier-in-the-call state as final when the client changed it later, giving Paul an action point, putting the Planner note in a code block, leaving out a benefit/cession explained on the call, telling Sitamah/Paul to "confirm" something already on file, leaving out credit life, wording two independent actions as one gated on the other (e.g. "request the FNA once the psychiatric report is received" when the two are actually independent), reverting - for a first/Fact Find meeting - to the old fixed 6-part layout instead of this skill's own planning-area structure, **or: producing a report after a single read, keyword-searching instead of reading, writing a garbled line up as a fact (e.g. a health condition the client may not have), inventing a chase action for something the client said he would get back to us on, writing "not agreed" when the client said yes, or missing a request made in the closing minutes (e.g. the client asking for his wife's portfolio review to be put in the what's-next email).** **And (Paul's rule): a Planner note that repeats the PDF or runs past one line per bullet, an action that is for later or is not an action at all, Paul's own step listed under Next Steps.**
 
 ## Filenames and saving (mandatory) - follow-up meetings only
 

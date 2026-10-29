@@ -629,7 +629,7 @@ class PlannerPage(Base):
                           ("egar", "EGAR: the goal analysis is still to be requested"),
                           ("medical", "Medical aid: broker-of-record to move to WR"),
                           ("short_term", "Short-term: vehicle schedule sent to the broker")):
-            c["areas"].append({"key": key, "bullets": [{"id": "x_" + key, "text": text, "status": "still open",
+            c["areas"].append({"key": key, "bullets": [{"id": "x_" + key, "text": text, "short": text, "status": "still open",
                                                          "src": [self.src("one thousand one hundred rand a month")]}]})
         self.write("content.json", c)
         sh("build.py", self.run_dir, ok=True)

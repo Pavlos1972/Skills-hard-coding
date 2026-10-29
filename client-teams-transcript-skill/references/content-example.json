@@ -46,7 +46,8 @@
               "ref": "BrightRock quote 100000001",
               "quote": "CP 100000001, R1,100.00 p.m."
             }
-          ]
+          ],
+          "short": "BrightRock Revised Reduced Quote CP 100000001, R1,100.00 p.m."
         },
         {
           "id": "b2",
@@ -57,11 +58,12 @@
               "line": 18,
               "quote": "the home loan must be ceded to Absa for the minimum period"
             }
-          ]
+          ],
+          "short": "Instalment Protector on the Absa home loan, once the loan is ceded to Absa"
         },
         {
           "id": "b3",
-          "text": "Credit life on the Absa home loan (about R500 p.m.) to be cancelled once the BrightRock policy is accepted and in force",
+          "text": "Credit life on the Absa home loan (about R500 p.m.): the details are still to be obtained from Sam",
           "status": "still open",
           "src": [
             {
@@ -73,7 +75,8 @@
               "ref": "Fact Find Summary",
               "quote": "Absa home loan credit life R500 p.m."
             }
-          ]
+          ],
+          "short": "Credit life on the Absa home loan, about R500 p.m."
         }
       ]
     },
@@ -94,7 +97,8 @@
               "ref": "OM Optimal RA quote 100000002",
               "quote": "OM Optimal RA Quote 100000002, R3,000 p.m."
             }
-          ]
+          ],
+          "short": "OM Optimal RA Quote 100000002, R3,000 p.m.: client will get back to us"
         }
       ]
     },
@@ -110,7 +114,8 @@
               "line": 39,
               "quote": "rather put it in my name for now"
             }
-          ]
+          ],
+          "short": "owner now Sam (was Dana), for now"
         },
         {
           "id": "b6",
@@ -121,7 +126,8 @@
               "line": 42,
               "quote": "We need Alwyn to give us a revised quote in your name"
             }
-          ]
+          ],
+          "short": "Revised Tax-Free quote in Sam's name requested from Alwyn"
         }
       ]
     },
@@ -138,7 +144,8 @@
               "ref": "Follow-Up 01.09.26",
               "quote": "Will with Capital Legacy in progress"
             }
-          ]
+          ],
+          "short": "Will: no change discussed on this call"
         }
       ]
     }
@@ -157,7 +164,8 @@
           "line": 63,
           "quote": "Alright, 100%"
         }
-      ]
+      ],
+      "when": "now"
     },
     {
       "id": "a2",
@@ -167,17 +175,20 @@
           "line": 18,
           "quote": "We will send you the cession documents to sign"
         }
-      ]
+      ],
+      "when": "later",
+      "trigger": "once the BrightRock policy is issued"
     },
     {
       "id": "a3",
-      "text": "Sitamah to get the credit-life details from Sam, ask whether he or WR will cancel it, and cancel only once the BrightRock policy is accepted and in force",
+      "text": "Sitamah to get the credit-life details from Sam",
       "src": [
         {
           "line": 24,
           "quote": "We cancel that only once the new policy is accepted and in force"
         }
-      ]
+      ],
+      "when": "now"
     },
     {
       "id": "a4",
@@ -187,7 +198,8 @@
           "line": 42,
           "quote": "We need Alwyn to give us a revised quote in your name"
         }
-      ]
+      ],
+      "when": "now"
     },
     {
       "id": "a5",
@@ -197,7 +209,8 @@
           "line": 63,
           "quote": "please do not cancel the old Instant Life policy"
         }
-      ]
+      ],
+      "when": "now"
     }
   ],
   "next_steps": [
@@ -209,7 +222,8 @@
           "line": 33,
           "quote": "I'll get back to you on the RA once I have spoken to Dana"
         }
-      ]
+      ],
+      "owner": "client"
     }
   ],
   "next_appointment": {

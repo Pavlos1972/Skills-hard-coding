@@ -398,5 +398,13 @@
   "new": "... requested, on hold, declined.",
   "why": "Found by the independent review: the example note already used 'on hold' but the list of status words did not include it (nor 'declined', which the Accuracy rules call for).",
   "needs_paul": false
+ },
+ {
+  "file": "04-areas-and-quotes.md",
+  "kind": "reworded",
+  "old": "3. **Actions - all `Sitamah to ...`:** (a) get the credit-life details from the client; (b) ask the client what he wants to do; (c) cancel it ONLY after the new policy has been accepted and is in force.",
+  "new": "3. **The ONE action: `Sitamah to get the credit-life details from the client`, for now.** Asking the client what he wants to do, and cancelling the credit life, are NOT actions.",
+  "why": "Paul, 29/10/2026, first real-case trial: (a) stays as the one credit-life action; (b) asking the clients what they want to do is their decision, not an action (answer 6: remove); (c) cancelling the credit life is removed (answer 7: remove).",
+  "needs_paul": false
  }
 ]

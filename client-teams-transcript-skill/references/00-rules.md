@@ -14,13 +14,15 @@
 
 10. **Say which version is running.** The first words of your first reply to Paul are the sentence the program prints under "SAY THIS TO PAUL FIRST" (this skill's name and its Last updated date and time, Athens time). It comes from the skill's own stamp, so it changes with every update; never type a date yourself. The final printout repeats it. If the sentence says NOT STAMPED, tell Paul.
 
+11. **Short means short (Paul's rule).** The Planner note is one-line bullets and the actions for now; the PDF is two pages at most; every action is sorted `now` or `later`. The checker fails anything longer or unsorted.
+
 The names Step 1b, Step 4c, Step 6 and so on in these pages are the rule names from the original skill. The program's own numbering (STEP 3 of 14) is separate.
 
 ## Deliverables of a run (the run is finished only when all of these exist and `verify.py` prints PASS)
 
 1. The **Planner note** as a copy-ready page (Artifact, with a Copy note button). Every meeting type.
 2. The **PDF**: Follow-Up Appointment Summary Notes (Teams follow-up) or WhatsApp Call Summary. Sent in the chat, saved into the client's `2. Fact Find` folder, and the saved file listed back. Not for a first/Fact Find meeting (that meeting's PDF is the Fact Find Summary, made by `fact-find-summary`).
-3. The **message to Sitamah** in Teams ("Teams Appointment Completed", or "WhatsApp Call Completed" for a WhatsApp call), shown to Paul, sent through Zapier only after his yes.
+3. The **message to Sitamah** in Teams ("Teams Appointment Completed", or "WhatsApp Call Completed" for a WhatsApp call), shown to Paul in the same reply as the Planner page and the PDF (one reply, one question, so he approves all three together) and sent through Zapier only after his yes.
 4. The checks: both reads, the source trace, the mandatory questions, and the final `verify.py` printout, pasted unedited into the reply.
 
 After ANY correction, repeat the build and every hand-over for each output that changed, then run `verify.py` again.

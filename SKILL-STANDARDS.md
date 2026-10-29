@@ -1,6 +1,6 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
-**Version 2.1 (draft for Paul to review)**
+**Version 2.2 (draft for Paul to review)**
 **Last updated: 2026-10-29 13:08 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
@@ -334,6 +334,8 @@ Every run (one client, one meeting) keeps in its own run folder:
 10. **Go for the Teams transcript skill given (29/10/2026).** The NEXT skill does not start until Paul has trialled this one and says go.
 11. **The five removals (Paul, 29/10/2026: "Yes to removals 1-4, keep the table")**: the long change history, the two worked examples with real client details, old rules 1 and 9, and the dated attributions after headings are removed for good; the 21-point checklist stays as a table. Nothing further to change in the skill.
 
+12. **Structure after the first real-case trial (Paul, 29/10/2026).** Planner note: per area 1 to 3 one-line bullets (at most 20 words), the actions for now (at most 8), nothing else; the PDF: at most 4 bullets per area (45 words each), two pages at most, the actions for now under Action Points, the waiting ones under Coming up with their trigger, Next Steps for the client only. Paul's answers on the ten actions of his trial: follow up with a third party (yes), get full policy schedules (yes), get credit-life details (yes), get updated quotes (yes); cession (after the policy is issued, so later); remove: what-if question to a provider, asking the clients what they want to do about credit life, cancelling credit life, sending the updated quotes ("she will do that in another step"), setting up the next appointment. The message to Sitamah is shown with the outputs in one reply with one question.
+
 **Still open**
 1. Which skill comes after the Teams transcript skill (only after Paul's trial and his go)?
 2. Paul's upload of the zip and the result of the real-case trial (his yes/no on the five removals is answered: see decision 11).
@@ -354,19 +356,20 @@ Every run (one client, one meeting) keeps in its own run folder:
 - **Planner notes far too long.** Paul's original rule (approved 06/10/2026) was 1 to 4 short bullets per area and a PDF of two pages at most. The rebuild made ONE set of bullets feed both the Planner note and the PDF and put no length limit or check on either, so the note carried everything (one area had 7 bullets of 40 to 70 words each, packed with figures). The checker proved nothing was missed, never that it was short. Paul wants the Planner note to give only: which areas were discussed, one-line bullets, and the relevant action points.
 - **Action points were not sorted.** Paul: some are for now, some are not for the here and now, some should not be actions at all. The program checks only that an action has a source. The old credit-life and cession rules (07/10 and 06/10) were copied literally and produce actions that are later steps ("cancel the credit life once the new policy is in force", "arrange the cession" while the quote is still only pending) or the client's own decision ("ask the clients what they want to do"). The PDF also let Paul own a next step ("Paul will send the updated quotes") next to a Sitamah action to send the same quotes.
 - **The Teams message to Sitamah was not offered.** In the program it is the very last step, shown only after Paul has approved the other deliverables; Paul expected it together with them (as `fact-find-summary` does). The end of that chat was not seen, so whether the step was skipped or never reached is not known.
-- **Status: structure for the Planner note, the Summary Notes PDF and the action sorting is being agreed with Paul before anything is rebuilt.** Do not change the skill until he has said yes to the structure.
+- **Status: BUILT (29/10/2026) after Paul agreed the structure and sorted the ten actions (decision 12).** Limits live in `wrlib.LIMITS` and are enforced by group L of `verify.py`; the Teams message is shown with the outputs. Waiting for Paul to see a sample and upload; the next real run is the test.
 
 ## 9. Skill tracker
 
 | Skill | Status |
 |---|---|
-| client-teams-transcript-skill | REBUILT to these standards (step driver, reading lock, client-file and access logs, Planner page, PDF, Sitamah Teams message (Teams meetings and WhatsApp calls), PASS/FAIL checklist; 183 tests, hardened after an independent review; nothing from the old skill lost without a record). The Sitamah message also covers WhatsApp calls (Paul's yes). Uploaded 29/10/2026 by a Claude-in-Chrome chat as version v33 (reported by that chat; a fresh chat quoted the new Last updated line); Paul has answered the removals list; waiting for the real-case trial and Paul's confirmation that it is live |
+| client-teams-transcript-skill | REBUILT to these standards (step driver, reading lock, client-file and access logs, Planner page, PDF, Sitamah Teams message (Teams meetings and WhatsApp calls), PASS/FAIL checklist; 215 tests, hardened after an independent review; nothing from the old skill lost without a record). The Sitamah message also covers WhatsApp calls (Paul's yes). Uploaded 29/10/2026 by a Claude-in-Chrome chat as version v33 (reported by that chat). First real-case trial found the notes too long, the actions unsorted and the Teams message not offered; REBUILT the same day to Paul's answers (short Planner note, sorted actions, message shown with the outputs; zip pending his upload); waiting for his confirmation that it is live |
 | client-pipeline-board, complete-applications-skill, fact-find-summary, ff-population-transcript, wr-roa-builder, wr-sroa-builder, rgar-skill, om-optimal-ra-proposal, om-tax-free-skill, investment-comparisons-skill, life-insurer-comparison, life-policy-schedule-analyzer, client-review-notes, client-transcript-download, teams-meeting-setup-skill, outlook-emails-skill, planner-interim-procedure, cameron-short-term-skill, advicetech-website-knowledge, alpha-bank-statements, nedbank-current-account-categorization, paul-email-signature, correcting-skills, master-skill-template | Not started |
 
 ## 10. Changelog (last 5)
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-10-29 17:21 | Version 2.2: the skill rebuilt to Paul's answers after the first real-case trial (short Planner note, PDF limits, actions sorted now/later, message to Sitamah shown with the outputs); decision 12 recorded |
 | 2026-10-29 16:57 | Version 2.1: findings of the first real-case trial recorded in section 8 (notes too long, actions not sorted, Teams message not offered); structure to be agreed with Paul |
 | 2026-10-29 15:46 | Version 2.0: the upload method is recorded as it really works (the Chrome chat uploads, the skill is REPLACED, the old version stays in its version history); the upload brief is now written by a program next to every zip |
 | 2026-10-29 14:23 | Version 1.9: S7 records why the upload is by hand (no write route for Claude Code; Paul is on Max; org sync is Team/Enterprise only) |

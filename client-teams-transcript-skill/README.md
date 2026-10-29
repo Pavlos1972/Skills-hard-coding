@@ -12,14 +12,14 @@ The rules for every skill are in `../SKILL-STANDARDS.md`. Plain-language summary
 | `deliverables.json` | Every output, who makes it, how it is handed over and checked | yes |
 | `references/` | The rule pages the program prints at the step where they apply, plus model examples (invented data) | yes |
 | `scripts/` | `run.py` (the step driver), `tx.py` (reading lock), `build.py` + `page.py` (outputs), `verify.py` (PASS/FAIL), `wrlib.py` | yes |
-| `tests/` | 183 tests on invented data, including a full run from start to PASS, the Copy button in a real browser, and one test for each weakness an independent review found | no |
+| `tests/` | 215 tests on invented data, including a full run from start to PASS, the Copy button in a real browser, and one test for each weakness an independent review found | no |
 | `history/` | The old skill (client names replaced), every change with its reason, every drop with its decision, the coverage report | no |
 
 ## One run
 
 `run.py start RUN --type followup|first|whatsapp`, then `run.py next` / `run.py done RUN <step>` until the last step prints the PASS/FAIL checklist.
 Steps: locate (access log) > prep (completeness check) > context (client file read and logged) > pass1 (read + ledger) > pass2 > scan >
-content (content.json, every item sourced, every conditional rule answered) > build (Planner page, PDF, message to Sitamah) > check (page images and outputs) >
+content (content.json, every item sourced, every conditional rule answered, short and sorted) > build (Planner page, PDF, message to Sitamah) > check (page images and outputs) >
 planner (publish the page) > pdf (send, save, list back) > handoffs > teams (only with Paul's yes, Zapier only) > final (verify.py).
 
 ## What the program proves, and what it cannot

@@ -44,8 +44,8 @@ Not applicable at a first/Fact Find meeting (no quote exists yet to revise).
 
 1. **Quote-literacy check.** For every product/benefit Paul explains, open the discussed quote in `Comparative Quotes` and read what it actually does: trigger, waiting period, months paid, conditions. Report it in ONE short plain-English bullet. If the quote does not state it, say "not stated in the quote" and flag it.
 2. **Name the line items.** Name specific debts in words, never account numbers.
-3. **Cession rule.** If a benefit needs ceding: (a) report in both outputs; (b) add the action `Sitamah to arrange for [the line items] to be ceded to [the bank] and send the cession documents to [client] to sign`; (c) check the application; (d) record `Still open` until the signed cession is back.
-4. **Coverage check.** Every benefit Paul explained must map to a Step 4c bullet and a Sitamah action where cession/signature is needed.
+3. **Cession rule.** If a benefit needs ceding: (a) report in both outputs; (b) add the action `Sitamah to arrange for [the line items] to be ceded to [the bank] and send the cession documents to [client] to sign` as a LATER action with the trigger `once the policy is issued` (Paul: the cession waits for the policy, so it is listed in the PDF under Coming up and not in the Planner note); (c) check the application; (d) record `Still open` until the signed cession is back.
+4. **Coverage check.** Every benefit Paul explained must map to a Step 4c bullet and a Sitamah action (a later one for a cession) where cession/signature is needed.
 5. **Be resourceful - look beyond the quote.** Before flagging a detail as unknown, search: (a) the Fact Find Summary / Fact Find; (b) the latest WR Overview; (c) earlier Follow-Up Notes; (d) the applications; (e) current-transaction correspondence. Only if every source is silent or they conflict, flag it plainly.
 
 ## Step 4d: Credit life on a debt that new cover now protects (Paul's rule - ALWAYS add it)
@@ -54,8 +54,8 @@ Must ALWAYS appear in the report, even if nobody mentioned it on the call - incl
 
 1. **Find it (Step 4c item 5 - be resourceful).** For every debt the new cover protects, check the Fact Find Summary / Fact Find, the latest WR Overview, earlier notes, applications. Record per debt: lender, whether credit life exists, the monthly cost or `unconfirmed`.
 2. **Report it** one short bullet per debt. Mark it `Still open`.
-3. **Actions - all `Sitamah to ...`:** (a) get the credit-life details from the client; (b) ask the client what he wants to do; (c) cancel it ONLY after the new policy has been accepted and is in force.
-4. **Never cancel early.**
+3. **The ONE action (Paul's rule): `Sitamah to get the credit-life details from the client`, for now.** Asking the client what he wants to do, and cancelling the credit life, are NOT actions: his decision is reported as `PENDING - client deciding`.
+4. **Never create a cancel-credit-life action.**
 5. If the client has no credit life on a debt, say so only when the Fact Find records it explicitly; do not invent one.
 
 ## Step 5: Carry-forward against earlier meetings (follow-up meetings only - a first/Fact Find meeting has nothing to carry forward)

@@ -25,7 +25,7 @@ const { chromium } = require('playwright');
     title, horizontalScroll: hscroll, errors, status,
     htmlHasBold: /<b>/.test(clip['text/html'] || ''), htmlHasBullet: (clip['text/html'] || '').includes('•'),
     plainHasMarkdownStars: /\*\*/.test(clip['text/plain'] || ''), plainFirstLines: (clip['text/plain'] || '').split('\n').slice(0, 4),
-    plainHasAction: (clip['text/plain'] || '').includes('Sitamah to arrange for the Absa home loan'),
+    plainHasAction: (clip['text/plain'] || '').includes('Sitamah to get the credit-life details from Sam'),
   }, null, 1));
   await browser.close();
 })();
