@@ -4,7 +4,7 @@ You are helping Paul Kafentzis, a financial adviser. He uses "Skills" in his cla
 
 ## The facts
 - Skill name: `client-teams-transcript-skill`
-- File to upload: `client-teams-transcript-skill-20261029-1338.zip` (81,540 bytes, 21 files). It is on Paul's computer in this folder: **[PAUL: WRITE THE FOLDER HERE, for example Downloads]**
+- File to upload: `client-teams-transcript-skill-20261029-1338.zip` (81,540 bytes, 21 files). It is on Paul's Windows computer in this folder: `C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New`. Full path of the file: `C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New\client-teams-transcript-skill-20261029-1338.zip`. If the computer's file window opens, the full path can be typed or pasted into its "File name" box and confirmed with Open.
 - NEW version: its SKILL.md contains the line `Last updated: 2026-10-29 13:38 (Athens time)` and its first section is called `Index`.
 - OLD version (already in Paul's account, switched on): its SKILL.md contains `Last updated: 2026-10-08 14:20` and its first section is called `UNIVERSAL OPERATING RULES - READ FIRST`.
 - Both have the SAME name and the SAME description, so you cannot tell them apart by name. Use the "before" list (step 3) and the test (step 7).
@@ -21,7 +21,7 @@ You are helping Paul Kafentzis, a financial adviser. He uses "Skills" in his cla
 1. **Start.** Load the Claude in Chrome tools (the chrome-browser skill explains how). Look at the open tabs, then open a NEW tab and go to claude.ai. If the extension asks for site permission, tell Paul and wait.
 2. **Open the Skills page.** In Paul's settings, find Skills (it is called Settings > Features in some versions and Customize > Skills in others). Check that code execution is on (rule 5).
 3. **"Before" list.** Write down every skill name and whether it is on or off. Write down how many entries are called `client-teams-transcript-skill` (expected: exactly 1, switched on) and anything the page shows for it (dates, description).
-4. **Upload.** Click the button to upload or add a skill and choose the zip file named above. A browser helper often cannot operate the computer's own file-picker window. Try your file-upload tool first. If you cannot choose the file, tell Paul: "Please pick `client-teams-transcript-skill-20261029-1338.zip` in the file window, then tell me when it is done," and wait. Then finish any confirm step. If it asks to replace the existing skill, follow rule 2.
+4. **Upload.** Click the button to upload or add a skill and choose the zip file named above. A browser helper often cannot operate the computer's own file-picker window. Try your file-upload tool first. If you cannot choose the file, tell Paul: "Please pick `client-teams-transcript-skill-20261029-1338.zip` from the folder `Claude Skills - New` in the file window, then tell me when it is done," and wait. Then finish any confirm step. If it asks to replace the existing skill, follow rule 2.
 5. **"After" list.** Reload the page and list the skills again. One of these happened:
    - (a) Two entries named `client-teams-transcript-skill`: go to step 6.
    - (b) Still one entry: it may have replaced the old one. Tell Paul in plain words that the old copy is no longer in the account as a backup (Paul still has his original saved as a file). Go to step 7.
