@@ -1,19 +1,20 @@
 #!/usr/bin/env python3
 """Step driver for the client-teams-transcript skill (SKILL-STANDARDS.md S16).
 
-  run.py start   <run_dir> --type followup|first|whatsapp
+  run.py start   <run_dir> --type followup|first|whatsapp --client "First Surname" --date DD/MM/YYYY
   run.py next    <run_dir>            show the current step again
   run.py done    <run_dir> <step>     check the proof; only then move on
   run.py status  <run_dir>            where the job is up to (also the recovery point after a long chat)
   run.py preflight                    the self-test on its own
 
   run.py access  <run_dir> --need N --route device|m365|zapier|user|passed --tool T --result ok|fail [--detail D]
-  run.py source  <run_dir> --kind K (--path P --date YYYY-MM-DD --read yes | --none REASON)
+  run.py source  <run_dir> --kind K (--path P --date YYYY-MM-DD --read yes [--ref NAME] [--text-file F] | --none REASON)
   run.py ask     <run_dir> --need N --question Q --searched S [--kind file|knowledge]
   run.py ledger  <run_dir> add --line N --kind K --quote Q [--speaker S] [--meaning M]
   run.py ledger  <run_dir> cover <ledger id> <item id> [<item id> ...]
   run.py ledger  <run_dir> exclude <ledger id> <reason>
-  run.py ledger  <run_dir> review --line N --reason R
+  run.py ledger  <run_dir> ack --pass 1|2 --chunk N --reason R
+  run.py ledger  <run_dir> review (--line N | --from A --to B) --reason R
   run.py ledger  <run_dir> list
   run.py receipt <run_dir> --set a.b=value [--set ...]
 
@@ -21,6 +22,7 @@ The program shows one step at a time and will not show the next until the proof 
 this one is on file. It is run as it is; it is never edited during a run.
 """
 import argparse
+import datetime as dt
 import os
 import re
 import shutil
@@ -85,7 +87,8 @@ def chunk_commands(run, pass_no):
     k = len(st["chunks"]) if st else 0
     if not k:
         return "(chunk commands appear once `tx.py prep` has run)"
-    return "\n".join("  python3 %s/tx.py chunk %s %d %d" % (SCRIPTS, run, pass_no, n) for n in range(1, k + 1))
+    return ("  python3 %s/tx.py chunk %s %d 1     (%d chunks in all; each chunk prints the command for the next one, and the next is\n"
+            "  refused until this one has ledger entries or a reasoned acknowledgement)" % (SCRIPTS, run, pass_no, k))
 
 
 def teams_block(run):
@@ -96,7 +99,14 @@ def teams_block(run):
     msg = page.teams_message(content)
     if not msg:
         return "(not applicable to a WhatsApp call)"
-    lines = ["MESSAGE TO SEND, exactly this:", "  " + msg, "",
+    R, *_ = verify.run_checks(run, "final", ("teams",))
+    if R.fails:
+        return ("NOT YET. The message must not be shown or sent until every other check passes. Fix these first:\n" +
+                "\n".join("  - " + m for lvl, _, m in R.rows if lvl == "FAIL")[:2500] +
+                "\nThen run `python3 %s/run.py next %s` again." % (SCRIPTS, run))
+    lines = ["BEFORE SENDING: if this meeting's message was already sent by ff-population-transcript or fact-find-summary in this chat, "
+             "record teams.status=already_sent with teams.already_sent_evidence (which skill, when, message id) and do NOT send again.", "",
+             "MESSAGE TO SEND, exactly this:", "  " + msg, "",
              "WHY THE FOLLOW-UP SENTENCE IS %s: %s" % (
                  "IN" if content["next_appointment"].get("agreed") else "OUT", content["next_appointment"].get("check", "")),
              "", "THE ZAPIER ROUTE (hard-coded, use exactly this):"]
@@ -127,7 +137,7 @@ def preflight(run=None):
     except ImportError:
         add(False, "reportlab is not installed: the PDF cannot be built")
     for tool, why, fatal in (("pdftotext", "checks the PDF text", True), ("pdftoppm", "renders the page images", True),
-                             ("pandoc", "reads a .docx transcript", False)):
+                             ("pandoc", "reads a .docx transcript", True)):
         add(shutil.which(tool) is not None, "%s (%s)" % (tool, why), fatal)
     try:
         import zoneinfo
@@ -200,14 +210,22 @@ def cmd_start(a):
     if os.path.exists(p(a.run, w.RUN)):
         print("\nThis run already exists. Showing where it is up to (use `status` / `next`).")
         return cmd_next(a)
+    parts = a.client.split()
+    if len(parts) < 2:
+        w.die('--client must be the first name and surname, for example --client "Sam Testcase"')
+    try:
+        dt.datetime.strptime(a.date, "%d/%m/%Y")
+    except ValueError:
+        w.die("--date must be a real date as DD/MM/YYYY (taken from Paul's message), got %r" % a.date)
     rj = {"skill": "client-teams-transcript-skill", "meeting_type": a.type, "created": w.now(),
-          "skill_stamp": skill_stamp(), "steps": {}}
+          "skill_stamp": skill_stamp(), "steps": {}, "client": {"first": parts[0], "surname": " ".join(parts[1:])}, "date": a.date}
     w.save_json(p(a.run, w.RUN), rj)
     for name in (w.SOURCES, w.ACCESS, w.QUESTIONS):
         w.save_json(p(a.run, name), [])
     w.save_json(p(a.run, w.LEDGER), {"entries": [], "scan_reviewed": []})
     w.save_json(p(a.run, w.RECEIPT), {})
-    print("\nRUN STARTED  type: %s   skill version: %s" % (a.type, rj["skill_stamp"] or "unstamped"))
+    print("\nRUN STARTED  type: %s   client: %s %s   meeting date: %s   skill version: %s"
+          % (a.type, rj["client"]["first"], rj["client"]["surname"], a.date, rj["skill_stamp"] or "unstamped"))
     print("Standing rules for the whole job:\n")
     print(expand(read_ref("00-rules.md"), a.run))
     print()
@@ -262,17 +280,28 @@ def _state(run):
     return w.load_json(p(run, w.STATE), "state.json")
 
 
+def unacked(run, p):
+    st = _state(run)
+    led = load_list_ledger(run)
+    return [c for c in range(1, len(st["chunks"]) + 1) if not tx.chunk_acked(st, led, p, c)]
+
+
 def ck_pass1(run, rj):
     errs = []
     if not tx.passes_done(_state(run))[0]:
         errs.append("Pass 1 has not served every chunk (see `tx.py status %s`)" % run)
     if not (load_list_ledger(run).get("entries")):
         errs.append("the ledger is empty: record decisions, requests and figures with run.py ledger add")
+    if unacked(run, 1):
+        errs.append("Pass 1 chunks %s have no ledger entry or reasoned acknowledgement" % unacked(run, 1))
     return errs
 
 
 def ck_pass2(run, rj):
-    return [] if tx.passes_done(_state(run))[1] else ["Pass 2 has not served every chunk (see `tx.py status %s`)" % run]
+    errs = [] if tx.passes_done(_state(run))[1] else ["Pass 2 has not served every chunk (see `tx.py status %s`)" % run]
+    if unacked(run, 2):
+        errs.append("Pass 2 chunks %s have no ledger entry or reasoned acknowledgement" % unacked(run, 2))
+    return errs
 
 
 def ck_scan(run, rj):
@@ -283,7 +312,7 @@ def ck_verify(stage):
     def check(run, rj):
         R, st, ledger, content = verify.run_checks(run, stage)
         if stage == "final":
-            verify.report(R, st, ledger, content, stage)   # the whole printout goes into the transcript
+            verify.report(R, st, ledger, content, stage, run)   # the whole printout goes into the transcript
         return [m for lvl, _, m in R.rows if lvl == "FAIL"][:15]
     return check
 
@@ -305,6 +334,15 @@ def rc_get(run, dotted):
     return d
 
 
+def ck_judgment(run, rj):
+    errs = ck_receipt("independent_check", n=10)(run, rj)
+    for k in verify.JUDGMENT_KEYS:
+        errs += ck_receipt("judgment." + k, n=12)(run, rj)
+    if rj["meeting_type"] != "first":
+        errs += ck_receipt("png_visual_check", n=20)(run, rj)
+    return errs
+
+
 def ck_receipt(*keys, n=1):
     def check(run, rj):
         return ["receipt is missing '%s' (run.py receipt --set %s=...)" % (k, k) for k in keys
@@ -322,13 +360,18 @@ def ck_planner(run, rj):
 
 
 def ck_teams(run, rj):
-    return [] if rc_get(run, "teams.status") in ("sent", "declined", "failed") else ["teams.status must be sent, declined or failed"]
+    st = rc_get(run, "teams.status")
+    if st not in ("sent", "already_sent", "declined", "failed"):
+        return ["teams.status must be sent, already_sent, declined or failed"]
+    need = {"sent": ("teams.message_id", "teams.sent_time", "teams.body_as_stored", "teams.approved_by_paul"),
+            "already_sent": ("teams.already_sent_evidence",), "declined": ("teams.paul_said",), "failed": ("teams.detail",)}[st]
+    return ck_receipt(*need)(run, rj)
 
 
 CHECKS = {
     "access_transcript": ck_access_transcript, "prep_done": ck_prep_done, "sources_ok": ck_sources_ok,
     "pass1_done": ck_pass1, "pass2_done": ck_pass2, "scan_done": ck_scan, "verify_pre": ck_verify("pre"),
-    "build_fresh": ck_build, "receipt_png": ck_receipt("png_visual_check", n=20), "receipt_planner": ck_planner,
+    "build_fresh": ck_build, "receipt_check": ck_judgment, "receipt_planner": ck_planner,
     "receipt_pdf": ck_receipt("pdf_sent_in_chat", "saved.tool", "saved.folder", "saved.filename", "saved.tool_result",
                               "saved.folder_listing_check"),
     "receipt_apps": ck_receipt("applications_handoff"), "receipt_teams": ck_teams, "verify_final": ck_verify("final"),
@@ -379,15 +422,17 @@ def cmd_ledger(a):
         print("%d entries, %d scan reviews" % (len(led["entries"]), len(led["scan_reviewed"])))
         return
     if a.action == "add":
+        if not os.path.exists(p(a.run, w.TRANSCRIPT)):
+            w.die("REFUSED: the transcript has not been prepared yet (tx.py prep).")
         lines = w.read_lines(a.run)
         if a.kind not in LEDGER_KINDS:
             w.die("kind must be one of %s" % LEDGER_KINDS)
         if not 1 <= a.line <= len(lines) or not verify.quote_ok(lines, a.line, a.quote):
             w.die("REFUSED: that quote is not found at transcript line %d. Copy the exact words from the chunk you read." % a.line)
         st = _state(a.run)
-        p1 = tx.passes_done(st)[0]
+        in_pass2 = any(r["pass"] == 2 for r in st["reads"])
         e = {"id": "L%d" % (len(led["entries"]) + 1), "line": a.line, "kind": a.kind, "quote": a.quote,
-             "pass": 2 if p1 else 1, "covered_by": []}
+             "pass": 2 if in_pass2 else 1, "covered_by": []}
         if a.speaker:
             e["speaker"] = a.speaker
         if a.meaning:
@@ -424,9 +469,23 @@ def cmd_ledger(a):
     elif a.action == "review":
         if len(a.reason.strip()) < 6:
             w.die("REFUSED: give a real reason.")
-        led["scan_reviewed"].append({"line": a.line, "reason": a.reason})
+        if a.line is None and (a.frm is None or a.to is None):
+            w.die("REFUSED: give --line N or --from A --to B.")
+        rec = {"line": a.line, "reason": a.reason} if a.line is not None else {"from": a.frm, "to": a.to, "reason": a.reason}
+        led["scan_reviewed"].append(rec)
         save()
-        print("scan hit at line %d reviewed: %s" % (a.line, a.reason))
+        print("scan hit(s) %s reviewed: %s" % (a.line if a.line is not None else "%d-%d" % (a.frm, a.to), a.reason))
+    elif a.action == "ack":
+        st = _state(a.run)
+        if a.pass_ not in (1, 2) or not 1 <= a.chunk <= len(st["chunks"]):
+            w.die("REFUSED: --pass must be 1 or 2 and --chunk 1..%d." % len(st["chunks"]))
+        if not any(r["pass"] == a.pass_ and r["chunk"] == a.chunk for r in st["reads"]):
+            w.die("REFUSED: chunk %d of Pass %d has not been read yet." % (a.chunk, a.pass_))
+        if len(a.reason.strip()) < 20:
+            w.die("REFUSED: say in your own words what this chunk contained and why it holds nothing to record (at least 20 characters).")
+        led.setdefault("chunk_acks", []).append({"pass": a.pass_, "chunk": a.chunk, "reason": a.reason, "t": w.now()})
+        save()
+        print("chunk %d of Pass %d acknowledged." % (a.chunk, a.pass_))
 
 
 # ------------------------------------------------------------------ logs
@@ -454,13 +513,28 @@ def cmd_source(a):
     if a.none:
         if len(a.none.strip()) < 8:
             w.die("REFUSED: say what you searched and where (at least 8 characters).")
+        tried = {e.get("route") for e in load_list(a.run, w.ACCESS) if e.get("need") == a.kind and e.get("result") == "fail"}
+        if len(tried & set(w.ROUTES)) < 2:
+            w.die("REFUSED: you may say there is no %s on file only after searching on at least two routes (device, m365, zapier) and logging each: "
+                  "run.py access %s --need %s --route device --tool <tool> --result fail --detail \"nothing found in <where>\"." % (a.kind, a.run, a.kind))
         srcs.append({"kind": a.kind, "none": a.none})
     else:
         if not (a.path and a.date and a.read == "yes"):
             w.die("REFUSED: a document needs --path, --date and --read yes (or use --none \"reason\").")
-        srcs.append({"kind": a.kind, "path": a.path, "date": a.date, "read": "yes"})
+        ref = a.ref or re.sub(r"\.[A-Za-z0-9]{1,5}$", "", re.split(r"[\\/]", a.path.strip())[-1])
+        if any(verify.source_ref(e) == ref for e in srcs if e.get("read") == "yes"):
+            w.die("REFUSED: a document called %r is already recorded; give this one its own --ref." % ref)
+        entry = {"kind": a.kind, "path": a.path, "date": a.date, "read": "yes", "ref": ref}
+        if a.text_file:
+            if not os.path.exists(a.text_file):
+                w.die("REFUSED: text file not found: %s" % a.text_file)
+            os.makedirs(os.path.join(a.run, w.DOCS), exist_ok=True)
+            shutil.copyfile(a.text_file, os.path.join(a.run, w.DOCS, ref + ".txt"))
+            entry["text"] = True
+        srcs.append(entry)
     w.save_json(p(a.run, w.SOURCES), srcs)
-    print("recorded %s source (%d so far)." % (a.kind, len(srcs)))
+    print("recorded %s source (%d so far)%s." % (a.kind, len(srcs), "" if a.none or srcs[-1].get("text") else
+          ". NOTE: no --text-file given, so quotes and figures from this document cannot be machine-checked (Paul will be told)"))
 
 
 def cmd_ask(a):
@@ -500,6 +574,8 @@ def cmd_receipt(a):
         for k in parts[:-1]:
             d = d.setdefault(k, {})
         d[parts[-1]] = v
+        stp = rc.setdefault("_stamps", {})
+        stp[parts[0]] = (_state(a.run).get("build") or {}).get("content_sha", "none")
     w.save_json(path, rc)
     print("receipt updated (%d top-level fields)." % len(rc))
 
@@ -518,6 +594,8 @@ def main():
 
     sp = add("start", cmd_start, "run")
     sp.add_argument("--type", required=True, choices=["followup", "first", "whatsapp"])
+    sp.add_argument("--client", required=True, help='the client exactly as in Paul\'s message, "First Surname"')
+    sp.add_argument("--date", required=True, help="the meeting date from Paul's message, DD/MM/YYYY")
     add("next", cmd_next, "run")
     sp = add("done", cmd_done, "run", "step")
     add("status", cmd_status, "run")
@@ -536,6 +614,8 @@ def main():
     sp.add_argument("--date")
     sp.add_argument("--read", choices=["yes"])
     sp.add_argument("--none")
+    sp.add_argument("--ref", help="a short name for this document; item sources cite it (default: the file name)")
+    sp.add_argument("--text-file", dest="text_file", help="a text copy of the document (for example from pdftotext) so quotes and figures can be checked")
     sp = add("ask", cmd_ask, "run")
     sp.add_argument("--need", required=True)
     sp.add_argument("--question", required=True)
@@ -559,11 +639,19 @@ def main():
     x.add_argument("id")
     x.add_argument("reason")
     x = lsub.add_parser("review")
-    x.add_argument("--line", type=int, required=True)
+    x.add_argument("--line", type=int)
+    x.add_argument("--from", dest="frm", type=int)
+    x.add_argument("--to", type=int)
+    x.add_argument("--reason", required=True)
+    x = lsub.add_parser("ack")
+    x.add_argument("--pass", dest="pass_", type=int, required=True)
+    x.add_argument("--chunk", type=int, required=True)
     x.add_argument("--reason", required=True)
     lsub.add_parser("list")
 
     a = ap.parse_args()
+    if getattr(a, "run", None):
+        a.run = os.path.abspath(a.run)
     a.fn(a)
 
 

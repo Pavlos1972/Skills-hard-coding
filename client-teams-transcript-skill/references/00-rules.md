@@ -12,6 +12,8 @@
 8. **If a rule cannot be met, stop and say so.** State exactly which rule or step could not be completed and why. Never hand over partial work as if it were complete.
 9. **Changes to this skill are made only in Claude Code** (SKILL-STANDARDS.md S7), tested there, and uploaded by Paul as a zip. Never edit the skill, its steps or its programs during a run, never create a second copy of the skill, and never say a change is live until Paul confirms he uploaded it.
 
+The names Step 1b, Step 4c, Step 6 and so on in these pages are the rule names from the original skill. The program's own numbering (STEP 3 of 14) is separate.
+
 ## Deliverables of a run (the run is finished only when all of these exist and `verify.py` prints PASS)
 
 1. The **Planner note** as a copy-ready page (Artifact, with a Copy note button). Every meeting type.

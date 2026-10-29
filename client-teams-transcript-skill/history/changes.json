@@ -382,5 +382,21 @@
   "new": "(no ChatMessage.Send permission: 403 confirmed)",
   "why": "Dated attribution removed from the live page (standards S5); the original wording stays in history/SKILL.2026-10-08.redacted.md.",
   "needs_paul": false
+ },
+ {
+  "file": "01-access-and-locate.md",
+  "kind": "reworded",
+  "old": "A WhatsApp call has no transcript file: see the WhatsApp section.",
+  "new": "A WhatsApp call has no transcript file: ask Paul for his recap/notes or recording and confirm the exact date and TIME (log it as route user; tx.py prep then needs --notes).",
+  "why": "Found by the independent review: the WhatsApp text only appeared at the build step, too late. It is now also shown at the first step.",
+  "needs_paul": false
+ },
+ {
+  "file": "06a-planner-note.md",
+  "kind": "reworded",
+  "old": "Status words in bold: ACCEPTED (verbal), ACCEPTED (verbal + email DD/MM/YYYY), PENDING - client deciding, CHANGED:, awaiting, still open, resolved, requested.",
+  "new": "... requested, on hold, declined.",
+  "why": "Found by the independent review: the example note already used 'on hold' but the list of status words did not include it (nor 'declined', which the Accuracy rules call for).",
+  "needs_paul": false
  }
 ]

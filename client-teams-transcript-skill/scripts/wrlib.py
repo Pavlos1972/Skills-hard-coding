@@ -50,6 +50,16 @@ STATUS_WORDS = [
     "resolved", "requested", "on hold", "declined",
 ]
 TAG_WORDS = ["resolved", "still open", "new", "changed"]
+STATUS_WORDS += ["verbally confirmed - awaiting email reply to proposal", "verbally confirmed", "accepted"]
+
+# A follow-up appointment is real only with a specific date/time; vague wording is not an appointment.
+AGREED_RE = re.compile(
+    r"\b\d{1,2}[/.]\d{1,2}(?:[/.]\d{2,4})?\b"
+    r"|\b(?:mon|tues?|wed(?:nes)?|thu(?:rs)?|fri|sat(?:ur)?|sun)(?:day)?\b.*\b\d{1,2}(?::\d{2})?\s?(?:am|pm)\b"
+    r"|\b\d{1,2}(?:st|nd|rd|th)?\s+(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)", re.I)
+VAGUE_RE = re.compile(
+    r"date to be set|to be set|\btbc\b|to be confirmed|sometime|we'?ll chat|will chat|revisit|early next|later (?:this|next)|"
+    r"next (?:week|month)|in (?:january|february|march|april|may|june|july|august|september|october|november|december)\b", re.I)
 
 # Paul's eight planning areas (29/10/2026) plus "Other" (only when something notable was said).
 # Each is its own heading, in this order, in the Planner note and the PDF.

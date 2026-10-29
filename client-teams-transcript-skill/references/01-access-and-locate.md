@@ -14,7 +14,7 @@ Claude HAS access to Paul's files, mail and Teams. Use these routes in this orde
 - No date given: take the newest unsummarised transcript and mention any older unprocessed ones.
 - Stage it with `device_stage_files` (or fetch it through the m365 route), then `tx.py prep` converts it with `pandoc -t plain --wrap=none`.
 - Not in the folder yet: if the meeting has finished, use the `client-transcript-download` skill to fetch it (Claude in Chrome), then continue. If that is not possible (all three routes logged as failed), ask: "Please upload this client's Teams Meeting Transcript". Never summarise from a title or memory.
-- A WhatsApp call has no transcript file: see the WhatsApp section.
+- A WhatsApp call has no transcript file: ask Paul for his recap/notes or recording and confirm the exact date and TIME of the call before drafting (log it as route `user`; `tx.py prep` then needs `--notes`).
 - **For a first/Fact Find meeting reached via `ff-population-transcript`'s Step 7b, the transcript is already in hand (passed in directly)** - skip the locating (log it with `--route passed`), but NOT the two reads: go straight to Step 1b and do both reads there.
 
 ## Step 1: Verify the transcript is complete

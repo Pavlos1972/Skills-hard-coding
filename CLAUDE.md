@@ -37,8 +37,9 @@ S15 one skill at a time | S16 a program drives the job step by step (approved; r
 - Skill tracker: section 9 of SKILL-STANDARDS.md. Keep it current.
 
 ## Commands
-- Tests: `python3 -m unittest discover -s client-teams-transcript-skill/tests` (98 tests, about 70 seconds)
+- Tests: `python3 -m unittest discover -s client-teams-transcript-skill/tests` (156 tests, about 2.5 minutes)
 - Lint: `WR_NAME_BLOCKLIST=<private names file outside the repo> python3 tools/lint_skill.py client-teams-transcript-skill`
+- Packaging takes several minutes (it runs every test twice): run it in the background. `WR_NAME_BLOCKLIST` must point at a private names file kept OUTSIDE the repo.
 - After editing a skill: `python3 tools/stamp_skill.py <skill> --change "..."`, then `python3 tools/package_skill.py <skill> --out releases`
 - Athens time for any stamp: `TZ=Europe/Athens date '+%Y-%m-%d %H:%M'`
 

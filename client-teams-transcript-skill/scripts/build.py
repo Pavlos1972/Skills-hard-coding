@@ -142,6 +142,15 @@ def main():
         build.update(pdf=names["pdf"], pdf_sha=w.sha256_file(pdf))
     st["build"] = build
     w.save_json(os.path.join(a.run, w.STATE), st)
+    rjp = os.path.join(a.run, w.RUN)
+    if os.path.exists(rjp):                  # a rebuild re-opens every hand-over step (Paul's rule: a correction re-opens the whole task)
+        rj = w.load_json(rjp)
+        again = [sid for sid in ("check", "planner", "pdf", "handoffs", "final") if (rj.get("steps", {}).get(sid) or {}).get("state") == "done"]
+        for sid in ("check", "planner", "pdf", "handoffs", "final"):
+            rj.get("steps", {}).pop(sid, None)
+        w.save_json(rjp, rj)
+        if again:
+            print("HAND-OVER RE-OPENED because the outputs were rebuilt: redo steps %s and record them again." % ", ".join(again))
 
     print("BUILT from content.json (hash %s...)" % build["content_sha"][:10])
     print("  Planner page (publish this as the Artifact): %s" % os.path.join(out, names["page"]))

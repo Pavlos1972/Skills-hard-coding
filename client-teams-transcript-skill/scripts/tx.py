@@ -27,6 +27,7 @@ import wrlib as w
 TOLERANCE_S = 120   # last timestamp may fall this far short of the stated duration
 JUMP_S = 600        # a silent jump bigger than this is treated as a gap
 CLOSING_FRACTION = 0.15
+CLOSING_SECONDS = 600
 
 TS_ARROW = re.compile(r"^\s*(\d{1,2}):(\d{1,2}):(\d{1,2})(?:[.,]\d+)?\s*-->")
 TS_START = re.compile(r"^\s*(\d{1,2}):(\d{2})(?::(\d{2}))?(?:[.,]\d+)?(?!\d)")
@@ -76,8 +77,11 @@ def fmt(sec):
 
 def read_source(path):
     if path.lower().endswith((".docx", ".doc", ".rtf", ".odt")):
-        r = subprocess.run(["pandoc", "-t", "plain", "--wrap=none", path],
-                           capture_output=True, text=True)
+        try:
+            r = subprocess.run(["pandoc", "-t", "plain", "--wrap=none", path],
+                               capture_output=True, text=True)
+        except FileNotFoundError:
+            w.die("STOP: pandoc is not installed, so a .docx transcript cannot be read. Tell Paul exactly this; do not summarise from anything else.", 4)
         if r.returncode:
             w.die("pandoc failed: " + r.stderr.strip())
         return r.stdout
@@ -152,6 +156,10 @@ def cmd_prep(a):
                          % (fmt(dur), fmt(last_ts), fmt(dur - last_ts)))
         elif dur is None:
             notes.append("WARN: no stated duration found; only the gap check was run.")
+            if not [i for i, ln in enumerate(lines, 1) if CLOSING.search(ln)]:
+                complete = False
+                notes.append("INCOMPLETE?: the file states no total duration and has no closing marker ('stopped transcription'), "
+                             "so it cannot be checked that the transcript reaches the end. Tell Paul; use --force only if he says to carry on.")
         for (i1, t1), (i2, t2) in zip(stamps, stamps[1:]):
             if t2 - t1 > JUMP_S:
                 complete = False
@@ -211,6 +219,15 @@ def cmd_chunk(a):
                   "Pass 1 still needs: %s" % missing, 3)
     if n > 1 and (n - 1) not in done:
         w.die("REFUSED: read chunk %d of Pass %d first. Chunks are read in order, none skipped." % (n - 1, p), 3)
+    led = load_ledger(a.run)
+    if n > 1 and not chunk_acked(st, led, p, n - 1):
+        w.die("REFUSED: chunk %d of Pass %d has no ledger entry and no acknowledgement. Record what it contains first "
+              "(run.py ledger %s add ...), or say in your own words why it holds no decisions, requests or figures: "
+              "run.py ledger %s ack --pass %d --chunk %d --reason \"...\" (at least 20 characters)." % (n - 1, p, a.run, a.run, p, n - 1), 3)
+    if p == 2 and n == 1:
+        unacked = [c for c in range(1, len(st["chunks"]) + 1) if not chunk_acked(st, led, 1, c)]
+        if unacked:
+            w.die("REFUSED: Pass 1 chunks %s have no ledger entry or acknowledgement; finish Pass 1 properly before Pass 2." % unacked, 3)
 
     s, e = st["chunks"][n - 1]
     body = "\n".join("%6d  %s" % (i, lines[i - 1]) for i in range(s, e + 1))
@@ -221,6 +238,8 @@ def cmd_chunk(a):
         st["reads"].append({"pass": p, "chunk": n, "t": w.now(), "lines": [s, e],
                             "sha256": w.sha256_text(body)})
         w.save_json(os.path.join(a.run, w.STATE), st)
+    print("BEFORE THE NEXT CHUNK: record what this chunk contains (run.py ledger %s add ...) or, if it holds no decisions, requests or "
+          "figures, acknowledge it in your own words: run.py ledger %s ack --pass %d --chunk %d --reason \"...\"" % (a.run, a.run, p, n))
     if n < k:
         print("NEXT: tx.py chunk %s %d %d" % (a.run, p, n + 1))
     elif p == 1:
@@ -229,6 +248,21 @@ def cmd_chunk(a):
     else:
         print("PASS 2 COMPLETE (all %d chunks). Check every ledger entry against the words, add "
               "anything Pass 1 missed, then run: tx.py scan %s" % (k, a.run))
+
+
+def chunk_acked(st, ledger, p, c):
+    """A chunk counts as worked through only when it produced a ledger entry (in that pass) or a reasoned acknowledgement."""
+    s, e = st["chunks"][c - 1]
+    for en in (ledger or {}).get("entries", []):
+        if isinstance(en, dict) and en.get("pass") == p and isinstance(en.get("line"), int) and s <= en["line"] <= e:
+            return True
+    return any(isinstance(a, dict) and a.get("pass") == p and a.get("chunk") == c and len(str(a.get("reason", "")).strip()) >= 20
+               for a in (ledger or {}).get("chunk_acks", []))
+
+
+def load_ledger(run):
+    path = os.path.join(run, w.LEDGER)
+    return w.load_json(path) if os.path.exists(path) else {"entries": [], "scan_reviewed": [], "chunk_acks": []}
 
 
 def passes_done(st):
@@ -242,9 +276,19 @@ def cmd_scan(a):
     if not all(passes_done(st)):
         w.die("REFUSED: the keyword scan runs in addition to the two reads, not instead of them. "
               "Finish Pass 1 and Pass 2 first.", 3)
+    led = load_ledger(a.run)
+    unacked = [(p_, c) for p_ in (1, 2) for c in range(1, len(st["chunks"]) + 1) if not chunk_acked(st, led, p_, c)]
+    if unacked:
+        w.die("REFUSED: chunks without a ledger entry or acknowledgement (pass, chunk): %s" % unacked[:10], 3)
     lines = w.read_lines(a.run)
     total = len(lines)
     closing_from = int(total * (1 - CLOSING_FRACTION)) + 1
+    # the closing minutes: the last 15% of the lines OR the last 10 minutes of the call, whichever reaches further back
+    stamps_ = [(i, ts_seconds(ln)) for i, ln in enumerate(lines, 1) if ts_seconds(ln) is not None]
+    if stamps_:
+        last = max(sec for _, sec in stamps_)
+        by_time = next((i for i, sec in stamps_ if sec >= last - CLOSING_SECONDS), closing_from)
+        closing_from = min(closing_from, by_time)
     hits = [i for i, ln in enumerate(lines, 1) if HIGH_RE.search(ln)]
     low = [i for i, ln in enumerate(lines, 1) if i not in set(hits) and LOW_RE.search(ln)]
     print("KEYWORD SCAN: %d lines with decision/change/request words, %d more with figures/days/products "
@@ -268,6 +312,10 @@ def cmd_status(a):
     print("  complete: %s%s" % (st["complete"], "  (FORCED)" if st["forced"] else ""))
     print("  Pass 1 read: %s  %s" % (r1, "DONE" if p1 else "NOT DONE"))
     print("  Pass 2 read: %s  %s" % (r2, "DONE" if p2 else "NOT DONE"))
+    led = load_ledger(a.run)
+    pend = [(p_, c) for p_ in (1, 2) for c in range(1, k + 1) if c in {r["chunk"] for r in st["reads"] if r["pass"] == p_}
+            and not chunk_acked(st, led, p_, c)]
+    print("  chunks read but not yet acknowledged in the ledger (pass, chunk): %s" % (pend or "none"))
     print("  keyword scan: %s" % ("run, %d hits" % len(st["scan"]["hits"]) if st["scan"] else "NOT RUN"))
     print("  outputs built: %s" % ("yes" if st["build"] else "no"))
     if not p1:
