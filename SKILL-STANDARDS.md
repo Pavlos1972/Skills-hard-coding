@@ -1,7 +1,7 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
-**Version 1.1 (draft for Paul to review)**
-**Last updated: 2026-10-29 12:00 (Athens time)**
+**Version 1.2 (draft for Paul to review)**
+**Last updated: 2026-10-29 11:22 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
 Every future Claude Code session in this repo must read it before touching any skill
@@ -49,7 +49,7 @@ Claude says it did ("attested").
 | S13 | Same house conventions everywhere (dates, Rand, names, wording) | Written |
 | S14 | Report honestly: say what was checked, what was only attested, and never say "live" until Paul confirms | Written |
 | S15 | One skill at a time, finished and tested on a real case before the next | Written |
-| S16 | PROPOSED: a program drives the job step by step and shows the next step only when the last one is proven | Waiting for Paul's yes |
+| S16 | A program drives the job step by step and shows the next step only when the last one is proven | APPROVED 29/10/2026, on condition it is proven in a real chat first |
 
 ---
 
@@ -174,7 +174,7 @@ split the text from its scripts.
 - The zip carries the Athens-time stamp (S2). Paul uploads it (one upload per change); Claude writes the step-by-step the first time.
 - Claude never says a change is live until Paul confirms he uploaded it (S14).
 
-**Replaces.** Rule 9 of the old "Universal operating rules" block, and the "only propose it with the card" guardrail in `correcting-skills`, for any skill that has scripts. Both skills need their wording updated (see section 5).
+**Replaces.** Rule 9 of the old "Universal operating rules" block, and the "only propose it with the card" guardrail in `correcting-skills`, for any skill that has scripts. Both skills need their wording updated (see section 6).
 
 **Status.** Process written. Packaging tool TO BUILD.
 
@@ -222,18 +222,39 @@ Never say a skill change is live until Paul confirms he uploaded it.
 ### S15. One skill at a time
 **Rule.** Finish one skill, test it on a real case, get Paul's yes, then start the next. After a skill goes live, there is a watch period: Paul reports anything that behaves differently, and each report becomes a test (S12).
 
-### S16. PROPOSED: a program drives the job, one step at a time
+### S16. A program drives the job, one step at a time (approved 29/10/2026, on condition it works in a real chat)
 **Rule.** The skill's text is short. It says: run the driver command, do exactly what it prints, run it again. The driver
 shows the next step only after the proof for the previous step is on file. At the very start it runs a self-test (right tools
 present? python, PDF tools, Zapier, Microsoft 365 reachable?) and stops with a plain message if something is missing,
 so a chat can never quietly fall back to a text draft.
 **Why.** Long skills get skimmed or forgotten after a long chat. A step Claude has not been shown cannot be skipped.
 **How it is locked in.** `steps.json` per skill (the ordered steps, the proof each needs); one driver program shared by all skills.
-**Status.** Waiting for Paul's yes. Not built yet; the checker and reading lock already built become steps in it.
+**Condition set by Paul.** "As long as it works." So: tested here on invented data first, then tried by Paul in a real chat on one
+real client, with the old skill kept as a backup. Nothing is called finished before that real trial passes.
+**Status.** Approved. Not built yet; the checker and reading lock already built become steps in it.
 
 ---
 
-## 3. The standard kit (how every skill is built)
+## 3. Where the program lives (plain words)
+
+- **Inside the skill itself.** A skill is a folder: the instructions (SKILL.md) plus the programs, packed together as one zip.
+  Paul uploads the zip once, and Claude receives both together. Eight of Paul's skills already work this way
+  (for example `wr-roa-builder`, `wr-sroa-builder`, `fact-find-summary`, `rgar-skill`, `ff-population-transcript`).
+- **In each chat.** When the skill starts, the chat gets its own temporary copy of that folder, like a toolbox put on a desk.
+  Claude runs the program from there. The program keeps its notes (what is done, what is next) in the chat's workspace.
+  When the chat ends, the workspace is cleared. The finished files live in the client's folder, saved through the connections.
+- **The master copy** is this GitHub repo. Changes are made here (S7), tested here, and the zip is made from here.
+- **How it governs.** The skill's first instruction is "run the program". The program then says what to do next, remembers
+  where the job is up to, builds the outputs and does the final checking.
+- **A difference from today.** In the Fact Find skill, Claude treats its script as "a starting template" it may change.
+  In the new standard the program is run as it is, never rewritten by Claude during a run.
+- **What I cannot see from here.** I cannot run anything inside Paul's claude.ai chat, so how the chat's workspace behaves is
+  proven only by a real trial. The program's first action is a self-test that stops with a plain message if something it needs is missing.
+- **Packaging.** Anthropic's own `skill-creator` skill contains a `package_skill.py`; the standard packaging tool (S7) starts from that idea.
+
+---
+
+## 4. The standard kit (how every skill is built)
 
 ```
 skills-hard-coding/
@@ -256,7 +277,7 @@ Every run (one client, one meeting) keeps in its own run folder:
 
 ---
 
-## 4. How to correct any skill (the checklist Claude Code follows)
+## 5. How to correct any skill (the checklist Claude Code follows)
 
 1. Read this file and the skill's whole folder. Say back to Paul, in plain words, what will change. Wait for his yes.
 2. Take the inventory (S5 step 1). Archive the old text (step 2).
@@ -270,7 +291,7 @@ Every run (one client, one meeting) keeps in its own run folder:
 
 ---
 
-## 5. What this replaces in the older rules (to be updated in the skills themselves)
+## 6. What this replaces in the older rules (to be updated in the skills themselves)
 
 | Old rule | Now |
 |---|---|
@@ -284,39 +305,41 @@ Every run (one client, one meeting) keeps in its own run folder:
 
 ---
 
-## 6. Decisions by Paul (29/10/2026) and what is still open
+## 7. Decisions by Paul (29/10/2026) and what is still open
 
 **Decided**
 1. **Right-hand pane** = the Planner note as a private HTML page with a Copy button (same as his 28/10/2026 page). Hard-coded by program (S6).
 2. **Teams message to Sitamah**: use the one in `ff-population-transcript` Step 8, posted through Zapier to her chat, with Paul's yes. The follow-up (transcript) skill uses the same message with the right ordinal (2nd, 3rd...).
 3. **Removing outdated text**: clearly replaced rules are dropped automatically; anything uncertain goes to Paul as a short yes/no list. Approved.
 4. **The eight planning areas**: Risk, RA, Investment, RGAR, EGAR, Medical Aid, Will, Short-Term. "Other" (debt, children, health, general) is shown only when something notable was said.
+5. **Headings**: each of the eight is its own heading, in that order, in the Planner note and the PDF, shown only when discussed or still open, with one line naming the ones not discussed.
+6. **S16 approved** (program drives the job step by step), on condition that it works in a real chat first.
 
 **Still open**
-1. In the Planner note and the PDF, should each of the eight be its own heading, in that order, shown only when discussed or still open, with one line naming the ones not discussed? (Recommended: yes. The current skill folds RGAR under Retirement, EGAR under Investment, and Medical/Will/Short-term under one heading, while Paul's real 28/10/2026 page already shows Will and Short-term separately.)
-2. Is S16 (the program drives the job step by step) approved?
-3. Which skill comes after the Teams transcript skill?
+1. Which skill comes after the Teams transcript skill?
+2. Paul's "go" to start the rewrite of the Teams transcript skill (not given yet).
 
-## 7. Known gaps found in the Teams transcript skill (to fix in its rewrite)
+## 8. Known gaps found in the Teams transcript skill (to fix in its rewrite)
 
 - Step 3 says "eight areas" but lists seven. Resolved: the eight are Risk, RA, Investment, RGAR, EGAR, Medical Aid, Will, Short-Term (decision 4).
 - No Teams message to Sitamah deliverable. Resolved: add the Step 8 message from `ff-population-transcript` (decision 2).
 - **Missing page template.** `ff-population-transcript` Step 7b says to use the Planner page template and publishing steps in this skill's Output 1 section. They are not there. Each chat invents its own page. The rewrite generates the page by program.
-- Other skills already carry scripts (`ff-population-transcript` has `scripts/build_fact_find.js` and a field map). The standard must work with these; it does not start from zero.
+- Other skills already carry scripts: `alpha-bank-statements`, `complete-applications-skill`, `fact-find-summary`, `ff-population-transcript` (JavaScript), `om-tax-free-skill`, `rgar-skill`, `wr-roa-builder`, `wr-sroa-builder`. The standard must work with these; it does not start from zero. Several treat the script as a template Claude may adapt, which the new standard does not allow during a run.
 - Examples contain real client names (S11).
 - Change history is longer than the rules and sits at the top of the file (S2, S5).
 - The "first-meeting exception" (06.10.26) was reversed on 07.10.26 but its backstory is still in the text.
 
-## 8. Skill tracker
+## 9. Skill tracker
 
 | Skill | Status |
 |---|---|
 | client-teams-transcript-skill | First slice built and tested (reading lock, source check, PDF + Planner note, checker, 47 tests). SKILL.md rewrite waiting for Paul's OK of this file |
 | client-pipeline-board, complete-applications-skill, fact-find-summary, ff-population-transcript, wr-roa-builder, wr-sroa-builder, rgar-skill, om-optimal-ra-proposal, om-tax-free-skill, investment-comparisons-skill, life-insurer-comparison, life-policy-schedule-analyzer, client-review-notes, client-transcript-download, teams-meeting-setup-skill, outlook-emails-skill, planner-interim-procedure, cameron-short-term-skill, advicetech-website-knowledge, alpha-bank-statements, nedbank-current-account-categorization, paul-email-signature, correcting-skills, master-skill-template | Not started |
 
-## 9. Changelog (last 5)
+## 10. Changelog (last 5)
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-10-29 11:22 | Version 1.2: S16 approved on condition of a real-chat trial; each of the eight areas is its own heading; section 3 explains where the program lives; existing skills with scripts listed |
 | 2026-10-29 12:00 | Version 1.1: Paul's answers recorded (pane, Teams message via Zapier, removal approach, eight areas); Planner page and Teams message rules taken from `ff-population-transcript`; S16 proposed; missing page template recorded as a gap |
 | 2026-10-29 11:01 | Version 1.0 written from Paul's seven rules plus eight additions (S8 to S15); Microsoft 365 permissions recorded; open questions and known gaps listed |
