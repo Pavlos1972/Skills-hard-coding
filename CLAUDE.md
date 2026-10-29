@@ -1,0 +1,37 @@
+# Read first (Claude Code, this repo)
+
+This repo holds the hard-coded versions of Paul Kafentzis's skills (Wealth Revolution). Before touching
+any skill, read **SKILL-STANDARDS.md** in full. It is the memory of what Paul has asked for. If anything
+here or in a skill disagrees with it, SKILL-STANDARDS.md wins.
+
+## How to talk to Paul
+- Simple everyday words. No jargon. Explain any technical word the first time you use it.
+- Give ONE recommended route and state its catch honestly. Explain back what you understood before building anything big, and wait for his yes.
+- Short answers. Ask one thing at a time.
+- Say what was checked and what was only attested. Never claim done without the checker's PASS output.
+
+## The standards in one line each (details in SKILL-STANDARDS.md)
+S1 follow instructions strictly, nothing skipped or swapped | S2 every skill dated in Athens time, stamp set by a program |
+S3 client facts come from the client's file first, ask Paul last, with proof of what was searched |
+S4 always use the access routes (local drive/OneDrive, Microsoft 365, Zapier), never say "I cannot access your files" without a log of all three tried |
+S5 clean, current instructions; archive before removing; the skill must still work |
+S6 every output (reports, Planner note, Teams note to Sitamah) hard-coded and checked |
+S7 skills are changed only in Claude Code, then packaged and uploaded as a zip |
+S8 run state on disk | S9 nothing invented, every fact has a source | S10 nothing sent without Paul's yes |
+S11 no client data in the repo | S12 tests on invented data, every real bug becomes a test |
+S13 house conventions (DD/MM/YYYY, R, Athens time, actions owned by Sitamah) | S14 report honestly, never say "live" before Paul confirms |
+S15 one skill at a time
+
+## Where things are
+- `client-teams-transcript-skill/`: first skill, scripts and tests built; SKILL.md rewrite waits for Paul's OK of the standards.
+- Paul's current skills (read-only copies, edits there change nothing): `/root/.claude/skills/synced/*/<skill-name>/SKILL.md` in cloud sessions.
+- Skill tracker: section 8 of SKILL-STANDARDS.md. Keep it current.
+
+## Commands
+- Tests: `python3 -m unittest discover -s client-teams-transcript-skill/tests`
+- Athens time for any stamp: `TZ=Europe/Athens date '+%Y-%m-%d %H:%M'`
+
+## Never
+- Put client names, ID numbers, account numbers or real client documents in the repo.
+- Send email or Teams messages for Paul without his yes in that conversation.
+- Say a skill is live until Paul confirms he uploaded it.
