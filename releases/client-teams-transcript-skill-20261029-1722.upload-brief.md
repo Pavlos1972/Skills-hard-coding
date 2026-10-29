@@ -4,12 +4,12 @@ You are helping Paul Kafentzis, a financial adviser who uses Skills in his claud
 
 THE FACTS
 - Skill name: client-teams-transcript-skill
-- File: client-teams-transcript-skill-20261029-1338.zip (81,540 bytes, 21 files)
+- File: client-teams-transcript-skill-20261029-1722.zip (86,368 bytes, 21 files)
 - Where it is on Paul's Windows computer, in this folder:
   C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New
   Full path of the file:
-  C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New\client-teams-transcript-skill-20261029-1338.zip
-- What the NEW version says inside: the line "Last updated: 2026-10-29 13:38 (Athens time)", and its first section after the main title is called "Index".
+  C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New\client-teams-transcript-skill-20261029-1722.zip
+- What the NEW version says inside: the line "Last updated: 2026-10-29 17:22 (Athens time)", and its first section after the main title is called "Index".
 - Paul's account already has this skill (an older version). A zip with the same name REPLACES it: the account cannot hold two skills with one name. The older version is kept in the skill's version history (a dropdown on the skill's page, listing versions such as v32, v31 and so on). That history is the backup. Expect ONE entry before the upload and ONE entry after it.
 
 HARD RULES
@@ -26,10 +26,10 @@ STEPS
 2. Open the Skills page (Settings > Features in some versions, Customize > Skills in others; the skills Paul uploaded are under "Created by you"). Check that code execution is on (rule 6). Write down the BEFORE record: how many skills are on the page in total; how many entries are called client-teams-transcript-skill (expected: exactly 1); whether it is switched on; its version label (for example v32); its date; its number of files.
 3. BEFORE test. Open a new claude.ai chat in a new tab and type exactly: Do not run any task and do not use any client information. Open the skill client-teams-transcript-skill and tell me only (1) the line that starts with "Last updated" (say "none" if there is no such line) and (2) the title of the first section after the main title.
    Write down the answer word for word (an older skill may answer "none" for the first part).
-4. Upload. Choose the button to upload or add a skill and give it the zip. The file-upload tool may refuse the first attempt with a message like "only files this session is allowed to read can be uploaded". That is expected, and this is the fix: tell Paul you need folder access to the folder named "Claude Skills - New" and ask him to approve it; then stage the zip from the computer into your workspace (it lands under /mnt/user-data/uploads/); check that the staged file is 81,540 bytes; then upload from that staged path. The Windows path itself may still be refused, so use the staged path. If you still cannot choose the file, tell Paul: "Please pick client-teams-transcript-skill-20261029-1338.zip from the folder Claude Skills - New in the file window, then tell me when it is done," and wait. If the computer's file window is open, the full path above can be typed into its "File name" box.
+4. Upload. Choose the button to upload or add a skill and give it the zip. The file-upload tool may refuse the first attempt with a message like "only files this session is allowed to read can be uploaded". That is expected, and this is the fix: tell Paul you need folder access to the folder named "Claude Skills - New" and ask him to approve it; then stage the zip from the computer into your workspace (it lands under /mnt/user-data/uploads/); check that the staged file is 86,368 bytes; then upload from that staged path. The Windows path itself may still be refused, so use the staged path. If you still cannot choose the file, tell Paul: "Please pick client-teams-transcript-skill-20261029-1722.zip from the folder Claude Skills - New in the file window, then tell me when it is done," and wait. If the computer's file window is open, the full path above can be typed into its "File name" box.
 5. The replace box. After you upload, the page shows a box like: Replace "client-teams-transcript-skill" skill? ... Earlier versions stay available in the skill's version history. Current: N lines - This file: M lines. Write down the box text word for word, especially the two line counts. Paul has approved this: click "Upload and replace". (If the skill was switched off, the box says the upload will switch it on again. That is fine.)
 6. AFTER record. Reload the Skills page. Expected: still ONE entry named client-teams-transcript-skill, switched ON, a version label one higher than before, 21 files, and opening with "Index". The old version is NOT a separate entry. Write down what you see.
 7. AFTER test. Open a new chat and type exactly the same question as in step 3.
-   Correct answer: "Last updated: 2026-10-29 13:38 (Athens time)" and "Index".
+   Correct answer: "Last updated: 2026-10-29 17:22 (Athens time)" and "Index".
    If the answer is different, STOP and tell Paul. Do not undo anything.
 8. Report to Paul in plain, short words, as a before-and-after list: number of entries; version label; number of files; the two line counts from the replace box; the test answer before and after, quoted; what happened at the upload (any message word for word, whether folder access and staging were needed, whether Paul had to pick the file himself); anything unusual. Finish with: "Uploaded and tested. Not confirmed live until you confirm." Do not say it is live. Paul will confirm.
