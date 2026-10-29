@@ -1,6 +1,6 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
-**Version 1.8 (draft for Paul to review)**
+**Version 1.9 (draft for Paul to review)**
 **Last updated: 2026-10-29 13:08 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
@@ -179,6 +179,14 @@ split the text from its scripts.
 
 **Status.** BUILT: `tools/package_skill.py` refuses to package unless lint and all tests pass, and re-runs the tests against the unpacked zip.
 
+**Why Paul uploads by hand (checked 29/10/2026, do not research again unless Anthropic's pages change).**
+- Claude Code (cloud or local) can list and read Paul's claude.ai skills but has no tool that creates or replaces one. The skills folder in a cloud session is a one-way copy made when the session starts.
+- Anthropic's Agent Skills overview says custom skills on claude.ai are uploaded by the user as zip files (Settings > Features, which may be called Customize in the app), are individual to each user, and "do not sync across surfaces" (claude.ai, the API and Claude Code are separate). The Skills API (`/v1/skills`) needs a Console API key and its skills are not available on claude.ai.
+- Paul is on the **Max** plan (an individual plan). The GitHub-repo sync into claude.ai (Organization settings > Plugins & skills) is documented for Team and Enterprise owners only. Nothing found lets an individual plan sync a repo into claude.ai skills.
+- Paul's skills are ordinary skills in his account (each has its own skill id), not plugin skills. Whether uploading a zip with the same name replaces the old one or adds a second copy is not documented: Paul checks the list after each upload and switches the old one off.
+- The upload rules are already enforced by lint: frontmatter keys limited to name, description, license, compatibility, metadata, allowed-tools; name in lowercase letters, numbers and hyphens only.
+- Every run says its version first (S2), so Paul sees at once whether the new upload is the one answering.
+
 ### S8. A run leaves its evidence on disk
 **Rule.** Each run works in its own folder with a state file, so a long or compressed conversation cannot make
 Claude forget where it was. The `status` command always says what is done and what the next required step is.
@@ -348,7 +356,8 @@ Every run (one client, one meeting) keeps in its own run folder:
 
 | When (Athens time) | What changed |
 |---|---|
-| 2026-10-29 13:37 | Version 1.8: S2 now makes the date move with the skill (fingerprint record) and requires every run to say its version (Paul's request); built into the Teams transcript skill |
+| 2026-10-29 14:23 | Version 1.9: S7 records why the upload is by hand (no write route for Claude Code; Paul is on Max; org sync is Team/Enterprise only) |
+| 2026-10-29 13:38 | Version 1.8: S2 now makes the date move with the skill (fingerprint record) and requires every run to say its version (Paul's request); built into the Teams transcript skill |
 | 2026-10-29 13:27 | Version 1.7: Paul's yes to removals 1 to 4 and keep the table recorded; no change to the skill |
 | 2026-10-29 13:17 | Version 1.6: Paul's answers recorded (WhatsApp calls also notify Sitamah with "WhatsApp Call Completed"; the true stories in the rules stay; go given for the Teams transcript skill); the skill now builds that message for WhatsApp calls |
 | 2026-10-29 11:22 | Version 1.2: S16 approved on condition of a real-chat trial; each of the eight areas is its own heading; section 3 explains where the program lives; existing skills with scripts listed |
