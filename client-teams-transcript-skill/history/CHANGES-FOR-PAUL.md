@@ -1,6 +1,6 @@
 # What changed in the Teams transcript skill, in plain words
 
-For Paul. Uploaded on 29/10/2026 as version v33 (reported by the Chrome chat). Nothing is called live until you have tried it on a real meeting and told me.
+For Paul. The 17:53 version was uploaded as v34 (reported by the Chrome chat; the line counts in its replace box match my files). Nothing is called live until you have tried it on a real meeting and told me.
 
 ## After your first real-case trial (29/10/2026): what I changed, in plain words
 You ran the skill on two real clients and told me four things. Here is what is now different. This version is **not uploaded yet**: you have the sample to look at first.
