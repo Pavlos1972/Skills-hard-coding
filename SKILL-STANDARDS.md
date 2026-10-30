@@ -1,6 +1,6 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
-**Version 2.6 (draft for Paul to review)**
+**Version 2.7 (draft for Paul to review)**
 **Last updated: 2026-10-29 13:08 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
@@ -49,7 +49,7 @@ Claude says it did ("attested").
 | S13 | Same house conventions everywhere (dates, Rand, names, wording) | Written |
 | S14 | Report honestly: say what was checked, what was only attested, and never say "live" until Paul confirms | Written |
 | S15 | One skill at a time, finished and tested on a real case before the next | Written |
-| S16 | A program drives the job step by step and shows the next step only when the last one is proven | APPROVED 29/10/2026; built for 1 skill; real-chat trial pending |
+| S16 | A program drives the job step by step and shows the next step only when the last one is proven | APPROVED 29/10/2026; PROVEN in real chats on the Teams transcript skill (Paul, 30/10/2026: "Yes it is live"); next skills follow the same kit |
 
 ---
 
@@ -237,7 +237,7 @@ Never say a skill change is live until Paul confirms he uploaded it.
 ### S15. One skill at a time
 **Rule.** Finish one skill, test it on a real case, get Paul's yes, then start the next. After a skill goes live, there is a watch period: Paul reports anything that behaves differently, and each report becomes a test (S12).
 
-### S16. A program drives the job, one step at a time (approved 29/10/2026, on condition it works in a real chat)
+### S16. A program drives the job, one step at a time (approved 29/10/2026; condition met 30/10/2026: it works in real chats)
 **Rule.** The skill's text is short. It says: run the driver command, do exactly what it prints, run it again. The driver
 shows the next step only after the proof for the previous step is on file. At the very start it runs a self-test (right tools
 present? python, PDF tools, Zapier, Microsoft 365 reachable?) and stops with a plain message if something is missing,
@@ -339,8 +339,8 @@ Every run (one client, one meeting) keeps in its own run folder:
 13. **Action points (Sitamah's checklist) must be thought about intelligently (Paul, 29/10/2026).** Chronological order (earliest deadline first), then logical order (what must happen first comes first); sift out what is not relevant and show what was left out; and when the skill is not sure it ASKS Paul instead of deciding. Paul said to forget the separate skill `planner-interim-procedure`: the rules apply to this skill's action points only.
 
 **Still open**
-1. Which skill comes after the Teams transcript skill (only after Paul's trial and his go)?
-2. Paul's upload of the zip and the result of the real-case trial (his yes/no on the five removals is answered: see decision 11).
+1. Which skill comes after the Teams transcript skill (Paul names it and says go; one skill at a time, S15)?
+2. (Closed 30/10/2026) The Teams transcript skill is LIVE: Paul uploaded the 17:53 build (v34), ran it on real meetings and confirmed.
 
 ## 8. Known gaps found in the Teams transcript skill (to fix in its rewrite)
 
@@ -364,7 +364,7 @@ Every run (one client, one meeting) keeps in its own run folder:
 
 | Skill | Status |
 |---|---|
-| client-teams-transcript-skill | REBUILT to these standards (step driver, reading lock, client-file and access logs, Planner page, PDF, Sitamah Teams message (Teams meetings and WhatsApp calls), PASS/FAIL checklist; 226 tests, hardened after an independent review; nothing from the old skill lost without a record). The Sitamah message also covers WhatsApp calls (Paul's yes). Uploaded 29/10/2026 by a Claude-in-Chrome chat as version v33 (reported by that chat). First real-case trial found the notes too long, the actions unsorted and the Teams message not offered; REBUILT the same day to Paul's answers (short Planner note, sorted and ordered actions, asks when unsure, message shown with the outputs); uploaded 30/10/2026 UTC by a Claude-in-Chrome chat as v34 (Last updated 2026-10-29 17:53; reported by that chat, its replace-box line counts 65 to 66 match the files); Paul ran it again on real meetings and said "It seems to be working now" (30/10/2026): recorded as a good sign, NOT yet confirmed live; waiting for his word that it is live |
+| client-teams-transcript-skill | REBUILT to these standards (step driver, reading lock, client-file and access logs, Planner page, PDF, Sitamah Teams message (Teams meetings and WhatsApp calls), PASS/FAIL checklist; 226 tests, hardened after an independent review; nothing from the old skill lost without a record). The Sitamah message also covers WhatsApp calls (Paul's yes). Uploaded 29/10/2026 by a Claude-in-Chrome chat as version v33 (reported by that chat). First real-case trial found the notes too long, the actions unsorted and the Teams message not offered; REBUILT the same day to Paul's answers (short Planner note, sorted and ordered actions, asks when unsure, message shown with the outputs); uploaded 30/10/2026 UTC by a Claude-in-Chrome chat as v34 (Last updated 2026-10-29 17:53; reported by that chat, its replace-box line counts 65 to 66 match the files); **LIVE: Paul confirmed on 30/10/2026 ("Yes it is live")** after running the 17:53 build (v34) on real meetings; the old version is v33 in its version history |
 | client-pipeline-board, complete-applications-skill, fact-find-summary, ff-population-transcript, wr-roa-builder, wr-sroa-builder, rgar-skill, om-optimal-ra-proposal, om-tax-free-skill, investment-comparisons-skill, life-insurer-comparison, life-policy-schedule-analyzer, client-review-notes, client-transcript-download, teams-meeting-setup-skill, outlook-emails-skill, cameron-short-term-skill, advicetech-website-knowledge, alpha-bank-statements, nedbank-current-account-categorization, paul-email-signature, correcting-skills, master-skill-template | Not started |
 | planner-interim-procedure | FORGET (Paul, 29/10/2026): an interim skill, retired with AdviceTech. Do not convert it, consider it, or build rules for it |
 
@@ -374,6 +374,7 @@ Every run (one client, one meeting) keeps in its own run folder:
 |---|---|
 | 2026-10-30 09:02 | Version 2.5: the 17:53 build uploaded as v34 by the Chrome chat (reported); second proven use of the upload method |
 | 2026-10-30 14:49 | Version 2.6: Paul's second real-case trial recorded ("It seems to be working now"); not yet confirmed live |
+| 2026-10-30 14:50 | Version 2.7: Teams transcript skill confirmed LIVE by Paul; S16 condition met (proven in real chats); next skill to be named by Paul |
 | 2026-10-29 17:47 | Version 2.4: planner-interim-procedure forgotten at Paul's word; decision 13 narrowed to this skill's action points |
 | 2026-10-29 17:42 | Version 2.3: Paul's request recorded (decision 13): action points and checklist items ordered chronologically then logically, irrelevant ones sifted out, the skill asks when unsure; not built yet |
 | 2026-10-29 17:21 | Version 2.2: the skill rebuilt to Paul's answers after the first real-case trial (short Planner note, PDF limits, actions sorted now/later, message to Sitamah shown with the outputs); decision 12 recorded |

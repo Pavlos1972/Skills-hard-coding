@@ -20,7 +20,7 @@ S7 skills are changed only in Claude Code, then packaged and uploaded as a zip |
 S8 run state on disk | S9 nothing invented, every fact has a source | S10 nothing sent without Paul's yes |
 S11 no client data in the repo | S12 tests on invented data, every real bug becomes a test |
 S13 house conventions (DD/MM/YYYY, R, Athens time, actions owned by Sitamah) | S14 report honestly, never say "live" before Paul confirms |
-S15 one skill at a time | S16 a program drives the job step by step (approved; real-chat trial pending)
+S15 one skill at a time | S16 a program drives the job step by step (approved; proven live on the Teams transcript skill, 30/10/2026)
 
 ## Decisions by Paul, 29/10/2026 (full list: SKILL-STANDARDS.md section 6)
 - Eight planning areas: Risk, RA, Investment, RGAR, EGAR, Medical Aid, Will, Short-Term ("Other" only when notable).
@@ -32,10 +32,10 @@ S15 one skill at a time | S16 a program drives the job step by step (approved; r
 - Action points must be in chronological order (earliest deadline first), then logical order, with irrelevant ones sifted out and listed as left out, and the skill ASKS Paul when unsure (Paul, 29/10/2026; decision 13). FORGET the skill `planner-interim-procedure` (Paul's word): never convert it or write rules for it.
 - The short true stories inside the rules stay (Paul: "Keep"), names removed.
 - Outdated text: drop what is clearly replaced, give Paul a yes/no list for anything uncertain.
-- Paul said go for the Teams transcript skill (29/10/2026). Do not start the NEXT skill until he has trialled this one and says go.
+- The Teams transcript skill is LIVE (Paul confirmed 30/10/2026: "Yes it is live"; build 17:53, v34). Do not start the NEXT skill until Paul names it and says go (one skill at a time, S15).
 
 ## Where things are
-- `client-teams-transcript-skill/`: REBUILT (step driver in `scripts/`, rules in `references/`, tests in `tests/`, history and Paul's change list in `history/`). Shared tools in `tools/`. Zip in `releases/` (Paul answered the removals list 29/10/2026) waits for his upload and a real-case trial. Nothing is live until he confirms.
+- `client-teams-transcript-skill/`: REBUILT (step driver in `scripts/`, rules in `references/`, tests in `tests/`, history and Paul's change list in `history/`). Shared tools in `tools/`. Its zip and upload brief are in `releases/`. It is LIVE (Paul, 30/10/2026). Anything changed later is not live until Paul confirms the new upload.
 - Paul's current skills (read-only copies, edits there change nothing): `/root/.claude/skills/synced/*/<skill-name>/SKILL.md` in cloud sessions.
 - Skill tracker: section 9 of SKILL-STANDARDS.md. Keep it current.
 - **Getting a new version into Paul's claude.ai Skills** (full finding and method: SKILL-STANDARDS.md S7; do not research it again). You cannot save into his Skills (no tool, no documented route; he is on Max). `package_skill.py` writes `releases/<zip>.upload-brief.md` next to every zip. Paul saves the zip in `C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New` (you cannot put a file there) and pastes the brief into a chat that has Claude in Chrome. That chat uploads it. Expect ONE entry and a "Replace" box: uploading REPLACES the skill and the old version stays in its version history (that is the backup). The brief pre-approves "Upload and replace": make it only when Paul has asked for that skill to be uploaded. Never tell the chat to switch an old copy off or to expect two entries. If the first upload is refused, the chat asks for folder access, stages the zip into its workspace and uploads from there. Test every upload with a fresh chat quoting the "Last updated" line and first section title, before and after. Never say "live" until Paul confirms.
