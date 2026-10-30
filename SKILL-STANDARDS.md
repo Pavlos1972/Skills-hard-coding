@@ -1,6 +1,6 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
-**Version 2.7 (draft for Paul to review)**
+**Version 2.8 (draft for Paul to review)**
 **Last updated: 2026-10-29 13:08 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
@@ -360,6 +360,13 @@ Every run (one client, one meeting) keeps in its own run folder:
 - **The Teams message to Sitamah was not offered.** In the program it is the very last step, shown only after Paul has approved the other deliverables; Paul expected it together with them (as `fact-find-summary` does). The end of that chat was not seen, so whether the step was skipped or never reached is not known.
 - **Status: BUILT (29/10/2026) after Paul agreed the structure and sorted the ten actions (decision 12).** Limits live in `wrlib.LIMITS` and are enforced by group L of `verify.py`; the Teams message is shown with the outputs. Waiting for Paul to see a sample and upload; the next real run is the test.
 
+## 8b. ff-population-transcript: findings of the study (30/10/2026, no client data kept here)
+
+Purpose: builds the completed WR Fact Find (11 sections, v3.0 layout) as a PDF from the Fact Find (Audio to Text) file (primary), the Teams transcript and the latest Overview; finds contact details and the lead source; hands over to `fact-find-summary` and to the Planner note; saves into the client's folder; notifies Sitamah. Used after the first meeting with a prospect or a review client.
+- **Strengths:** clear source order with "Audio to Text wins, differences flagged"; "Not discussed is a claim"; totals to the cent; policy numbers from the schedule; standing ABIs; quote requests must name insurer and New Business or Servicing (no default); save proven by listing the folder (size equal); spouse rules; lead-source search in Outlook; a delivery gate.
+- **Weaknesses:** (1) 300 lines, 60 KB, nothing enforced by a program: no step driver, no reading lock, no source trace, a 13-point re-check done by hand. (2) `scripts/build_fact_find.js` still holds a REAL client's name, ID number, emails and income (S11 breach, and a cross-client leak risk because the chat must overwrite every row by hand). (3) The script and `references/ff-field-map.md` still follow the retired v2.0 layout while the skill says the layout is v3.0. (4) Step 7b names the old Planner headings and points at a text section of the Teams skill that no longer exists (it is a program now). (5) Step 8 (Teams message) has no (Review Client)/(Prospect) label, says `Review Teams Appointment`, and is sent only after everything is approved (the flaw that stopped the message being offered); `fact-find-summary` has the same step, so two skills own the Planner note and the message. (6) Rules 1 and 9 are the old method (reload after compression; the Update skill card). (7) The stamp is typed by hand. (8) Dated attributions and a changelog at the top.
+- **Not checked:** the skill was read, not run; the script was not run; no real Audio to Text file or finished Fact Find was seen.
+
 ## 9. Skill tracker
 
 | Skill | Status |
@@ -375,6 +382,7 @@ Every run (one client, one meeting) keeps in its own run folder:
 | 2026-10-30 09:02 | Version 2.5: the 17:53 build uploaded as v34 by the Chrome chat (reported); second proven use of the upload method |
 | 2026-10-30 14:49 | Version 2.6: Paul's second real-case trial recorded ("It seems to be working now"); not yet confirmed live |
 | 2026-10-30 14:50 | Version 2.7: Teams transcript skill confirmed LIVE by Paul; S16 condition met (proven in real chats); next skill to be named by Paul |
+| 2026-10-30 15:05 | Version 2.8: SKILL-TEMPLATE.md drafted (13 ingredients and a scorecard) and the study of ff-population-transcript recorded in section 8b; waiting for Paul's answers |
 | 2026-10-29 17:47 | Version 2.4: planner-interim-procedure forgotten at Paul's word; decision 13 narrowed to this skill's action points |
 | 2026-10-29 17:42 | Version 2.3: Paul's request recorded (decision 13): action points and checklist items ordered chronologically then logically, irrelevant ones sifted out, the skill asks when unsure; not built yet |
 | 2026-10-29 17:21 | Version 2.2: the skill rebuilt to Paul's answers after the first real-case trial (short Planner note, PDF limits, actions sorted now/later, message to Sitamah shown with the outputs); decision 12 recorded |

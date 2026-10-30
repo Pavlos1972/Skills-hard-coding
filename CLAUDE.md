@@ -1,7 +1,7 @@
 # Read first (Claude Code, this repo)
 
 This repo holds the hard-coded versions of Paul Kafentzis's skills (Wealth Revolution). Before touching
-any skill, read **SKILL-STANDARDS.md** in full. It is the memory of what Paul has asked for. If anything
+any skill, read **SKILL-STANDARDS.md** in full. It is the memory of what Paul has asked for. Then read **SKILL-TEMPLATE.md**: the 13 ingredients every converted skill must have, and what is settled once for all skills (do not re-ask Paul). If anything
 here or in a skill disagrees with it, SKILL-STANDARDS.md wins.
 
 ## How to talk to Paul
