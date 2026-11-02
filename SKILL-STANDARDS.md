@@ -1,6 +1,6 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
-**Version 2.8 (draft for Paul to review)**
+**Version 2.9 (draft for Paul to review)**
 **Last updated: 2026-10-29 13:08 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
@@ -374,6 +374,7 @@ Purpose: builds the completed WR Fact Find (11 sections, v3.0 layout) as a PDF f
 | client-teams-transcript-skill | REBUILT to these standards (step driver, reading lock, client-file and access logs, Planner page, PDF, Sitamah Teams message (Teams meetings and WhatsApp calls), PASS/FAIL checklist; 226 tests, hardened after an independent review; nothing from the old skill lost without a record). The Sitamah message also covers WhatsApp calls (Paul's yes). Uploaded 29/10/2026 by a Claude-in-Chrome chat as version v33 (reported by that chat). First real-case trial found the notes too long, the actions unsorted and the Teams message not offered; REBUILT the same day to Paul's answers (short Planner note, sorted and ordered actions, asks when unsure, message shown with the outputs); uploaded 30/10/2026 UTC by a Claude-in-Chrome chat as v34 (Last updated 2026-10-29 17:53; reported by that chat, its replace-box line counts 65 to 66 match the files); **LIVE: Paul confirmed on 30/10/2026 ("Yes it is live")** after running the 17:53 build (v34) on real meetings; the old version is v33 in its version history |
 | client-pipeline-board, complete-applications-skill, fact-find-summary, ff-population-transcript, wr-roa-builder, wr-sroa-builder, rgar-skill, om-optimal-ra-proposal, om-tax-free-skill, investment-comparisons-skill, life-insurer-comparison, life-policy-schedule-analyzer, client-review-notes, client-transcript-download, teams-meeting-setup-skill, outlook-emails-skill, cameron-short-term-skill, advicetech-website-knowledge, alpha-bank-statements, nedbank-current-account-categorization, paul-email-signature, correcting-skills, master-skill-template | Not started |
 | planner-interim-procedure | FORGET (Paul, 29/10/2026): an interim skill, retired with AdviceTech. Do not convert it, consider it, or build rules for it |
+| ff-to-ff-populate | FORGET (Paul, 02/11/2026): he runs it by hand when needed. Do not convert it, build on it, or count on its Audio to Text file being there |
 
 ## 10. Changelog (last 5)
 
@@ -383,6 +384,7 @@ Purpose: builds the completed WR Fact Find (11 sections, v3.0 layout) as a PDF f
 | 2026-10-30 14:49 | Version 2.6: Paul's second real-case trial recorded ("It seems to be working now"); not yet confirmed live |
 | 2026-10-30 14:50 | Version 2.7: Teams transcript skill confirmed LIVE by Paul; S16 condition met (proven in real chats); next skill to be named by Paul |
 | 2026-10-30 15:05 | Version 2.8: SKILL-TEMPLATE.md drafted (13 ingredients and a scorecard) and the study of ff-population-transcript recorded in section 8b; waiting for Paul's answers |
+| 2026-11-02 09:11 | Version 2.9: ff-to-ff-populate forgotten at Paul's word (he deploys it by hand); the Audio to Text file may or may not exist when ff-population-transcript runs |
 | 2026-10-29 17:47 | Version 2.4: planner-interim-procedure forgotten at Paul's word; decision 13 narrowed to this skill's action points |
 | 2026-10-29 17:42 | Version 2.3: Paul's request recorded (decision 13): action points and checklist items ordered chronologically then logically, irrelevant ones sifted out, the skill asks when unsure; not built yet |
 | 2026-10-29 17:21 | Version 2.2: the skill rebuilt to Paul's answers after the first real-case trial (short Planner note, PDF limits, actions sorted now/later, message to Sitamah shown with the outputs); decision 12 recorded |
