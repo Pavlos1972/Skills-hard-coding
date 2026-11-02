@@ -1,0 +1,45 @@
+{
+  "skill": "ff-population-transcript",
+  "deliverables": [
+    {
+      "name": "Fact Find Transcript PDF",
+      "file": "out/Fact Find Transcript - DD.MM.YY - (Name Surname).pdf",
+      "produced_by": "scripts/build.py (from content.json, composed by scripts/compose.py)",
+      "handover": "sent in the chat; saved into the client's 2. Fact Find folder with device_commit_files; folder listed back and the listed size compared with the local file",
+      "checked_by": "verify.py group E (text identical to content.json, no page numbers, no stranded heading, no split row, font really embedded, one PDF only) and group F (saved receipt)",
+      "step": "pdf"
+    },
+    {
+      "name": "Source report and glance list",
+      "file": "(printed)",
+      "produced_by": "scripts/verify.py",
+      "handover": "pasted unedited into the reply",
+      "checked_by": "verify.py final printout",
+      "step": "final"
+    },
+    {
+      "name": "Hand-over to fact-find-summary (Fact Find Summary PDF)",
+      "file": "receipt.json (summary)",
+      "produced_by": "the fact-find-summary skill, from the saved PDF",
+      "handover": "run on the saved PDF; Section 8 ABIs confirmed the same",
+      "checked_by": "verify.py group F (attested)",
+      "step": "handoffs"
+    },
+    {
+      "name": "Hand-over to client-teams-transcript-skill (Planner note page and message to Sitamah)",
+      "file": "receipt.json (teams)",
+      "produced_by": "client-teams-transcript-skill, started with --type first; this skill never writes a Planner note or a message",
+      "handover": "shown in the same reply with one question; sent through Zapier only after Paul's yes (by that skill)",
+      "checked_by": "verify.py group F: the Teams run exists for this client and date (attested for the rest)",
+      "step": "handoffs"
+    },
+    {
+      "name": "Final PASS/FAIL printout and delivery line",
+      "file": "(printed)",
+      "produced_by": "scripts/verify.py",
+      "handover": "pasted unedited into the reply",
+      "checked_by": "Paul sees it or sees that it is missing",
+      "step": "final"
+    }
+  ]
+}

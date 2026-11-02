@@ -113,6 +113,7 @@ class Ctx:
         self.ov = inp.get("overlay") or {}
         self.cross = {i["key"]: i["answer"] for i in inp.get("cross") or [] if isinstance(i, dict) and isinstance(i.get("answer"), dict)}
         self.claims = inp.get("claims") or {}
+        self.pdf_reviews = (inp.get("formpdf") or {}).get("reviews") or {}
         self.lead = inp.get("lead") or {}
         self.common = inp.get("common")
         self.meeting = w.parse_date(self.run.get("date")) or w.parse_date(self.form.get("date")) or dt_today()
@@ -209,6 +210,11 @@ class Ctx:
         return self.row(rid, label, ["UNSETTLED"], [], "unsettled", kind)
 
     def apply_cross(self, row, key, form_value):
+        pr = self.pdf_reviews.get(key)
+        if pr and pr.get("result") == "disagree":
+            self.flag(row, "Difference: the form's data file says %s; the form's saved PDF says %s." % (form_value, pr.get("pdf_value")), "difference",
+                      [{"formpdf": key, "quote": pr.get("quote", "")}])
+            self.report["differences"].append({"key": key, "label": row["label"], "form": form_value, "other": str(pr.get("pdf_value")), "where": "the form's saved PDF"})
         a = self.cross.get(key)
         if not a:
             return
@@ -577,7 +583,7 @@ class Ctx:
                 if miss:
                     self.flag(tr, "%d item(s) have no amount yet, so this total is not complete; none is left out on purpose." % miss, "reconcile", [{"total_of": comps}])
                 trows.append(tr)
-            blocks.append({"kind": "fields", "sub": g["sub"] + " totals", "rows": trows})
+            blocks.append({"kind": "fields", "sub": "Totals", "rows": trows})
         return blocks
 
     def quote_rows(self):
@@ -623,7 +629,7 @@ class Ctx:
                 if g.get("overlay") == "documents_to_request":
                     items = [i for i in self.ov.get("documents_to_request") or [] if isinstance(i, dict)]
                     if items:
-                        r = self.row("docs_to_request", "Documents to request", [i["text"].strip() for i in items], [s for i in items for s in (i.get("src") or [])], "filled")
+                        r = self.row("docs_to_request", "To request from the client", [i["text"].strip() for i in items], [s for i in items for s in (i.get("src") or [])], "filled")
                         blocks.append({"kind": "fields", "sub": g["sub"], "rows": [r]})
                     continue
                 if g.get("list"):
@@ -667,7 +673,7 @@ class Ctx:
         rows = []
         notes = [n for n in self.ov.get("notes") or [] if isinstance(n, dict) and n.get("section") == sid]
         if notes:
-            rows.append(self.row("notes." + sid, "Added from the call and documents", [n["text"].strip() for n in notes], [s for n in notes for s in (n.get("src") or [])], "filled", "text", "added"))
+            rows.append(self.row("notes." + sid, "Notes", [n["text"].strip() for n in notes], [s for n in notes for s in (n.get("src") or [])], "filled", "text", "added"))
         for f in self.ov.get("flags") or []:
             if isinstance(f, dict) and f.get("section") == sid:
                 r = self.row("flag." + f["id"], "Flag", [f["text"].strip()], list(f.get("src") or []), "flag", "text", "flag")
@@ -742,10 +748,10 @@ class Ctx:
             g.append("Odd entries in the form's file: %s." % "; ".join(self.form["odd"][:5]))
         if self.form.get("top_unknown"):
             g.append("The form's file has top-level keys this skill does not know: %s." % ", ".join(self.form["top_unknown"]))
-        nd = [lbl for _, lbl in self.report["not_discussed"]]
+        nd = ["%s (%s)" % (lbl, rid) for rid, lbl in self.report["not_discussed"]]
         if nd:
             g.append("Left as Not discussed after a search of the call and the documents: %s." % ", ".join(nd[:12]) + (" ..." if len(nd) > 12 else ""))
-        rq = [lbl for _, lbl in self.report["requested"]]
+        rq = ["%s (%s)" % (lbl, rid) for rid, lbl in self.report["requested"]]
         if rq:
             g.append("Marked Requested (missing after the search): %s." % ", ".join(rq[:12]))
         if self.common_used:
@@ -785,7 +791,7 @@ def load_inputs(run):
     sp = rj.get("spouse") or {}
     if sp.get("run") and os.path.exists(os.path.join(sp["run"], w.FORM)):
         common = w.load_json(os.path.join(sp["run"], w.FORM))
-    return {"layout": w.layout(), "run": rj, "form": form, "overlay": j(w.OVERLAY, {}), "cross": j(w.CROSS, []), "claims": j(w.CLAIMS, {}), "lead": j(w.LEAD, {}), "common": common}
+    return {"layout": w.layout(), "run": rj, "form": form, "overlay": j(w.OVERLAY, {}), "cross": j(w.CROSS, []), "claims": j(w.CLAIMS, {}), "lead": j(w.LEAD, {}), "common": common, "formpdf": j(w.FORMPDF, {})}
 
 
 def main():

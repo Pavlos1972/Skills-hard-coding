@@ -1,0 +1,5 @@
+{
+ "stamp": "2026-11-02 23:24",
+ "fingerprint": "00826e65806b349c989101bc3a77adab40a0ed7681cfb19bc7ff4049c6d92207",
+ "change": "The Not discussed lists in the source report and the glance list now name each field with its key, so two fields with the same label cannot be confused"
+}

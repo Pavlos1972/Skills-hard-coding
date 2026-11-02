@@ -1,0 +1,11 @@
+# The two reads of the transcript (the reading lock)
+
+**Read the whole transcript, start to finish, at least twice before drafting.** The program enforces it: it serves the transcript in numbered chunks (`tx.py chunk`, 400 lines or fewer each), refuses to skip one, and will not serve the next chunk until you have recorded what this one adds (`run.py ledger add`) or said in your own words why it holds nothing to record (`run.py ledger ack`). Pass 2 is refused until Pass 1 has served every chunk. A quote that is not really in the transcript is refused the moment you type it. `tx.py scan` is the keyword scan: it runs in addition to the two reads, never instead of them, and every decision, change or request word needs a ledger entry within 3 lines or a recorded review.
+
+**What the ledger holds here:** what the call adds to the form's facts: a gap the call fills, a difference from the form, a contact detail, a quote request (insurer and New Business or Servicing), a next step or appointment, a change of mind. The final state governs: if something is changed later in the call, the later statement wins and the earlier one is not shown as current.
+
+**Several transcripts for one meeting:** `run.py join` puts them in one file, each part marked by a separator line; `tx.py prep` then checks every part on its own (duration, gaps, closing marker). At each join you check that the last exchange of one transcript and the opening of the next pick up the same topic or figure and record it (`run.py continuity`); a real gap is flagged to Paul, never filled in silently.
+
+**Garbled or unclear speech:** if a line is unclear, garbled or ambiguous, do not turn it into a fact: flag it to the user. Digit-by-digit read-outs (ID, phone, tax number) are transcribed exactly once the client has confirmed them, and are checked against the quote digit for digit.
+
+**Speaker labels:** the recording may label both spouses with the same name. Attribute every statement from its content (who owns the policy, whose job, "my husband / my wife") and from the form's file, never from the label. Where a statement cannot be attributed with evidence, do not guess: flag it in the notes of both sets and to Paul.

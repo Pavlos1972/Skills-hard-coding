@@ -1,0 +1,55 @@
+[
+ {
+  "from_prefix": "7b. Planner / AdviceTech note (via",
+  "to_prefix": "Named precedent: [client A], 07.10.26 (review) — Paul rejected the fixed 6-part",
+  "reason": "Replaced by the hand-over to the Teams transcript program (Paul, 02/11/2026). The old text pointed at an 'Output 1' section that no longer exists. Kept elsewhere: independent actions are separate lines and the FNA insurer and New Business or Servicing rule (Step 3); Sitamah-only actions, the copy-ready page and no code block (Teams skill rules); Debts/Childcare/Health left out unless notable (the eight areas rule).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Step 8: Notify Sitamah in Teams (Paul's rule, 09/10/2026",
+  "to_prefix": "Check and report: Zapier returns a message id",
+  "reason": "Moved to the Teams transcript skill (references/07-teams-message.md and its step texts): the message wording with (Review Client)/(Prospect), the 1st/2nd/3rd count, the follow-up sentence check, show your check, the Zapier-only route, the 403 on the Microsoft 365 connector, once per meeting and Paul's yes. This skill now says only when it is shown and sent.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "UNIVERSAL OPERATING RULES - READ FIRST",
+  "reason": "Heading of the old rules block; the rules now live in references/00-rules.md and are shown by the program when a run starts.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Changelog — full history (including caught mistakes",
+  "reason": "Change history belongs in history/ (S2, S5): the archive copies of the old skill are kept there, and the skill keeps only its last 5 changes.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "See claude/ff-population-transcript-changelog.md in the project",
+  "reason": "Points at the old changelog document; replaced by the history/ folder of the repo (S2, S5).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Whenever this SKILL.md is edited, add a new one-line row",
+  "reason": "The Last updated line and the changes table are now written by tools/stamp_skill.py (S2), never by hand.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "1 | Universal operating rules (1-11) + Delivery gate",
+  "reason": "The old Index table is replaced by this skill's own Index in SKILL.md (S5); the pages it listed are the references/ pages.",
+  "needs_paul": false,
+  "to_prefix": "13 | Step 8"
+ },
+ {
+  "from_prefix": "Re-load this skill before you start, and again after any compression",
+  "reason": "Rule 1 replaced: the program shows each step and `run.py status` recovers the position after a long chat (standards S8/S16). The new rule 1 is in references/00-rules.md.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Changes to a skill: edit the existing skill, never create a new one",
+  "reason": "Rule 9 replaced by standard S7: skills with programs are changed only in Claude Code and uploaded as a zip (new rule 9 in references/00-rules.md).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Last updated: 2026-11-02 15:48",
+  "reason": "Replaced by the stamp the program sets (standards S2).",
+  "needs_paul": false
+ }
+]

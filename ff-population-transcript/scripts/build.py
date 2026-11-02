@@ -122,8 +122,10 @@ def register(fontrec):
         cands = sorted((p for p in _files_in(DEFAULT_DIRS) if _stem_match(p, "dejavusans")), key=lambda p: (_style_of(p) != "bold", p))
         if cands:
             try:
-                pdfmetrics.registerFont(TTFont("WR-Mark", cands[0]))
+                gt = TTFont("WR-Mark", cands[0])
+                pdfmetrics.registerFont(gt)
                 mark, gfont = "\u26a0", "WR-Mark"
+                fontrec["glyph_ps"] = gt.face.name.decode("latin-1") if isinstance(gt.face.name, bytes) else str(gt.face.name)
             except Exception:  # pragma: no cover
                 pass
     fontrec.update(mark=mark, glyph_font=gfont)
@@ -159,11 +161,11 @@ def build_pdf(content, path, lay=None, fontrec=None):
     meta = S("meta", fontSize=size - 1, textColor=grey, alignment=1, spaceAfter=6)
     head = S("head", fontName=nm["bold"], fontSize=st["head_size"], leading=st["head_size"] * 1.25, textColor=navy, spaceBefore=12, spaceAfter=4, keepWithNext=1)
     sub = S("sub", fontName=nm["bold"], fontSize=size, textColor=navy, spaceBefore=7, spaceAfter=3, keepWithNext=1)
-    label = S("label", fontName=nm["bold"], fontSize=size - 0.5, leading=lead - 0.5)
-    val = S("val", fontSize=size - 0.5, leading=lead - 0.5)
-    bul = S("bul", fontSize=size - 0.5, leading=lead - 0.5, leftIndent=11, bulletIndent=1, bulletFontName=nm["regular"], bulletFontSize=size - 0.5)
-    added = S("added", parent=None, fontName=nm["italic"], fontSize=size - 0.5, leading=lead - 0.5, leftIndent=11, bulletIndent=1, textColor=flag_c)
-    flagp = S("flag", fontName=nm["bold"], fontSize=size - 1, leading=lead - 1, textColor=flag_c, leftIndent=11, bulletIndent=0, spaceBefore=1)
+    label = S("label", fontName=nm["bold"], fontSize=size, leading=lead)
+    val = S("val", fontSize=size, leading=lead)
+    bul = S("bul", fontSize=size, leading=lead, leftIndent=11, bulletIndent=1, bulletFontName=nm["regular"], bulletFontSize=size)
+    added = S("added", fontName=nm["italic"], fontSize=size, leading=lead, leftIndent=11, bulletIndent=1, textColor=flag_c)
+    flagp = S("flag", fontName=nm["bold"], fontSize=size, leading=lead, textColor=flag_c, leftIndent=11, bulletIndent=0, spaceBefore=1)
 
     avail = A4[0] - 2 * st["margin_cm"] * cm
     cw = [avail * st["label_width"], avail * (1 - st["label_width"])]
@@ -200,7 +202,8 @@ def build_pdf(content, path, lay=None, fontrec=None):
         if not rows:
             return []
         first, rest = rows[:2], rows[2:]
-        out = [KeepTogether([heading_flow, table(first)])]
+        heads = heading_flow if isinstance(heading_flow, list) else [heading_flow]
+        out = [KeepTogether(heads + [table(first)])]
         if rest:
             out.append(table(rest))
         return out
@@ -213,10 +216,10 @@ def build_pdf(content, path, lay=None, fontrec=None):
             continue
         h = "%d. %s" % (sec["num"], sec["title"])
         headings.append(h)
-        story.append(Paragraph(escape(h), head))
-        for b in sec["blocks"]:
+        for n_, b in enumerate(sec["blocks"]):
             headings.append(b["sub"])
-            story += block(Paragraph(escape(b["sub"]), sub), b["rows"])
+            heads = ([Paragraph(escape(h), head)] if n_ == 0 else []) + [Paragraph(escape(b["sub"]), sub)]
+            story += block(heads, b["rows"])       # the section heading travels with its first sub-heading and its first rows
     cl = content["closing"]
     story += [Spacer(1, 6), HRFlowable(width="100%", thickness=1.0, color=navy, spaceBefore=4, spaceAfter=2)]
     headings.append(cl["title"])
@@ -229,7 +232,7 @@ def build_pdf(content, path, lay=None, fontrec=None):
                             bottomMargin=st["margin_cm"] * cm, title=(content.get("file_name") or "Fact Find Transcript").replace(".pdf", ""), author="Wealth Revolution",
                             subject="Fact Find Transcript")
     doc.build(story)
-    return {"headings": headings, "font": {k: fontrec.get(k) for k in ("wanted", "family", "ps_names", "aptos", "substitute", "mark")}}
+    return {"headings": headings, "font": {k: fontrec.get(k) for k in ("wanted", "family", "ps_names", "aptos", "substitute", "mark", "glyph_ps")}}
 
 
 def render_pngs(pdf, out):
@@ -265,7 +268,7 @@ def main():
     rjp = os.path.join(run, w.RUN)
     if os.path.exists(rjp):                  # a rebuild re-opens every later step (Paul's rule: a correction re-opens the whole task)
         rj = w.load_json(rjp)
-        later = ["check", "pdf", "handoffs", "reply", "final"]
+        later = ["check", "pdf", "handoffs", "final"]
         again = [sid for sid in later if (rj.get("steps", {}).get(sid) or {}).get("state") == "done"]
         for sid in later:
             rj.get("steps", {}).pop(sid, None)

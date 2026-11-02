@@ -4,6 +4,8 @@
   ffform.py identify <file> [<file> ...]      which of these files is the form's data file (by what is INSIDE, never by name)
   ffform.py read <file> <run_dir> [--again]   read it for this run: schema check, statuses, trimming, the look-up check,
                                               what is ignored; writes form_read.json and crosscheck.json in the run folder
+  ffform.py pdf <form pdf> <run_dir>          the form's saved PDF is a source too: every populated value of the data file must be in it
+  ffform.py pdfreview <run_dir> --key K ...   record what the PDF shows for a value the program could not find in it
 
 A program reads the file, so no value is retyped by Claude. The form is READ-ONLY for this skill (Paul corrects a wrong
 field in the form himself and saves again; the skill uses the saved value).
@@ -273,19 +275,21 @@ def cmd_identify(a):
     sys.exit(0 if found else 1)
 
 
-def cmd_read(a):
+def read_into_run(file, run, again=False, quiet=False):
+    """Read the form's data file for this run. Returns (form, problems); writes nothing when it is the wrong file or the wrong schema."""
+    import shutil
     lay = w.layout()
-    rj = w.load_opt(os.path.join(a.run, w.RUN), None)
+    rj = w.load_opt(os.path.join(run, w.RUN), None)
     if rj is None:
         w.die("MISSING: run.json (run `run.py start` first)")
     try:
-        form = read_form(a.file, lay)
+        form = read_form(file, lay)
     except FormError as e:
         print(str(e))
         sys.exit(4)
-    cross_path = os.path.join(a.run, w.CROSS)
+    cross_path = os.path.join(run, w.CROSS)
     old = w.load_opt(cross_path, [])
-    if any(i.get("answer") for i in old) and not a.again:
+    if any(i.get("answer") for i in old) and not again:
         w.die("REFUSED: crosscheck answers already exist for this run. Use --again only if the form was saved again and you will redo them.")
     problems = []
     cl = rj["client"]
@@ -293,29 +297,141 @@ def cmd_read(a):
         problems.append("the form is for %s %s but this run is for %s %s" % (form["client"]["first"], form["client"]["surname"], cl["first"], cl["surname"]))
     if form["date"] != rj["date"]:
         problems.append("the form's Date completed is %s but Paul's meeting date is %s" % (form["date"] or "empty", rj["date"]))
-    w.save_json(os.path.join(a.run, w.FORM), form)
-    w.save_json(cross_path, crosscheck_items(form, lay))
-    pop = sum(1 for c in form["fields"].values() if c["populated"])
-    print("FORM READ  %s  schema %s  saved %s" % (form["file"], form["schema"], form["modified"]))
-    print("  populated fields: %d (%s)   list rows: %d   empty rows left out: %s" % (
-        pop, ", ".join("%s %d" % (k, v) for k, v in sorted(form["statuses"].items())), sum(len(v) for v in form["lists"].values()), form["empty_rows"] or "none"))
-    for k, v in sorted(form["ignored"].items()):
-        print("  %-12s %s" % (k, v))
-    if form["presets"]:
-        print("  preset values (will be listed in the source report): %s" % ", ".join(form["presets"]))
-    lk = form["lookup"]
-    if lk["verdict"] != "empty":
-        print("  company look-up text: %s%s" % (lk["verdict"].upper().replace("_", " "), (" (" + "; ".join(lk["reasons"]) + ")") if lk["reasons"] else ""))
-    for what, items in (("fields the layout does not know (printed in the closing block)", form["unknown_fields"]), ("lists the layout does not know", form["unknown_lists"]),
-                        ("columns the layout does not know", ["%s: %s" % kv for kv in form["unknown_cols"].items()]), ("odd entries", form["odd"])):
-        if items:
-            print("  %s: %s" % (what, ", ".join(items)))
-    for p in problems:
-        print("  PROBLEM: " + p)
-    print("  crosscheck list: %d items to compare with the call (%s)" % (len(crosscheck_items(form, lay)), os.path.join(a.run, w.CROSS)))
-    if problems:
-        print("\nSTOP. This is not the right file for this run. Find the right one (identify by content), or ask Paul.")
+    if problems and not again:
+        for p_ in problems:
+            print("PROBLEM: " + p_)
+        print("\nSTOP. This is not the right file for this run (nothing was saved). Find the right one (identify by content), or ask Paul.")
         sys.exit(5)
+    shutil.copyfile(file, os.path.join(run, "form_source.json"))       # the saved copy lets the checker read the file again and compare
+    w.save_json(os.path.join(run, w.FORM), form)
+    w.save_json(cross_path, crosscheck_items(form, lay))
+    if not quiet:
+        pop = sum(1 for c in form["fields"].values() if c["populated"])
+        print("FORM READ  %s  schema %s  saved %s" % (form["file"], form["schema"], form["modified"]))
+        print("  populated fields: %d (%s)   list rows: %d   empty rows left out: %s" % (
+            pop, ", ".join("%s %d" % (k, v) for k, v in sorted(form["statuses"].items())), sum(len(v) for v in form["lists"].values()), form["empty_rows"] or "none"))
+        for k, v in sorted(form["ignored"].items()):
+            print("  %-12s %s" % (k, v))
+        if form["presets"]:
+            print("  preset values (will be listed in the source report): %s" % ", ".join(form["presets"]))
+        lk = form["lookup"]
+        if lk["verdict"] != "empty":
+            print("  company look-up text: %s%s" % (lk["verdict"].upper().replace("_", " "), (" (" + "; ".join(lk["reasons"]) + ")") if lk["reasons"] else ""))
+        for what, items in (("fields the layout does not know (printed in the closing block)", form["unknown_fields"]), ("lists the layout does not know", form["unknown_lists"]),
+                            ("columns the layout does not know", ["%s: %s" % kv for kv in form["unknown_cols"].items()]), ("odd entries", form["odd"])):
+            if items:
+                print("  %s: %s" % (what, ", ".join(items)))
+        for p_ in problems:
+            print("  PROBLEM (accepted with --again): " + p_)
+        print("  crosscheck list: %d items to compare with the call (%s)" % (len(crosscheck_items(form, lay)), cross_path))
+    return form, problems
+
+
+def cmd_read(a):
+    read_into_run(a.file, a.run, a.again)
+
+
+# ------------------------------------------------------------------ the form's saved PDF (a source too: the data file's values must be in it)
+TRIVIAL = {"yes", "no", "y", "n", "true", "false", "none", "nil", "n a", "na"}
+
+
+def pdf_text(path):
+    import subprocess
+    try:
+        r = subprocess.run(["pdftotext", "-layout", path, "-"], capture_output=True, text=True)
+    except OSError:
+        w.die("STOP: pdftotext is not installed, so the form's saved PDF cannot be read.", 4)
+    if r.returncode:
+        w.die("pdftotext could not read %s: %s" % (path, r.stderr.strip()[:120]), 4)
+    return r.stdout
+
+
+def _compact(s):
+    return re.sub(r"[\s,]+", "", str(s)).lower().replace("\u2013", "-")
+
+
+def value_in_pdf(value, text, ntext, ctext):
+    """Is this value of the data file in the PDF's text? Amounts and dates are compared without spaces or commas (R 24 000.00 = R24,000.00)."""
+    v = tidy(value)
+    if not v or w.norm(v) in TRIVIAL or len(w.norm(v)) < 2:
+        return True
+    if w.norm(v) in ntext or _compact(v) in ctext:
+        return True
+    m = w.parse_money(v)
+    if m is not None:
+        a, b = _compact(w.fmt_money(m)), _compact(w.fmt_money(m)).replace(".00", "")
+        return a in ctext or b in ctext or w.digits(w.fmt_money(m)) in w.digits(text)
+    toks = w.norm(v).split()
+    return len(toks) > 8 and " ".join(toks[:8]) in ntext
+
+
+def pdf_check(form, text, lay=None):
+    lay = lay or w.layout()
+    ntext, ctext = w.norm(text), _compact(text)
+    labels = {r["key"]: r["label"] for sec in lay["sections"] for g in sec["groups"] for r in g.get("rows", []) if r.get("key")}
+    labels.update({r["key"]: r["label"] for r in lay["closing"]["rows"]})
+    checked, missing = 0, []
+    for k, c in form["fields"].items():
+        if not c["populated"]:
+            continue
+        checked += 1
+        if k == "co_does" and form["lookup"]["verdict"] == "thrown_out":
+            continue
+        if not value_in_pdf(c["v"], text, ntext, ctext):
+            missing.append({"key": k, "label": labels.get(k, k), "value": c["v"]})
+    for name, rows in form["lists"].items():
+        for r in rows:
+            for col, v in r["d"].items():
+                if v:
+                    checked += 1
+                    if not value_in_pdf(v, text, ntext, ctext):
+                        missing.append({"key": "%s.%d.%s" % (name, r["index"], col), "label": "%s %d: %s" % (name, r["index"] + 1, col), "value": v})
+    return checked, missing
+
+
+def cmd_pdf(a):
+    form = w.load_json(os.path.join(a.run, w.FORM), "form_read.json (run `run.py form` first)")
+    rec = {"file": None, "sha256": None, "checked": 0, "not_found": [], "reviews": {}, "missing": None}
+    if a.none:
+        if len(a.none.strip()) < 8:
+            w.die("REFUSED: say why there is no saved PDF (what was searched, at least 8 characters).")
+        rec["missing"] = a.none
+        w.save_json(os.path.join(a.run, w.FORMPDF), rec)
+        print("recorded: no saved PDF of the form (%s). The data file is the source; Paul will see this in the glance list." % a.none)
+        return
+    if not a.file or not os.path.exists(a.file):
+        w.die("REFUSED: give the form's saved PDF (or --none \"reason\" after all three routes were tried).")
+    text = pdf_text(a.file)
+    if not text.strip():
+        w.die("STOP: the form's saved PDF has no extractable text. Tell Paul; render it and read it by eye (not machine-checked).", 4)
+    checked, missing = pdf_check(form, text)
+    with open(os.path.join(a.run, "form_pdf.txt"), "w", encoding="utf-8") as f:
+        f.write(text)
+    rec.update(file=os.path.basename(a.file), sha256=w.sha256_file(a.file), checked=checked, not_found=missing)
+    w.save_json(os.path.join(a.run, w.FORMPDF), rec)
+    print("FORM PDF READ  %s: %d populated values of the data file checked against its text; %d not found in the PDF." % (rec["file"], checked, len(missing)))
+    for m in missing:
+        print("  NOT IN THE PDF: %s (%s) = %r" % (m["label"], m["key"], m["value"]))
+    if missing:
+        print("\nFor each one, look at the PDF and record what it shows: `run.py pdfreview <run> --key K --result format_only|disagree --quote \"<words from the PDF>\" [--pdf-value V]`. "
+              "A disagreement is flagged with both values (the data file's value is the one used).")
+
+
+def cmd_pdfreview(a):
+    path = os.path.join(a.run, w.FORMPDF)
+    rec = w.load_json(path, "form_pdf.json (run `run.py formpdf` first)")
+    if a.key not in {m["key"] for m in rec["not_found"]}:
+        w.die("REFUSED: %s is not one of the values the program could not find in the PDF." % a.key)
+    with open(os.path.join(a.run, "form_pdf.txt"), encoding="utf-8") as f:
+        ntext = w.norm(f.read())
+    if w.norm(a.quote) not in ntext or len(w.norm(a.quote)) < 4:
+        w.die("REFUSED: that quote is not in the form's PDF text. Copy the exact words from the PDF.")
+    if a.result == "disagree" and not (a.pdf_value or "").strip():
+        w.die("REFUSED: a disagreement needs --pdf-value (what the PDF says).")
+    rec["reviews"][a.key] = {"result": a.result, "quote": a.quote, "pdf_value": a.pdf_value or ""}
+    w.save_json(path, rec)
+    left = [m["key"] for m in rec["not_found"] if m["key"] not in rec["reviews"]]
+    print("recorded %s for %s. Still to review: %s" % (a.result, a.key, left or "nothing"))
 
 
 def main():
@@ -329,6 +445,18 @@ def main():
     p.add_argument("run")
     p.add_argument("--again", action="store_true")
     p.set_defaults(fn=cmd_read)
+    p = sub.add_parser("pdf")
+    p.add_argument("file", nargs="?")
+    p.add_argument("run")
+    p.add_argument("--none")
+    p.set_defaults(fn=cmd_pdf)
+    p = sub.add_parser("pdfreview")
+    p.add_argument("run")
+    p.add_argument("--key", required=True)
+    p.add_argument("--result", required=True, choices=["format_only", "disagree"])
+    p.add_argument("--quote", required=True)
+    p.add_argument("--pdf-value", dest="pdf_value")
+    p.set_defaults(fn=cmd_pdfreview)
     a = ap.parse_args()
     if getattr(a, "run", None):
         a.run = os.path.abspath(a.run)
