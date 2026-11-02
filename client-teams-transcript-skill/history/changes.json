@@ -406,5 +406,13 @@
   "new": "3. **The ONE action: `Sitamah to get the credit-life details from the client`, for now.** Asking the client what he wants to do, and cancelling the credit life, are NOT actions.",
   "why": "Paul, 29/10/2026, first real-case trial: (a) stays as the one credit-life action; (b) asking the clients what they want to do is their decision, not an action (answer 6: remove); (c) cancelling the credit life is removed (answer 7: remove).",
   "needs_paul": false
+ },
+ {
+  "file": "05-accuracy.md",
+  "kind": "reworded",
+  "old": "Not quotes, proposals or the what's-next email (another step sends those) and not meeting invites or the next appointment (another step sets those up): Paul, 29/10/2026.",
+  "new": "Not quotes, proposals or the what's-next email (another step sends those): Paul, 29/10/2026. Setting up the follow-up appointment IS an action for Sitamah at every meeting (Paul, 02/11/2026, reversing his 29/10/2026 removal): she books it, or sends the Teams meeting request.",
+  "why": "Paul, 02/11/2026: he asks the client for a follow-up appointment in every meeting and Sitamah sets it up (books it for a physical appointment, or sends the Teams meeting request). This reverses the 29/10/2026 removal (answer 10). The program no longer refuses it and fails a run that has an agreed appointment and no such action.",
+  "needs_paul": false
  }
 ]

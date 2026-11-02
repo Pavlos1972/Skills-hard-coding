@@ -665,9 +665,10 @@ ACTION_BANS = (
         r"|\bemail\w*\b[^.]{0,30}\b(proposals?|(?:updated |revised |new )?quotes? to)\b"
         r"|\b(send|email)\w*\b[^.]{0,40}\bwhat'?s[- ]next\b", re.I),
      "sending quotes, proposals and the what's-next email is done in another step: leave it out (a request to a provider, such as 'request the revised quote from Alwyn', is fine)"),
-    ("setting up the next meeting", re.compile(r"\b(set up|arrange|book|schedule|diarise|diarize|organi[sz]e)\b[^.]{0,40}\b(appointment|meeting|invite)\b|\b(meeting|calendar) invite\b", re.I),
-     "setting up the next meeting is done in another step (teams-meeting-setup-skill): leave it out, the Next appointment line shows it"),
 )
+# The follow-up appointment IS an action (Paul, 02/11/2026, reversing the 29/10/2026 removal): Sitamah books it (a physical
+# appointment) or sends the Teams meeting request. When one was agreed, the run must carry that action.
+FOLLOWUP_ACTION = re.compile(r"\b(set up|arrange|book|schedule|diarise|diarize|organi[sz]e|send)\b[^.]{0,60}\b(appointment|meeting|invite)\b", re.I)
 WHAT_IF = re.compile(r"\bcheck with\b[^.]{0,60}\b(whether|if|would)\b", re.I)
 
 
@@ -728,6 +729,9 @@ def check_structure(content, R):
                 fail("action %s is %s: %s (Paul's rule): %r" % (aid, name, why, text[:70]))
         if WHAT_IF.search(text) and not S(a.get("asked")).strip():
             fail("action %s asks a provider a what-if question: Paul removed one like it, so ask him whether to keep it (suggest: leave it out) and refer to his answer in `asked`" % aid)
+    na = content.get("next_appointment") or {}
+    if na.get("agreed") is True and not any(FOLLOWUP_ACTION.search(S(a.get("text"))) for a in actions):
+        fail("a follow-up appointment was agreed (%r) but no action sets it up: add `Sitamah to set up the follow-up appointment` (book it, or send the Teams meeting request) as an action (Paul, 02/11/2026)" % S(na.get("text"))[:50])
     # ORDER (Paul): the earliest deadline first, and nothing before what it depends on
     pos = {a.get("id"): n for n, a in enumerate(actions)}
     meeting = w.parse_date(S(content.get("meeting_date")))

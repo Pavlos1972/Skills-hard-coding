@@ -50,12 +50,12 @@ class ShortNotes(Base):
         self.assertTrue(bullets)
         self.assertTrue(all(ln.count("\u2022") <= 1 for ln in txt), "two bullets on one line")
         actions = [ln for ln in bullets if "Sitamah to " in ln]
-        self.assertEqual(len(actions), 4)                                       # the four actions for now, one line each
+        self.assertEqual(len(actions), 5)                                       # the five actions for now (one is the follow-up appointment), one line each
         page = slurp(self.p("out", "planner_note.html"))
         shown = page.split("<article", 1)[1].split("</article>", 1)[0]
         self.assertEqual(shown.count('<p class="b">'), len(bullets))           # in the page too: one paragraph per bullet
         pdf = pdf_text(self.p("out")).split("Action Points", 1)[1].split("Coming up", 1)[0]
-        self.assertEqual(sum(1 for ln in pdf.split("\n") if ln.startswith("\u2022 Sitamah to ")), 4)
+        self.assertEqual(sum(1 for ln in pdf.split("\n") if ln.startswith("\u2022 Sitamah to ")), 5)
 
     def test_a_planner_one_liner_over_twenty_words_fails(self):
         long = "BrightRock quote CP 100000001 at R1,100.00 p.m. " + "with a lot of extra words that make this much longer than one line " * 2
@@ -170,9 +170,26 @@ class SortedActions(Base):
         R = structure([act("Sitamah to send the updated quotes to the clients")])
         self.assertTrue(any("sending quotes" in m for _, _, m in R.fails), R.rows)
 
-    def test_setting_up_the_next_appointment_is_not_an_action(self):                                             # 10: remove
-        R = structure([act("Sitamah to set up another evening appointment for early next week")])
-        self.assertTrue(any("setting up the next meeting" in m for _, _, m in R.fails), R.rows)
+    def test_setting_up_the_follow_up_appointment_is_an_action(self):                                            # 02/11/2026: reverses 10
+        """Paul, 02/11/2026: Sitamah books the follow-up appointment or sends the Teams meeting request, at every meeting."""
+        for text in ("Sitamah to set up another evening appointment for early next week",
+                     "Sitamah to book the meeting invite for Thursday",
+                     "Sitamah to send Sam the Teams meeting request for the follow-up appointment"):
+            self.assertEqual(structure([act(text)]).fails, [], text)
+
+    def test_an_agreed_follow_up_appointment_needs_its_action(self):
+        na = {"id": "next", "text": "Thu 15/10/2026 at 4pm (RA)", "agreed": True}
+        R = structure([act("Sitamah to get the policy schedules from the insurer")], next_appointment=na)
+        self.assertTrue(failed(R, "follow-up appointment was agreed"), R.rows)
+        for text in ("Sitamah to set up the follow-up appointment for Thu 15/10/2026 at 4pm (book it)",
+                     "Sitamah to send Sam the Teams meeting request for Thu 15/10/2026 at 4pm"):
+            R = structure([act("Sitamah to get the policy schedules from the insurer"), act(text, i="a2")], next_appointment=na)
+            self.assertEqual(R.fails, [], text)
+
+    def test_no_agreed_appointment_means_no_required_action(self):
+        na = {"id": "next", "text": "Early next month, date to be set", "agreed": False}
+        R = structure([act("Sitamah to get the policy schedules from the insurer")], next_appointment=na)
+        self.assertEqual(R.fails, [], R.rows)
 
     def test_a_what_if_question_to_a_provider_needs_pauls_answer(self):                                          # 2: remove (no stated reason)
         text = "Sitamah to check with the insurer whether the income protector would still pay on a lower income"
@@ -187,12 +204,12 @@ class SortedActions(Base):
                      "Sitamah to ask Paul to approve the draft email before it goes out",
                      "Sitamah to request the revised Tax-Free quote from Alwyn",
                      "Sitamah to email Alwyn to request a revised quote in Sam's name",
-                     "Sitamah to send the revised quote request to Alwyn"):
+                     "Sitamah to send the revised quote request to Alwyn",
+                     "Sitamah to set up the follow-up appointment (send the Teams meeting request)"):
             self.assertEqual(structure([act(text)]).fails, [], text)
 
     def test_more_ways_of_writing_the_removed_actions_are_caught(self):
         for text in ("Sitamah to send the what's-next email to Sam",
-                     "Sitamah to book the meeting invite for Thursday",
                      "Sitamah to ask Sam whether he wants the Tax-Free in his name",
                      "Sitamah to cancel the credit life on the Absa home loan",
                      "Sitamah to email the proposals to the clients",

@@ -1,5 +1,5 @@
 {
- "stamp": "2026-10-29 17:53",
- "fingerprint": "fae5156dc7c6e11cd1bc2ae90c3a5738dea3b896f5d594151fb015f5be6247b1",
- "change": "Action points are put in order (earliest deadline first, then logical), what is not relevant is left out and listed, and the skill asks Paul in one message when it is not sure"
+ "stamp": "2026-11-02 15:55",
+ "fingerprint": "c9095f5b329f6b0853d13f43b74e7c8933d82d6300ae7a7ff0e84267e21bdc8c",
+ "change": "The follow-up appointment is now an action for Sitamah at every meeting where one was agreed (the program no longer refuses it and fails an agreed appointment with no such action); the first-meeting message to Sitamah is made by this skill only (Paul, 02/11/2026)"
 }

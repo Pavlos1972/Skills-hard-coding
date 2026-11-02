@@ -203,6 +203,17 @@
       "asked": "q1"
     },
     {
+      "id": "a6",
+      "when": "now",
+      "text": "Sitamah to set up the follow-up appointment for Thu 15/10/2026 at 4pm (send Sam the Teams meeting request)",
+      "src": [
+        {
+          "line": 51,
+          "quote": "Thursday the fifteenth at four in the afternoon"
+        }
+      ]
+    },
+    {
       "id": "a2",
       "text": "Sitamah to arrange for the Absa home loan to be ceded to Absa and send Sam the cession documents to sign",
       "src": [

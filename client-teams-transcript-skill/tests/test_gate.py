@@ -156,6 +156,8 @@ class Base(unittest.TestCase):
                  "src": [s("We need Alwyn to give us a revised quote in your name")]},
                 {"id": "a5", "when": "now", "text": "Sitamah to keep the old Instant Life policy in place until the BrightRock policy is in force",
                  "src": [s("please do not cancel the old Instant Life policy")]},
+                {"id": "a6", "when": "now", "text": "Sitamah to set up the follow-up appointment for Thu 15/10/2026 at 4pm (send Sam the Teams meeting request)",
+                 "src": [s("Thursday the fifteenth at four in the afternoon")]},
             ],
             "next_steps": [
                 {"id": "n1", "owner": "client", "text": "Sam to speak to Dana and come back on the RA",
@@ -186,7 +188,7 @@ class Base(unittest.TestCase):
             e("L5", "hold", "Let's leave it for now, I'll get back to you on the RA", ["b4", "n1"], pass_=1),
             e("L6", "change", "rather put it in my name for now", ["b5", "s1"], pass_=1),
             e("L7", "instruction", "We need Alwyn to give us a revised quote in your name", ["b6", "a4"], pass_=1),
-            e("L8", "decision", "Thursday the fifteenth at four in the afternoon", ["next"], pass_=1),
+            e("L8", "decision", "Thursday the fifteenth at four in the afternoon", ["next", "a6"], pass_=1),
             e("L9", "request", "put a review of Dana's portfolio in your what's-next email", ["a1"], pass_=1),
             e("L10", "offer", "I'll offer that and we can look at her portfolio", ["a1"], pass_=1),
             e("L11", "acceptance", "Alright, 100%", ["a1"], pass_=1),

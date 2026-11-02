@@ -1,6 +1,6 @@
 ## Message to Sitamah (Paul's rule - every Teams meeting and every WhatsApp call, every time)
 
-Rule taken from `fact-find-summary` / `ff-population-transcript` Step 8 so the follow-up skill sends the same message. **It applies to a WhatsApp call too (Paul's rule): the words "Teams Appointment Completed" become "WhatsApp Call Completed"; everything else is the same.** Example: *First Last (Review Client) – 3rd WhatsApp Call Completed: 05/11/2026 – Please see instructions in Client / Prospect Task.*
+This skill makes and sends this message for every meeting type, first/Fact Find meetings included (Paul, 02/11/2026: `ff-population-transcript` and `fact-find-summary` hand over to this skill and no longer make a message of their own). **It applies to a WhatsApp call too (Paul's rule): the words "Teams Appointment Completed" become "WhatsApp Call Completed"; everything else is the same.** Example: *First Last (Review Client) – 3rd WhatsApp Call Completed: 05/11/2026 – Please see instructions in Client / Prospect Task.*
 
 **When it is SHOWN and when it is SENT (Paul's rule).** It is SHOWN in the same reply as the Planner page and the PDF (follow-up only), once they and the hand-offs are produced, checked and SAVED (saved files confirmed by listing the folder back): one reply, one question ("Shall I post this message to Sitamah in Teams?"), so Paul approves all three together. Never end a reply without the message in it. It is SENT only after his yes. If any output is still being corrected, do not send.
 
@@ -18,7 +18,7 @@ Rule taken from `fact-find-summary` / `ff-population-transcript` Step 8 so the f
 
 **The route is hard-coded: Zapier only.** The driver prints the exact steps for this client's message. The Microsoft 365 connector cannot send Teams messages (no ChatMessage.Send permission: 403 confirmed). Post only into the 1:1 chat labelled "(1:1 Chat) Paul Kafentzis, Sitamah Nathoo", never into a client meeting chat or any other chat. If the Zapier call fails, say so plainly and give Paul the message text to paste himself; never claim it was sent.
 
-**Once per meeting:** `ff-population-transcript` and `fact-find-summary` send this same message for a first/Fact Find meeting. If it was already sent for this meeting in this chat, record `teams.status=already_sent` with `teams.already_sent_evidence` and do NOT send again.
+**Once per meeting:** for a first/Fact Find meeting this skill is run from `ff-population-transcript` Step 7b, and those two skills no longer send their own message. If it was already sent for this meeting in this chat (for example by an earlier version of them), record `teams.status=already_sent` with `teams.already_sent_evidence` and do NOT send again.
 
 **The program holds the message back:** it is shown only when every other check has passed, so the message can never go out and the run then fail. Record `teams.body_as_stored` (what Zapier says it stored); the checker compares it with the message.
 

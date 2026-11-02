@@ -1,6 +1,6 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
-**Version 3.2 (draft for Paul to review)**
+**Version 3.3 (draft for Paul to review)**
 **Last updated: 2026-10-29 13:08 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
@@ -382,7 +382,8 @@ Where: `Company - Paul > Claude > Fact Find Documents > WR Fact Find - ZIP > WR 
 | Skill | Status |
 |---|---|
 | client-teams-transcript-skill | REBUILT to these standards (step driver, reading lock, client-file and access logs, Planner page, PDF, Sitamah Teams message (Teams meetings and WhatsApp calls), PASS/FAIL checklist; 226 tests, hardened after an independent review; nothing from the old skill lost without a record). The Sitamah message also covers WhatsApp calls (Paul's yes). Uploaded 29/10/2026 by a Claude-in-Chrome chat as version v33 (reported by that chat). First real-case trial found the notes too long, the actions unsorted and the Teams message not offered; REBUILT the same day to Paul's answers (short Planner note, sorted and ordered actions, asks when unsure, message shown with the outputs); uploaded 30/10/2026 UTC by a Claude-in-Chrome chat as v34 (Last updated 2026-10-29 17:53; reported by that chat, its replace-box line counts 65 to 66 match the files); **LIVE: Paul confirmed on 30/10/2026 ("Yes it is live")** after running the 17:53 build (v34) on real meetings; the old version is v33 in its version history |
-| client-pipeline-board, complete-applications-skill, fact-find-summary, ff-population-transcript, wr-roa-builder, wr-sroa-builder, rgar-skill, om-optimal-ra-proposal, om-tax-free-skill, investment-comparisons-skill, life-insurer-comparison, life-policy-schedule-analyzer, client-review-notes, client-transcript-download, teams-meeting-setup-skill, outlook-emails-skill, cameron-short-term-skill, advicetech-website-knowledge, alpha-bank-statements, nedbank-current-account-categorization, paul-email-signature, correcting-skills, master-skill-template | Not started |
+| client-pipeline-board, complete-applications-skill, wr-roa-builder, wr-sroa-builder, rgar-skill, om-optimal-ra-proposal, om-tax-free-skill, investment-comparisons-skill, life-insurer-comparison, life-policy-schedule-analyzer, client-review-notes, client-transcript-download, teams-meeting-setup-skill, outlook-emails-skill, cameron-short-term-skill, advicetech-website-knowledge, alpha-bank-statements, nedbank-current-account-categorization, paul-email-signature, correcting-skills, master-skill-template | Not started |
+| ff-population-transcript, fact-find-summary | INTERIM-UPDATED 02/11/2026 (text edits only, record in `history/fact-find-interim-2026-11-02/`): the new Fact Find form's data file is the first source (naming stays Audio to Text), schema version checked each run, parking list not processed, company look-up text checked, Dread Disease ABI 3%, and the Planner note and the Sitamah message handed to the Teams transcript program (one maker). Zips and upload briefs made outside the repo (the `ff-population-transcript` script still holds a real client's data). NOT uploaded, NOT live. Upload only when Paul asks, and the Teams transcript skill first. The full rebuild to the template is still to do: `ff-population-transcript` next (Paul named it 30/10/2026); scorecard in SKILL-TEMPLATE.md |
 | planner-interim-procedure | FORGET (Paul, 29/10/2026): an interim skill, retired with AdviceTech. Do not convert it, consider it, or build rules for it |
 | ff-to-ff-populate | FORGET (Paul, 02/11/2026): he runs it by hand when needed. Do not convert it, build on it, or count on its Audio to Text file being there |
 
@@ -394,6 +395,7 @@ Where: `Company - Paul > Claude > Fact Find Documents > WR Fact Find - ZIP > WR 
 | 2026-10-30 14:49 | Version 2.6: Paul's second real-case trial recorded ("It seems to be working now"); not yet confirmed live |
 | 2026-10-30 14:50 | Version 2.7: Teams transcript skill confirmed LIVE by Paul; S16 condition met (proven in real chats); next skill to be named by Paul |
 | 2026-10-30 15:05 | Version 2.8: SKILL-TEMPLATE.md drafted (13 ingredients and a scorecard) and the study of ff-population-transcript recorded in section 8b; waiting for Paul's answers |
+| 2026-11-02 16:05 | Version 3.3: interim text update of `ff-population-transcript` and `fact-find-summary` made (zips outside the repo, not uploaded); Teams transcript skill changed so the follow-up appointment IS an action (228 tests, lint PASS, inventory 0 unaccounted; packaged, not uploaded, not live) |
 | 2026-11-02 15:43 | Version 3.2: decision 14 completed (parked facts not processed; follow-up appointment IS an action at every meeting, reversing 29/10 in the Teams skill; look-up text checked and replaced) |
 | 2026-11-02 15:24 | Version 3.1: decision 14 (new Fact Find form is the primary source; Audio to Text naming stays; Dread Disease ABI 3% always; follow-up appointment is not an action; version check) |
 | 2026-11-02 09:11 | Version 2.9: ff-to-ff-populate forgotten at Paul's word (he deploys it by hand); the Audio to Text file may or may not exist when ff-population-transcript runs |

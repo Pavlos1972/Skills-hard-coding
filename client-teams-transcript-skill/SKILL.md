@@ -15,17 +15,17 @@ description: "Summarize a client's Teams meeting transcript (or WhatsApp call) i
 | 4 | When something goes wrong | What to do instead of improvising |
 | 5 | Where the detail lives | The pages the program shows at each step |
 
-**Last updated: 2026-10-29 17:53 (Athens time)**
+**Last updated: 2026-11-02 15:55 (Athens time)**
 
 **Recent changes** (last 5, one line each; full history in the repo `history/` folder)
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-11-02 15:55 | The follow-up appointment is now an action for Sitamah at every meeting where one was agreed (the program no longer refuses it and fails an agreed appointment with no such action); the first-meeting message to Sitamah is made by this skill only (Paul, 02/11/2026) |
 | 2026-10-29 17:53 | Action points are put in order (earliest deadline first, then logical), what is not relevant is left out and listed, and the skill asks Paul in one message when it is not sure |
 | 2026-10-29 17:22 | Dated notes taken out of the live pages (the dates stay in the history files) |
 | 2026-10-29 17:21 | Planner note is now short (one-liners and actions for now), PDF limited to 4 bullets per area and two pages, actions sorted now/later, message to Sitamah shown with the outputs (Paul's answers after his first real-case trial) |
 | 2026-10-29 13:38 | Every run now begins by saying which version it is (read from this stamp), the final checklist repeats it, and the date can only move when the skill's files really change |
-| 2026-10-29 13:18 | The message to Sitamah is now also built, checked and sent for WhatsApp calls ("WhatsApp Call Completed"), as Paul decided |
 
 ## Run it
 
@@ -58,6 +58,7 @@ Never rewrite, shorten or "improve" the programs during a run, and never replace
 8. If a rule cannot be met, stop and say exactly which one and why. Never hand over partial work as complete.
 9. Changes to this skill are made only in Claude Code and uploaded by Paul. Never say a change is live until he confirms it.
 10. Short means short: the Planner note is one-line bullets and the actions for now, the PDF is two pages at most, and every action is sorted now or later and put in order (earliest deadline first, then logical). Leave out what is not relevant and list it; when you are not sure, ask Paul in one message. The program fails anything longer, unsorted or unanswered.
+11. Setting up the follow-up appointment is an action for Sitamah at every meeting where one was agreed (she books it, or sends the Teams meeting request). The program fails a run that has an agreed appointment and no such action.
 
 ## When something goes wrong
 

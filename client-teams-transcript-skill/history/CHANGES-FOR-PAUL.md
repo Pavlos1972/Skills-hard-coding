@@ -2,6 +2,12 @@
 
 For Paul. **LIVE since 30/10/2026 (you confirmed).** The 17:53 version is v34; your earlier version is v33 in the skill's version history.
 
+## After your Fact Find form decisions (02/11/2026): what I changed in this skill
+This version is **not uploaded yet**, so it is not live until you ask for the upload and confirm.
+
+1. **Setting up the follow-up appointment is now an action for Sitamah, at every meeting where one was agreed.** She books it for a physical appointment, or sends the Teams meeting request. This reverses what you removed on 29/10/2026 (your answer 10). The program no longer refuses this action, and it now fails a run where a follow-up appointment was agreed but no action sets it up.
+2. **At a first (Fact Find) meeting this skill makes the message to Sitamah**, shown with the Planner page and one question, as you chose. `ff-population-transcript` and `fact-find-summary` no longer make a message of their own, so only one message is ever made.
+
 ## After your first real-case trial (29/10/2026): what I changed, in plain words
 You ran the skill on two real clients and told me four things. Here is what is now different. This version is **not uploaded yet**: you have the sample to look at first.
 
