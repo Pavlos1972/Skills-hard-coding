@@ -154,6 +154,116 @@ def source_ref(e):
     return re.sub(r"\.[A-Za-z0-9]{1,5}$", "", base)
 
 
+# ---------------------------------------------------------------- search terms for 'Not discussed' / 'not on the call' (every claimable field has curated ones)
+def _specs(lay):
+    d = {}
+    for sec in lay["sections"]:
+        for g in sec["groups"]:
+            for r in g.get("rows", []):
+                if r.get("key"):
+                    d[r["key"]] = r
+            if g.get("list"):
+                d["list:" + g["list"]] = g
+    for r in lay["closing"]["rows"]:
+        d[r["key"]] = r
+    return d
+
+
+def field_terms(lay, key, label="", row_values=None):
+    """(terms, curated). A field with only its label words to search for is a WEAK search: it is never accepted without a reason written for that field."""
+    specs = _specs(lay)
+    parts = str(key).split(".")
+    if parts[0] == "list" and len(parts) == 2:
+        g = specs.get("list:" + parts[1])
+        if g and g.get("terms"):
+            return list(g["terms"]), True
+    if len(parts) == 3 and parts[1].isdigit():
+        g = specs.get("list:" + parts[0])
+        if g and isinstance(g["cols"], list):
+            col = next((c for c in g["cols"] if c["col"] == parts[2]), None)
+            if col and col.get("terms"):
+                return list(col["terms"]), True
+    if len(parts) == 2 and parts[1].isdigit() and row_values:
+        words = []
+        for v in row_values:
+            for x in re.findall(r"[A-Za-z][A-Za-z'-]{3,}", str(v)):
+                if x.lower() not in ("none", "years", "year", "month", "months", "primary", "school"):
+                    words.append(x.lower())
+        words = list(dict.fromkeys(words))
+        if words:
+            return words, True
+    r = specs.get(key)
+    if r and r.get("terms"):
+        return list(r["terms"]), True
+    return [re.sub(r"\s*\([^)]*\)", "", label or key).lower().strip() or str(key)], False
+
+
+def row_values(fr, key):
+    p_ = parse_key(key)
+    rows = (fr or {}).get("lists", {}).get(p_[0], [])
+    if len(p_) == 2 and p_[1] < len(rows):
+        return list(rows[p_[1]]["d"].values())
+    return []
+
+
+NO_WORDS = {"no", "n", "false", "none", "0", "nil", "n a", "na", ""}
+
+
+def sibling_hits(lay, fr, key):
+    """Populated fields of the form that say the thing this field asks about exists (for example a debt with credit life), so 'Not discussed' would contradict the form."""
+    r = _specs(lay).get(key) or {}
+    out = []
+    for sp in r.get("siblings") or []:
+        if "*" in sp:
+            name, _, col = sp.partition(".*.")
+            for row in (fr or {}).get("lists", {}).get(name, []):
+                v = row["d"].get(col, "")
+                if v and w.norm(v) not in NO_WORDS:
+                    out.append("%s %d %s = %s" % (name, row["index"] + 1, col, v))
+        else:
+            c = (fr or {}).get("fields", {}).get(sp)
+            if c and c.get("populated") and w.norm(c["v"]) not in NO_WORDS:
+                out.append("%s = %s" % (sp, c["v"]))
+    return out
+
+
+DATE_LINE = re.compile(r"(?i)(?:meeting started|started|date|when)\D{0,12}(\d{1,2})[/.\-](\d{1,2})[/.\-](\d{2,4})")
+
+
+def transcript_date(lines):
+    """The date the transcript says the meeting started (first 15 lines), or None when it states none."""
+    for ln in lines[:15]:
+        m = DATE_LINE.search(ln)
+        if m:
+            d, mo, y = int(m.group(1)), int(m.group(2)), int(m.group(3))
+            y += 2000 if y < 100 else 0
+            try:
+                import datetime as _dt
+                return _dt.date(y, mo, d)
+            except ValueError:
+                return None
+    return None
+
+
+def save_folder_problem(folder, client, spelling=""):
+    """The client's own `2. Fact Find` folder under Company - Paul or Company - WR Clients\\Paul Kafentzis (Client Files): never another client's or another broker's."""
+    segs = [x for x in re.split(r"[\\/]+", S(folder)) if x.strip()]
+    low = [x.strip().lower() for x in segs]
+    if not low or low[-1] != "2. fact find":
+        return "the folder %r does not end in the client's '2. Fact Find' folder" % folder
+    root_ok = "company - paul" in low or any(low[i] == "company - wr clients" and i + 1 < len(low) and low[i + 1] == "paul kafentzis (client files)" for i in range(len(low)))
+    if not root_ok:
+        return "the folder %r is not under 'Company - Paul' or 'Company - WR Clients\\Paul Kafentzis (Client Files)' (never another broker's folder)" % folder
+    if len(segs) < 2:
+        return "the folder has no client folder before '2. Fact Find'"
+    want = w.norm("%s, %s" % (client.get("surname", ""), client.get("first", "")))
+    got = w.norm(segs[-2])
+    if got != want and not (len(spelling.strip()) >= 10):
+        return ("the client folder is %r but this run is for %s, %s: save only into the client's own folder (if the folder is really spelled differently, say so in saved.folder_spelling)"
+                % (segs[-2], client.get("surname"), client.get("first")))
+    return None
+
+
 # ---------------------------------------------------------------- A reading lock
 def check_reading(run, st, R):
     g = "A"
@@ -223,10 +333,16 @@ def check_sources(run, R, lines=None, content=None):
             fail("the meeting date %r is not a real date (DD/MM/YYYY)" % rj["date"])
         if isinstance(content, dict):
             cc = content.get("client") or {}
-            if w.norm(S(cc.get("first"))) != w.norm(cl["first"]) or w.norm(S(cc.get("surname"))) != w.norm(cl["surname"]):
+            if not w.same_person(S(cc.get("first")), S(cc.get("surname")), cl["first"], cl["surname"]):
                 fail("content.json is for %s %s but Paul's request was for %s %s" % (cc.get("first"), cc.get("surname"), cl["first"], cl["surname"]))
-        if lines is not None and w.norm(cl["surname"]) not in w.norm(" ".join(lines)):
+        if lines is not None and w.last_name_token(cl["surname"]) not in w.norm(" ".join(lines)):
             fail("this transcript never mentions the client's surname (%s): is it the right file?" % cl["surname"])
+        if lines is not None and w.parse_date(rj.get("date")):
+            td = transcript_date(lines)
+            if td and td != w.parse_date(rj["date"]):
+                fail("the transcript says the meeting started on %s but Paul's meeting date is %s: this is another meeting's transcript" % (td.strftime("%d/%m/%Y"), rj["date"]))
+            elif not td:
+                R.add("WARN", g, "the transcript states no meeting date in its first lines, so its date could not be checked against %s" % rj["date"])
     by_need = {}
     for e in access:
         if e.get("route") not in ALLOWED_ROUTES or e.get("result") not in ("ok", "fail") or not S(e.get("need")).strip():
@@ -286,6 +402,16 @@ def check_sources(run, R, lines=None, content=None):
             if ref in refs:
                 fail("two sources share the reference %r: give each its own --ref" % ref)
             refs[ref] = k
+            if k in ("Overview", "Policy schedule"):
+                txt = doc_text(run, ref)
+                if txt is None:
+                    fail("the %s %r has no text copy: it cannot be accepted unless its text was recorded (run.py source ... --text-file), because nothing in it could be checked" % (k, ref))
+                else:
+                    fr_ = load(os.path.join(run, w.FORM), {})
+                    idd = w.digits(((fr_.get("fields") or {}).get("idno") or {}).get("v", ""))
+                    sur = w.last_name_token(cl.get("surname", ""))
+                    if not ((sur and sur in w.norm(txt)) or (len(idd) >= 10 and idd in w.digits(txt))):
+                        fail("the %s %r does not mention the client (%s, or the ID number): it does not look like this client's document" % (k, ref, cl.get("surname")))
         else:
             fail("source %s: record read=yes with path and date, or a 'none' reason" % k)
     have = {e.get("kind") for e in sources if e.get("read") == "yes" or len(S(e.get("none")).strip()) >= 8}
@@ -348,7 +474,7 @@ def check_form(run, R, lines, content):
     if fr.get("schema") != w.SCHEMA:
         fail("schema is %r; this skill knows only %s" % (fr.get("schema"), w.SCHEMA))
     cl = rj.get("client") or {}
-    if w.norm(fr["client"]["first"]) != w.norm(cl.get("first")) or w.norm(fr["client"]["surname"]) != w.norm(cl.get("surname")):
+    if not w.same_person(fr["client"]["first"], fr["client"]["surname"], cl.get("first"), cl.get("surname")):
         fail("the form is for %s %s but Paul asked for %s %s" % (fr["client"]["first"], fr["client"]["surname"], cl.get("first"), cl.get("surname")))
     if fr["date"] != rj.get("date"):
         qs = [q for q in load(os.path.join(run, w.QUESTIONS), []) if isinstance(q, dict) and q.get("need") == "date" and len(S(q.get("paul_said")).strip()) >= 3]
@@ -401,14 +527,22 @@ def check_form(run, R, lines, content):
             if json.dumps(missing, sort_keys=True) != json.dumps(fp.get("not_found"), sort_keys=True):
                 fail("form_pdf.json is not what the program finds when it checks the data file against the PDF text (edited by hand?)")
             nt = w.norm(ptxt)
+            for pr_ in ffform.pdf_identity_problems(fr, ptxt):
+                fail("the form's saved PDF is not this client's: " + pr_)
+            if checked and len(missing) > 0.25 * checked:
+                fail("%d of the %d populated values of the data file are not in the saved PDF: it is not the PDF of this data file" % (len(missing), checked))
             for m in missing:
                 rv = (fp.get("reviews") or {}).get(m["key"])
                 if not rv or rv.get("result") not in ("format_only", "disagree"):
                     fail("%s (%r) is in the data file but not in the form's saved PDF, and nobody looked: run.py pdfreview" % (m["label"], m["value"]))
                 elif w.norm(S(rv.get("quote"))) not in nt:
                     fail("pdfreview %s: the quote is not in the PDF text" % m["key"])
-                elif rv["result"] == "disagree" and w.norm(S(rv.get("pdf_value"))) == w.norm(m["value"]):
-                    fail("pdfreview %s: a disagreement needs a PDF value that differs from the data file's" % m["key"])
+                elif rv["result"] == "disagree" and (w.norm(S(rv.get("pdf_value"))) == w.norm(m["value"]) or w.norm(S(rv.get("pdf_value"))) not in w.norm(S(rv.get("quote")))):
+                    fail("pdfreview %s: a disagreement needs a PDF value that differs from the data file's and is in the quote" % m["key"])
+                elif rv["result"] == "format_only":
+                    dg = w.digits(m["value"])
+                    if (len(dg) >= 2 and dg not in w.digits(S(rv.get("quote")))) or (len(dg) < 2 and w.norm(m["value"]) not in w.norm(S(rv.get("quote")))):
+                        fail("pdfreview %s says format_only but the quote does not hold the value's own digits or words: it does not show the same value" % m["key"])
     cross = load(os.path.join(run, w.CROSS), [])
     if not dict_list(cross):
         fail("crosscheck.json is not a list")
@@ -441,8 +575,16 @@ def check_form(run, R, lines, content):
         if r == "same" and numeric_value(i["value"]) and isinstance(a.get("line"), int) and lines and 1 <= a["line"] <= len(lines) and not i.get("row"):
             if numeric_value(i["value"]) not in w.digits(window_slice(lines, a["line"])):
                 R.add("WARN", g, "crosscheck %s says the call agrees with the form (%s) but the quote near line %s does not hold those digits: check" % (k, i["value"], a["line"]))
-        if r == "not_on_call" and not i.get("row") and len(w.digits(i["value"])) >= 4 and re.search(r"\d", i["value"]):
-            if w.digits(i["value"]) in w.digits(" ".join(lines or [])):
+        if r == "not_on_call":
+            lay_ = w.layout()
+            terms, curated = field_terms(lay_, k, i.get("label", k), row_values(fr, k) if i.get("row") else None)
+            hits, _ = search_terms(run, lines or [], terms)
+            why = S(a.get("reviewed")).strip()
+            if hits and len(why) < 15:
+                fail("crosscheck %s is 'not on the call' but the call mentions it (searched %s: lines %s): answer same or differs with the words, or say why those lines are not about it" % (k, terms[:4], hits[:6]))
+            elif not curated and len(why) < 15:
+                fail("crosscheck %s is 'not on the call' on a WEAK search (only its label words were searched): write a reason for this field" % k)
+            if re.search(r"\d", i["value"]) and len(w.digits(i["value"])) >= 4 and not i.get("row") and w.digits(i["value"]) in w.digits(" ".join(lines or [])):
                 R.add("WARN", g, "crosscheck %s: marked not on the call, yet the digits of %r appear in the transcript: check" % (k, i["value"]))
     if not probs:
         n = sum(1 for i in cross if isinstance(i.get("answer"), dict))
@@ -455,21 +597,73 @@ def check_form(run, R, lines, content):
 
 
 # ---------------------------------------------------------------- B ledger and coverage
-def cover_targets(run, ov, cross, lead):
-    """Items a ledger entry can be covered by: overlay entries, answered cross-check fields, the lead search, the claims."""
+# What may cover which kind of ledger entry (A1). A "lead" or a claim is never a blanket cover, and every cover must cite the same part of the call.
+KIND_ALLOWED = {
+    "contact": {"fill", "cross", "lead", "claim"},
+    "gap": {"fill", "claim"},
+    "difference": {"cross_differs", "diff", "note"},
+    "quote_request": {"quote", "quote_req"},
+    "next_step": {"request", "note", "cross", "fill"},
+    "request": {"request", "note", "cross", "fill"},
+    "change": {"note", "cross_differs", "fill", "diff"},
+}
+OVERLAY_TYPE = {"fills": "fill", "rows_add": "fill", "lookup": "fill", "notes": "note", "flags": "note", "joint": "note", "diffs": "diff", "quotes": "quote_entry",
+                "policy_numbers": "policy", "abi_override": "abi", "documents_to_request": "request", "next_steps": "request"}
+
+
+def cover_targets(run, ov, cross, lead, content=None):
+    """Everything a ledger entry can be covered by: id -> {types, lines (the call lines it cites)}."""
+    lay = w.layout()
+    req_keys = {q["req"] for q in lay["quote_groups"] if not q.get("list")}
     t = {}
     for name, it in compose.overlay_items(ov):
-        lines = [s["line"] for s in it.get("src") or [] if isinstance(s, dict) and isinstance(s.get("line"), int)]
-        t[it.get("id", name)] = lines
+        typ = OVERLAY_TYPE.get(name, "note")
+        types = {typ}
+        if name == "fills" and it.get("key") in req_keys:
+            types.add("quote_req")
+        lines = [x["line"] for x in it.get("src") or [] if isinstance(x, dict) and isinstance(x.get("line"), int)]
+        t[it.get("id", name)] = {"types": types, "lines": lines}
+    cross_lines = {}
     for i in cross:
         a = i.get("answer")
-        if isinstance(a, dict) and a.get("r") in ("same", "differs"):
-            t[i["key"]] = [a["line"]] if isinstance(a.get("line"), int) else []
+        if isinstance(a, dict) and a.get("r") in ("same", "differs") and isinstance(a.get("line"), int):
+            types = {"cross"} | ({"cross_differs"} if a["r"] == "differs" else set()) | ({"quote_req"} if i["key"] in req_keys else set())
+            t[i["key"]] = {"types": types, "lines": [a["line"]]}
+            cross_lines[i["key"]] = a["line"]
     if lead:
-        t["lead"] = []
-    for k in load(os.path.join(run, w.CLAIMS), {}):
-        t["claim:" + k] = []
+        t["lead"] = {"types": {"lead"}, "lines": []}
+    for k, cl in load(os.path.join(run, w.CLAIMS), {}).items():
+        t["claim:" + k] = {"types": {"claim"}, "lines": [x for x in (cl.get("hits") or []) if isinstance(x, int)]}
+    for _, _, r in iter_rows(content or {}):
+        if str(r.get("id", "")).startswith("quote."):
+            grp = next((q for q in lay["quote_groups"] if q["id"] == r.get("quote_group")), None)
+            lines = []
+            if grp:
+                lines = [cross_lines[k] for k in (grp.get("req"), grp.get("type"), grp.get("ins")) if k in cross_lines]
+            lines += [x["line"] for x in r.get("src") or [] if isinstance(x, dict) and isinstance(x.get("line"), int)]
+            t[r["id"]] = {"types": {"quote"}, "lines": lines}
     return t
+
+
+LEAD_WORDS = re.compile(r"(?i)\b(referr\w*|recommend\w*|heard (?:about|of)|found (?:you|us)|d\s*&\s*r|marketing|lead|introduced)\b")
+
+
+def cover_problem(kind, line, tid, tinfo, quote=""):
+    """None when `tid` really covers a ledger entry of this kind at this line; otherwise the plain reason it does not."""
+    allowed = KIND_ALLOWED.get(kind, set())
+    if kind in KINDS_OPTIONAL:
+        return None
+    if not (tinfo["types"] & allowed):
+        return "%s (a %s) cannot cover a %s entry: a %s entry needs %s" % (tid, "/".join(sorted(tinfo["types"])), kind, kind, " or ".join(sorted(allowed)))
+    if "lead" in tinfo["types"]:
+        if not LEAD_WORDS.search(quote or ""):
+            return "the lead search can cover only a line about how the client came to Paul (a referral, a recommendation, a marketing lead), not %r" % (quote or "")[:50]
+        return None
+    if not tinfo["lines"]:
+        return "%s cites no line of the call, so it cannot be about this part of the call" % tid
+    if not any(abs(x - line) <= COVER_SPAN for x in tinfo["lines"]):
+        return "%s cites the call at line(s) %s, not within %d lines of line %d" % (tid, tinfo["lines"][:4], COVER_SPAN, line)
+    return None
 
 
 def reviewed_lines(ledger):
@@ -525,19 +719,20 @@ def check_ledger(run, st, lines, ledger, targets, R):
             continue
         if not cov:
             if kind in KINDS_MUST_COVER:
-                R.add("FAIL", g, "%s (%s, line %d) is not covered by any fill, difference, note or answer: %r" % (where, kind, ln, e.get("quote")))
+                R.add("FAIL", g, "%s (%s, line %d) is not covered by any fill, difference, note, request or answer: %r" % (where, kind, ln, e.get("quote")))
                 bad += 1
             elif len(S(e.get("excluded")).strip()) < 8:
                 R.add("FAIL", g, "%s (%s) is neither covered nor excluded with a reason" % (where, kind))
                 bad += 1
             continue
-        line_lists = [targets[c] for c in cov if targets[c]]
-        if kind in KINDS_MUST_COVER and line_lists and not any(abs(x - ln) <= COVER_SPAN for ls in line_lists for x in ls):
-            R.add("FAIL", g, "%s (%s, line %d): none of the covering items %s cites the call within %d lines of it, so they are not about the same thing" % (where, kind, ln, cov, COVER_SPAN))
-            bad += 1
+        if kind in KINDS_MUST_COVER:
+            probs = [cover_problem(kind, ln, c, targets[c], S(e.get('quote'))) for c in cov]
+            if all(probs):
+                R.add("FAIL", g, "%s (%s, line %d) is not really covered: %s" % (where, kind, ln, "; ".join(probs)))
+                bad += 1
     if not bad:
         must = sum(1 for e in ents if e.get("kind") in KINDS_MUST_COVER)
-        R.add("PASS", g, "%d ledger entries, every quote found verbatim; all %d gap/difference/contact/quote/next-step entries covered by an item that cites the same part of the call" % (len(ents), must))
+        R.add("PASS", g, "%d ledger entries, every quote found verbatim; all %d gap/difference/contact/quote/next-step entries are covered by the kind of item that can cover them (a fill, a difference, a quote row, a request, an answer) and that item cites the call within %d lines of the entry" % (len(ents), must, COVER_SPAN))
     k = len(st["chunks"])
     gaps = [(p, c) for p in (1, 2) for c in range(1, k + 1) if not tx.chunk_acked(st, ledger, p, c)]
     if gaps:
@@ -602,7 +797,7 @@ def check_content(run, lines, content, fr, refs, ov, R):
     rj = load(os.path.join(run, w.RUN), {})
     claims = load(os.path.join(run, w.CLAIMS), {})
     questions = load(os.path.join(run, w.QUESTIONS), [])
-    paul_words = {S(q.get("paul_said")).strip() for q in (ov.get("asked_paul") or []) if isinstance(q, dict)} | {S(q.get("paul_said")).strip() for q in questions if isinstance(q, dict)}
+    paul_words = {S(q.get("need")): S(q.get("paul_said")).strip() for q in questions if isinstance(q, dict) and len(S(q.get("paul_said")).strip()) >= 3}
     row_by_id = {r["id"]: r for _, _, r in iter_rows(content) if isinstance(r, dict) and r.get("id")}
     for sid, blk, r in iter_rows(content):
         rid = S(r.get("id"))
@@ -688,8 +883,8 @@ def check_content(run, lines, content, fr, refs, ov, R):
                     problems += 1
                 evidence.append(text)
             elif "paul" in s:
-                if len(S(s["paul"]).strip()) < 3 or S(s["paul"]).strip() not in paul_words:
-                    R.add("FAIL", g, "%s: Paul's words %r are not recorded in an answered question (asked_paul or run.py answer)" % (rid, s.get("paul")))
+                if len(S(s["paul"]).strip()) < 3 or paul_words.get(S(s.get("need"))) != S(s["paul"]).strip():
+                    R.add("FAIL", g, "%s: Paul's words %r are not the ones the program recorded (run.py ask --kind knowledge --need ..., then run.py answer): words typed into the overlay are not accepted" % (rid, s.get("paul")))
                     problems += 1
                 evidence.append(text)
             else:
@@ -707,9 +902,6 @@ def check_content(run, lines, content, fr, refs, ov, R):
             if not any(w.digits(text) in w.digits(e) for e in evidence):
                 R.add("FAIL", g, "%s: the identifier %r is not in its sources digit for digit" % (rid, text[:30]))
                 problems += 1
-        if rj.get("spouse") and r.get("status") == "filled" and any("line" in s for s in srcs if isinstance(s, dict)):
-            if not any(len(S(it.get("attrib")).strip()) >= 10 for _, it in compose.overlay_items(ov) if rid in (it.get("key"), "flag." + S(it.get("id")))):
-                R.add("WARN", g, "%s: two spouses in one meeting: say in `attrib` why this call statement belongs to this spouse (from its content, not the speaker label)" % rid)
     idno = next((r["bullets"][0] for r in row_by_id.values() if r["id"] == "idno" and r["bullets"]), "")
     if len(w.digits(idno)) == 13:
         d = w.digits(idno)
@@ -752,7 +944,8 @@ def search_terms(run, lines, terms):
     d = os.path.join(run, w.DOCS)
     if os.path.isdir(d):
         for f in sorted(os.listdir(d)):
-            t = " %s " % w.norm(open(os.path.join(d, f), encoding="utf-8", errors="replace").read())
+            with open(os.path.join(d, f), encoding="utf-8", errors="replace") as fh_:
+                t = " %s " % w.norm(fh_.read())
             if any(x in t for x in nterms):
                 docs.append(os.path.splitext(f)[0])
     return hits, docs
@@ -781,6 +974,39 @@ def spouse_overlap(mine, other):
     return sorted(t for t in theirs if t in mine_text)
 
 
+SPOUSE_COMMON_IDS = {"consent", "advisor", "date", "meet", "ref", "nat", "nat_other", "marital", "marr_date", "idtype", "loa", "next_appt", "next_day", "next_time", "has_debts", "has_kids"}
+SPOUSE_TRIVIAL = {"yes", "no", "n a", "not discussed", "not stated", "pending fna", "none", "south african", "teams meeting", "paul kafentzis", "full time", "employed", "active"}
+
+
+def spouse_values_overlap(mine, other):
+    """The other spouse's own values (names, employers, occupations, amounts, short policy numbers) found in what was written for this spouse.
+    Rows copied straight from this spouse's own form are skipped (two people can have the same salary); what the chat wrote is checked."""
+    common = {"debts", "children", "other"}
+    theirs = {}
+    for sid, blk, r in iter_rows(other):
+        if sid in common or S(r.get("id")).startswith(("joint.", "notes.", "flag.", "docs_to_request", "next_steps", "total.")) or r.get("id") in SPOUSE_COMMON_IDS:
+            continue
+        if r.get("status") in ("standing", "rule", "na", "claim", "derived", "unsettled"):
+            continue
+        for b in r.get("bullets") or []:
+            nb = w.norm(b)
+            if len(nb) >= 4 and nb not in SPOUSE_TRIVIAL and not re.fullmatch(r"\d{1,3}", nb):
+                theirs[nb] = r.get("id")
+    mine_own = {w.norm(b) for sid, _, r in iter_rows(mine) for b in r.get("bullets") or [] if any(isinstance(x, dict) and "form" in x for x in r.get("src") or [])}
+    hits = []
+    for sid, blk, r in iter_rows(mine):
+        if sid in common or S(r.get("id")).startswith("joint."):
+            continue
+        written = r.get("style") in ("added", "flag") or r.get("status") in ("filled", "flag", "quote", "lead", "paul") or any(isinstance(x, dict) and ("line" in x or "doc" in x) for x in r.get("src") or [])
+        if not written:
+            continue
+        text = " %s " % w.norm(" ".join(list(r.get("bullets") or []) + [f.get("text", "") for f in r.get("flags") or []]))
+        for v, vid in theirs.items():
+            if " %s " % v in text and v not in mine_own:
+                hits.append((v, r.get("id")))
+    return hits
+
+
 def check_rules(run, lines, content, fr, ov, R):
     g = "D"
     lay = w.layout()
@@ -798,29 +1024,39 @@ def check_rules(run, lines, content, fr, ov, R):
     if other_un:
         fail("%d field(s) are empty and not settled: %s. Fill each from the call or a document (overlay `fills` with its source), or run `run.py claim` (it searches the call and the documents before 'Not discussed' is allowed)" % (len(other_un), other_un[:12]))
     if quotes_un:
-        fail("a quote request has no insurer or no New Business/Servicing (%s): there is no default. ASK PAUL: \"%s\" and record his words (asked_paul, then overlay `quotes`)" % (quotes_un[:4], ASK_QUOTE))
-    # 'Not discussed' is a claim: the search is repeated here
+        fail("a quote request has no insurer or no New Business/Servicing (%s): there is no default. ASK PAUL: \"%s\" and record his words with the program (run.py ask --kind knowledge --need <name>, then run.py answer), then add the overlay `quotes` entry with src [{\"ask\": \"<name>\"}]" % (quotes_un[:4], ASK_QUOTE))
+    # 'Not discussed' is a claim: the search is repeated here, with the layout's own terms (a claim cannot shrink its own search)
     claims = load(os.path.join(run, w.CLAIMS), {})
     lead = load(os.path.join(run, w.LEAD), {})
+    weak = 0
     for key, cl in claims.items():
         word = S(cl.get("as"))
         if word not in ("Not discussed", "Requested", "N/A"):
             fail("claim %s: %r is not allowed (Not discussed, Requested or N/A)" % (key, word))
             continue
-        terms = cl.get("terms") or []
+        why = S(cl.get("reviewed")).strip()
+        row = rows.get(key) or {}
+        terms, curated = field_terms(lay, key, row.get("label", key))
         if word == "Not discussed":
-            hits, docs = search_terms(run, lines, terms)
-            if (hits or docs) and len(S(cl.get("reviewed")).strip()) < 15:
-                fail("claim %s 'Not discussed': the search still finds %s%s. Read it, then fill the field or record why it does not answer it (run.py claim --reviewed)" % (key, ("call lines %s" % hits[:6]) if hits else "", (" and documents %s" % docs) if docs else ""))
-            if not terms:
-                fail("claim %s: no search terms were recorded" % key)
+            hits, docs = search_terms(run, lines, list(dict.fromkeys(terms + list(cl.get("terms") or []))))
+            sib = sibling_hits(lay, fr, key)
+            if (hits or docs or sib) and len(why) < 15:
+                fail("claim %s 'Not discussed': the search still finds %s%s%s. Read it, then fill the field or record why it does not answer it (run.py claim --reviewed)"
+                     % (key, ("call lines %s" % hits[:6]) if hits else "", (" and documents %s" % docs) if docs else "", (" and the form itself says %s" % "; ".join(sib[:3])) if sib else ""))
+            if not curated:
+                weak += 1
+                if len(why) < 15:
+                    fail("claim %s 'Not discussed' rests on a WEAK search (only the field's label words): write a reason for this field (run.py claim --key %s --reviewed ...)" % (key, key))
             if key in CONTACT_KEYS and not lead.get("searched"):
                 fail("claim %s: contact details may be called 'Not discussed' only after the lead-source search and the documents were checked (run.py lead)" % key)
         elif word == "Requested":
-            if not key.startswith("debts.") or "outlook" not in S(cl.get("searched")).lower() or len(S(cl.get("searched"))) < 20:
-                fail("claim %s 'Requested': only a debt detail that is truly missing after the form, the call, the Overview, other documents AND Outlook were checked (say so in --searched)" % key)
-        elif len(S(cl.get("reviewed")).strip()) < 15:
+            if not key.startswith("debts.") or not lead.get("searched") or len(S(cl.get("searched"))) < 20:
+                fail("claim %s 'Requested': only a debt detail that is truly missing after the form, the call, the Overview, other documents AND Outlook (a recorded lead search) were checked; say what was searched in --searched" % key)
+        elif len(why) < 15:
             fail("claim %s 'N/A' needs the reason (--reviewed)" % key)
+    # every overlay entry must have landed in the document (nothing may be dropped silently)
+    for oid in content.get("overlay_unused") or []:
+        fail("overlay entry %r landed nowhere in the document (a section, list, key or group that does not apply here): fix it or remove it" % oid)
     # totals reconcile to the cent, from their named components; debt is never left out
     for rid, r in rows.items():
         for s in r.get("src") or []:
@@ -883,6 +1119,21 @@ def check_rules(run, lines, content, fr, ov, R):
                 continue
             if "Basis: Servicing" in b and not says_servicing(r):
                 fail("%s says Servicing but no source (the form, the call or Paul) says Servicing: Servicing is never a default" % rid)
+            ev = []
+            for sx in r["src"]:
+                if isinstance(sx, dict) and "form" in sx and fr:
+                    ev.append(form_value(fr, S(sx["form"])) or "")
+                elif isinstance(sx, dict) and isinstance(sx.get("line"), int) and 1 <= sx["line"] <= len(lines):
+                    ev.append(window_slice(lines, sx["line"]))
+                elif isinstance(sx, dict) and "paul" in sx:
+                    ev.append(S(sx["paul"]))
+            evn = w.norm(" ".join(ev))
+            m_ins = re.search(r"Insurer: (.+?)(?: Basis:|$)", b)
+            m_mode = re.search(r"Basis: (New Business|Servicing)", b)
+            if m_ins and w.norm(m_ins.group(1)) not in evn:
+                fail("%s names the insurer %r but no source it cites (the form, the call words it quotes, or Paul's recorded words) says that insurer" % (rid, m_ins.group(1).strip()))
+            if m_mode and ("new business" if m_mode.group(1) == "New Business" else "servic") not in evn:
+                fail("%s says %s but no source it cites says so: the basis is never a default" % (rid, m_mode.group(1)))
         elif "servicing" in w.norm(b) and r.get("status") not in ("flag", "filled") and not says_servicing(r):
             fail("%s mentions Servicing without a source that says so" % rid)
     # policy numbers come from the policy schedule only
@@ -943,6 +1194,31 @@ def check_rules(run, lines, content, fr, ov, R):
             fail("asked_paul %s needs about, question, suggestion and Paul's own words (paul_said)" % q.get("id"))
     if not content.get("file_name"):
         fail("the file name could not be built: it needs the first name, surname and the form's Date completed")
+    # a number of six or more digits that Claude wrote (a policy number, a reference) must be in a recorded policy schedule or Overview
+    doc_digits = set()
+    for ref_, kind_ in kinds.items():
+        if kind_ in ("Policy schedule", "Overview"):
+            t_ = doc_text(run, ref_) or ""
+            doc_digits |= {re.sub(r"\D", "", x) for x in re.findall(r"\d[\d ]*\d", t_)}
+    for rid, r in rows.items():
+        authored = r.get("style") in ("added", "flag") or (r.get("status") in ("filled", "flag", "quote", "lead", "paul") and r.get("kind") != "id") or rid == "docs_to_request"
+        if not authored:
+            continue
+        for b_ in r["bullets"]:
+            for m_ in re.finditer(r"(?<![\d.,])(?:[A-Za-z]{0,3}\s?)?(\d{6,})(?![\d])", b_):
+                if not any(m_.group(1) in d_ for d_ in doc_digits):
+                    fail("%s writes the number %s, which is in no recorded Policy schedule or Overview (a number of 6 or more digits needs a document that shows it)" % (rid, m_.group(1)))
+    # two spouses: one run each, the question was asked, and nothing of the other spouse is in this document
+    rj_ = load(os.path.join(run, w.RUN), {})
+    jn = rj_.get("joint") or {}
+    if jn.get("answer") not in ("yes", "no"):
+        fail("the question 'Is this a joint meeting with a spouse?' was not answered (run.py joint)")
+    elif (jn["answer"] == "yes") != bool(rj_.get("spouse")):
+        fail("the joint-meeting answer is %r but this run was %sstarted with --spouse: start one run per spouse" % (jn["answer"], "" if rj_.get("spouse") else "not "))
+    if rj_.get("spouse"):
+        for name_, it_ in compose.overlay_items(ov):
+            if any(isinstance(x_, dict) and "line" in x_ for x_ in it_.get("src") or []) and len(S(it_.get("attrib")).strip()) < 10:
+                fail("overlay %s: two spouses in one meeting: say in `attrib` why this statement belongs to this spouse (from what it says, never from the speaker label)" % it_.get("id"))
     # two spouses: the other spouse's identifiers never appear here
     sp = (load(os.path.join(run, w.RUN), {}).get("spouse") or {})
     if sp.get("run"):
@@ -956,6 +1232,12 @@ def check_rules(run, lines, content, fr, ov, R):
             back = spouse_overlap(other, content)
             if back:
                 fail("this spouse's own data is in the other spouse's document (%d identifier(s) such as %r)" % (len(back), back[0]))
+            vo = spouse_values_overlap(content, other)
+            if vo:
+                fail("values that belong to the other spouse appear in what was written for this spouse (%d, for example %r in %s): only the common debts, children and joint policies may be shared" % (len(vo), vo[0][0], vo[0][1]))
+            vb = spouse_values_overlap(other, content)
+            if vb:
+                fail("values that belong to this spouse appear in what was written for the other spouse (%d, for example %r in %s)" % (len(vb), vb[0][0], vb[0][1]))
     if not probs:
         R.add("PASS", g, "nothing left unsettled; %d claim(s) re-searched; totals recomputed to the cent from their components (debt never left out); standing ABIs, no Life Cover (WOL) line under Disability, ACI '?' shown as %s; "
                          "quote requests name insurer and basis from a source; policy numbers only from a policy schedule; business parts only for a business owner; every cross-reference exists%s"
@@ -1073,6 +1355,8 @@ def check_pdf(run, st, content, R):
     raw_pages = [w.norm(p) for p in (pdf_pages(pdf, raw=True) or [])]
     split = []
     for _, blk, r in iter_rows(content):
+        if r.get("hidden"):
+            continue
         want = w.norm(row_text(r))
         if want and raw_pages and not any(want in p for p in raw_pages):
             split.append(r.get("id"))
@@ -1083,7 +1367,12 @@ def check_pdf(run, st, content, R):
     emb = [n for n, e in fonts if e]
     rec = b.get("font") or {}
     claimed = list(rec.get("ps_names") or []) + ([rec["glyph_ps"]] if rec.get("glyph_ps") else [])
-    if not emb or any(n not in claimed for n in emb):
+    standard = list(rec.get("ps_names") or []) == ["Helvetica"]          # no TrueType family was found: the PDF's own standard font is used
+    if standard:
+        if not any(n.startswith("Helvetica") for n, _ in fonts) or emb:
+            R.add("FAIL", g, "the build says the standard font Helvetica was used but the PDF's fonts are %s" % [n for n, _ in fonts])
+            probs += 1
+    elif not emb or any(n not in claimed for n in emb):
         R.add("FAIL", g, "the font recorded at build (%s) is not what the PDF embeds (%s)" % (claimed, emb))
         probs += 1
     elif rec.get("aptos") and not all(n.lower().startswith(("aptos", "dejavu")) for n in emb):
@@ -1097,6 +1386,8 @@ def check_pdf(run, st, content, R):
         probs += 1
     if rec.get("aptos"):
         R.add("PASS", g, "FONT USED: Aptos (embedded: %s)" % ", ".join(emb))
+    elif standard:
+        R.add("WARN", g, "FONT USED: Helvetica, a standard PDF font that is not embedded (no usable font family was found on this computer). It is NOT Aptos: tell Paul (never say Aptos)")
     else:
         R.add("WARN", g, "FONT USED: %s (embedded in the PDF: %s). Aptos was NOT found on this computer, so this is a substitute: tell Paul (never say Aptos)" % (rec.get("family") or "?", ", ".join(emb)))
     if not probs:
@@ -1105,6 +1396,45 @@ def check_pdf(run, st, content, R):
 
 
 # ---------------------------------------------------------------- F receipt and driver
+def check_teams_handoff(run, rj, content, tm):
+    """None when the Teams run is really there and finished up to the message; otherwise the plain reason. Reads the Teams program's own records and runs its own checker."""
+    sd, rd = S(tm.get("skill_dir")), S(tm.get("run_folder"))
+    md = os.path.join(sd, "SKILL.md")
+    if not os.path.exists(md) or not re.search(r'(?m)^name:\s*"?client-teams-transcript-skill"?\s*$', open(md, encoding="utf-8", errors="replace").read()):
+        return "%r is not the folder of client-teams-transcript-skill (its SKILL.md must say so)" % sd
+    tr = load(os.path.join(rd, w.RUN), None)
+    cl = rj.get("client") or {}
+    if not isinstance(tr, dict):
+        return "%r holds no run.json: the Teams program was not started there" % rd
+    tc = tr.get("client") or {}
+    if tr.get("meeting_type") != "first" or not w.same_person(S(tc.get("first")), S(tc.get("surname")), cl.get("first"), cl.get("surname")) or tr.get("date") != rj.get("date"):
+        return "the Teams run at %r is not a first-meeting run for %s %s on %s" % (rd, cl.get("first"), cl.get("surname"), rj.get("date"))
+    steps = [x for x in load(os.path.join(sd, "steps.json"), {}).get("steps", []) if "first" in (x.get("applies") or [])]
+    ids = [x["id"] for x in steps]
+    before = ids[:ids.index("teams")] if "teams" in ids else ids[:-1]
+    open_ = [x for x in before if (tr.get("steps", {}).get(x) or {}).get("state") != "done"]
+    if open_:
+        return "the Teams run has not finished these steps before its message step: %s (drive it with its own run.py until it shows the message to Sitamah)" % open_
+    for f in ("planner_note.html", "teams_message.txt"):
+        if not os.path.exists(os.path.join(rd, "out", f)):
+            return "the Teams run has no out/%s: its Planner page and message were not built" % f
+    msg = open(os.path.join(rd, "out", "teams_message.txt"), encoding="utf-8").read()
+    if w.norm("%s %s" % (cl.get("first"), cl.get("surname"))) not in w.norm(msg) or rj.get("date") not in msg:
+        return "the Teams message does not name %s %s and %s" % (cl.get("first"), cl.get("surname"), rj.get("date"))
+    r = subprocess.run([sys.executable, os.path.join(sd, "scripts", "verify.py"), rd, "--skip-teams"], capture_output=True, text=True)
+    if r.returncode != 0 or "RESULT: PASS" not in r.stdout:
+        return "the Teams program's own checker does not pass for that run (verify.py --skip-teams): %s" % ((r.stdout.strip().splitlines() or ["no output"])[-1])[:120]
+    tcnt = load(os.path.join(rd, w.CONTENT), {})
+    form_next = next((r_["bullets"][0] for _, _, r_ in iter_rows(content) if r_.get("id") == "next_appt" and r_.get("bullets") and r_["bullets"][0] not in ("N/A", "Not discussed")), "")
+    day = next((r_["bullets"][0] for _, _, r_ in iter_rows(content) if r_.get("id") == "next_day" and r_.get("bullets")), "")
+    if form_next:
+        na = tcnt.get("next_appointment") or {}
+        txt = w.norm(S(na.get("text")))
+        if na.get("agreed") is not True or not (w.digits(form_next) in w.digits(S(na.get("text"))) or (day and w.norm(day) in txt)):
+            return "the form has a next appointment (%s %s) but the Teams run does not carry it as an agreed follow-up appointment (next_appointment.agreed true with that day or date)" % (day, form_next)
+    return None
+
+
 def check_receipt(run, st, content, R, skip=()):
     g = "F"
     p = os.path.join(run, w.RECEIPT)
@@ -1141,8 +1471,9 @@ def check_receipt(run, st, content, R, skip=()):
         if S(content.get("file_name")) not in str(sv["folder_listing_check"]):
             fail("saved.folder_listing_check does not show the file in the folder listing")
             bad += 1
-        if "2. Fact Find" not in str(sv["folder"]):
-            fail("saved.folder is not the client's '2. Fact Find' folder")
+        fp_ = save_folder_problem(sv["folder"], rj.get("client") or {}, S(sv.get("folder_spelling")))
+        if fp_:
+            fail("saved.folder: " + fp_)
             bad += 1
         if str(sv["listed_size"]).strip().replace(",", "") != str(local):
             fail("saved.listed_size is %s but the local PDF is %s bytes: a save is proven only when the listed size equals the local file's (a new time with the old size means the copy lagged: commit again and list again)" % (sv["listed_size"], local))
@@ -1169,17 +1500,14 @@ def check_receipt(run, st, content, R, skip=()):
     else:
         R.add("ATTEST", g, "Fact Find Summary hand-over: " + str(sm["invoked"])[:80])
     tm = rc.get("teams") if isinstance(rc.get("teams"), dict) else {}
-    if not text(tm, "run_folder", "next_appointment_carried", n=3):
-        fail("teams{run_folder, next_appointment_carried}: the Planner note page and the message to Sitamah are made ONLY by client-teams-transcript-skill (run.py start --type first); record its run folder and what next appointment it carries")
+    if not text(tm, "run_folder", "skill_dir", "next_appointment_carried", n=3):
+        fail("teams{run_folder, skill_dir, next_appointment_carried}: the Planner note page and the message to Sitamah are made ONLY by client-teams-transcript-skill (run.py start --type first, driven to its message step); record its run folder, the skill's own folder and which next appointment it carries")
     else:
-        tr = load(os.path.join(S(tm["run_folder"]), w.RUN), None)
-        cl = rj.get("client") or {}
-        if not isinstance(tr, dict):
-            fail("teams.run_folder %r holds no run.json: the Teams program was not started there" % tm["run_folder"])
-        elif tr.get("meeting_type") != "first" or w.norm((tr.get("client") or {}).get("surname")) != w.norm(cl.get("surname")) or tr.get("date") != rj.get("date"):
-            fail("the Teams run at %r is not a first-meeting run for %s %s on %s" % (tm["run_folder"], cl.get("first"), cl.get("surname"), rj.get("date")))
+        msg = check_teams_handoff(run, rj, content, tm)
+        if msg:
+            fail("Teams hand-over: " + msg)
         else:
-            R.add("ATTEST", g, "Planner note and message to Sitamah: made by client-teams-transcript-skill (a first-meeting run for this client and date exists at %s; its own checker is the proof of those two); next appointment carried: %s"
+            R.add("ATTEST", g, "Planner note page and message to Sitamah: the Teams run at %s has every step before its message step done, and its own checker (verify.py --skip-teams) printed RESULT: PASS when this checker ran it; the page was published, the message shown and Paul's yes obtained by Claude (attested); next appointment carried: %s"
                   % (tm["run_folder"], str(tm["next_appointment_carried"])[:60]))
     if rj.get("spouse"):
         sp = rc.get("spouse") if isinstance(rc.get("spouse"), dict) else {}
@@ -1187,6 +1515,19 @@ def check_receipt(run, st, content, R, skip=()):
             fail("spouse.cross_check: say the result of the search for the other spouse's data in this PDF (run.py spouse)")
         else:
             R.add("ATTEST", g, "other spouse's data searched for: " + str(sp["cross_check"])[:80])
+
+
+def check_programs_unchanged(run, R):
+    """The programs, the layout, the steps and the rule pages must be what they were when the run started (every stage, not only the last)."""
+    g = "F"
+    rj = load(os.path.join(run, w.RUN), None)
+    if not isinstance(rj, dict):
+        return
+    fp0 = rj.get("program_fingerprint")
+    if not fp0:
+        R.add("FAIL", g, "this run has no program fingerprint (it was not started by run.py start of this version)")
+    elif fp0 != w.program_fingerprint():
+        R.add("FAIL", g, "the skill's programs, layout, steps or rule pages were CHANGED while this run was in progress: the programs are run as they are and never edited during a run. Start the run again")
 
 
 def check_driver(run, R, skip=()):
@@ -1203,7 +1544,7 @@ def check_driver(run, R, skip=()):
     if pending:
         R.add("FAIL", g, "steps not completed through the driver (run.py done): %s" % pending)
     else:
-        R.add("PASS", g, "every step before the final check was completed through the driver, in order")
+        R.add("PASS", g, "every step before the final check was completed through the driver, in order; the programs, layout, steps and rule pages did not change during the run")
 
 
 # ---------------------------------------------------------------- driver
@@ -1219,13 +1560,14 @@ def run_checks(run, stage, skip=()):
     R = Results()
     st = w.load_json(os.path.join(run, w.STATE), "state.json (run tx.py prep first)")
     guarded(R, "A", "reading", check_reading, run, st, R)
+    guarded(R, "F", "programs unchanged", check_programs_unchanged, run, R)
     lines = w.read_lines(run)
     ledger = load(os.path.join(run, w.LEDGER), None)
     content = load(os.path.join(run, w.CONTENT), None)
     ov = load(os.path.join(run, w.OVERLAY), {})
     cross = load(os.path.join(run, w.CROSS), [])
     lead = load(os.path.join(run, w.LEAD), {})
-    shape = compose.validate_overlay(ov)
+    shape = compose.check_inputs(compose.load_inputs(run))
     if not isinstance(content, dict):
         R.add("FAIL", "C", "content.json missing (run `run.py compose` after the overlay is written)")
     for e in shape:
@@ -1235,7 +1577,7 @@ def run_checks(run, stage, skip=()):
     if ledger is None or not isinstance(ledger, dict):
         R.add("FAIL", "B", "ledger.json missing (record the ledger as you read: run.py ledger add)")
     elif not shape:
-        guarded(R, "B", "ledger", check_ledger, run, st, lines, ledger, cover_targets(run, ov, cross if dict_list(cross) else [], lead), R)
+        guarded(R, "B", "ledger", check_ledger, run, st, lines, ledger, cover_targets(run, ov, cross if dict_list(cross) else [], lead, content if isinstance(content, dict) else None), R)
     if isinstance(content, dict) and not shape:
         guarded(R, "C", "composed content", check_composed, run, content, R)
         guarded(R, "C", "source trace", check_content, run, lines, content, fr, refs, ov, R)
@@ -1299,7 +1641,13 @@ def summary_lines(run, st, ledger, content):
     routes = sorted({e.get("route") for e in acc if isinstance(e, dict)})
     out.append("Access routes used: %s" % ", ".join(routes))
     ents = (ledger or {}).get("entries") or []
-    out.append("Ledger: %d entries; %d keyword-scan lines dismissed with a reason" % (len(ents), len(reviewed_lines(ledger or {}))))
+    dismissed = len(reviewed_lines(ledger or {}))
+    total = st.get("total_lines") or 1
+    out.append("Ledger: %d entries; %d keyword-scan lines dismissed with a reason (%d%% of the %d lines of the call)%s" % (
+        len(ents), dismissed, round(100.0 * dismissed / total), total, "  <-- MORE THAN A QUARTER OF THE CALL WAS DISMISSED: look at the reasons" if dismissed > 0.25 * total else ""))
+    rv = [r for r in (ledger or {}).get("scan_reviewed") or [] if isinstance(r, dict)]
+    if rv:
+        out.append("   scan dismissals: " + "; ".join("%s: %s" % (("line %s" % r["line"]) if r.get("line") is not None else ("lines %s-%s" % (r.get("from"), r.get("to"))), S(r.get("reason"))[:50]) for r in rv[:6]) + (" ..." if len(rv) > 6 else ""))
     return out
 
 
@@ -1325,11 +1673,12 @@ def report(R, st, ledger, content, stage, run=None):
         print("\nWHAT PAUL SHOULD GLANCE AT (the program counted these; it cannot judge them):")
         for ln in summary_lines(run or ".", st, ledger, content):
             print("  - " + ln)
-        print("\nPROVEN BY PROGRAM: the form's data file read by program and every value of it found in the form's saved PDF (or reviewed); every value's source (form field, quote found in the call, recorded document, "
-              "recomputation, standing rule, search-backed claim); totals to the cent; standing ABIs; quote insurer and basis; the PDF rebuilt from content.json and identical; no page numbers; no split rows; "
-              "the font really embedded; the save size equals the local file.")
-        print("ONLY ATTESTED BY CLAUDE: sending the PDF in the chat, the folder save and listing (the sizes are compared by the program), the visual check, the independent re-check, the judgment sentences, "
-              "the Fact Find Summary and the Planner note/message made by the other two skills.")
+        print("\nPROVEN BY THE PROGRAM (it read the files itself or recomputed): the form's data file as read from its saved copy and its schema, client and date; that every value of it is in the form's saved PDF (exact amounts, whole words) or was looked at; "
+              "that the form's summaries, drafted actions, parking list and cost counters are not printed; that every row has a source and each source is checked: the form field, a quote found in the transcript at that line, a quote found in a document FOR WHICH A TEXT COPY WAS RECORDED (a document without a copy is only listed), a recomputation, a standing rule, a search-backed claim; "
+              "that every ledger entry is covered by the kind of item that can cover it and that item cites the call within 8 lines; totals to the cent from all rows; the standing ABIs; that a quote's insurer and basis are in a source it cites; policy and other long numbers only from a recorded schedule or Overview; "
+              "that every overlay entry landed in the document; the PDF rebuilt from content.json and identical, with no page numbers, no stranded heading, no split row and the font really embedded; that the save size equals the local file and the save folder is the client's own.")
+        print("ONLY ATTESTED BY CLAUDE (typed or done in the chat, recorded, not proven): Paul's own words (the program records what the chat typed), the real send of the PDF in the chat and the real folder save and listing, the visual check, the independent re-check, the six judgment sentences, the Fact Find Summary hand-over, "
+              "that the Planner page was published and Paul said yes to the message; text in a document that has no recorded copy; and every rule that is only text, not a check (pending items stay pending, independent requests not waiting on each other, prior-year figures, garbled lines, comparing the Overview, other documents).")
         fnt = (st.get("build") or {}).get("font") or {}
         print("\nDELIVERY LINE (copy into the reply, unedited):")
         print("Skill version: %s. Transcript read in full TWICE (Pass 1 and Pass 2, %d lines each, %d chunks, every chunk acknowledged in the ledger); %d ledger entries; "

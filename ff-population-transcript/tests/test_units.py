@@ -199,7 +199,7 @@ class FormReader(unittest.TestCase):
         r = rows_of(c)
         self.assertEqual(r["dob"]["bullets"], ["01/01/1990 (worked out from the ID number)"])
         self.assertEqual(r["gender"]["bullets"], ["Male (worked out from the ID number)"])
-        self.assertEqual(r["age"]["bullets"], ["36"])
+        self.assertEqual(r["age"]["bullets"], ["36 (worked out from the date of birth)"])
         c = content_for(form_with(dob="02/01/1990", gender="Female"))
         r = rows_of(c)
         self.assertEqual(r["dob"]["bullets"], ["02/01/1990"])

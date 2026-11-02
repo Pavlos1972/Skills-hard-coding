@@ -23,7 +23,7 @@
 13. **Say which font was really used.** The PDF is set in Aptos when Aptos is installed where the skill runs. If it is not, the program uses a named substitute and prints which one; tell Paul in your reply and never say Aptos when it was not used.
 14. **Never print or edit what is not yours.** The form's own summaries, its drafted action list, its parking list and its cost counters are never a source and never printed. The form's data file and PDF, and the Manual Fact Find, are read-only for this skill.
 
-The names Step 1b, Step 3, Step 5a and so on in these pages are the rule names from the original skill. The program's own numbering (STEP 3 of 15) is separate.
+The names Step 1b, Step 3, Step 5a and so on in these pages are the rule names from the original skill. The program's own numbering (STEP 3 of 16) is separate.
 
 ## Delivery gate for this skill (rules 5 and 6 applied)
 

@@ -136,6 +136,7 @@ def id_facts(idno, meeting, age_hint=None):
     if pick is None:
         pick = cands[0]          # the 2000s when that date is not in the future, otherwise the 1900s
     out["dob"] = pick
+    out["ambiguous_century"] = age_hint is None and len(cands) > 1       # both 20yy and 19yy are real dates not in the future
     out["gender"] = "Female" if int(d[6:10]) < 5000 else "Male"
     if not luhn_ok(d):
         out["problems"].append("the ID number's check digit does not match: confirm the number digit for digit")
@@ -293,11 +294,11 @@ def read_into_run(file, run, again=False, quiet=False):
         w.die("REFUSED: crosscheck answers already exist for this run. Use --again only if the form was saved again and you will redo them.")
     problems = []
     cl = rj["client"]
-    if w.norm(form["client"]["first"]) != w.norm(cl["first"]) or w.norm(form["client"]["surname"]) != w.norm(cl["surname"]):
+    if not w.same_person(form["client"]["first"], form["client"]["surname"], cl["first"], cl["surname"]):
         problems.append("the form is for %s %s but this run is for %s %s" % (form["client"]["first"], form["client"]["surname"], cl["first"], cl["surname"]))
     if form["date"] != rj["date"]:
         problems.append("the form's Date completed is %s but Paul's meeting date is %s" % (form["date"] or "empty", rj["date"]))
-    if problems and not again:
+    if problems:                       # also with --again: a form of another client or date is never accepted
         for p_ in problems:
             print("PROBLEM: " + p_)
         print("\nSTOP. This is not the right file for this run (nothing was saved). Find the right one (identify by content), or ask Paul.")
@@ -321,8 +322,6 @@ def read_into_run(file, run, again=False, quiet=False):
                             ("columns the layout does not know", ["%s: %s" % kv for kv in form["unknown_cols"].items()]), ("odd entries", form["odd"])):
             if items:
                 print("  %s: %s" % (what, ", ".join(items)))
-        for p_ in problems:
-            print("  PROBLEM (accepted with --again): " + p_)
         print("  crosscheck list: %d items to compare with the call (%s)" % (len(crosscheck_items(form, lay)), cross_path))
     return form, problems
 
@@ -333,6 +332,7 @@ def cmd_read(a):
 
 # ------------------------------------------------------------------ the form's saved PDF (a source too: the data file's values must be in it)
 TRIVIAL = {"yes", "no", "y", "n", "true", "false", "none", "nil", "n a", "na"}
+AMOUNT_RX = re.compile(r"(?<![\d.,])R?\s?\d{1,3}(?:[ ,]\d{3})+(?:[.,]\d{1,2})?(?![\d])|(?<![\d.,])R?\s?\d+(?:[.,]\d{1,2})?(?![\d])")
 
 
 def pdf_text(path):
@@ -350,26 +350,45 @@ def _compact(s):
     return re.sub(r"[\s,]+", "", str(s)).lower().replace("\u2013", "-")
 
 
-def value_in_pdf(value, text, ntext, ctext):
-    """Is this value of the data file in the PDF's text? Amounts and dates are compared without spaces or commas (R 24 000.00 = R24,000.00)."""
+def pdf_amounts(text):
+    """Every amount written in the PDF's text, as exact Decimals (so R 45 000.00 is never 'found' inside R 1 450 000.00)."""
+    out = set()
+    for m in AMOUNT_RX.finditer(text):
+        d = w.parse_money(m.group(0))
+        if d is not None:
+            out.add(d)
+    return out
+
+
+def value_in_pdf(value, text, ntext=None, ctext=None, amounts=None, money=False):
+    """Is this value of the data file in the PDF's text? Amounts are compared as exact amounts; other values whole word for whole word
+    (so Pat is not found inside Patricia, and 65 is not found inside 1650)."""
     v = tidy(value)
+    ntext = ntext if ntext is not None else w.norm(text)
     if not v or w.norm(v) in TRIVIAL or len(w.norm(v)) < 2:
         return True
-    if w.norm(v) in ntext or _compact(v) in ctext:
-        return True
     m = w.parse_money(v)
-    if m is not None:
-        a, b = _compact(w.fmt_money(m)), _compact(w.fmt_money(m)).replace(".00", "")
-        return a in ctext or b in ctext or w.digits(w.fmt_money(m)) in w.digits(text)
-    toks = w.norm(v).split()
+    looks_money = m is not None and (money or v.upper().startswith("R"))
+    if looks_money:
+        return m in (amounts if amounts is not None else pdf_amounts(text))
+    padded = " %s " % ntext
+    nv = w.norm(v)
+    if " %s " % nv in padded:
+        return True
+    if re.fullmatch(r"[\d ./+-]+", v):                      # a number, date or phone number: the same digits as a whole run
+        runs = {w.digits(x) for x in re.findall(r"\+?\d[\d ./-]*\d|\d", text)}
+        return w.digits(v) in runs
+    toks = nv.split()
     return len(toks) > 8 and " ".join(toks[:8]) in ntext
 
 
 def pdf_check(form, text, lay=None):
     lay = lay or w.layout()
-    ntext, ctext = w.norm(text), _compact(text)
+    ntext, amounts = w.norm(text), pdf_amounts(text)
     labels = {r["key"]: r["label"] for sec in lay["sections"] for g in sec["groups"] for r in g.get("rows", []) if r.get("key")}
     labels.update({r["key"]: r["label"] for r in lay["closing"]["rows"]})
+    kinds = {r["key"]: r.get("kind") for sec in lay["sections"] for g in sec["groups"] for r in g.get("rows", []) if r.get("key")}
+    colkinds = {(g["list"], c["col"]): c.get("kind") for sec in lay["sections"] for g in sec["groups"] if g.get("list") and isinstance(g["cols"], list) for c in g["cols"]}
     checked, missing = 0, []
     for k, c in form["fields"].items():
         if not c["populated"]:
@@ -377,16 +396,29 @@ def pdf_check(form, text, lay=None):
         checked += 1
         if k == "co_does" and form["lookup"]["verdict"] == "thrown_out":
             continue
-        if not value_in_pdf(c["v"], text, ntext, ctext):
+        if not value_in_pdf(c["v"], text, ntext, None, amounts, kinds.get(k) == "money"):
             missing.append({"key": k, "label": labels.get(k, k), "value": c["v"]})
     for name, rows in form["lists"].items():
         for r in rows:
             for col, v in r["d"].items():
                 if v:
                     checked += 1
-                    if not value_in_pdf(v, text, ntext, ctext):
+                    if not value_in_pdf(v, text, ntext, None, amounts, colkinds.get((name, col)) == "money"):
                         missing.append({"key": "%s.%d.%s" % (name, r["index"], col), "label": "%s %d: %s" % (name, r["index"] + 1, col), "value": v})
     return checked, missing
+
+
+def pdf_identity_problems(form, text):
+    """The PDF must be THIS client's: the surname and the form's date have to be in its text."""
+    nt = " %s " % w.norm(text)
+    out = []
+    sur = w.last_name_token(form["client"]["surname"])
+    if sur and " %s " % sur not in nt:
+        out.append("the client's surname (%s) is not in the PDF's text" % form["client"]["surname"])
+    d = form.get("date") or ""
+    if d and d not in text and w.norm(d) not in nt:
+        out.append("the form's Date completed (%s) is not in the PDF's text" % d)
+    return out
 
 
 def cmd_pdf(a):
@@ -404,7 +436,15 @@ def cmd_pdf(a):
     text = pdf_text(a.file)
     if not text.strip():
         w.die("STOP: the form's saved PDF has no extractable text. Tell Paul; render it and read it by eye (not machine-checked).", 4)
+    ident = pdf_identity_problems(form, text)
     checked, missing = pdf_check(form, text)
+    if ident or (checked and len(missing) > 0.25 * checked):
+        for i_ in ident:
+            print("PROBLEM: " + i_)
+        if checked and len(missing) > 0.25 * checked:
+            print("PROBLEM: %d of the %d populated values of the data file are not in this PDF" % (len(missing), checked))
+        print("\nSTOP. This does not look like the saved PDF of this data file (nothing was recorded). Find the right PDF, or tell Paul in one line.")
+        sys.exit(5)
     with open(os.path.join(a.run, "form_pdf.txt"), "w", encoding="utf-8") as f:
         f.write(text)
     rec.update(file=os.path.basename(a.file), sha256=w.sha256_file(a.file), checked=checked, not_found=missing)
@@ -426,8 +466,18 @@ def cmd_pdfreview(a):
         ntext = w.norm(f.read())
     if w.norm(a.quote) not in ntext or len(w.norm(a.quote)) < 4:
         w.die("REFUSED: that quote is not in the form's PDF text. Copy the exact words from the PDF.")
+    miss = next(m for m in rec["not_found"] if m["key"] == a.key)
     if a.result == "disagree" and not (a.pdf_value or "").strip():
         w.die("REFUSED: a disagreement needs --pdf-value (what the PDF says).")
+    if a.result == "disagree" and w.norm(a.pdf_value) not in w.norm(a.quote):
+        w.die("REFUSED: the quote must contain the PDF's own value (%r)." % a.pdf_value)
+    if a.result == "format_only":
+        v = miss["value"]
+        digs = w.digits(v)
+        if len(digs) >= 2 and digs not in w.digits(a.quote):
+            w.die("REFUSED: 'format_only' means the PDF shows the SAME value written differently: the quote must contain its digits (%s)." % digs)
+        if len(digs) < 2 and w.norm(v) not in w.norm(a.quote):
+            w.die("REFUSED: 'format_only' means the PDF shows the same value: the quote must contain %r." % v)
     rec["reviews"][a.key] = {"result": a.result, "quote": a.quote, "pdf_value": a.pdf_value or ""}
     w.save_json(path, rec)
     left = [m["key"] for m in rec["not_found"] if m["key"] not in rec["reviews"]]

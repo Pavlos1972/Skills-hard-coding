@@ -11,7 +11,7 @@ class Journey(Chat):
         r = self.s_start()
         self.assertIn("SAY THIS TO PAUL FIRST", r.stdout)
         self.assertIn("Using ff-population-transcript, last updated", r.stdout)
-        self.assertIn("STEP 1 of 15", r.stdout)
+        self.assertIn("STEP 1 of 16", r.stdout)
         for step in self.ORDER[1:]:
             if step == "content":
                 self.s_content_done()
@@ -26,6 +26,14 @@ class Journey(Chat):
         self.assertIn("DELIVERY LINE", out)
         self.assertIn("EVERY STEP IS DONE", out)
         self.assertIn("FONT:", out)
+        self.assertIn("PROVEN BY THE PROGRAM", out)
+        self.assertIn("ONLY ATTESTED BY CLAUDE", out)
+        # the hand-over was proven against a REAL Teams run driven on the same invented call (A4), not just a folder that was started
+        teams_run = os.path.join(self.tmp, "teams-run")
+        self.assertTrue(os.path.exists(os.path.join(teams_run, "out", "teams_message.txt")))
+        self.assertTrue(os.path.exists(os.path.join(teams_run, "out", "planner_note.html")))
+        self.assertIn("has every step before its message step done", out)
+        self.assertIn("its own checker (verify.py --skip-teams) printed RESULT: PASS", out)
         st = jload(self.p("state.json"))
         pdf = os.path.join(self.p("out"), st["build"]["pdf"])
         self.assertEqual(os.path.getsize(pdf), st["build"]["pdf_size"])
@@ -33,7 +41,7 @@ class Journey(Chat):
         self.assertEqual(str(rc["saved"]["listed_size"]), str(st["build"]["pdf_size"]))        # the PDF was saved and listed back at the same size
         self.assertEqual(st["build"]["pdf"], "Fact Find Transcript - 05.11.26 - (Pat Samplecase).pdf")
         rj = jload(self.p("run.json"))
-        self.assertEqual([s for s in rj["steps"] if rj["steps"][s]["state"] == "done"].__len__(), 15)
+        self.assertEqual([s for s in rj["steps"] if rj["steps"][s]["state"] == "done"].__len__(), 16)
         # the run folder holds the evidence a recovered chat needs
         for name in ("state.json", "ledger.json", "sources.json", "access_log.json", "form_read.json", "crosscheck.json", "claims.json", "overlay.json", "content.json", "receipt.json"):
             self.assertTrue(os.path.exists(self.p(name)), name)

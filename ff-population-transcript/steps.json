@@ -5,7 +5,8 @@
       "id": "locate",
       "title": "Find the client's folder and every source (three routes, in order, every try logged)",
       "ref": [
-        "01-access-and-locate.md"
+        "01-access-and-locate.md",
+        "03-two-spouses.md"
       ],
       "do": [
         "Find, for this client and the meeting date Paul gave, in the client's `2. Fact Find` folder (and `1. Overview`): (1) the Fact Find FORM's data file (a .json; recognise it by what is inside it, `app` = `wr-fact-find`, not by its name), (2) the form's saved PDF, (3) the Teams transcript(s), (4) the latest Overview. Try the three routes IN THIS ORDER and record EVERY attempt, failures too. The time of day never changes this.",
@@ -14,6 +15,7 @@
         "  3  zapier: the Zapier Office 365 tools",
         "Record each try: python3 {scripts}/run.py access {run} --need form|formpdf|transcript|Overview --route device|m365|zapier --tool <tool you used> --result ok|fail --detail \"<what happened>\"",
         "To tell which staged .json is the form's data file: python3 {scripts}/ffform.py identify <the candidate .json files>. OPEN every candidate before deciding; a name that does not match is never a reason to say a file is missing.",
+        "TWO SPOUSES: if this meeting was with a couple (one Teams call, both spouses), the job is run once per spouse (page 03 below). Start each spouse's own run folder with --spouse. If it is a single client, ignore page 03.",
         "If Paul attached a file use --route user; if another skill passed it in use --route passed (both with --result ok).",
         "IF THE FORM'S DATA FILE IS NOT FOUND AFTER ALL THREE ROUTES: STOP. Run `python3 {scripts}/run.py ask {run} --need form --searched \"<where you looked>\"`: it prints the exact question for Paul (use the filled-in Manual Fact Find PDF, or the transcript alone?). Ask him, wait, then record his own words with `run.py answer {run} --need form --said \"...\" --choice manual|transcript`. Never carry on without his answer, and never say 'I cannot access your files' without that log."
       ],
@@ -58,7 +60,7 @@
       ],
       "do": [
         "Record every document you read, with a text copy so the program can check your quotes and figures: python3 {scripts}/run.py source {run} --kind Overview|\"Policy schedule\"|\"Other document\"|Correspondence --path \"<full path>\" --date YYYY-MM-DD --read yes --ref \"<short name>\" --text-file <text copy>   (pdftotext \"<file>\" /tmp/<name>.txt for a PDF).",
-        "The latest Overview in the client's `1. Overview` folder is REQUIRED: read it, or after searching on at least two routes (logged with run.py access --need Overview ... --result fail) record: run.py source {run} --kind Overview --none \"searched <where>, none found\"",
+        "The latest Overview in the client's `1. Overview` folder is REQUIRED: read it, or after searching on at least two routes (logged with run.py access --need Overview ... --result fail) record: run.py source {run} --kind Overview --none \"searched <where>, none found\". An Overview and a Policy schedule are accepted ONLY with a text copy (--text-file) that mentions the client (his surname or ID number): the program refuses a made-up document.",
         "Read the client's other documents (policy schedules, payslips, benefit statements, servicing records, applications) whenever a field cannot be resolved otherwise, BEFORE marking anything unconfirmed. A policy number is taken only from a Policy schedule.",
         "Use the access routes in order for every file. Ask Paul ONLY for what no file holds, with run.py ask."
       ],
@@ -133,11 +135,24 @@
         "  differs: the call says something different. Give the line, the exact words and the call's own value; the program flags it with BOTH values (the form's value is the one used):   --key edu --r differs --line 20 --quote \"<exact words>\" --value \"<what the call says>\"",
         "  not_on_call: the call does not mention it.",
         "For a list row (a debt, a child, a policy) answer the row as same / not_on_call, and name the column for a difference (for example debts.0.bal).",
-        "Several answers at once: python3 {scripts}/run.py cross {run} --file answers.json  (a JSON object: key -> {r, line, quote, value}). When the rest really are not on the call: --rest not_on_call --reviewed \"<what you did to check, at least 20 characters>\". The checker warns when a field you called 'not on the call' has digits that appear in the transcript.",
+        "Several answers at once: python3 {scripts}/run.py cross {run} --file answers.json  (a JSON object: key -> {r, line, quote, value, reviewed}). Then: python3 {scripts}/run.py cross {run} --rest not_on_call : the PROGRAM searches the call for each remaining field (its own search terms), records 'not on the call' only where it finds nothing, and LISTS the fields it found in the call: answer each of those yourself (same / differs with the exact words, or not_on_call with --reviewed \"<why those lines are not about this field>\"). A field with only its label words to search for is a weak search and always needs your reason. The checker repeats every search.",
         "The company look-up text and the standing values are checked by the program; do not answer for them."
       ],
       "proof": "every populated field has an answer, every quote found",
       "check": "cross_done"
+    },
+    {
+      "id": "joint",
+      "title": "Is this a joint meeting with a spouse?",
+      "ref": [
+        "03-two-spouses.md"
+      ],
+      "do": [
+        "Look at who spoke on the call. Is this a joint meeting with a spouse (both spouses on the call, or the call is about both)? Record the answer: python3 {scripts}/run.py joint {run} --answer yes|no --evidence \"<what shows it>\"",
+        "If yes, this run is for ONE spouse and the other spouse has their own run (started with --spouse and --spouse-run). Everything on the page below applies: only the common debts, the children and the joint policies are shared, every statement taken from the call needs an `attrib` line saying why it belongs to this spouse, and `run.py spouse` must find none of the other spouse's data in this document."
+      ],
+      "proof": "the joint-meeting question is answered and matches how the run was started",
+      "check": "joint_done"
     },
     {
       "id": "content",
@@ -148,13 +163,13 @@
       ],
       "do": [
         "1. python3 {scripts}/run.py compose {run}  (it lists what is UNSETTLED), then python3 {scripts}/run.py claim {run} --all-empty : for every empty field it searches the call and the documents and records 'Not discussed' only where nothing is found. It lists the fields whose search finds something: fill them from what the call or a document says, or record why the lines do not answer it (--key K --as \"Not discussed\" --reviewed \"...\"). A debt detail is 'Requested' only after the form, the call, the Overview, other documents AND Outlook were checked.",
-        "2. Write {run}/overlay.json: what the call and the documents ADD. The form's own values are copied by the program, never by you. Shape (every entry has a unique `id` and its source `src`: a call line plus the exact words, or a recorded document with its --ref and the exact words):",
+        "2. Write {run}/overlay.json: what the call and the documents ADD. THE VALID NAMES (anything else is refused with a message): {valid_ids} The form's own values are copied by the program, never by you. Shape (every entry has a unique `id` and its source `src`: a call line plus the exact words, or a recorded document with its --ref and the exact words):",
         "   fills: [{id, key, value, src}]  a gap the form leaves (key is a form key, or list.index.column such as debts.0.cl). Not for a field the form already holds: that is a difference (step before). Identifiers read out on the call need \"confirmed\": true and the exact digits in the quote.",
         "   rows_add: [{id, list, cells:{col: value}, src}]   notes: [{id, section, text, src}] (one short fact each, at most 6 per section)   flags: [{id, section, text, src}]",
         "   diffs: [{id, key, other, label, src}]  a difference between the form and a DOCUMENT (the Overview, a benefit statement): shown with both values.   quotes: [{id, group, insurer, mode, src}] insurer and New Business or Servicing for a quote request the form does not fully state.",
-        "   policy_numbers: [{id, found, resolved, ref, quote}] (only from a Policy schedule)   abi_override: [{id, key, value, paul_said}] (only if Paul stated another ABI for this client)   documents_to_request, next_steps: [{id, text, src}]   joint: [{id, list, index, with, src}]   lookup: {id, text, src, client_confirmed}   asked_paul: [{id, about, question, suggestion, paul_said}]",
-        "   An FNA, Shortfall or Reduced quote needs the INSURER and New Business or Servicing, never a default. If neither the form nor the call says: STOP and ASK Paul \"Which insurer should the FNA, Shortfall or Reduced quote(s) be requested from, and is it New Business or Servicing?\" and record his words in asked_paul (src {\"paul\": \"<his words>\"}).",
-        "3. python3 {scripts}/run.py compose {run} again. Then link every ledger entry to what covers it: python3 {scripts}/run.py ledger {run} cover <ledger id> <item id> ... (an overlay id, an answered cross-check key such as edu, 'lead', or claim:<key>), or: ledger exclude <id> \"reason\" for a plain fact or figure. A covering item must cite the call close to that ledger line.",
+        "   policy_numbers: [{id, found, resolved, ref, quote}] (only from a Policy schedule)   abi_override: [{id, key, value, ask}] (only if Paul stated another ABI for this client; `ask` names the question recorded with run.py ask --kind knowledge --need <name> ... and run.py answer: the program writes Paul's words itself, words typed into the overlay are refused)   documents_to_request, next_steps: [{id, text, src}]   joint: [{id, list, index, with, src}]   lookup: {id, text, src, client_confirmed}   A source may also be {\"ask\": \"<need>\"}: Paul's recorded answer (run.py ask --kind knowledge --need <need> --question ... --searched ..., then run.py answer --need <need> --said \"<his words>\").",
+        "   An FNA, Shortfall or Reduced quote needs the INSURER and New Business or Servicing, never a default. If neither the form nor the call says: STOP and ASK Paul \"Which insurer should the FNA, Shortfall or Reduced quote(s) be requested from, and is it New Business or Servicing?\" (run.py ask --kind knowledge ..., then run.py answer ...). The insurer and the basis must be in the words of the source you cite. If the call asks for a quote (a quote_request in the ledger) and the form's request field is empty, fill that field (fna_req etc.: Yes) with the call words so the quote row exists (src {\"ask\": \"<need>\"}, see above).",
+        "3. python3 {scripts}/run.py compose {run} again. Then link every ledger entry to what covers it: python3 {scripts}/run.py ledger {run} cover <ledger id> <item id> ... The program refuses a cover that cannot be right. contact: a fill or an answered field (or 'lead' for a referral line only); gap: a fill or a claim whose search found that line; difference: an answered field that differs, a diffs entry or a note; quote_request: a quote row (quote.fna ...) or an answered/filled quote request field; next_step / request / change: a note, next step, document to request, fill or answered field. Every covering item must cite the call within 8 lines of the entry. (fact and figure entries may instead be excluded with a reason.)",
         "4. Check: python3 {scripts}/verify.py {run} --stage pre   and fix every FAIL before moving on. Never edit content.json by hand: it is composed from the inputs and the checker compares them."
       ],
       "proof": "verify --stage pre passes",
@@ -198,7 +213,7 @@
       "do": [
         "Do NOT end your reply here and do not ask Paul anything yet: Paul is asked ONCE, in the last reply, after the hand-overs. Record this step and go straight on.",
         "1. If the folder /mnt/user-data/outputs exists, copy the PDF there first so it can be presented: cp \"{run}/out/<the PDF file>\" /mnt/user-data/outputs/ . Then send it in the chat for Paul to download (present_files / SendUserFile).",
-        "2. Save the same file into the client's `2. Fact Find` folder with device_commit_files (route order as always; the folder of THIS client, never another broker's).",
+        "2. Save the same file into the client's own `2. Fact Find` folder with device_commit_files (route order as always). The folder must be under Company - Paul or Company - WR Clients\\Paul Kafentzis (Client Files), and the folder before `2. Fact Find` must be this client's own (Surname, First): the program refuses another client's or another broker's folder.",
         "3. List the folder back and confirm the new file's exact name, size and time. The listed size must equal the local file's size: a write call that reports success is not proof. If it differs, wait briefly, commit again and list again.",
         "Record it: python3 {scripts}/run.py receipt {run} --set pdf_sent_in_chat=true --set saved.tool=device_commit_files --set saved.folder=\"<folder>\" --set saved.filename=\"<exact file name>\" --set saved.tool_result=\"<tool result>\" --set saved.folder_listing_check=\"<the listing line showing the file>\" --set saved.listed_size=<bytes in the listing>"
       ],
@@ -209,14 +224,15 @@
       "id": "handoffs",
       "title": "Hand over: the Summary, the Planner note and the message to Sitamah",
       "ref": [
-        "11-handoffs.md"
+        "11-handoffs.md",
+        "03-two-spouses.md"
       ],
       "do": [
         "Do NOT end your reply here: the question to Paul comes once, at the end of the final reply.",
         "1. The Fact Find Summary: run the `fact-find-summary` skill on the PDF you just saved. Confirm its Section 8 shows the same ABIs as this PDF (Life cover fractured: Life Cover (WOL) ABI 3% and Childcare ABI 5%; Permanent disability fractured: Household needs ABI 5% and Childcare ABI 5%, no Life Cover (WOL) line; Dread Disease ABI 3%).",
-        "2. The Planner note page and the message to Sitamah are made ONLY by `client-teams-transcript-skill`: run its driver for this meeting, `python3 <teams skill>/scripts/run.py start <teams run folder> --type first --client \"First Surname\" --date DD/MM/YYYY`, with the transcript passed in directly (`--route passed`). Carry the form's next appointment (day, time) into that run: setting up the follow-up appointment is an action for Sitamah at every meeting. Do not write a Planner note or a message in this skill.",
+        "2. The Planner note page and the message to Sitamah are made ONLY by `client-teams-transcript-skill`: run its driver for this meeting, `python3 <teams skill>/scripts/run.py start <teams run folder> --type first --client \"First Surname\" --date DD/MM/YYYY`, with the transcript passed in directly (`--route passed`), and drive it through every step up to (not including) its `teams` step, where it shows the message. Carry the form's next appointment (day, time) into that run as an AGREED follow-up appointment: setting it up is an action for Sitamah at every meeting. Do not write a Planner note or a message in this skill. This checker runs the Teams program's own checker (verify.py --skip-teams) on that run and fails if it does not pass, if any step before `teams` is open, or if the next appointment is not carried.",
         "3. Two spouses in one meeting: run `python3 {scripts}/run.py spouse {run}` and record its one-line result.",
-        "Record: python3 {scripts}/run.py receipt {run} --set summary.invoked=\"<what was run and its result>\" --set summary.abi_same=\"<what Section 8 shows>\" --set teams.run_folder=<the Teams run folder> --set teams.next_appointment_carried=\"<next appointment, day and time>\" [--set spouse.cross_check=\"<the result>\"]"
+        "Record: python3 {scripts}/run.py receipt {run} --set summary.invoked=\"<what was run and its result>\" --set summary.abi_same=\"<what Section 8 shows>\" --set teams.run_folder=<the Teams run folder> --set teams.skill_dir=<the folder of client-teams-transcript-skill> --set teams.next_appointment_carried=\"<next appointment, day and time>\" [--set spouse.cross_check=\"<the result>\"]"
       ],
       "proof": "summary and teams hand-overs recorded; the Teams run exists for this client and date",
       "check": "receipt_handoffs"

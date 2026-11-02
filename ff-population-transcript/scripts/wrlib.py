@@ -189,11 +189,11 @@ CENT = Decimal("0.01")
 
 
 def parse_money(text):
-    """'R 24 000.00' / 'R24,000.00' / '24000' / 'R 1 234,50' -> Decimal (2 places), or None when it is not an amount."""
-    s = str(text or "").strip()
+    """'R 24 000.00' / 'R24,000.00' / '24000' / 'R 1.234,50' -> Decimal (2 places), or None when it is not an amount
+    or when the way it is written is ambiguous (for example 'R 2.000': two rand or two thousand?)."""
+    s = str(text or "").strip().replace("\u00a0", " ")
     if not s:
         return None
-    s = s.replace(" ", " ")
     neg = s.startswith("-") or s.startswith("(")
     s = re.sub(r"^[Rr]\s*", "", s.lstrip("-(").strip()).rstrip(")").strip()
     s = re.sub(r"^[Rr]\s*", "", s)
@@ -201,12 +201,24 @@ def parse_money(text):
         return None
     s = s.replace(" ", "")
     if "," in s and "." in s:
-        s = s.replace(",", "")                       # 24,000.00
+        if s.rfind(".") > s.rfind(","):
+            s = s.replace(",", "")                   # 24,000.00
+        else:
+            s = s.replace(".", "").replace(",", ".")   # 1.234,50
     elif "," in s:
         head, _, tail = s.rpartition(",")
-        s = (head.replace(",", "") + "." + tail) if len(tail) in (1, 2) else s.replace(",", "")
-    elif s.count(".") > 1:
-        s = s.replace(".", "")
+        if s.count(",") > 1 or len(tail) == 3:
+            s = s.replace(",", "")                   # 2,000 or 1,234,567
+        elif len(tail) in (1, 2):
+            s = head + "." + tail                    # 1234,50
+        else:
+            return None
+    elif "." in s:
+        head, _, tail = s.rpartition(".")
+        if s.count(".") > 1:
+            s = s.replace(".", "")                   # 1.234.567
+        elif len(tail) not in (1, 2):
+            return None                              # 'R 2.000' could be 2 or 2000: refuse rather than guess
     try:
         d = Decimal(s).quantize(CENT, rounding=ROUND_HALF_UP)
     except InvalidOperation:
@@ -236,6 +248,36 @@ def parse_pct(text):
 def fmt_pct(d):
     d = Decimal(d)
     return ("%d%%" % d) if d == d.to_integral() else ("%s%%" % d.normalize())
+
+
+def same_person(first_a, surname_a, first_b, surname_b):
+    """The same full name, whatever way it is split into first names and surname ('Pat Jo' + 'Samplecase' = 'Pat' + 'Jo Samplecase')."""
+    return norm("%s %s" % (first_a, surname_a)) == norm("%s %s" % (first_b, surname_b)) and bool(norm(first_a)) and bool(norm(surname_a))
+
+
+def last_name_token(surname):
+    toks = norm(surname).split()
+    return toks[-1] if toks else ""
+
+
+FINGERPRINT_FILES = ("steps.json", "deliverables.json")
+
+
+def program_fingerprint():
+    """A fingerprint of everything that drives a run (the programs, the layout, the steps, the rule pages): it must not change during a run."""
+    h = hashlib.sha256()
+    paths = [os.path.join(SKILL_DIR, f) for f in FINGERPRINT_FILES]
+    for d in ("scripts", "references"):
+        for root, dirs, files in os.walk(os.path.join(SKILL_DIR, d)):
+            dirs[:] = sorted(x for x in dirs if x != "__pycache__")
+            paths += [os.path.join(root, f) for f in sorted(files) if not f.endswith(".pyc")]
+    for path in sorted(paths):
+        if not os.path.exists(path):
+            continue
+        with open(path, "rb") as f:
+            data = f.read().replace(b"\r\n", b"\n")
+        h.update(os.path.relpath(path, SKILL_DIR).replace(os.sep, "/").encode("utf-8") + b"\0" + hashlib.sha256(data).digest())
+    return h.hexdigest()
 
 
 def safe_filename(s):

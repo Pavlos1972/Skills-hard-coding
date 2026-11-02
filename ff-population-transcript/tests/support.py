@@ -22,6 +22,7 @@ ENV = dict(os.environ, WR_CHUNK_LINES="25")
 CLIENT = ["--client", "Pat Samplecase", "--date", "05/11/2026"]
 
 from fixtures import household as H  # noqa: E402
+import teams_driver  # noqa: E402
 
 
 def spit(path, data):
@@ -166,8 +167,19 @@ class Chat(unittest.TestCase):
         for line in r.stdout.splitlines():             # a value the program cannot find in the PDF is looked at and recorded
             if line.strip().startswith("NOT IN THE PDF"):
                 key = line.split("(")[-1].split(")")[0]
-                self.ok("pdfreview", self.run_dir, "--key", key, "--result", "format_only", "--quote", "WR Fact Find v3.0")
+                self.ok("pdfreview", self.run_dir, "--key", key, "--result", "format_only", "--quote", self.pdf_quote_for(key))
         self.ok("done", self.run_dir, "form")
+
+    def pdf_quote_for(self, key):
+        """The words of the form's saved PDF that show this field's value (written differently): the line of the PDF text that holds it."""
+        import re
+        val = (self.load("form_read.json")["fields"].get(key) or {}).get("v", "")
+        digs = re.sub(r"\D", "", val)
+        with open(self.p("form_pdf.txt"), encoding="utf-8") as f:
+            for ln in f.read().splitlines():
+                if (len(digs) >= 2 and digs in re.sub(r"\D", "", ln)) or (len(digs) < 2 and val.lower() in ln.lower()):
+                    return ln.strip()
+        return "WR Fact Find v3.0"
 
     def s_prep(self):
         r = sh("tx.py", "prep", self.transcript, self.run_dir)
@@ -237,19 +249,63 @@ class Chat(unittest.TestCase):
             "employer": {"r": "same", "line": L("I work at Fakeco Logistics"), "quote": "I work at Fakeco Logistics"},
             "occ": {"r": "same", "line": L("operations manager"), "quote": "I'm an operations manager"},
             "years": {"r": "same", "line": L("I started in 2015"), "quote": "I started in 2015"},
+            "fna_req": {"r": "same", "line": L("new business FNA quote"), "quote": "ask BrightRock for a new business FNA quote"},
+            "fna_type": {"r": "same", "line": L("new business FNA quote"), "quote": "for a new business FNA quote"},
+            "fna_ins": {"r": "same", "line": L("new business FNA quote"), "quote": "I will ask BrightRock for a new"},
+            "loa": {"r": "same", "line": L("letter of authority"), "quote": "we also need a letter of authority from you"},
+            "next_appt": {"r": "same", "line": L("Thursday the twelfth at four works"), "quote": "Thursday the twelfth at four works"},
+            "next_day": {"r": "same", "line": L("Thursday the twelfth at four works"), "quote": "Thursday the twelfth at four works"},
+            "next_time": {"r": "same", "line": L("Thursday the twelfth at four works"), "quote": "Thursday the twelfth at four works"},
         }
 
-    def s_crosscheck(self):
+    # what the call says about the fields the program leaves for the chat after `cross --rest` (the program found the call mentioning them)
+    REST_SAME = {
+        "has_kids": ("the children, Sam is in primary school", "And the children, Sam is in primary school"),
+        "will": ("Do you have a will", "Do you have a will"),
+        "will_where": ("it is with an attorney", "it is with an attorney"),
+        "smoker": ("I do not smoke", "I am healthy and I do not smoke"),
+        "ret_age": ("At sixty-five", "At sixty-five, and I would need about"),
+        "has_risk": ("You have the BrightRock life cover", "You have the BrightRock life cover"),
+        "ps_risk": ("You have the BrightRock life cover", "You have the BrightRock life cover"),
+        "has_debts": ("credit life with Absa", "there is credit life with Absa on the home loan"),
+    }
+
+    def s_crosscheck(self, rest_reason="read the lines the program found for this field; they are about something else, the field itself is not discussed on the call"):
         af = os.path.join(self.tmp, "answers.json")
-        jdump(af, self.answers())
-        self.ok("cross", self.run_dir, "--file", af, "--rest", "not_on_call", "--reviewed", "read the whole call twice; these fields are not mentioned on it")
+        have = {i["key"] for i in self.load("crosscheck.json")}
+        jdump(af, {k: v for k, v in self.answers().items() if k in have})
+        r = self.ok("cross", self.run_dir, "--file", af, "--rest", "not_on_call")
+        left = [ln.strip()[2:].split(":")[0].strip() for ln in r.stdout.splitlines() if ln.strip().startswith("- ") and ":" in ln]
+        extra = {}
+        for k in left:
+            if k in self.REST_SAME and self.try_line(self.REST_SAME[k][0]):
+                where, quote = self.REST_SAME[k]
+                extra[k] = {"r": "same", "line": self.L(where), "quote": quote}
+            else:
+                extra[k] = {"r": "not_on_call", "reviewed": rest_reason}
+        if extra:
+            jdump(af, extra)
+            self.ok("cross", self.run_dir, "--file", af)
         self.ok("done", self.run_dir, "crosscheck")
+
+    def try_line(self, text):
+        try:
+            self.L(text)
+            return True
+        except AssertionError:
+            return False
+
+    def s_joint(self):
+        self.ok("joint", self.run_dir, "--answer", "no", "--evidence", "Only Pat and Paul spoke on the call; no spouse took part")
+        self.ok("done", self.run_dir, "joint")
 
     def overlay(self):
         L = self.L
         return {
             "fills": [
                 {"id": "o1", "key": "debts.0.cl", "value": "Yes", "src": [{"line": L("credit life with Absa"), "quote": "there is credit life with Absa on the home loan"}]},
+                {"id": "o6", "key": "cl_req", "value": "Yes", "src": [{"line": L("credit life with Absa"), "quote": "there is credit life with Absa on the home loan"}]},
+                {"id": "o7", "key": "cl_lender", "value": "Absa", "src": [{"line": L("credit life with Absa"), "quote": "there is credit life with Absa on the home loan"}]},
             ],
             "notes": [
                 {"id": "o2", "section": "medical", "text": "The will has not been updated since before the children were born",
@@ -264,31 +320,36 @@ class Chat(unittest.TestCase):
             ],
         }
 
+    # fields the search finds call lines for, but whose lines are about something else: each gets its own written reason
+    CLAIM_REASONS = {
+        "bf_fna_req": "line 66 is the FNA quote already recorded under the FNA quote request; nothing is said about this second (bf) quote",
+        "bf_fna_type": "line 66 is the FNA quote already recorded under the FNA quote request; nothing is said about this second (bf) quote type",
+        "bf_sf_req": "line 66 is about the FNA quote, no shortfall (group risk) quote is mentioned on the call at all",
+        "bf_sf_type": "line 66 is about the FNA quote, no shortfall (group risk) quote is mentioned on the call at all",
+        "egar_req": "line 18 is Paul asking about the client's own highest education, not an education goal analysis for the children",
+        "h_oth": "lines 60 and 63 only say no conditions and not a smoker; the form's health ticks already say No, no other issue is named",
+        "pr_life": "lines 36 and 66 mention the cover and the FNA quote, but the client never ranks any area as his priority",
+        "pr_rgar": "line 72 is Paul saying he will ask for the RGAR; the client does not rank it as a priority",
+        "pr_will": "line 54 only asks whether there is a will; no priority rank is given for it",
+        "cl_bal": "the call says credit life exists with Absa but gives no balance covered by it",
+        "cl_life": "the call says credit life exists with Absa but gives no cover amount for it",
+    }
+
     def s_content(self, overlay=None):
         self.ok("compose", self.run_dir)
         r = self.ok("claim", self.run_dir, "--all-empty")
+        for key, why in self.CLAIM_REASONS.items():
+            if key in r.stdout:
+                self.ok("claim", self.run_dir, "--key", key, "--as", "Not discussed", "--reviewed", why)
         self.write("overlay.json", overlay if overlay is not None else self.overlay())
         self.ok("compose", self.run_dir)
         return r
 
     def cover_all(self):
-        # cross-check keys only exist as targets once answered; covering needs the answered keys: fna_ins / next_appt / loa are answered as not_on_call
-        # so cover those entries by notes instead (the call lines are cited by overlay entries)
+        """Cover each ledger entry with the kind of item that really can (a fill, an answered field, a request) - the checker refuses anything else."""
         led = self.load("ledger.json")
-        ov = self.load("overlay.json")
-        ov.setdefault("notes", [])
-        extra = [
-            ("o6", "quote_request", "The FNA is a BrightRock New Business quote", "ask BrightRock for a new business FNA quote"),
-            ("o7", "next_step", "Next appointment Thursday the twelfth at four in the afternoon", "Thursday the twelfth at four works"),
-            ("o8", "request", "Letter of authority to be signed by the client", "we also need a letter of authority from you"),
-        ]
-        for oid, kind, text, quote in extra:
-            ov["notes"].append({"id": oid, "section": {"quote_request": "advisor", "next_step": "next", "request": "next"}[kind], "text": text,
-                                "src": [{"line": self.L(quote), "quote": quote}]})
-        self.write("overlay.json", ov)
-        self.ok("compose", self.run_dir)
         by_text = {"cell number is 082": ["cell"], "one-year diploma": ["edu"], "we move freight": ["o3"], "credit life with Absa": ["o1"],
-                   "new business FNA": ["o6"], "Thursday the twelfth": ["o7"], "send us your latest payslip": ["o4"], "letter of authority": ["o8"]}
+                   "new business FNA": ["fna_req"], "Thursday the twelfth": ["next_appt"], "send us your latest payslip": ["o4"], "letter of authority": ["loa"]}
         for e in led["entries"]:
             for frag, items in by_text.items():
                 if frag.lower() in e["quote"].lower():
@@ -327,25 +388,20 @@ class Chat(unittest.TestCase):
             return drv("done", self.run_dir, "pdf")           # a wrong listing or folder is refused here
         return self.ok("done", self.run_dir, "pdf")
 
-    def s_handoffs(self):
-        teams_run = os.path.join(self.tmp, "teams-run")
-        if os.path.exists(TEAMS_RUN_PY):
-            r = subprocess.run([sys.executable, TEAMS_RUN_PY, "start", teams_run, "--type", "first", "--client", "Pat Samplecase", "--date", "05/11/2026"],
-                               capture_output=True, text=True)
-            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
-        else:
-            os.makedirs(teams_run)
-            jdump(os.path.join(teams_run, "run.json"), {"meeting_type": "first", "client": {"first": "Pat", "surname": "Samplecase"}, "date": "05/11/2026"})
+    def s_handoffs(self, teams_run=None):
+        teams_run = teams_run or os.path.join(self.tmp, "teams-run")
+        teams_driver.drive(teams_run, self.transcript)
         self.ok("receipt", self.run_dir, "--set", "summary.invoked=fact-find-summary run on the saved PDF: Summary built and saved",
                 "--set", "summary.abi_same=Section 8 shows Life Cover (WOL) ABI 3%, Childcare ABI 5%, Household needs ABI 5% and Dread Disease ABI 3%",
-                "--set", "teams.run_folder=" + teams_run, "--set", "teams.next_appointment_carried=Thursday 12/11/2026 at 16:00 (action for Sitamah)")
+                "--set", "teams.run_folder=" + teams_run, "--set", "teams.skill_dir=" + teams_driver.TEAMS_DIR,
+                "--set", "teams.next_appointment_carried=Thursday 12/11/2026 at 16:00 (action for Sitamah)")
         self.ok("done", self.run_dir, "handoffs")
 
     def s_final(self):
         """The last step: the checker's whole printout, then the driver closes the run."""
         return self.ok("done", self.run_dir, "final")
 
-    ORDER = ["start", "locate", "form", "prep", "documents", "pass1", "pass2", "scan", "contact", "crosscheck", "content", "build", "check", "pdf", "handoffs"]
+    ORDER = ["start", "locate", "form", "prep", "documents", "pass1", "pass2", "scan", "contact", "crosscheck", "joint", "content", "build", "check", "pdf", "handoffs"]
 
     def through(self, last):
         """Play the chat up to and including the named step."""
@@ -360,3 +416,41 @@ class Chat(unittest.TestCase):
 
     def verify(self, *extra):
         return sh("verify.py", self.run_dir, *extra)
+
+
+class Staged(Chat):
+    """A Chat whose first part (up to STAGE) is played ONCE for the whole class; each test works on its own copy of that finished state.
+
+    Keeps the regression tests fast: a test breaks one thing at the stage where that thing is done, and asserts the program REFUSES it.
+    """
+    STAGE = "joint"
+
+    @classmethod
+    def setUpClass(cls):
+        class Maker(cls):
+            def runTest(self):
+                pass
+        m = Maker()
+        Chat.setUp(m)
+        m.through(cls.STAGE)
+        cls._base = m.tmp
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(cls._base, True)
+
+    def setUp(self):
+        self.tmp = tempfile.mkdtemp(prefix="wrff-")
+        shutil.rmtree(self.tmp)
+        shutil.copytree(self._base, self.tmp)
+        self.addCleanup(shutil.rmtree, self.tmp, True)
+        self.run_dir = os.path.join(self.tmp, "run")
+        self.form_path = os.path.join(self.tmp, "Fact Find (Audio to Text) - 05.11.2026 - Pat Samplecase.json")
+        self.pdf_path = os.path.join(self.tmp, "Fact Find (Audio to Text) - 05.11.2026 - Pat Samplecase.pdf")
+        self.form = self.form_json() if callable(self.form_json) else H.pat_form()
+        self.transcript = FIXTURE
+
+    def fresh_overlay(self, ov=None):
+        """Rebuild content from an overlay (the claims already made stay)."""
+        self.write("overlay.json", ov if ov is not None else {})
+        return drv("compose", self.run_dir)

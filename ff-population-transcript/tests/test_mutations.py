@@ -123,7 +123,7 @@ class Mutations(unittest.TestCase):
         led = jload(self.p("ledger.json"))
         led["entries"][1]["covered_by"] = []
         jdump(self.p("ledger.json"), led)
-        self.caught("is not covered by any fill, difference, note or answer")
+        self.caught("is not covered by any fill, difference, note, request or answer")
 
     def test_a_ledger_entry_with_an_invented_quote(self):
         led = jload(self.p("ledger.json"))
@@ -153,7 +153,7 @@ class Mutations(unittest.TestCase):
         rc = jload(self.p("receipt.json"))
         rc["saved"]["folder"] = "C:\\liferisk.co.za\\Company - Paul\\New Business\\Samplecase, Pat\\5. Admin"
         jdump(self.p("receipt.json"), rc)
-        self.caught("saved.folder is not the client's '2. Fact Find' folder")
+        self.caught("does not end in the client's '2. Fact Find' folder")
 
     def test_the_teams_hand_over_for_another_client(self):
         rc = jload(self.p("receipt.json"))
@@ -203,6 +203,71 @@ class Mutations(unittest.TestCase):
         jdump(self.p("overlay.json"), ov)
         sh("run.py", "compose", self.run_dir, ok=True)                 # content.json is now right ... but the PDF still shows the old note
         self.caught("content.json changed after the PDF was built")
+
+    # ---- mutant-killing tests (M5): each one drives the checker to a message that only ONE line of the checker can produce
+    def test_text_from_the_forms_parking_list_printed_in_the_document(self):
+        parked = jload(self.p("form_source.json"))["unplaced"][0]["fact"]
+        self.edit_content(lambda c: self.row(c, "occ")["bullets"].append(parked))
+        self.caught("text from the form's parking list, summaries or drafted action list (never a source) is printed")
+
+    def test_the_forms_own_drafted_action_text_printed_in_the_document(self):
+        drafted = jload(self.p("form_source.json"))["f"]["pa_actions"]["v"]
+        self.edit_content(lambda c: self.row(c, "occ")["bullets"].append(drafted))
+        self.caught("text from the form's parking list, summaries or drafted action list (never a source) is printed")
+
+    def test_the_thrown_out_company_look_up_text_printed_in_the_document(self):
+        text = jload(self.p("form_source.json"))["f"]["co_does"]["v"]
+        self.edit_content(lambda c: self.row(c, "occ")["bullets"].append(text))
+        self.caught("the company look-up text was meant to be thrown out")
+
+    def test_an_identifier_that_is_not_in_its_sources_digit_for_digit(self):
+        def ed(c):
+            self.row(c, "idno").update(status="filled", bullets=[H.make_id("800101", 5009)],
+                                       src=[{"line": 12, "quote": "Your name is Pat Samplecase"}])
+        self.edit_content(ed)
+        self.caught("is not in its sources digit for digit")
+
+    def test_a_hand_made_pdf_whose_hash_was_also_rewritten_is_seen_by_its_text(self):
+        import hashlib
+        st = jload(self.p("state.json"))
+        pdf = self.p("out", st["build"]["pdf"])
+        from reportlab.pdfgen import canvas
+        c = canvas.Canvas(pdf)
+        c.drawString(72, 700, "A hand-made page that is not the Fact Find")
+        c.save()
+        with open(pdf, "rb") as f:
+            st["build"]["pdf_sha"] = hashlib.sha256(f.read()).hexdigest()
+        st["build"]["pdf_size"] = os.path.getsize(pdf)
+        jdump(self.p("state.json"), st)
+        self.caught("the PDF text is not what content.json produces")
+
+    def test_business_parts_printed_for_a_client_who_is_not_a_business_owner(self):
+        def ed(c):
+            c["sections"][0]["blocks"].append({"kind": "fields", "sub": "Business assurance", "rows": [
+                {"id": "bs_req", "label": "Business assurance", "bullets": ["Yes"], "src": [{"form": "bs_req"}], "status": "confirmed", "flags": [], "kind": "text"}]})
+        self.edit_content(ed)
+        self.caught("Business Assurance and the other business parts are printed")
+
+    def test_an_overview_whose_text_copy_was_lost_fails_the_checker(self):
+        os.remove(self.p("docs", "WR Overview Pat Samplecase.txt"))
+        self.caught("has no text copy: it cannot be accepted")
+
+    def test_an_overview_text_that_is_not_this_clients_fails_the_checker(self):
+        spit(self.p("docs", "WR Overview Pat Samplecase.txt"), "An invented overview of nobody in particular. Fakeco unit trust R 777 000.00")
+        self.caught("does not mention the client")
+
+    def test_the_insurer_of_a_quote_is_shown_once_not_twice(self):
+        c = jload(self.p("content.json"))
+        q = self.row(c, "quote.fna")
+        self.assertTrue(q.get("hidden"), "the form already shows the insurer and the basis: the quote row is kept for the checker, not printed")
+        st = jload(self.p("state.json"))
+        text = subprocess.run(["pdftotext", "-layout", self.p("out", st["build"]["pdf"]), "-"], capture_output=True, text=True).stdout
+        self.assertNotIn("Insurer: BrightRock", text)
+        self.assertNotIn("insurer and basis", text.lower())
+
+    def test_a_preset_left_out_of_the_source_report(self):
+        self.edit_content(lambda c: c["report"].update(presets=[]))
+        self.caught("preset values missing from the source report")
 
     def test_the_skill_updated_while_the_run_was_going_is_reported(self):
         rj = jload(self.p("run.json"))

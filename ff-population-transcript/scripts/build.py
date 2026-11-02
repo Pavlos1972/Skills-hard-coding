@@ -164,7 +164,7 @@ def build_pdf(content, path, lay=None, fontrec=None):
     label = S("label", fontName=nm["bold"], fontSize=size, leading=lead)
     val = S("val", fontSize=size, leading=lead)
     bul = S("bul", fontSize=size, leading=lead, leftIndent=11, bulletIndent=1, bulletFontName=nm["regular"], bulletFontSize=size)
-    added = S("added", fontName=nm["italic"], fontSize=size, leading=lead, leftIndent=11, bulletIndent=1, textColor=flag_c)
+    added = S("added", fontName=nm["italic"], fontSize=size, leading=lead, leftIndent=11, bulletIndent=1, textColor=HexColor("#404040"))     # notes: dark grey italic, never the red of a flag
     flagp = S("flag", fontName=nm["bold"], fontSize=size, leading=lead, textColor=flag_c, leftIndent=11, bulletIndent=0, spaceBefore=1)
 
     avail = A4[0] - 2 * st["margin_cm"] * cm
@@ -212,18 +212,20 @@ def build_pdf(content, path, lay=None, fontrec=None):
              Paragraph(escape("%s %s   |   Meeting date: %s   |   Advisor: %s" % (content["client"]["first"], content["client"]["surname"], content["meeting_date"], lay["advisor"])), meta),
              HRFlowable(width="100%", thickness=1.2, color=navy, spaceAfter=4)]
     for sec in content["sections"]:
-        if not sec["blocks"]:
+        if not any(not r.get("hidden") for b in sec["blocks"] for r in b["rows"]):
             continue
         h = "%d. %s" % (sec["num"], sec["title"])
         headings.append(h)
-        for n_, b in enumerate(sec["blocks"]):
+        shown = [(b, [r for r in b["rows"] if not r.get("hidden")]) for b in sec["blocks"]]
+        shown = [(b, rows) for b, rows in shown if rows]
+        for n_, (b, rows) in enumerate(shown):
             headings.append(b["sub"])
             heads = ([Paragraph(escape(h), head)] if n_ == 0 else []) + [Paragraph(escape(b["sub"]), sub)]
-            story += block(heads, b["rows"])       # the section heading travels with its first sub-heading and its first rows
+            story += block(heads, rows)       # the section heading travels with its first sub-heading and its first rows
     cl = content["closing"]
     story += [Spacer(1, 6), HRFlowable(width="100%", thickness=1.0, color=navy, spaceBefore=4, spaceAfter=2)]
     headings.append(cl["title"])
-    story += block(Paragraph(escape(cl["title"]), head), cl["rows"])
+    story += block(Paragraph(escape(cl["title"]), head), [r for r in cl["rows"] if not r.get("hidden")])
     if content.get("other_fields"):
         headings.append("Other fields from the form")
         story += block(Paragraph("Other fields from the form", head), content["other_fields"])

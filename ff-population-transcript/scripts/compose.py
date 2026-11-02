@@ -25,6 +25,7 @@ PENDING = "Pending – FNA"
 ABBREV = {"mr", "mrs", "ms", "dr", "prof", "st", "no", "pty", "ltd", "vs", "etc", "approx", "ca", "incl", "est", "tel", "cell", "nr", "ave", "rd"}
 OVERLAY_LISTS = ("fills", "rows_add", "notes", "flags", "diffs", "quotes", "policy_numbers", "abi_override", "documents_to_request",
                  "next_steps", "joint", "asked_paul")
+SRC_LISTS = ("fills", "rows_add", "notes", "flags", "diffs", "quotes", "documents_to_request", "next_steps", "joint")
 KIND_ID = ("id",)
 
 
@@ -69,12 +70,45 @@ def pct_equal(a, b):
 
 
 # ------------------------------------------------------------------ overlay shape
-def validate_overlay(ov):
+def valid_ids(lay, form=None):
+    """What an overlay may name: section ids, list names, quote groups, field keys (and the columns of each list)."""
+    secs = [x["id"] for x in lay["sections"]] + ["next"]
+    keys, lists = [], {}
+    for sec in lay["sections"]:
+        for g in sec["groups"]:
+            keys += [r["key"] for r in g.get("rows", []) if r.get("key") and not r.get("notes")]
+            keys += [r["key"] for r in g.get("rows", []) if r.get("key") and r.get("notes")]
+            if g.get("list"):
+                lists[g["list"]] = None if g["cols"] == "generic" else [c["col"] for c in g["cols"]]
+    keys += [r["key"] for r in lay["closing"]["rows"]]
+    return {"sections": secs, "keys": sorted(set(keys)), "lists": lists, "groups": [q["id"] for q in lay["quote_groups"]], "abi": [a["key"] for a in lay["standing"]["abi"]]}
+
+
+REQUIRED = {
+    "fills": ("key", "value", "src"), "rows_add": ("list", "cells", "src"), "notes": ("section", "text", "src"), "flags": ("section", "text", "src"),
+    "diffs": ("key", "other", "src"), "quotes": ("group", "insurer", "mode", "src"), "policy_numbers": ("found", "resolved", "ref", "quote"),
+    "abi_override": ("key", "value", "ask"), "documents_to_request": ("text", "src"), "next_steps": ("text", "src"), "joint": ("list", "index", "with", "src"),
+}
+
+
+def validate_overlay(ov, lay=None, form=None, questions=None):
+    """Plain-message check of the overlay's shape and of every name it uses. Lists what is valid, so nothing has to be guessed."""
     errs = []
     if not isinstance(ov, dict):
         return ["overlay.json must be an object"]
+    lay = lay or w.layout()
+    ok = valid_ids(lay)
+    paul = {q.get("need") for q in questions or [] if isinstance(q, dict) and len(str(q.get("paul_said") or "").strip()) >= 3}
     seen = set()
+    if ov.get("asked_paul"):
+        errs.append("overlay.asked_paul is no longer accepted: Paul's words must be recorded by the program (run.py ask --kind knowledge ..., then run.py answer ...) and referred to with \"ask\": \"<need>\"")
+    nrows = {k: len((form or {}).get("lists", {}).get(k, [])) for k in ok["lists"]}
+    for it in ov.get("rows_add") or []:
+        if isinstance(it, dict) and it.get("list") in nrows:
+            nrows[it["list"]] += 1
     for name in OVERLAY_LISTS:
+        if name == "asked_paul":
+            continue
         v = ov.get(name, [])
         if not isinstance(v, list) or not all(isinstance(i, dict) for i in v):
             errs.append("overlay.%s must be a list of objects" % name)
@@ -83,16 +117,78 @@ def validate_overlay(ov):
             iid = it.get("id")
             if not isinstance(iid, str) or not iid:
                 errs.append("every entry of overlay.%s needs a plain-text `id`" % name)
+                iid = "?"
             elif iid in seen:
                 errs.append("overlay id %r is used twice" % iid)
             else:
                 seen.add(iid)
-            if "src" in it and not (isinstance(it["src"], list) and all(isinstance(s, dict) for s in it["src"])):
-                errs.append("overlay %s: `src` must be a list like [{\"line\": 12, \"quote\": \"exact words\"}]" % iid)
+            where = "overlay.%s %s" % (name, iid)
+            for fld in REQUIRED.get(name, ()):
+                val = it.get(fld)
+                if val is None or (isinstance(val, (str, list, dict)) and not val):
+                    errs.append("%s: needs `%s`" % (where, fld))
+            if "src" in it and not (isinstance(it["src"], list) and it["src"] and all(isinstance(x, dict) for x in it["src"])):
+                errs.append("%s: `src` must be a non-empty list like [{\"line\": 12, \"quote\": \"exact words\"}]" % where)
+            for x in it.get("src") or []:
+                if isinstance(x, dict) and "ask" in x and x["ask"] not in paul:
+                    errs.append("%s: src names Paul's answer %r, which is not on record: run.py ask --kind knowledge --need %s ..., then run.py answer ... (recorded needs: %s)" % (where, x["ask"], x["ask"], sorted(paul) or "none"))
+            for fld in ("text", "value", "insurer", "mode", "other", "found", "resolved", "with"):
+                if fld in it and not isinstance(it[fld], str):
+                    errs.append("%s: `%s` must be text" % (where, fld))
+            if name in ("notes", "flags") and it.get("section") not in ok["sections"] and it.get("section"):
+                errs.append("%s: section %r does not exist. Valid sections: %s" % (where, it.get("section"), ", ".join(ok["sections"])))
+            if name in ("fills", "diffs") and it.get("key"):
+                k = str(it["key"])
+                parts = k.split(".")
+                if len(parts) == 1:
+                    if k not in ok["keys"]:
+                        errs.append("%s: %r is not a field of the form. Valid keys: %s" % (where, k, ", ".join(ok["keys"])))
+                elif len(parts) == 3 and parts[0] in ok["lists"] and parts[1].isdigit():
+                    cols = ok["lists"][parts[0]]
+                    if cols is not None and parts[2] not in cols:
+                        errs.append("%s: %r has no column %r. Valid columns of %s: %s" % (where, k, parts[2], parts[0], ", ".join(cols)))
+                    if int(parts[1]) >= nrows.get(parts[0], 0):
+                        errs.append("%s: %s has only %d row(s) (numbering starts at 0)" % (where, parts[0], nrows.get(parts[0], 0)))
+                else:
+                    errs.append("%s: %r is neither a field key nor list.row.column (lists: %s)" % (where, k, ", ".join(sorted(ok["lists"]))))
+            if name == "rows_add" and it.get("list") not in ok["lists"]:
+                errs.append("%s: list %r does not exist. Valid lists: %s" % (where, it.get("list"), ", ".join(sorted(ok["lists"]))))
+            if name == "rows_add" and isinstance(it.get("cells"), dict):
+                cols = ok["lists"].get(it.get("list"))
+                bad = [c for c in it["cells"] if cols is not None and c not in cols]
+                if bad:
+                    errs.append("%s: %s has no column(s) %s. Valid columns: %s" % (where, it.get("list"), bad, ", ".join(cols)))
+            if name == "quotes":
+                if it.get("group") not in ok["groups"]:
+                    errs.append("%s: quote group %r does not exist. Valid groups: %s" % (where, it.get("group"), ", ".join(ok["groups"])))
+                if it.get("mode") not in ("New Business", "Servicing"):
+                    errs.append("%s: mode must be exactly New Business or Servicing" % where)
+            if name == "abi_override" and it.get("key") not in ok["abi"]:
+                errs.append("%s: %r has no standing ABI. Valid keys: %s" % (where, it.get("key"), ", ".join(ok["abi"])))
+            if name == "abi_override" and it.get("ask") not in paul:
+                errs.append("%s: Paul's answer %r is not on record (run.py ask --kind knowledge --need %s ..., then run.py answer)" % (where, it.get("ask"), it.get("ask")))
+            if name == "joint":
+                if it.get("list") not in ok["lists"]:
+                    errs.append("%s: list %r does not exist. Valid lists: %s" % (where, it.get("list"), ", ".join(sorted(ok["lists"]))))
+                if not isinstance(it.get("index"), int):
+                    errs.append("%s: `index` must be a number" % where)
     lk = ov.get("lookup")
-    if lk is not None and not isinstance(lk, dict):
-        errs.append("overlay.lookup must be an object")
+    if lk is not None:
+        if not isinstance(lk, dict):
+            errs.append("overlay.lookup must be an object")
+        else:
+            if not isinstance(lk.get("id"), str) or not lk.get("id"):
+                errs.append("overlay.lookup needs a plain-text `id`")
+            elif lk["id"] in seen:
+                errs.append("overlay id %r is used twice" % lk["id"])
+            if not ((lk.get("text") and lk.get("src")) or (lk.get("client_confirmed") and lk.get("src"))):
+                errs.append("overlay.lookup needs `text` and `src`, or `client_confirmed` true and `src`")
     return errs
+
+
+def check_inputs(inp):
+    """The overlay's shape and every name in it, checked against the layout, the form's rows and Paul's recorded answers."""
+    return validate_overlay(inp["overlay"], inp.get("layout"), inp.get("form"), inp.get("questions"))
 
 
 def overlay_items(ov):
@@ -113,6 +209,8 @@ class Ctx:
         self.ov = inp.get("overlay") or {}
         self.cross = {i["key"]: i["answer"] for i in inp.get("cross") or [] if isinstance(i, dict) and isinstance(i.get("answer"), dict)}
         self.claims = inp.get("claims") or {}
+        self.paul = {q.get("need"): str(q.get("paul_said")).strip() for q in inp.get("questions") or [] if isinstance(q, dict) and len(str(q.get("paul_said") or "").strip()) >= 3}
+        self.used = set()
         self.pdf_reviews = (inp.get("formpdf") or {}).get("reviews") or {}
         self.lead = inp.get("lead") or {}
         self.common = inp.get("common")
@@ -131,6 +229,12 @@ class Ctx:
         self.abi = {a["key"]: a for a in self.lay["standing"]["abi"]}
         self.abi_override = {i.get("key"): i for i in self.ov.get("abi_override") or [] if isinstance(i, dict)}
         self.quotes = [i for i in self.ov.get("quotes") or [] if isinstance(i, dict)]
+        for q in self.quotes:                       # a quote entry that settles the insurer / the basis also settles the form's own two empty rows (no 'Not discussed' beside a named insurer)
+            qg = next((g for g in self.lay["quote_groups"] if g["id"] == q.get("group")), None)
+            if qg and not qg.get("list"):
+                for key, val in ((qg.get("type"), q.get("mode")), (qg.get("ins"), q.get("insurer"))):
+                    if key and isinstance(val, str) and val.strip() and key not in self.fills and not self.fv(key):
+                        self.fills[key] = {"id": q.get("id"), "key": key, "value": val.strip(), "src": q.get("src"), "from_quote": True}
         self.lists_eff = {}
         self._prepare_lists()
 
@@ -175,6 +279,20 @@ class Ctx:
                 tot, missing = sum_col(lists.get(g["list"], []), t["col"])
                 self.totals[t["id"]] = tot
                 self.totals[t["id"] + "_missing"] = missing
+
+    # ---- sources: an {"ask": need} reference becomes Paul's recorded words (written by the program, never typed into the overlay)
+    def rs(self, it):
+        out = []
+        for x in (it.get("src") or []) if isinstance(it, dict) else []:
+            if isinstance(x, dict) and "ask" in x:
+                out.append({"paul": self.paul.get(x["ask"], ""), "need": x["ask"]})
+            else:
+                out.append(x)
+        return out
+
+    def mark(self, it):
+        if isinstance(it, dict) and it.get("id"):
+            self.used.add(it["id"])
 
     # ---- flags
     def flag(self, row, text, kind, src=None):
@@ -231,7 +349,8 @@ class Ctx:
         for d in self.ov.get("diffs") or []:
             if isinstance(d, dict) and d.get("key") == key:
                 where = d.get("label") or "a document"
-                self.flag(row, "Difference: the form says %s; %s says %s." % (form_value, where, d.get("other")), "difference", d.get("src") or [])
+                self.mark(d)
+                self.flag(row, "Difference: the form says %s; %s says %s." % (form_value, where, d.get("other")), "difference", self.rs(d))
                 self.report["differences"].append({"key": key, "label": row["label"], "form": form_value, "other": str(d.get("other")), "where": where})
 
     def apply_rules(self, row, key):
@@ -294,11 +413,13 @@ class Ctx:
         if special == "aci":
             if form_v and form_v != "?":
                 row = self.row(key, label, self.bullets_for(form_v, kind), [{"form": key}], cell["st"], kind)
-            else:
+            elif key not in self.fills:                       # a value the call gave (with its source) wins over the default
                 row = self.row(key, label, [PENDING], [{"rule": "aci_pending"}], "rule", kind)
         elif special == "ddcover":
             dflt = self.lay["standing"]["dd_cover"]["value"]
-            if not form_v:
+            if not form_v and key in self.fills:
+                row = None
+            elif not form_v:
                 row = self.row(key, label, [dflt], [{"standing": "dd_cover"}], "standing", kind)
             else:
                 row = self.row(key, label, [form_v], [{"form": key}], cell["st"], kind)
@@ -354,10 +475,11 @@ class Ctx:
 
     def fill_row(self, key, label, kind):
         f = self.fills[key]
-        row = self.row(key, label, self.bullets_for(f["value"].strip(), kind), list(f.get("src") or []), "filled", kind)
+        self.mark(f)
+        row = self.row(key, label, self.bullets_for(f["value"].strip(), kind), self.rs(f), "filled", kind)
         self.report["filled"].append((key, label))
-        if kind == "id" and not f.get("confirmed") and not any("doc" in s for s in f.get("src") or []):
-            self.flag(row, "Read out on the call and not yet confirmed: check it digit for digit.", "unclear", f.get("src") or [])
+        if kind == "id" and not f.get("confirmed") and not any("doc" in s for s in self.rs(f)):
+            self.flag(row, "Read out on the call and not yet confirmed: check it digit for digit.", "unclear", self.rs(f))
         return row
 
     # ---- special fields
@@ -366,9 +488,12 @@ class Ctx:
         form_v = self.fv(key) if not std.get("added") else ""
         ov = self.abi_override.get(key)
         if ov:
-            row = self.row(key, label, [str(ov["value"]).strip()], [{"paul": ov.get("paul_said", ""), "ref": ov.get("id")}], "paul", kind)
-            self.flag(row, "Paul stated this ABI for this client: %s (the standing value is %s)." % (str(ov["value"]).strip(), std["value"]), "standing", [{"paul": ov.get("paul_said", "")}])
+            self.mark(ov)
+            words = self.paul.get(ov.get("ask"), "")
+            row = self.row(key, label, [str(ov["value"]).strip()], [{"paul": words, "need": ov.get("ask")}], "paul", kind)
+            self.flag(row, "Paul stated this ABI for this client: %s (the standing value is %s)." % (str(ov["value"]).strip(), std["value"]), "standing", [{"paul": words, "need": ov.get("ask")}])
             self.report["standing"].append("%s: %s, as Paul stated" % (std["block"] + " / " + label, ov["value"]))
+            self.glance.append("ABI changed on Paul's word: %s / %s = %s. His words, as Claude recorded them from the chat (attested, not proven by the program): \"%s\"" % (std["block"], label, ov["value"], words[:120]))
             return row
         row = self.row(key, label, [std["value"]], [{"standing": "abi:" + key}], "standing", kind)
         if std.get("added"):
@@ -385,11 +510,13 @@ class Ctx:
         v = lk["verdict"]
         if v == "empty":
             if ov.get("text"):
-                return self.row(key, label, facts(ov["text"]), list(ov.get("src") or []), "filled", kind)
+                self.mark(ov)
+                return self.row(key, label, facts(ov["text"]), self.rs(ov), "filled", kind)
             return None
         if v == "thrown_out":
             if ov.get("text"):
-                row = self.row(key, label, facts(ov["text"]), list(ov.get("src") or []), "filled", kind)
+                self.mark(ov)
+                row = self.row(key, label, facts(ov["text"]), self.rs(ov), "filled", kind)
                 self.report["derived"].append("%s: the form's web look-up text was thrown out (%s); replaced from the call" % (label, "; ".join(lk["reasons"])))
             else:
                 row = self.row(key, label, ["Not stated"], [{"rule": "lookup_not_stated"}], "rule", kind)
@@ -397,7 +524,8 @@ class Ctx:
             return row
         row = self.row(key, label, facts(cell["v"]), [{"form": key}], cell["st"], kind)
         if ov.get("client_confirmed") and ov.get("src"):
-            row["src"] += list(ov["src"])
+            self.mark(ov)
+            row["src"] += self.rs(ov)
         else:
             row["bullets"].append("(web look-up, not confirmed with the client)")
             if cell["st"] == "confirmed":
@@ -427,6 +555,8 @@ class Ctx:
             d = info["dob"].strftime("%d/%m/%Y")
             row = self.row(key, label, ["%s (worked out from the ID number)" % d], [{"derived": "dob_from_id", "from": ["idno"]}], "derived", kind)
             self.report["derived"].append("Date of birth worked out from the ID number")
+            if info.get("ambiguous_century"):
+                self.glance.append("Date of birth %s was worked out from the ID number, but the ID's year could be 19%s or 20%s and no age was given: check the century." % (d, d[8:10], d[8:10]))
             for p in info["problems"]:
                 self.flag(row, "ID number: " + p + ".", "unclear", [{"form": "idno"}])
             return row
@@ -459,7 +589,8 @@ class Ctx:
             info = self.id_info()
             d = info["dob"] if info and info["dob"] else None
         if d:
-            return self.row(key, label, [str(ffform.age_on(d, self.meeting))], [{"derived": "age_from_dob", "from": ["dob"], "on": self.meeting.strftime("%d/%m/%Y")}], "derived", kind)
+            self.report["derived"].append("Age worked out from the date of birth")
+            return self.row(key, label, ["%d (worked out from the date of birth)" % ffform.age_on(d, self.meeting)], [{"derived": "age_from_dob", "from": ["dob"], "on": self.meeting.strftime("%d/%m/%Y")}], "derived", kind)
         return None
 
     def referral_row(self, key, label, kind, cell):
@@ -553,7 +684,9 @@ class Ctx:
                 v = row["d"].get(c["col"], "")
                 kind = c.get("kind", "text")
                 if v:
-                    r = self.row(rid, c["label"], self.bullets_for(v, kind), [{"form": "%s.%d.%s" % (name, i, c["col"])}] if not row.get("added") else list(row["added"].get("src") or []), row["st"], kind)
+                    r = self.row(rid, c["label"], self.bullets_for(v, kind), [{"form": "%s.%d.%s" % (name, i, c["col"])}] if not row.get("added") else self.rs(row["added"]), row["st"], kind)
+                    if row.get("added"):
+                        self.mark(row["added"])
                     if row.get("common"):
                         r["src"] = [{"form": "%s.%d.%s" % (name, i, c["col"]), "from_spouse": True}]
                     self.apply_cross(r, "%s.%d.%s" % (name, i, c["col"]), v)
@@ -570,7 +703,8 @@ class Ctx:
                     item_rows.append(self.row("%s.%d.%s" % (name, i, c), prettify(c), facts(v), [{"form": "%s.%d.%s" % (name, i, c)}], row["st"]))
             for j in self.ov.get("joint") or []:
                 if isinstance(j, dict) and j.get("list") == name and j.get("index") == i:
-                    item_rows.append(self.row("joint.%s.%d" % (name, i), "Joint policy", ["Joint policy with %s" % j.get("with")], list(j.get("src") or []), "filled"))
+                    self.mark(j)
+                    item_rows.append(self.row("joint.%s.%d" % (name, i), "Joint policy", ["Joint policy with %s" % j.get("with")], self.rs(j), "filled"))
             if row.get("common"):
                 self.flag(item_rows[0], "Common to both spouses: taken from the other spouse's form.", "common", [{"form": "%s.%d" % (name, i), "from_spouse": True}])
             blocks.append({"kind": "item", "sub": "%s %d" % (g["item"], i + 1), "list": name, "index": i, "rows": item_rows})
@@ -595,7 +729,7 @@ class Ctx:
                     if any(row["d"].values()) and not is_no(row["d"].get(qg["req"], "")):
                         out.append(self.quote_row(qg, row["index"], row["d"].get(qg["req"], ""), row["d"].get(qg["type"], ""), ""))
             elif is_yes(self.eff(qg["req"])):
-                out.append(self.quote_row(qg, None, self.eff(qg["req"]), self.eff(qg["type"]), self.eff(qg["ins"]) if qg.get("ins") else ""))
+                out.append(self.quote_row(qg, None, self.eff(qg["req"]), self.fv(qg["type"]), self.fv(qg["ins"]) if qg.get("ins") else ""))
         return out
 
     def quote_row(self, qg, idx, req, mode_form, ins_form):
@@ -613,9 +747,13 @@ class Ctx:
                 ins = str(ov["insurer"]).strip()
             if not mode and ov.get("mode"):
                 mode = str(ov["mode"]).strip()
-            srcs += list(ov.get("src") or [])
+            self.mark(ov)
+            srcs += self.rs(ov)
         bullets = ["Insurer: %s" % ins if ins else "Insurer: NOT KNOWN", "Basis: %s" % mode if mode else "Basis: NOT KNOWN"]
         r = self.row(rid, title + ": insurer and basis", bullets, srcs, "quote" if ins and mode else "unsettled", "text")
+        r["quote_group"] = qg["id"]
+        if ins and mode and not ov and ins_form:
+            r["hidden"] = True                  # the form's own rows already show both: kept for the checker, not printed twice
         if not (ins and mode):
             self.unsettled.append(rid)
         return r
@@ -629,7 +767,9 @@ class Ctx:
                 if g.get("overlay") == "documents_to_request":
                     items = [i for i in self.ov.get("documents_to_request") or [] if isinstance(i, dict)]
                     if items:
-                        r = self.row("docs_to_request", "To request from the client", [i["text"].strip() for i in items], [s for i in items for s in (i.get("src") or [])], "filled")
+                        r = self.row("docs_to_request", "To request from the client", [i["text"].strip() for i in items], [x for i in items for x in self.rs(i)], "filled")
+                        for i in items:
+                            self.mark(i)
                         blocks.append({"kind": "fields", "sub": g["sub"], "rows": [r]})
                     continue
                 if g.get("list"):
@@ -649,11 +789,15 @@ class Ctx:
         closing_rows = [self.field(spec) for spec in self.lay["closing"]["rows"]]
         ns = [i for i in self.ov.get("next_steps") or [] if isinstance(i, dict)]
         if ns:
-            closing_rows.append(self.row("next_steps", "Next steps for the client", [i["text"].strip() for i in ns], [s for i in ns for s in (i.get("src") or [])], "filled"))
+            closing_rows.append(self.row("next_steps", "Next steps for the client", [i["text"].strip() for i in ns], [x for i in ns for x in self.rs(i)], "filled"))
+            for i in ns:
+                self.mark(i)
         extra = self.section_extras("next")
         closing = {"title": self.lay["closing"]["title"], "rows": closing_rows + extra}
         self.policy_numbers([r for s in sections for b in s["blocks"] for r in b["rows"]] + closing["rows"])
         other = self.other_fields()
+        if self.lead.get("unavailable"):
+            self.glance.append("The Outlook search for a D&R Marketing appointment email could NOT be made on any of the three routes. Paul chose to carry on without it (his words, as recorded from the chat: \"%s\"). Referral From comes from the form or the call: check it." % str(self.lead.get("paul_said", ""))[:120])
         content = {
             "skill": w.skill_name(), "client": {"first": self.form.get("client", {}).get("first") or (self.run.get("client") or {}).get("first", ""),
                                                   "surname": self.form.get("client", {}).get("surname") or (self.run.get("client") or {}).get("surname", "")},
@@ -667,16 +811,21 @@ class Ctx:
         content["file_name"] = names["pdf"] if names else None
         content["report"] = self.make_report()
         content["glance"] = self.make_glance(other)
+        ids = [it["id"] for name, it in overlay_items(self.ov) if name != "asked_paul" and it.get("id")]
+        content["overlay_unused"] = sorted(i for i in ids if i not in self.used)
         return content
 
     def section_extras(self, sid):
         rows = []
         notes = [n for n in self.ov.get("notes") or [] if isinstance(n, dict) and n.get("section") == sid]
         if notes:
-            rows.append(self.row("notes." + sid, "Notes", [n["text"].strip() for n in notes], [s for n in notes for s in (n.get("src") or [])], "filled", "text", "added"))
+            rows.append(self.row("notes." + sid, "Notes", [n["text"].strip() for n in notes], [x for n in notes for x in self.rs(n)], "filled", "text", "added"))
+            for n in notes:
+                self.mark(n)
         for f in self.ov.get("flags") or []:
             if isinstance(f, dict) and f.get("section") == sid:
-                r = self.row("flag." + f["id"], "Flag", [f["text"].strip()], list(f.get("src") or []), "flag", "text", "flag")
+                self.mark(f)
+                r = self.row("flag." + f["id"], "Flag", [f["text"].strip()], self.rs(f), "flag", "text", "flag")
                 self.flags_all.append((r["id"], "check", f["text"]))
                 rows.append(r)
         return rows
@@ -696,7 +845,8 @@ class Ctx:
                         self.flag(r, "Policy number: the form or Overview says %s; the policy schedule says %s (the schedule is the source of truth)." % (found, resolved), "policy",
                                   [{"doc": "Policy schedule", "ref": pn.get("ref", ""), "quote": pn.get("quote", "")}])
                         self.report["differences"].append({"key": r["id"], "label": r["label"], "form": found, "other": resolved, "where": "the policy schedule"})
-            pn["_used"] = hit
+            if hit:
+                self.mark(pn)
 
     def other_fields(self):
         rows = []
@@ -723,8 +873,14 @@ class Ctx:
         for k in self.form.get("presets") or []:
             a = self.cross.get(k)
             row = self.rows_by_key.get(k)
-            if row is not None and row.get("status") == "standing":
+            if row is not None and row.get("status") == "rule" and any(isinstance(x, dict) and x.get("rule") == "aci_pending" for x in row["src"]):
+                done = "not used: a '?' is not a value, so the PDF shows %s" % PENDING
+            elif row is not None and row.get("status") == "standing" and not row.get("flags"):
+                done = "kept: it equals the standing value"
+            elif row is not None and row.get("status") == "standing":
                 done = "replaced by the standing rule"
+            elif row is not None and row.get("status") == "paul":
+                done = "replaced on Paul's word (recorded from the chat)"
             elif a and a.get("r") == "differs":
                 done = "kept and flagged: the call differs (line %s)" % a.get("line")
             elif a and a.get("r") == "same":
@@ -756,6 +912,11 @@ class Ctx:
             g.append("Marked Requested (missing after the search): %s." % ", ".join(rq[:12]))
         if self.common_used:
             g.append("Taken from the other spouse's form because this form has none: %s." % ", ".join(self.common_used))
+        weak_claims = [k for k, c in (self.claims or {}).items() if isinstance(c, dict) and c.get("weak")]
+        weak_cross = [k for k, a in self.cross.items() if isinstance(a, dict) and a.get("weak")]
+        if weak_claims or weak_cross:
+            g.append("%d 'Not discussed' claim(s) and %d 'not on the call' answer(s) rest on a WEAK search (the field's label words only, no curated search terms): %s." % (
+                len(weak_claims), len(weak_cross), ", ".join((weak_claims + weak_cross)[:10])))
         if not self.lay.get("labels_checked"):
             g.append("The field labels were written by this skill (the form's own label file could not be read): check them on this PDF.")
         return list(dict.fromkeys(g))
@@ -791,7 +952,7 @@ def load_inputs(run):
     sp = rj.get("spouse") or {}
     if sp.get("run") and os.path.exists(os.path.join(sp["run"], w.FORM)):
         common = w.load_json(os.path.join(sp["run"], w.FORM))
-    return {"layout": w.layout(), "run": rj, "form": form, "overlay": j(w.OVERLAY, {}), "cross": j(w.CROSS, []), "claims": j(w.CLAIMS, {}), "lead": j(w.LEAD, {}), "common": common, "formpdf": j(w.FORMPDF, {})}
+    return {"layout": w.layout(), "run": rj, "form": form, "overlay": j(w.OVERLAY, {}), "cross": j(w.CROSS, []), "claims": j(w.CLAIMS, {}), "lead": j(w.LEAD, {}), "common": common, "formpdf": j(w.FORMPDF, {}), "questions": j(w.QUESTIONS, [])}
 
 
 def main():
@@ -800,7 +961,7 @@ def main():
     a = ap.parse_args()
     run = os.path.abspath(a.run)
     inp = load_inputs(run)
-    errs = validate_overlay(inp["overlay"])
+    errs = check_inputs(inp)
     if errs:
         print("COMPOSE REFUSED. overlay.json has the wrong shape:")
         for e in errs:

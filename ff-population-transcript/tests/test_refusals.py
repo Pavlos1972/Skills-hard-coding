@@ -4,7 +4,7 @@ import os
 import subprocess
 import sys
 
-from support import Chat, H, SCRIPTS, drv, sh, jdump, jload, slurp, spit, CLIENT
+from support import Chat, H, SCRIPTS, drv, sh, jdump, jload, slurp, spit, CLIENT, make_form_pdf
 from fixtures import household as HH
 
 
@@ -124,17 +124,33 @@ class FormPdf(Chat):
     def test_a_value_missing_from_the_saved_pdf_must_be_looked_at(self):
         self.s_start()
         self.s_locate()
+        make_form_pdf(self.pdf_path, self.form, drop=self.pdf_drop, extra_lines=["Highest education: Diploma"])      # the PDF shows another value for education
         self.ok("form", self.run_dir, self.form_path)
         r = self.ok("formpdf", self.run_dir, self.pdf_path)
         self.assertIn("NOT IN THE PDF: Highest education (edu)", r.stdout)
-        self.refused("done", self.run_dir, "form")
+        r = self.refused("done", self.run_dir, "form")
+        self.assertIn("nobody looked", r.stdout)                                  # a value missing from the PDF that nobody looked at
         self.refused("pdfreview", self.run_dir, "--key", "edu", "--result", "disagree", "--quote", "invented words that are not there")
         self.refused("pdfreview", self.run_dir, "--key", "edu", "--result", "disagree", "--quote", "WR Fact Find v3.0")           # needs the PDF's own value
-        self.ok("pdfreview", self.run_dir, "--key", "edu", "--result", "disagree", "--quote", "WR Fact Find v3.0", "--pdf-value", "Diploma")
+        self.refused("pdfreview", self.run_dir, "--key", "edu", "--result", "disagree", "--quote", "WR Fact Find v3.0", "--pdf-value", "Diploma")   # ... and the quote must contain it (A8)
+        self.ok("pdfreview", self.run_dir, "--key", "edu", "--result", "disagree", "--quote", "Highest education: Diploma", "--pdf-value", "Diploma")
         self.ok("done", self.run_dir, "form")
         self.ok("compose", self.run_dir)
         flags = [f["text"] for sec in self.load("content.json")["sections"] for b in sec["blocks"] for r_ in b["rows"] for f in r_["flags"]]
         self.assertTrue(any("data file says 3-year degree" in f and "saved PDF says Diploma" in f for f in flags), flags)
+
+    def test_a_value_hidden_by_editing_the_pdf_record_by_hand_is_caught(self):
+        self.s_start()
+        self.s_locate()
+        make_form_pdf(self.pdf_path, self.form, drop=self.pdf_drop)
+        self.ok("form", self.run_dir, self.form_path)
+        r = self.ok("formpdf", self.run_dir, self.pdf_path)
+        self.assertIn("NOT IN THE PDF: Highest education (edu)", r.stdout)
+        rec = self.load("form_pdf.json")
+        rec["not_found"] = []                                           # someone empties the list instead of looking at the PDF
+        self.write("form_pdf.json", rec)
+        r = self.refused("done", self.run_dir, "form")
+        self.assertIn("form_pdf.json is not what the program finds", r.stdout)
 
     def test_a_missing_saved_pdf_needs_all_three_routes(self):
         self.s_start()
@@ -177,10 +193,8 @@ class Sources(Chat):
         ov = self.load("overlay.json")
         ov["fills"].append({"id": "o99", "key": "debts.1.notes", "value": "Fixed rate", "src": []})
         self.write("overlay.json", ov)
-        self.ok("compose", self.run_dir)
-        out = self.verify("--stage", "pre")
-        self.assertEqual(out.returncode, 1)
-        self.assertIn("has no source", out.stdout)
+        r = self.refused("compose", self.run_dir)                       # the program refuses an entry without a source at once (M2)
+        self.assertIn("needs `src`", r.stdout + r.stderr)
 
     def test_a_fill_with_a_quote_that_is_not_in_the_call_fails(self):
         self.through("content")
@@ -289,7 +303,7 @@ class Rules(Chat):
     def test_a_policy_number_from_the_schedule_wins_and_the_difference_is_flagged(self):
         self.through("prep")
         sched = os.path.join(self.tmp, "sched.txt")
-        spit(sched, "BrightRock policy schedule (invented). Policy number: ZZ445566. Life cover.")
+        spit(sched, "BrightRock policy schedule (invented) for Pat Samplecase. Policy number: ZZ445566. Life cover.")
         self.ok("source", self.run_dir, "--kind", "Policy schedule", "--path", "C:\\liferisk.co.za\\Company - Paul\\New Business\\Samplecase, Pat\\Policies\\sched.pdf", "--date", "2026-10-01",
                 "--read", "yes", "--ref", "BrightRock schedule", "--text-file", sched)
         import compose
@@ -307,6 +321,7 @@ class Rules(Chat):
         f["f"]["bs_req"] = {"v": "Yes", "st": "confirmed"}
         jdump(self.form_path, f)
         self.form = f
+        make_form_pdf(self.pdf_path, f)
         self.through("content")
         c = self.load("content.json")
         subs = [b["sub"] for s in c["sections"] for b in s["blocks"]]
@@ -343,8 +358,11 @@ class QuoteRequests(Chat):
         self.write("overlay.json", {})
         self.ok("compose", self.run_dir)
         self.ok("claim", self.run_dir, "--all-empty")
-        ov = {"asked_paul": [{"id": "q1", "about": "FNA quote", "question": "Which insurer and New Business or Servicing?", "suggestion": "BrightRock, New Business", "paul_said": "BrightRock, New Business"}],
-              "quotes": [{"id": "o1", "group": "fna", "insurer": "BrightRock", "mode": "Servicing", "src": [{"paul": "BrightRock, New Business"}]}]}
+        # Paul's words are recorded by the PROGRAM (ask, then answer); the overlay only refers to them
+        self.ok("ask", self.run_dir, "--need", "fna_quote", "--kind", "knowledge", "--question", "Which insurer should the FNA quote be requested from, and is it New Business or Servicing?",
+                "--searched", "the form, the call, the Overview and the other documents")
+        self.ok("answer", self.run_dir, "--need", "fna_quote", "--said", "BrightRock, New Business")
+        ov = {"quotes": [{"id": "o1", "group": "fna", "insurer": "BrightRock", "mode": "Servicing", "src": [{"ask": "fna_quote"}]}]}
         self.write("overlay.json", ov)
         self.ok("compose", self.run_dir)
         out = self.verify("--stage", "pre")
@@ -356,6 +374,11 @@ class QuoteRequests(Chat):
         row = [r for s in c["sections"] for b in s["blocks"] for r in b["rows"] if r["id"] == "quote.fna"][0]
         self.assertEqual(row["bullets"], ["Insurer: BrightRock", "Basis: New Business"])
         self.assertEqual(c["unsettled"] and [u for u in c["unsettled"] if u.startswith("quote.")], [])
+        # a typed-in answer from Paul is refused (A7)
+        ov["asked_paul"] = [{"id": "q1", "about": "FNA quote", "question": "Which insurer?", "suggestion": "BrightRock", "paul_said": "BrightRock, Servicing"}]
+        self.write("overlay.json", ov)
+        r = self.refused("compose", self.run_dir)
+        self.assertIn("asked_paul is no longer accepted", r.stdout + r.stderr)
 
 
 class UnknownKeys(Chat):
@@ -404,11 +427,12 @@ class SaveProof(Chat):
         self.assertEqual(out.returncode, 1)
         self.assertIn("saved.listed_size is 999 but the local PDF is", out.stdout)
 
-    def test_another_clients_or_brokers_folder_is_not_accepted_as_the_save_folder(self):
+    def test_another_folder_of_the_same_client_is_not_accepted_as_the_save_folder(self):
+        # (another client's and another broker's folders are in test_review_fixes.SaveFolders)
         self.through("check")
         r = self.s_pdf(expect_refusal=True, folder="C:\\liferisk.co.za\\Company - WR Clients\\Paul Kafentzis (Client Files)\\Samplecase, Pat\\3. Applications")
         self.assertNotEqual(r.returncode, 0)
-        self.assertIn("not the client's '2. Fact Find' folder", r.stdout)
+        self.assertIn("does not end in the client's '2. Fact Find' folder", r.stdout)
 
 
 class TwoSpouses(Chat):
