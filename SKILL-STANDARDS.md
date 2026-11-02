@@ -1,6 +1,6 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
-**Version 3.0 (draft for Paul to review)**
+**Version 3.1 (draft for Paul to review)**
 **Last updated: 2026-10-29 13:08 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
@@ -337,6 +337,7 @@ Every run (one client, one meeting) keeps in its own run folder:
 
 12. **Structure after the first real-case trial (Paul, 29/10/2026).** Planner note: per area 1 to 3 one-line bullets (at most 20 words), the actions for now (at most 8), nothing else; the PDF: at most 4 bullets per area (45 words each), two pages at most, the actions for now under Action Points, the waiting ones under Coming up with their trigger, Next Steps for the client only. Paul's answers on the ten actions of his trial: follow up with a third party (yes), get full policy schedules (yes), get credit-life details (yes), get updated quotes (yes); cession (after the policy is issued, so later); remove: what-if question to a provider, asking the clients what they want to do about credit life, cancelling credit life, sending the updated quotes ("she will do that in another step"), setting up the next appointment. The message to Sitamah is shown with the outputs in one reply with one question.
 13. **Action points (Sitamah's checklist) must be thought about intelligently (Paul, 29/10/2026).** Chronological order (earliest deadline first), then logical order (what must happen first comes first); sift out what is not relevant and show what was left out; and when the skill is not sure it ASKS Paul instead of deciding. Paul said to forget the separate skill `planner-interim-procedure`: the rules apply to this skill's action points only.
+14. **The new Fact Find form (Paul, 02/11/2026).** Its data file is the first and primary source of both Fact Find skills (`ff-population-transcript`, `fact-find-summary`), then the Teams transcript, the latest Overview and the client's other documents. The original naming stays: `Fact Find (Audio to Text) - DD.MM.YYYY - Name Surname`. The Dread Disease ABI is **3% always unless Paul states otherwise** (this replaces the 5% of 15/10/2026; the form's preset is 3%). The follow-up appointment is asked for by Paul in the meeting and goes in the Next appointment line; it is never an action (so the form's drafted action "set up a follow-up appointment" is left out). The skills check the form's schema version every run (Paul: yes). Open: how to handle facts the form heard but did not place, a newer answer parked behind an older one, and the company look-up text.
 
 **Still open**
 1. Which skill comes after the Teams transcript skill (Paul names it and says go; one skill at a time, S15)?
@@ -393,6 +394,7 @@ Where: `Company - Paul > Claude > Fact Find Documents > WR Fact Find - ZIP > WR 
 | 2026-10-30 14:49 | Version 2.6: Paul's second real-case trial recorded ("It seems to be working now"); not yet confirmed live |
 | 2026-10-30 14:50 | Version 2.7: Teams transcript skill confirmed LIVE by Paul; S16 condition met (proven in real chats); next skill to be named by Paul |
 | 2026-10-30 15:05 | Version 2.8: SKILL-TEMPLATE.md drafted (13 ingredients and a scorecard) and the study of ff-population-transcript recorded in section 8b; waiting for Paul's answers |
+| 2026-11-02 15:24 | Version 3.1: decision 14 (new Fact Find form is the primary source; Audio to Text naming stays; Dread Disease ABI 3% always; follow-up appointment is not an action; version check) |
 | 2026-11-02 09:11 | Version 2.9: ff-to-ff-populate forgotten at Paul's word (he deploys it by hand); the Audio to Text file may or may not exist when ff-population-transcript runs |
 | 2026-11-02 15:13 | Version 3.0: the new Fact Find form studied and recorded in section 8c (route 2 worked, route 1 not connected) |
 | 2026-10-29 17:47 | Version 2.4: planner-interim-procedure forgotten at Paul's word; decision 13 narrowed to this skill's action points |
