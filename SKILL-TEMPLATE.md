@@ -1,4 +1,4 @@
-# The WR skill template (DRAFT for Paul to approve)
+# The WR skill template (APPROVED by Paul, 02/11/2026, as it is)
 
 Every skill we convert is measured against these 13 ingredients. A skill with an ingredient missing is not finished.
 Source: `SKILL-STANDARDS.md` (S1 to S16) and what Paul asked for while the Teams transcript skill was built and trialled (29/10/2026 and 30/10/2026).
