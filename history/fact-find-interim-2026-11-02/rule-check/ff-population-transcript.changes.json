@@ -1,0 +1,194 @@
+[
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "description: \"Builds the WR Fact Find from the Fact Find (Audio to Text) file and the Teams transcript, using the latest Overview as a reference,",
+  "new": "description: \"Builds the WR Fact Find from the Fact Find form's data file (named Fact Find (Audio to Text)) and the Teams transcript, using the latest Overview as a reference,",
+  "why": "Paul, 02/11/2026 (decision 14): the new Fact Find form's data file is the first source (the name stays Audio to Text); statuses are confirmed/preset/empty (older files heard/verify).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "| 5 | Step 1 / 1b / 1d | Source order; how to read the Audio to Text file; Manual Fact Find as last resort; two spouses in one meeting |",
+  "new": "| 5 | Step 1 / 1b / 1d | Source order; how to read the form's data file (the Audio to Text file) and its schema check; Manual Fact Find as last resort; two spouses in one meeting |",
+  "why": "Paul, 02/11/2026 (decision 14): schema check, parking list not processed, company look-up check.",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "| 12 | Step 7 | Chain: Summary PDF and Planner note Artifact page |",
+  "new": "| 12 | Step 7 | Chain: Summary PDF; Planner note made by the Teams transcript program |",
+  "why": "Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "| 13 | Step 8 | Notify Sitamah in Teams |",
+  "new": "| 13 | Step 8 | The message to Sitamah (made once, by the Teams transcript program) |",
+  "why": "Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "    1. **FIRST and primary: `Fact Find (Audio to Text) - [date] - [Name Surname]`** (the PDF and its JSON). Every field starts from this file.",
+  "new": "    1. **FIRST and primary: the Fact Find form's data file, `Fact Find (Audio to Text) - [date] - [Name Surname]`** (the JSON the new Fact Find form saves, and its PDF; the name stays as it was - Paul, 02/11/2026). Every field starts from this file. Check its `schema` version every run (Step 1b).",
+  "why": "Paul, 02/11/2026 (decision 14): schema check, parking list not processed, company look-up check.",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "whatever its status (`confirmed`, `heard`, `verify`, `preset`).**",
+  "new": "whatever its status (`confirmed`, `preset`; `heard`, `verify` in an older file).**",
+  "why": "Paul, 02/11/2026 (decision 14): the new Fact Find form's data file is the first source (the name stays Audio to Text); statuses are confirmed/preset/empty (older files heard/verify).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "(3) the Planner / AdviceTech note (Step 7b) presented as a copy-ready Artifact page (own window, Copy note button, exact planning-area formatting);",
+  "new": "(3) the Planner / AdviceTech note (Step 7b) made by the Teams transcript program and presented as its copy-ready page (own window, Copy note button);",
+  "why": "Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "(6) once (1) to (5) are approved and saved, the Teams message to Sitamah (Step 8) sent via the Zapier route and the send confirmed.",
+  "new": "(6) the Teams message to Sitamah (Step 8), made by the Teams transcript program, shown in the same reply as (1) to (3) once (1) to (5) are checked and saved, with one question, and sent via the Zapier route only after Paul's yes, the send confirmed.",
+  "why": "Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "**Last updated:** 2026-10-28 10:45 (Athens/Greece time)",
+  "new": "**Last updated: 2026-11-02 22:33 (Athens time)**",
+  "why": "Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "| 2026-10-14 15:03 | Index added; description made plain; changelog archived; client names, policy numbers and beneficiary details in examples replaced with placeholders. No rule changed. |\n",
+  "new": "",
+  "why": "Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "| When (Athens time) | What changed |\n|---|---|\n",
+  "new": "| When (Athens time) | What changed |\n|---|---|\n| 2026-11-02 22:33 | Interim update (Paul, 02/11/2026): the new Fact Find form's data file is the first source (the name stays Fact Find (Audio to Text)); its schema version is checked every run; its parking list (`unplaced`) is not processed; the company look-up text is checked; Dread Disease ABI is 3% unless Paul states otherwise; setting up the follow-up appointment is an action for Sitamah; the Planner note and the Sitamah message are made once, by the Teams transcript program (Steps 7b and 8). |\n",
+  "why": "Paul, 02/11/2026 (decision 14): the Dread Disease ABI is 3% always unless he says otherwise (was 5%).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "(now always produced via `client-teams-transcript-skill`'s Output 1 structure and presented as its copy-ready Artifact page, per Step 7b below)",
+  "new": "(always made by `client-teams-transcript-skill`'s program and presented as its copy-ready page, per Step 7b below)",
+  "why": "Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "1. **The Fact Find (Audio to Text) file** — see Step 1b. This is the first and primary source.",
+  "new": "1. **The Fact Find form's data file (named `Fact Find (Audio to Text)`)** — see Step 1b. This is the first and primary source.",
+  "why": "Paul, 02/11/2026 (decision 14): the new Fact Find form's data file is the first source (the name stays Audio to Text); statuses are confirmed/preset/empty (older files heard/verify).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "1. **Locate it - by content as well as name.** It is normally `Fact Find (Audio to Text) - DD.MM.YYYY - [Name Surname].pdf` plus a `.json` with the same name, in the client's `2. Fact Find` folder (both locations per the Client File Access order). List the whole folder, open the candidates, and use the one dated the meeting date for this client.",
+  "new": "1. **Locate it - by content as well as name.** Paul's new Fact Find form saves a data file (`.json`) and a PDF. The name stays as it always was (Paul, 02/11/2026: keep \"Audio to Text\"): `Fact Find (Audio to Text) - DD.MM.YYYY - [Name Surname].json` plus the same name as `.pdf`, in the client's `2. Fact Find` folder (both locations per the Client File Access order). The form's own test files may be called `Fact Find - DD.MM.YYYY - [Name Surname].json`, and a `Fact Find (Voice to Text)` name may appear, so list the whole folder, open the candidates, and recognise the data file by what is inside it (`app` is `wr-fact-find`), not by its name. Use the one dated the meeting date for this client.",
+  "why": "Paul, 02/11/2026 (decision 14): the new Fact Find form's data file is the first source (the name stays Audio to Text); statuses are confirmed/preset/empty (older files heard/verify).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "2. **Read both the PDF and the JSON.** The PDF is the readable Fact Find (WR Fact Find v3.0). The JSON holds every field with a value `v` and a status `st`: `confirmed`, `heard`, `verify`, `preset` or `empty`; repeating lists (risk policies, retirement funding, debts, children and so on) sit under `l`. Extract both programmatically AND render the PDF pages and look at them. If the PDF and the JSON disagree on a field, flag it and quote both.",
+  "new": "2. **Read both the JSON and the PDF.** The JSON is the first source: every field sits under `f` as a value `v` with a status `st` (`confirmed`, `preset` or `empty`; files from the older form also use `heard` and `verify`), and the repeating lists (risk policies, retirement funding, debts, children and so on) sit under `l` as rows. The PDF is the readable copy of the same Fact Find (WR Fact Find v3.0). Extract both programmatically AND render the PDF pages and look at them. If the PDF and the JSON disagree on a field, flag it and quote both. The form's own area summaries (`sum`) and drafted action list (`pa`, `pa_actions`) are not sources: the facts come from the fields and lists, and the actions for Sitamah come from the Planner note (Step 7b).",
+  "why": "Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "`confirmed`, `heard`, `verify` and `preset` values are all populated values and all go into the Fact Find.",
+  "new": "`confirmed` and `preset` values (and `heard` and `verify` values in an older file) are all populated values and all go into the Fact Find.",
+  "why": "Paul, 02/11/2026 (decision 14): the new Fact Find form's data file is the first source (the name stays Audio to Text); statuses are confirmed/preset/empty (older files heard/verify).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "6. **Say what you did.** The source report (Step 5) states what the Audio to Text file contributed, with every `heard`, `verify` and `preset` entry listed, as well as every difference found.\n",
+  "new": "6. **Say what you did.** The source report (Step 5) states what the Audio to Text file contributed, with every `preset` entry (and every `heard` and `verify` entry in an older file) listed, as well as every difference found.\n7. **Check the form's schema version every run (Paul, 02/11/2026).** Read `schema` at the top of the JSON. This skill knows `3.0`. If it says anything else (the form's code is changed from time to time), stop before building and tell Paul in one line which version you found; never guess how a new version lays out its fields.\n8. **Do not process the parking list (Paul, 02/11/2026).** The JSON's `unplaced` list holds facts the form heard but did not place in a box. That is deliberate: only the crucial facts go into a field. The Teams call is recorded, so the transcript carries everything else; use the transcript for the extra context. Do not read `unplaced` as a source and do not list its entries.\n9. **Use the saved value.** If a field in the file is wrong, Paul corrects it in the form himself and saves again. Never change a value because the transcript sounds different; flag the difference under point 4 as always.\n10. **Check the company look-up text (Paul, 02/11/2026).** The form can look up on the web what a company does and write it into the 'what does the company do' field. Read that text before using it. Throw it out if it talks to the reader (for example \"try again\", \"I found no...\", a question) or is much longer than a short description (more than about 40 words), and replace it from what the client said in the transcript; if the transcript does not say, show `Not stated` and list it for Paul. A clean look-up that nobody confirmed is shown marked \"web look-up, not confirmed with the client\". If the file marks such a look-up `confirmed`, tell Paul in the hand-over message that the form's look-up should say \"to verify\", never \"confirmed\".\n",
+  "why": "Paul, 02/11/2026 (decision 14): schema check, parking list not processed, company look-up check.",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "- **Derive fields the layout implies but nobody stated outright.** E.g. Date of Birth and gender from a South African ID number (first 6 digits YYMMDD; the next four digits below 5000 mean female) - and cross-check against the Audio to Text file.",
+  "new": "- **Derive fields the layout implies but nobody stated outright.** E.g. Date of Birth and gender from a South African ID number (first 6 digits YYMMDD; the next four digits below 5000 mean female) - and cross-check against the Audio to Text file. If a 'number of years' field holds a year (for example 2015) instead of a count, work out the years (the meeting year minus that year) and show it as \"since 2015\".",
+  "why": "Paul, 02/11/2026 (decision 14): the new Fact Find form's data file is the first source (the name stays Audio to Text); statuses are confirmed/preset/empty (older files heard/verify).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "  - **Dread Disease ABI Value = 5%.**",
+  "new": "  - **Dread Disease ABI Value = 3% always, unless Paul states otherwise for that client (Paul, 02/11/2026; this replaces the 5% of 15/10/2026 - the new form presets 3%).**",
+  "why": "Paul, 02/11/2026 (decision 14): the Dread Disease ABI is 3% always unless he says otherwise (was 5%).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "9. **The Planner note (Step 7b)** — confirm it uses `client-teams-transcript-skill`'s Output 1 planning-area structure (Risk / Retirement / Investment / Medical Aid-Will-Short-Term / Applications / Actions / Next appointment), not the retired fixed 6-part layout, that every action is written as `Sitamah to ...`, and that it is presented as the copy-ready Artifact page (not chat text or a code block).",
+  "new": "9. **The Planner note (Step 7b)** — confirm it was made by the Teams transcript program (its checker says PASS), that every action is written as `Sitamah to ...`, that setting up the follow-up appointment is an action when one was asked for, and that it is presented as its copy-ready page (not chat text or a code block).",
+  "why": "Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "every `heard`, `verify` and `preset` entry is listed in the source report.",
+  "new": "every `preset` entry (and every `heard` and `verify` entry in an older file) is listed in the source report; the schema version was checked (Step 1b, point 7); the `unplaced` list was not processed; and the company look-up text was checked (Step 1b, point 10).",
+  "why": "Paul, 02/11/2026 (decision 14): schema check, parking list not processed, company look-up check.",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "Dread Disease ABI is 5%; and the Summary's Section 8 shows the same.",
+  "new": "Dread Disease ABI is 3% (unless Paul stated otherwise); and the Summary's Section 8 shows the same.",
+  "why": "Paul, 02/11/2026 (decision 14): the Dread Disease ABI is 3% always unless he says otherwise (was 5%).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "(b) every Audio to Text field that was populated with status `heard`, `verify` or `preset`, with what was done with it",
+  "new": "(b) every Audio to Text field that was populated with status `preset` (or `heard` or `verify` in an older file), with what was done with it",
+  "why": "Paul, 02/11/2026 (decision 14): the new Fact Find form's data file is the first source (the name stays Audio to Text); statuses are confirmed/preset/empty (older files heard/verify).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "then present the Planner note as its copy-ready Artifact page, in `client-teams-transcript-skill`'s Output 1 planning-area structure, with one short sentence in the reply saying what the page is. All three outputs come from one trigger — the advisor shouldn't have to ask for the summary, the Planner note, or the folder save separately once the Fact Find itself is approved. **Only after all three are approved and saved, finish with Step 8 (the Teams message to Sitamah).**",
+  "new": "then present the Planner note as its copy-ready page, with one short sentence in the reply saying what the page is, and show the message to Sitamah with its one question (Step 8). All three outputs come from one trigger — the advisor shouldn't have to ask for the summary, the Planner note, or the folder save separately once the Fact Find itself is approved.",
+  "why": "Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.",
+  "needs_paul": false
+ }
+]

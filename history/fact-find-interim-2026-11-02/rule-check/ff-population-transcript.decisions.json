@@ -1,0 +1,14 @@
+[
+ {
+  "from_prefix": "7b. Planner / AdviceTech note (via",
+  "to_prefix": "Named precedent: [client A], 07.10.26 (review) — Paul rejected the fixed 6-part",
+  "reason": "Replaced by the hand-over to the Teams transcript program (Paul, 02/11/2026). The old text pointed at an 'Output 1' section that no longer exists. Kept elsewhere: independent actions are separate lines and the FNA insurer and New Business or Servicing rule (Step 3); Sitamah-only actions, the copy-ready page and no code block (Teams skill rules); Debts/Childcare/Health left out unless notable (the eight areas rule).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Step 8: Notify Sitamah in Teams (Paul's rule, 09/10/2026",
+  "to_prefix": "Check and report: Zapier returns a message id",
+  "reason": "Moved to the Teams transcript skill (references/07-teams-message.md and its step texts): the message wording with (Review Client)/(Prospect), the 1st/2nd/3rd count, the follow-up sentence check, show your check, the Zapier-only route, the 403 on the Microsoft 365 connector, once per meeting and Paul's yes. This skill now says only when it is shown and sent.",
+  "needs_paul": false
+ }
+]

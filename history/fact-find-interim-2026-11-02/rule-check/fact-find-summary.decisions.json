@@ -1,0 +1,8 @@
+[
+ {
+  "from_prefix": "Step 8: Notify Sitamah in Teams after the meeting",
+  "to_prefix": "Check and report: Zapier returns a message id",
+  "reason": "Moved to the Teams transcript skill (references/07-teams-message.md and its step texts): wording, label, count, follow-up sentence check, show your check, the Zapier route, once per meeting, Paul's yes. This skill now says only when it is shown and sent.",
+  "needs_paul": false
+ }
+]

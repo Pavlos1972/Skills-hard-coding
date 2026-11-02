@@ -1,0 +1,130 @@
+[
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "from a completed WR Client Fact Find (v3.0 layout, built from the Audio to Text file and transcript), plus the other two outputs",
+  "new": "from a completed WR Client Fact Find (v3.0 layout, built from the Fact Find form's data file - named Audio to Text - and the transcript), plus the other two outputs",
+  "why": "Paul, 02/11/2026 (decision 14): the new Fact Find form's data file is the first source (the name stays Audio to Text); statuses are confirmed/preset/empty (older files heard/verify).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "| 11 | Step 8: notify Sitamah in Teams | Message format, Zapier route, Paul's yes |",
+  "new": "| 11 | Step 8: the message to Sitamah | Made once, by the Teams transcript program; shown with the outputs; Paul's yes |",
+  "why": "Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "(1) the client's `Fact Find (Audio to Text) - [date] - [Name Surname]` PDF and JSON is the first and primary source;",
+  "new": "(1) the Fact Find form's data file, `Fact Find (Audio to Text) - [date] - [Name Surname]` (the JSON the new Fact Find form saves, and its PDF; the name stays as it was - Paul, 02/11/2026), is the first and primary source;",
+  "why": "Paul, 02/11/2026 (decision 14): the new Fact Find form's data file is the first source (the name stays Audio to Text); statuses are confirmed/preset/empty (older files heard/verify).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "Whatever is populated in the Audio to Text file is used, whatever its status (confirmed, heard, verify, preset).",
+  "new": "Whatever is populated in the Audio to Text file is used, whatever its status (confirmed or preset; heard or verify in an older file). **The form's data file, three standing rules (Paul, 02/11/2026):** its `schema` value is checked every run and must be `3.0` (if not, stop and tell Paul in one line); the `unplaced` list (facts the form heard but did not place) is not processed, because the recorded transcript supplies the extra context; and where the Fact Find replaced chatter in the company look-up text with the transcript's words (`ff-population-transcript` Step 1b, point 10), that is deliberate and not a difference to flag.",
+  "why": "Paul, 02/11/2026 (decision 14): schema check, parking list not processed, company look-up check.",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "the Planner note delivered ONLY as the rendered Artifact page in the window on the right with the Copy button (never pasted in the chat, a code block, or a raw .html/.txt/.md file); (6) once (1) to (5) are approved and saved, the Teams message to Sitamah (Step 8) was shown to Paul, sent via the Zapier route only after his yes (or confirmed already sent for this meeting by `ff-population-transcript`), and the send confirmed.",
+  "new": "the Planner note made by the Teams transcript program and delivered ONLY as its rendered copy-ready page in the window on the right with the Copy button (never pasted in the chat, a code block, or a raw .html/.txt/.md file); (6) the Teams message to Sitamah (Step 8), made by the same program, was shown to Paul in the same reply as the outputs once (1) to (5) were checked and saved, sent via the Zapier route only after his yes (or confirmed already sent for this meeting), and the send confirmed.",
+  "why": "Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "**Last Updated:** 28 October 2026, 10:58 (Athens/Greece time)",
+  "new": "**Last updated: 2026-11-02 22:33 (Athens time)**",
+  "why": "Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "| 2026-10-14 13:55 | New Step 8: notify Sitamah in Teams after all three outputs are approved (Zapier route, Paul's yes, once per meeting); Delivery gate (6) added. |\n",
+  "new": "",
+  "why": "Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "| When (Athens time) | What changed |\n|---|---|\n",
+  "new": "| When (Athens time) | What changed |\n|---|---|\n| 2026-11-02 22:33 | Interim update (Paul, 02/11/2026): the new Fact Find form's data file is the first source (the name stays Fact Find (Audio to Text)); its schema version is checked every run; its parking list (`unplaced`) is not processed; Dread Disease ABI is 3% unless Paul states otherwise (was 5%); the Planner note and the Sitamah message are made once, by the Teams transcript program (Step 8). |\n",
+  "why": "Paul, 02/11/2026 (decision 14): the Dread Disease ABI is 3% always unless he says otherwise (was 5%).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "Whatever is populated in the Audio to Text file (confirmed, heard, verify or preset) is a populated value and belongs in the Summary.",
+  "new": "Whatever is populated in the Audio to Text file (confirmed or preset; heard or verify in an older file) is a populated value and belongs in the Summary.",
+  "why": "Paul, 02/11/2026 (decision 14): the new Fact Find form's data file is the first source (the name stays Audio to Text); statuses are confirmed/preset/empty (older files heard/verify).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "## Standing ABIs in Section 8 (Paul, 15 October 2026)",
+  "new": "## Standing ABIs in Section 8 (Paul, 15 October 2026; Dread Disease changed 2 November 2026)",
+  "why": "Paul, 02/11/2026 (decision 14): the Dread Disease ABI is 3% always unless he says otherwise (was 5%).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "- **Dread Disease ABI = 5%.**",
+  "new": "- **Dread Disease ABI = 3% always, unless Paul states otherwise for that client (Paul, 02/11/2026; this replaces the 5% of 15 October 2026, and the new Fact Find form presets 3%).**",
+  "why": "Paul, 02/11/2026 (decision 14): the Dread Disease ABI is 3% always unless he says otherwise (was 5%).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "(named precedent: [client H], 27.10.26 — the Audio to Text file showed a Dread Disease ABI of 3% and had no Household needs ABI line under Permanent disability fractured; 5% was written, the Household needs ABI line was added, and both were mentioned to Paul in one line)",
+  "new": "(named precedent: [client H], 27.10.26 — the Audio to Text file had no Household needs ABI line under Permanent disability fractured; the line was added at 5% and mentioned to Paul in one line. That file's Dread Disease ABI of 3% was then overwritten with 5%; since 02/11/2026 3% is the standard, so that case no longer arises)",
+  "why": "Paul, 02/11/2026 (decision 14): the Dread Disease ABI is 3% always unless he says otherwise (was 5%).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "Also open the client's `Fact Find (Audio to Text)` PDF and JSON and the Teams transcript, which the accuracy check in step 3 needs,",
+  "new": "Also open the client's `Fact Find (Audio to Text)` JSON and PDF (the Fact Find form's data file: recognise it by what is inside, `app` is `wr-fact-find`, and check that `schema` is `3.0` per rule 10) and the Teams transcript, which the accuracy check in step 3 needs,",
+  "why": "Paul, 02/11/2026 (decision 14): schema check, parking list not processed, company look-up check.",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "8. **Notify Sitamah in Teams — the very last step (Paul's rule, 14/10/2026).** Only AFTER the Fact Find Transcript PDF, this Summary PDF (sent in chat and saved, folder listing checked) and the Planner note page have all been produced, checked and approved by Paul. Details below.",
+  "new": "8. **The message to Sitamah (Paul's rule, 14/10/2026; made once, by the Teams transcript program, since 02/11/2026).** Shown in the same reply as the Fact Find Transcript PDF, this Summary PDF (sent in chat and saved, folder listing checked) and the Planner note page, with one question; sent only after Paul's yes. Details below.",
+  "why": "Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "with no Life Cover (WOL) ABI there; Dread Disease ABI 5%)",
+  "new": "with no Life Cover (WOL) ABI there; Dread Disease ABI 3%)",
+  "why": "Paul, 02/11/2026 (decision 14): the Dread Disease ABI is 3% always unless he says otherwise (was 5%).",
+  "needs_paul": false
+ },
+ {
+  "file": "SKILL.md",
+  "kind": "reworded",
+  "old": "3. **The summarized Planner / AdviceTech Notes of the client meeting** — built via",
+  "new": "3. **The summarized Planner / AdviceTech Notes of the client meeting** — made by `client-teams-transcript-skill`'s program (run with `--type first`)",
+  "why": "Paul, 02/11/2026: the Planner note is made by the Teams transcript program; the strict delivery rule (copy-ready page only, never chat, code block or file) is kept.",
+  "needs_paul": false
+ }
+]
