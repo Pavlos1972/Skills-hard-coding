@@ -1,6 +1,6 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
-**Version 2.9 (draft for Paul to review)**
+**Version 3.0 (draft for Paul to review)**
 **Last updated: 2026-10-29 13:08 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
@@ -367,6 +367,15 @@ Purpose: builds the completed WR Fact Find (11 sections, v3.0 layout) as a PDF f
 - **Weaknesses:** (1) 300 lines, 60 KB, nothing enforced by a program: no step driver, no reading lock, no source trace, a 13-point re-check done by hand. (2) `scripts/build_fact_find.js` still holds a REAL client's name, ID number, emails and income (S11 breach, and a cross-client leak risk because the chat must overwrite every row by hand). (3) The script and `references/ff-field-map.md` still follow the retired v2.0 layout while the skill says the layout is v3.0. (4) Step 7b names the old Planner headings and points at a text section of the Teams skill that no longer exists (it is a program now). (5) Step 8 (Teams message) has no (Review Client)/(Prospect) label, says `Review Teams Appointment`, and is sent only after everything is approved (the flaw that stopped the message being offered); `fact-find-summary` has the same step, so two skills own the Planner note and the message. (6) Rules 1 and 9 are the old method (reload after compression; the Update skill card). (7) The stamp is typed by hand. (8) Dated attributions and a changelog at the top.
 - **Not checked:** the skill was read, not run; the script was not run; no real Audio to Text file or finished Fact Find was seen.
 
+## 8c. The new Fact Find form (studied 02/11/2026; no client data kept here)
+
+Where: `Company - Paul > Claude > Fact Find Documents > WR Fact Find - ZIP > WR Fact Find` (SharePoint, read through the Microsoft 365 connector; route 1, the computer, was not connected). Voice logs sit in `Fact Find Documents > Save Log Reports`.
+- **What it is:** a Chrome page (index.html + js, css, assets, vendor; started by `Start Fact Find.bat` / `FactFindServer.ps1`). Paul uses it in the meeting: Listen (microphone: Whisper on the computer, Chrome speech, or OpenAI transcription), Voice mode (a Claude model decides which box each heard fact belongs in), meeting timer, Save, Save as, Preview PDF, Save PDF, progress counts (filled, to verify, not asked) and checks. App version 3.0, October 2026.
+- **What it saves:** (1) the Fact Find data file (JSON, `app: wr-fact-find`, `schema: 3.0`): `f` = every field as `{v, st}` with st `confirmed`, `preset`, `empty` (older files also `heard`, `verify`); `l` = repeating lists (risk, grp, ret_ra, ret_pp, inv, bizpol, shares, debts, kids, bfred, redq, raq, invq) as rows `{d, st}`; `sum` = a short summary per area (life, ra, rgar, inv, egar, med, will, st); `pa`/`pa_actions` = an action list drafted by Claude; `unplaced` = facts heard but not placed in any box, with the reason; cost counters. (2) A PDF (Save PDF). (3) A voice log per session (lines heard, who spoke, what the page did with each).
+- **File names seen:** `Fact Find (Audio to Text) - DD.MM.YYYY - Name Surname.json` (client folder), `Fact Find - DD.MM.YYYY - Name Surname.json` (new form, test client), and Paul's planned `Fact Find (Voice to Text) - dd.mm.yy - (name surname)`. No "Voice to Text" file exists yet. So the skills must find the file by content (`app` = `wr-fact-find`), not by name.
+- **Findings to handle in the skills:** `unplaced` facts must be read and handled, not ignored; a heard answer can lose to an older confirmed one; the form's own action list breaks three settled rules (it names the client where Sitamah is the owner, includes setting up the next appointment, and asks the client things); a preset Dread Disease ABI of 3% differs from the standing 5%; the company look-up wrote the model's own chatter into the "what does the company do" field and marked it confirmed; "Number of years" held a year; a trailing space in the first name; keys are kept in the browser as plain text and the page says its address is shared with other pages under the same GitHub Pages site; the form's `.js` files were changed today, so the schema version must be checked each run.
+- **Not seen:** `schema.js` and the other `.js`, `.bat` and `.ps1` files (the connector cannot read those types), the form's PDF, any real "Voice to Text" file.
+
 ## 9. Skill tracker
 
 | Skill | Status |
@@ -385,6 +394,7 @@ Purpose: builds the completed WR Fact Find (11 sections, v3.0 layout) as a PDF f
 | 2026-10-30 14:50 | Version 2.7: Teams transcript skill confirmed LIVE by Paul; S16 condition met (proven in real chats); next skill to be named by Paul |
 | 2026-10-30 15:05 | Version 2.8: SKILL-TEMPLATE.md drafted (13 ingredients and a scorecard) and the study of ff-population-transcript recorded in section 8b; waiting for Paul's answers |
 | 2026-11-02 09:11 | Version 2.9: ff-to-ff-populate forgotten at Paul's word (he deploys it by hand); the Audio to Text file may or may not exist when ff-population-transcript runs |
+| 2026-11-02 15:13 | Version 3.0: the new Fact Find form studied and recorded in section 8c (route 2 worked, route 1 not connected) |
 | 2026-10-29 17:47 | Version 2.4: planner-interim-procedure forgotten at Paul's word; decision 13 narrowed to this skill's action points |
 | 2026-10-29 17:42 | Version 2.3: Paul's request recorded (decision 13): action points and checklist items ordered chronologically then logically, irrelevant ones sifted out, the skill asks when unsure; not built yet |
 | 2026-10-29 17:21 | Version 2.2: the skill rebuilt to Paul's answers after the first real-case trial (short Planner note, PDF limits, actions sorted now/later, message to Sitamah shown with the outputs); decision 12 recorded |
