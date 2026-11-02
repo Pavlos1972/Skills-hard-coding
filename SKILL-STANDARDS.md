@@ -1,6 +1,6 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
-**Version 4.0 (draft for Paul to review)**
+**Version 4.1 (draft for Paul to review)**
 **Last updated: 2026-10-29 13:08 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
@@ -349,6 +349,8 @@ Every run (one client, one meeting) keeps in its own run folder:
 
 19. **The 13-ingredient template is APPROVED as it is (Paul, 02/11/2026).** `SKILL-TEMPLATE.md` is the measure for every skill from now on. Changes to it are added only when Paul asks. The structure questions for each next skill are asked when Paul names that skill and says go (S15).
 
+20. **Build the program for `ff-population-transcript` now (Paul, 02/11/2026, after he asked whether the two Fact Find skills had been verified).** This SUPERSEDES decision 18. Order: `ff-population-transcript` first, then `fact-find-summary` (one at a time, S15). Paul's words: "Make sure it executes as intended", so the build ends with a full end-to-end run of the program on made-up data, the checker, the tests, lint and the rule-by-rule check, and an independent review, and the real test is still a run on a real client. Decisions 15 and 16 stand (fixed 11-section report built by program, look unchanged, stop and ask when the form file is missing, no 8:45am rule). The helper's unfinished work was restored from commit 62cb4e1 and is being continued.
+
 **Still open**
 1. Which skill comes after the Teams transcript skill (Paul names it and says go; one skill at a time, S15)?
 2. (Closed 30/10/2026) The Teams transcript skill is LIVE: Paul uploaded the 17:53 build (v34), ran it on real meetings and confirmed.
@@ -406,6 +408,7 @@ Where: `Company - Paul > Claude > Fact Find Documents > WR Fact Find - ZIP > WR 
 | 2026-10-30 14:50 | Version 2.7: Teams transcript skill confirmed LIVE by Paul; S16 condition met (proven in real chats); next skill to be named by Paul |
 | 2026-10-30 15:05 | Version 2.8: SKILL-TEMPLATE.md drafted (13 ingredients and a scorecard) and the study of ff-population-transcript recorded in section 8b; waiting for Paul's answers |
 | 2026-11-02 17:05 | Version 3.5: decision 17 recorded (the form's own saved PDF is the Fact Find); the helper's build stopped |
+| 2026-11-02 20:10 | Version 4.1: decision 20 (build the program for ff-population-transcript now; supersedes decision 18); the helper's earlier work restored |
 | 2026-11-02 19:30 | Version 4.0: rule-by-rule check of the two interim Fact Find skills run and recorded (nothing lost by accident; two minor items for the next Teams change); lint, tests and a real run still not done |
 | 2026-11-02 18:40 | Version 3.9: decision 19, the 13-ingredient template approved by Paul as it is |
 | 2026-11-02 18:20 | Version 3.8: Teams skill 15:55 build uploaded as v35 by the Chrome chat (reported); waiting for Paul to confirm it is live; the two Fact Find zips still to upload, one at a time |
