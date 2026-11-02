@@ -34,7 +34,7 @@ The Teams transcript skill has all 13 and is the working model: `client-teams-tr
 - The eight planning areas and their order; "Other" only when notable. Each its own heading.
 - The Planner note is a private copy-ready page, never a code block, built by program. One-line bullets (3 per area at most, 20 words), only the actions for now.
 - The PDF: 4 bullets per area (45 words), two pages at most. Next Steps are the client's only.
-- Actions are all `Sitamah to ...`. Never an action: what the client decides, cancelling credit life, sending quotes or the what's-next email, setting up the next meeting, Paul's own steps. A cession is a later action.
+- Actions are all `Sitamah to ...`. Never an action: what the client decides, cancelling credit life, sending quotes or the what's-next email, Paul's own steps. A cession is a later action. Setting up the follow-up appointment IS an action for Sitamah at every meeting (Paul, 02/11/2026: she books it, or sends the Teams meeting request).
 - The message to Sitamah: `Name Surname (Review Client|Prospect) - Nth Teams Appointment Completed: DD/MM/YYYY ...` (WhatsApp: `WhatsApp Call Completed`), label from where the client's folder sits, shown with the outputs in one reply, sent through Zapier only after Paul's yes, once per meeting.
 - Client facts come from the client's file first, ask Paul last. Three access routes in order, each logged.
 - Outdated text: dropped when clearly replaced, a yes/no list to Paul for anything uncertain. The short true stories in the rules stay (names removed).
