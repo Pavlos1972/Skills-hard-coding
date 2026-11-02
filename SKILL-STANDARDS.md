@@ -1,6 +1,6 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
-**Version 3.3 (draft for Paul to review)**
+**Version 3.4 (draft for Paul to review)**
 **Last updated: 2026-10-29 13:08 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
@@ -341,6 +341,8 @@ Every run (one client, one meeting) keeps in its own run folder:
 
 15. **Fact Find Transcript layout (Paul, 02/11/2026, question 3 of the ff-population-transcript questions):** fixed 11 sections plus Next Steps, drawn by a program in the same order every time (the new form's sections: Client Info, Occupation, Income & Household, Existing Cover & Retirement, Investments, Medical/Will/Short-Term, Debts, Children, Health, Advisor Actions, Risk Calculation). The form's schema-version check stops the skill if the form's layout changes, and the skill is then updated once.
 
+16. **ff-population-transcript: look, missing form file, laptop window (Paul, 02/11/2026, questions 4 to 6):** (a) the look of the Fact Find Transcript PDF stays exactly as now: Aptos 12pt, navy headings (1F3A5F), light-blue label column (EAF1F8), one fact per line, no page numbers, and Paul checks one sample; (b) if the form's data file is missing for a meeting (searched on all three routes), the skill STOPS and ASKS Paul whether to use the filled-in Manual Fact Find PDF or the transcript alone, and records his words; (c) the 8:45am laptop window is dropped: every run tries the computer first, then Microsoft 365, then Zapier, logs each try, and never skips or comments because of the time of day.
+
 **Still open**
 1. Which skill comes after the Teams transcript skill (Paul names it and says go; one skill at a time, S15)?
 2. (Closed 30/10/2026) The Teams transcript skill is LIVE: Paul uploaded the 17:53 build (v34), ran it on real meetings and confirmed.
@@ -397,6 +399,7 @@ Where: `Company - Paul > Claude > Fact Find Documents > WR Fact Find - ZIP > WR 
 | 2026-10-30 14:49 | Version 2.6: Paul's second real-case trial recorded ("It seems to be working now"); not yet confirmed live |
 | 2026-10-30 14:50 | Version 2.7: Teams transcript skill confirmed LIVE by Paul; S16 condition met (proven in real chats); next skill to be named by Paul |
 | 2026-10-30 15:05 | Version 2.8: SKILL-TEMPLATE.md drafted (13 ingredients and a scorecard) and the study of ff-population-transcript recorded in section 8b; waiting for Paul's answers |
+| 2026-11-02 16:25 | Version 3.4: decisions 15 and 16 (fixed 11-section layout, look unchanged, ask Paul when the form file is missing, laptop window dropped); all six ff-population-transcript questions answered; proposal for the rebuild next |
 | 2026-11-02 16:05 | Version 3.3: interim text update of `ff-population-transcript` and `fact-find-summary` made (zips outside the repo, not uploaded); Teams transcript skill changed so the follow-up appointment IS an action (228 tests, lint PASS, inventory 0 unaccounted; packaged, not uploaded, not live) |
 | 2026-11-02 15:43 | Version 3.2: decision 14 completed (parked facts not processed; follow-up appointment IS an action at every meeting, reversing 29/10 in the Teams skill; look-up text checked and replaced) |
 | 2026-11-02 15:24 | Version 3.1: decision 14 (new Fact Find form is the primary source; Audio to Text naming stays; Dread Disease ABI 3% always; follow-up appointment is not an action; version check) |
