@@ -122,8 +122,10 @@ def register(fontrec):
         cands = sorted((p for p in _files_in(DEFAULT_DIRS) if _stem_match(p, "dejavusans")), key=lambda p: (_style_of(p) != "bold", p))
         if cands:
             try:
-                pdfmetrics.registerFont(TTFont("WR-Mark", cands[0]))
+                gt = TTFont("WR-Mark", cands[0])
+                pdfmetrics.registerFont(gt)
                 mark, gfont = "\u26a0", "WR-Mark"
+                fontrec["glyph_ps"] = gt.face.name.decode("latin-1") if isinstance(gt.face.name, bytes) else str(gt.face.name)
             except Exception:  # pragma: no cover
                 pass
     fontrec.update(mark=mark, glyph_font=gfont)
@@ -229,7 +231,7 @@ def build_pdf(content, path, lay=None, fontrec=None):
                             bottomMargin=st["margin_cm"] * cm, title=(content.get("file_name") or "Fact Find Transcript").replace(".pdf", ""), author="Wealth Revolution",
                             subject="Fact Find Transcript")
     doc.build(story)
-    return {"headings": headings, "font": {k: fontrec.get(k) for k in ("wanted", "family", "ps_names", "aptos", "substitute", "mark")}}
+    return {"headings": headings, "font": {k: fontrec.get(k) for k in ("wanted", "family", "ps_names", "aptos", "substitute", "mark", "glyph_ps")}}
 
 
 def render_pngs(pdf, out):
@@ -265,7 +267,7 @@ def main():
     rjp = os.path.join(run, w.RUN)
     if os.path.exists(rjp):                  # a rebuild re-opens every later step (Paul's rule: a correction re-opens the whole task)
         rj = w.load_json(rjp)
-        later = ["check", "pdf", "handoffs", "reply", "final"]
+        later = ["check", "pdf", "handoffs", "final"]
         again = [sid for sid in later if (rj.get("steps", {}).get(sid) or {}).get("state") == "done"]
         for sid in later:
             rj.get("steps", {}).pop(sid, None)
