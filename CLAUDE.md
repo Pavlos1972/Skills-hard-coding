@@ -1,5 +1,7 @@
 # Read first (Claude Code, this repo)
 
+**OPERATION SKILL RESTRUCTURE (Paul, 03/11/2026): the goal of this work and the ONE fixed procedure for every skill. Read  before any skill work, follow it strictly and in order, and call it by that name. One skill at a time; only ONE test per skill; no helpers; ask Paul before starting the next skill. Update its Progress table after every phase.**
+
 **Also read `CHAT-NOTES.md` (Paul, 03/11/2026): where things stand, what Paul wants, what went wrong, what comes next. Above all: NO helpers (subagents) and NO endless test rounds, because Paul's tokens are a budget.**
 
 This repo holds the hard-coded versions of Paul Kafentzis's skills (Wealth Revolution). Before touching

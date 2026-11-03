@@ -1,7 +1,7 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
-**Version 4.5 (draft for Paul to review)**
-**Last updated: 2026-11-03 08:31 (Athens time)**
+**Version 4.6 (draft for Paul to review)**
+**Last updated: 2026-11-03 09:12 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
 Every future Claude Code session in this repo must read it before touching any skill
@@ -353,6 +353,8 @@ Every run (one client, one meeting) keeps in its own run folder:
 
 21. **No helpers and no more test rounds (Paul, 03/11/2026).** After six fix-and-review rounds with helpers on `ff-population-transcript` Paul said: "we've done enough tests", "you have eaten all my tokens. No more helpers." Claude Code does NOT start helpers, subagents or independent reviewers unless Paul asks in his own words, and does not run review loops. One build, one lint, one full test run, one package per skill; say roughly how big a job is first. The finished `ff-population-transcript` (round 5, commit d434670) goes to packaging as it is; the unproven round 6 is set aside (commit d3cbb19). The real test is a run on a real client. See `CHAT-NOTES.md`.
 
+22. **Operation Skill Restructure (Paul, 03/11/2026).** The fixed procedure applied to every skill, one at a time: Phase A read and analyse (flaws, duplications, 13-ingredient score, Findings Report and yes/no list), Phase B plan (one route, Paul approves), Phase C build in one pass, Phase D prove with ONE test only (lint, rule-by-rule check, one end-to-end test on invented data), Phase E package and hand over, Phase F close out and ask Paul for the next skill. No helpers. Saved in  (with a Progress table) and pointed to from CLAUDE.md.
+
 **Still open**
 1. Which skill comes after the Teams transcript skill (Paul names it and says go; one skill at a time, S15)?
 2. (Closed 30/10/2026) The Teams transcript skill is LIVE: Paul uploaded the 17:53 build (v34), ran it on real meetings and confirmed.
@@ -406,6 +408,7 @@ Where: `Company - Paul > Claude > Fact Find Documents > WR Fact Find - ZIP > WR 
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-11-03 09:12 | Version 4.6: decision 22, Operation Skill Restructure approved and saved (OPERATION-SKILL-RESTRUCTURE.md) |
 | 2026-11-03 08:31 | Version 4.5: Teams skill v35 confirmed LIVE by Paul ("Yes, v35 is live") |
 | 2026-11-03 08:30 | Version 4.4: `ff-population-transcript` uploaded as v33 by a Chrome chat (reported); not confirmed live; the real upload subfolder is `ff-population-transcript-skill` |
 | 2026-11-03 07:17 | Version 4.3: decision 21 (no helpers, no more test rounds); round 6 set aside; `CHAT-NOTES.md` written; round-5 `ff-population-transcript` goes to packaging |
