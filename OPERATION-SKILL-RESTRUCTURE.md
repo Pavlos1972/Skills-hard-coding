@@ -85,6 +85,7 @@ It sits on top of SKILL-STANDARDS.md (the standards S1 to S16) and SKILL-TEMPLAT
 | `client-teams-transcript-skill` | Built BEFORE this list existed (heavier method). Not redone unless Paul asks. | v35 LIVE (Paul confirmed 03/11/2026) |
 | `ff-population-transcript` | Built BEFORE this list existed (heavier method). Not redone unless Paul asks. | v33 uploaded 03/11/2026 (reported); NOT confirmed live; Paul runs it on a real client first |
 | `fact-find-summary` | DONE 03/11/2026 (Phases A to F, no helpers, one test passed on the source and on the unpacked zip). Program reads the Fact Find Transcript PDF (needs `pdfplumber`), builds the nine sections, recomputes totals, draws an A4 PDF; SHORT audit of ticks and crosses; Planner note and Sitamah message left this skill; follow-up owners Cameron, CL, Valerie, Lizelle (Lizelle replaces Martin). Rule-by-rule check: 392 old rules, 13 kept, 93 reworded, 286 dropped on record, 0 unaccounted. | v18 UPLOADED 03/11/2026 (reported by a Chrome chat; v17 before; 15 files; test chat correct). NOT confirmed live by Paul: he runs it on a real client first. Backup zip of the old 2 files held by Paul. Open: 5 yes/no design questions in `fact-find-summary/history/CHANGES-FOR-PAUL.md`. |
+| `client-transcript-download` | CHOSEN by Paul 03/11/2026. PHASE A DONE 03/11/2026 (read-only; findings in `client-transcript-download/history/PHASE-A-FINDINGS.md`): 12 flaws, 3 duplications between skills, score 0 full / 4 partial / 6 missing / 3 not applicable. Main finding: the skill says the Microsoft 365 connector cannot fetch transcripts, but the connector now has the transcript permission (not yet proven by a real try). 5-question yes/no list given to Paul. | WAITING for Paul's answers, then Phase B (plan). Nothing built or changed. |
 | All other skills | NOT started. Paul names the next one. | |
 
 ## Skills still to do (sizes of the live copies, checked 03/11/2026; Paul names the next one)
@@ -119,6 +120,7 @@ Others on Paul's list (not yet sized): `advicetech-website-knowledge`, `alpha-ba
 8. **A `fact-find-summary` run ends with a SHORT audit** (ticks and crosses): that is the pattern for every skill built under this Operation.
 
 ## Running log
+- 03/11/2026: `client-transcript-download` Phase A done (no helpers, no tests). Main finding: the M365 connector now holds OnlineMeetingTranscript.Read.All, so the old 'Chrome only' rule is outdated (unproven until one real try). Waiting for Paul's answers.
 - 03/11/2026: Paul said "Update MD doc. then next skill". This file updated (Progress row cleaned, sizes of the skills still to do, practical notes). Next skill: Paul names it; recommendation given.
 - 03/11/2026: `fact-find-summary` uploaded as v18 (reported); not confirmed live. Operation Skill Restructure Phases A to F done for this skill. Asked Paul whether he is ready for the next skill.
 - 03/11/2026: Paul approved replacing `fact-find-summary` (v17) at the can't-be-restored box after saving the backup zip. Instruction sent for the Chrome chat to finish the upload.
