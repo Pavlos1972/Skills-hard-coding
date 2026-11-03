@@ -52,4 +52,11 @@ Full 0. Partial 6 (1 short entry page, 2 inputs, 5 evidence, 6 built by program,
 7. **Replacement:** the program sets the document-level replacement flag to true whenever any cover type is a replacement, and refuses a reason text that says "no Risk Cover currently in force" for a cover type marked new while another is replaced. (Yes)
 
 ## Status
-Phase A report given to Paul 03/11/2026. Waiting for his answers.
+Phase A report given to Paul 03/11/2026.
+
+## Paul's answers (03/11/2026)
+"Agree to all - BUT make sure that the skill works FULLY as intended including email embedding as before": yes to 1 to 7 as recommended, with one condition: the Retirement/Investment email embedding must keep working exactly as before. (1) No client data in the rebuilt skill. (2) The two scripts stay as the base, fixed and unchangeable during a run; the checker opens the finished .docx. (3) The program picks the Risk reason paragraph word for word from the bank; custom wording is marked. (4) Figures are checked against the quote's text; BrightRock only, other insurers stop and ask. (5) Saving through computer, Microsoft 365, Zapier, never overwriting; the HTML path is removed. (6) Step 0b run by the program with one question. (7) The replacement flag follows the cover types.
+
+Found while planning: `wkhtmltopdf` (which the embed step needs) is not installed in this container, no installable package exists for it here, and the system blocked running a copy downloaded from the internet. So the HTML-to-PDF render cannot be proven in this container; the rest of the embedding (font rewrite, images, insertion point per bundle, captions, order) can.
+
+Next: Phase B (plan) given to Paul 03/11/2026, waiting for his approval.
