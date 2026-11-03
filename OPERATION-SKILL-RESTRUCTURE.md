@@ -84,10 +84,42 @@ It sits on top of SKILL-STANDARDS.md (the standards S1 to S16) and SKILL-TEMPLAT
 |---|---|---|
 | `client-teams-transcript-skill` | Built BEFORE this list existed (heavier method). Not redone unless Paul asks. | v35 LIVE (Paul confirmed 03/11/2026) |
 | `ff-population-transcript` | Built BEFORE this list existed (heavier method). Not redone unless Paul asks. | v33 uploaded 03/11/2026 (reported); NOT confirmed live; Paul runs it on a real client first |
-| `fact-find-summary` | Operation Skill Restructure applied 03/11/2026 (Phases A to E): the program-driven `fact-find-summary` is BUILT and PACKAGED, not uploaded, not live. A program reads the Fact Find Transcript PDF (`scripts/ffread.py`, needs `pdfplumber`), composes the nine sections with totals and follow-up owners (Cameron, CL, Valerie, Lizelle; Lizelle replaces Martin), draws an A4 PDF and a checker prints a SHORT audit of green ticks and red crosses. The Planner note and the Sitamah message left this skill (the Teams skill owns them). Rule-by-rule check: 392 old rules, 13 kept, 93 reworded, 286 dropped on record, 0 unaccounted. Lint PASS. ONE end-to-end test on invented data passed on the source and on the unpacked zip. Zip: `releases/fact-find-summary-20261103-0941.zip` (15 files, 38,533 bytes). The older interim text-update zip and brief are SUPERSEDED: do not upload them. Waiting for Paul to give the real upload folder name, then the upload brief is made. Yes/no list for Paul: `fact-find-summary/history/CHANGES-FOR-PAUL.md`. Never say live before Paul confirms. | PHASES A TO E DONE. Real folder `fact-find-summary-skill` confirmed by Paul 03/11/2026; upload brief made and sent with the zip. PHASE F: UPLOADED as v18 on 03/11/2026 by a Chrome chat (reported by that chat, pasted by Paul): before = v17, 2 files, "Last Updated: 28 October 2026, 10:58"; the first replace box was a different one ("This overwrites fact-find-summary with this file. What it overwrites can't be restored afterwards."), so the chat stopped; Paul saved a backup zip of the old 2 files and approved; the second box read "This saves a new version of fact-find-summary. Earlier versions stay available in the skill's version history. Current: 218 lines - This file: 67 lines."; after = v18, 15 files, still ONE entry (31 skills), "Last updated: 2026-11-03 09:41 (Athens time)" and first section "Index" (the test chat answered correctly). NOT confirmed live by Paul (he runs it on a real client first). Backup of the old skill's 2 files is held by Paul. Yes/no list for Paul (5 design questions) is in `fact-find-summary/history/CHANGES-FOR-PAUL.md`. NEXT: ask Paul if he is ready for the next skill. |
+| `fact-find-summary` | DONE 03/11/2026 (Phases A to F, no helpers, one test passed on the source and on the unpacked zip). Program reads the Fact Find Transcript PDF (needs `pdfplumber`), builds the nine sections, recomputes totals, draws an A4 PDF; SHORT audit of ticks and crosses; Planner note and Sitamah message left this skill; follow-up owners Cameron, CL, Valerie, Lizelle (Lizelle replaces Martin). Rule-by-rule check: 392 old rules, 13 kept, 93 reworded, 286 dropped on record, 0 unaccounted. | v18 UPLOADED 03/11/2026 (reported by a Chrome chat; v17 before; 15 files; test chat correct). NOT confirmed live by Paul: he runs it on a real client first. Backup zip of the old 2 files held by Paul. Open: 5 yes/no design questions in `fact-find-summary/history/CHANGES-FOR-PAUL.md`. |
 | All other skills | NOT started. Paul names the next one. | |
 
+## Skills still to do (sizes of the live copies, checked 03/11/2026; Paul names the next one)
+
+| Skill (full name) | SKILL.md | Files | All files |
+|---|---|---|---|
+| `client-transcript-download` | 72 lines | 1 | 9 KB |
+| `outlook-emails-skill` | 72 lines | 1 | 9 KB |
+| `cameron-short-term-skill` | 100 lines | 1 | 17 KB |
+| `teams-meeting-setup-skill` | 155 lines | 1 | 15 KB |
+| `complete-applications-skill` | 206 lines | 5 | 174 KB |
+| `client-pipeline-board` | 245 lines | 11 | 105 KB |
+| `om-optimal-ra-proposal` | 253 lines | 6 | 251 KB |
+| `client-review-notes` | 297 lines | 1 | 19 KB |
+| `om-tax-free-skill` | 333 lines | 4 | 77 KB |
+| `investment-comparisons-skill` | 431 lines | 1 | 27 KB |
+| `rgar-skill` | 434 lines | 4 | 98 KB |
+| `wr-sroa-builder` | 534 lines | 6 | 189 KB |
+| `life-policy-schedule-analyzer` | 874 lines | 1 | 56 KB |
+| `wr-roa-builder` | 1,072 lines | 7 | 238 KB |
+| `life-insurer-comparison` | 1,076 lines | 1 | 68 KB |
+Others on Paul's list (not yet sized): `advicetech-website-knowledge`, `alpha-bank-statements`, `astute-summary-report-skill`, `managing-generali-checkups`, `nedbank-current-account-categorization`, `paul-email-signature`, `qb-monthly-budget`. Forgotten by Paul: `planner-interim-procedure`, `ff-to-ff-populate`.
+
+## Practical notes learned (NOT part of the approved list; they only record what happened. Paul decides if any becomes a step.)
+1. **Backup before an upload.** On 03/11/2026 the replace box for `fact-find-summary` (v17) said "What it overwrites can't be restored afterwards", unlike the other two uploads (which said earlier versions stay in the version history). From now on I make a backup zip of the live skill's files (from `/root/.claude/skills/synced/...`), outside the repo, and send it to Paul with the zip and the brief, unless he says not to.
+2. **The brief's approval covers only the box that mentions the version history.** A different box means STOP and ask Paul (the Chrome chat did exactly that).
+3. **Ask Paul for the real folder name** before making a brief. His folders are `<skill>-skill` (for example `ff-population-transcript-skill`, `fact-find-summary-skill`).
+4. **The packager's self-test runs `run.py preflight`:** every program-driven skill needs that command.
+5. **A skill whose program reads PDFs needs `pdfplumber`** in the chat's environment. The self-test at the start checks it; the first real run is the real test.
+6. **Check old example scripts for a real person's details in Phase A** (13-digit numbers, emails, phone numbers). Never archive such a file in the repo; the claude.ai version history still holds it.
+7. **The rule-by-rule check** uses `tools/inventory.py` with `history/changes.json` (reworded) and `history/decisions.json` (dropped, by line range). Build the prefixes with the tool's own `plain()` function, or they will not match.
+8. **A `fact-find-summary` run ends with a SHORT audit** (ticks and crosses): that is the pattern for every skill built under this Operation.
+
 ## Running log
+- 03/11/2026: Paul said "Update MD doc. then next skill". This file updated (Progress row cleaned, sizes of the skills still to do, practical notes). Next skill: Paul names it; recommendation given.
 - 03/11/2026: `fact-find-summary` uploaded as v18 (reported); not confirmed live. Operation Skill Restructure Phases A to F done for this skill. Asked Paul whether he is ready for the next skill.
 - 03/11/2026: Paul approved replacing `fact-find-summary` (v17) at the can't-be-restored box after saving the backup zip. Instruction sent for the Chrome chat to finish the upload.
 - 03/11/2026: `fact-find-summary` upload paused at an unexpected replace box (overwrite cannot be restored). Backup zip of the old 2 files sent to Paul. Do not click Upload and replace until Paul says so.
