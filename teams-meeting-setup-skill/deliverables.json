@@ -1,0 +1,29 @@
+{
+ "skill": "teams-meeting-setup-skill",
+ "deliverables": [
+  {
+   "name": "The follow-up Teams meeting invite (a calendar event with a Teams meeting, the client as attendee)",
+   "file": "out/invite.json (the exact arguments for the Microsoft 365 tool) and out/invite.txt (for Paul)",
+   "produced_by": "scripts/run.py build (scripts/invite.py), from facts recorded with their source and the Fact Find read by scripts/ffread.py",
+   "handover": "shown to Paul with one question; created through the Microsoft 365 tool only after his yes; the returned event compared with the approved invite",
+   "checked_by": "scripts/verify.py (rebuilds the invite and compares; checks the approval and the returned event)",
+   "step": "send"
+  },
+  {
+   "name": "Message to Sitamah (FYI) and the log lines for the board's Fact Find card",
+   "file": "out/sitamah.txt; printed by run.py log",
+   "produced_by": "scripts/run.py build / log (scripts/invite.py)",
+   "handover": "shown to Paul in the same reply as the invite (one yes covers both); sent once through Zapier; logged on the board's card as today",
+   "checked_by": "scripts/verify.py (message equals the rebuild; sent and logged are receipts)",
+   "step": "log"
+  },
+  {
+   "name": "Short audit",
+   "file": "printed by scripts/verify.py; full record in out_record/audit-full.txt",
+   "produced_by": "scripts/verify.py",
+   "handover": "pasted into the reply as it is: one line per check with a green tick or a red cross, one closing line for what is only attested",
+   "checked_by": "scripts/run.py done final",
+   "step": "final"
+  }
+ ]
+}

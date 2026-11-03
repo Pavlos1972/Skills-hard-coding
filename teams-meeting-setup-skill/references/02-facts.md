@@ -1,0 +1,15 @@
+Contents: the facts, where each comes from, and the fixed rules the program applies.
+
+## The facts
+- **Follow-up date and time** (South African time, 24-hour): confirmed in the meeting or by Paul. The Fact Find's "Next appointment", "Day" and "Time" rows may already show them. Source: say which.
+- **Last contact date and how it happened:** `--contact met` for a Teams or video appointment, `--contact spoke` ONLY when the last contact really was a phone or WhatsApp call. If it is genuinely unclear, ask Paul rather than guessing.
+- **Topics:** the product lines that are open for this client right now (from the follow-up summary, the Fact Find's Advisor Actions, or Paul). Only these short labels are accepted, and they always appear in this order: Risk, RA, Investments, RGAR, EGAR, Medical Aid, Will, STI.
+- **What we need from you** (optional): only items the client actually owes (for example confirm budget and any cover changes, send a statement, sign a form), taken from the Fact Find's documents to request, the follow-up summary or the client's Planner Task checklist. Leave it out when nothing is outstanding; the program refuses items with no source.
+- **Agenda** (optional): normally made from the topics in plain client words. If there are more than 5 topics, give `--agenda` with up to 5 short lines.
+
+## What the program builds from them
+- **Subject:** `{Client Name} / {topics}`, short labels only, joined naturally: one topic is just that label (`RA`), two get "&" (`Risk & RA`), three or more are comma-separated with "&" before the last (`Risk, RA & RGAR`). No "Follow-up", no "Meeting", no stage code.
+- **Time zone:** `Africa/Johannesburg` on start and end, always. South Africa Standard Time does not observe daylight saving, so the wall-clock time on the invite is always the real South African time. Outlook shows Paul the same event converted to his own Athens time: one hour later in the European summer, the same in winter. That is expected, not a bug.
+- **Duration:** exactly 1 hour ("Meetings are always 1 hour long": Paul). Only if Paul himself specifies another length for one meeting does it change, and then he tells Claude Code to change the program, never the chat to type it.
+- **Attendee:** the client only, from the Fact Find; never Sitamah, never Paul (he is the organizer). `responseRequested` is true so the client's Accept reaches Paul.
+- **Body:** "Hi {First name}," then an opening line that is **date-aware and accurate** (same day: "Great to have met with you earlier today."; the day before: "...yesterday."; longer: "...on DD/MM/YYYY."; "spoken with" only after a call), "As discussed, kindly accept the above Teams meeting request.", the agenda, the "what we need from you" block (only if something is owed), and "Below is the link to join the Teams meeting on {the follow-up's own date}." Microsoft adds the real Teams join block after it. No hand-typed signature: an Exchange rule adds Paul's full signature to every calendar invite from his mailbox.

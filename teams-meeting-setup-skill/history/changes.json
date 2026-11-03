@@ -1,0 +1,242 @@
+[
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Source first - never invent. Write only what is in the sou",
+  "new": "references/00-rules.md rule 2 and SKILL.md standing rule 2: every fact comes with its source; the name and email are read from the Fact Find by the program; never invent.",
+  "why": "Shortened to what applies to this skill; the program now records and checks the source.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Check before you claim. Never tell the user something is d",
+  "new": "references/00-rules.md rule 3: never claim sent or created until checked; the checker compares what the tool returned with the approved invite.",
+  "why": "Same rule, now enforced by receipts that the checker compares.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every correction re-opens the whole task, not just the item.",
+  "new": "references/00-rules.md rule 9 and run.py build/show: a correction means build and show again; Paul's earlier yes then no longer counts.",
+  "why": "The program voids the approval when the invite is rebuilt.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never lower the standard. A correction, a frustrated user,",
+  "new": "references/00-rules.md rule 11",
+  "why": "Kept in full.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If a rule cannot be met, stop and say so. State exactly wh",
+  "new": "references/00-rules.md rule 10",
+  "why": "Kept in full.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Once a follow-up/2nd (or later) appointment date and time is",
+  "new": "SKILL.md description, Run it and What a finished run contains; references/00-rules.md.",
+  "why": "Shortened: the program now builds the invite; the chat only sends exactly what the program built, after Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "{Client Name} / {short topic list}",
+  "new": "scripts/invite.py build_payload (subject) and references/02-facts.md, Subject.",
+  "why": "Built by the program from the client's name and the topics.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Client Name exactly as captured in the Fact Find (e.g. \"[C",
+  "new": "scripts/verify.py client_from_pdf and references/02-facts.md: the client's name is read from the Fact Find Transcript PDF by the program; the topics are recorded with their source and only the fixed labels are accepted (scripts/invite.py LINES).",
+  "why": "Program-read name; fixed labels checked.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "List only the lines actually open for this client at the tim",
+  "new": "scripts/invite.py subject_topics and topic_problems: fixed order, 'RA', 'Risk & RA', 'Risk, RA & RGAR'; topics must be recorded with a source.",
+  "why": "Joined by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Keep it short — a calendar subject, not a sentence. No \"Foll",
+  "new": "references/02-facts.md, Subject: short, no 'Follow-up', no 'Meeting', no stage code.",
+  "why": "Same rule, built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Time zone — always South Africa (\"Harare, Pretoria\")",
+  "new": "references/02-facts.md, Time zone; scripts/wrlib.py TZ.",
+  "why": "Constant in the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Set both start.timeZone and end.timeZone on outlook_cre",
+  "new": "scripts/wrlib.py TZ and scripts/invite.py build_payload; the checker refuses any other zone (invite.payload_problems).",
+  "why": "Built and checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Why this is deliberate, not an oversight: South Africa Sta",
+  "new": "references/02-facts.md, Time zone (shortened to two sentences).",
+  "why": "Shortened; the explanation is kept in plain words.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Outlook always stores an event's real instant (UTC) and disp",
+  "new": "references/02-facts.md, Time zone: Outlook shows Paul the same event in his own time.",
+  "why": "Shortened.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Creating the event with the zone set to SAST means the wall-",
+  "new": "references/02-facts.md, Time zone: one hour later in the European summer, the same in winter; expected, not a bug.",
+  "why": "Shortened.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Adapt this shape — don't send Paul's own example wording ver",
+  "new": "scripts/invite.py body_html: the program builds the body from a fixed template, so nothing is adapted by hand.",
+  "why": "Paul's approved plan (03/11/2026): the program builds the whole invite.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "{opening line — see below, date-aware and factually accurate",
+  "new": "scripts/invite.py opening_line and references/02-facts.md, Body.",
+  "why": "Computed by the program from the real gap and the kind of contact.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "{open topic 1 in plain words}",
+  "new": "scripts/invite.py agenda_lines and PLAIN wording.",
+  "why": "Made by the program from the topics, in plain client words.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "What we need from you before then:",
+  "new": "scripts/invite.py body_html (the 'What we need from you before then:' block, only when items have a source).",
+  "why": "Built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Below is the link to join the Teams meeting on {DD/MM/YYYY}.",
+  "new": "scripts/invite.py body_html (closing line with the follow-up meeting's own date).",
+  "why": "Built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Opening line is date-aware and describes the contact accurat",
+  "new": "scripts/invite.py opening_line, agenda_lines, body_html, build_payload and references/02-facts.md, Body: opening line by the real gap and kind of contact, 'met' versus 'spoken', agenda of plain topics, owed items with a source, closing date, no hand-written link, html body with blank lines, no hand-typed signature (the Exchange rule adds it; references/03-send.md).",
+  "why": "Moved into the program; the longer signature explanation is shortened and points to paul-email-signature.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Attendee, duration, and other fields",
+  "new": "references/02-facts.md, Body and attendee; scripts/invite.py build_payload.",
+  "why": "Built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "attendees: the client only, type: \"required\", using the ",
+  "new": "scripts/invite.py build_payload and payload_problems: the client only, type required, responseRequested true, exactly 1 hour, location untouched; the email comes from the Fact Find (references/02-facts.md).",
+  "why": "Built and checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Sending the invite is a real send — get Paul's go-ahead firs",
+  "new": "references/00-rules.md rule 1 and SKILL.md standing rule 1.",
+  "why": "The program shows the invite and records Paul's yes before the send step.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "There is no draft state for a calendar event with an attende",
+  "new": "references/00-rules.md rule 1: there is no draft state; the moment the event is created the client is emailed.",
+  "why": "Shortened.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "So: once a follow-up date (and time, and topic list) is conf",
+  "new": "scripts/run.py show: prints the full invite and the one question (the question is built by the program); approve refuses unless he was shown exactly this invite; the send step may only follow his recorded yes.",
+  "why": "Program-driven.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If Paul later says he wants this to auto-send, that's his ex",
+  "new": "references/00-rules.md rule 1: auto-send is Paul's explicit call; never assume it.",
+  "why": "Kept in the rules page.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Logging and keeping Sitamah in the loop",
+  "new": "references/03-send.md and scripts/run.py log.",
+  "why": "Logging and Sitamah now have their own page and a program step.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Log the confirmed meeting under the Fact Find card's Actions",
+  "new": "scripts/invite.py log_lines and scripts/run.py log: subject, date and time (SAST) and attendee as separate short bullets, logged on the board's Fact Find card as today (Paul, 03/11/2026); references/03-send.md for the Sitamah message and the reschedule.",
+  "why": "Lines built by the program; Sitamah is messaged after Paul's yes (same reply, one question).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Subject: client name, forward slash, short topic labels only",
+  "new": "scripts/verify.py and scripts/invite.py payload_problems: each check of the old list is a green tick or a red cross in the short audit; only Paul's words, the tool call itself, the logging and the signature on the client's copy stay attested.",
+  "why": "The checking list is now done by the checker.",
+  "needs_paul": false
+ }
+]

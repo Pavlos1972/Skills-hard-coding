@@ -1,0 +1,93 @@
+{
+ "skill": "teams-meeting-setup-skill",
+ "steps": [
+  {
+   "id": "client",
+   "title": "Find the client's Fact Find Transcript PDF and let the program read the name and email",
+   "ref": ["01-find-client.md"],
+   "do": [
+    "Find the client's `Fact Find Transcript - DD.MM.YY - (First Surname).pdf` in the client's `2. Fact Find` folder. Try the routes IN THIS ORDER and record EVERY try, failures too:",
+    "  1  device: the computer (local drive / OneDrive)    2  m365: the Microsoft 365 connector    3  zapier: the Zapier Office 365 tools",
+    "Record each try: python3 {scripts}/run.py access {run} --route device|m365|zapier --result failed|found --note \"what you did\"",
+    "Bring a copy into the run folder: python3 {scripts}/run.py source {run} --file <local copy of the PDF> --route <the route>",
+    "Then: python3 {scripts}/run.py client {run}",
+    "The program reads the client's name and personal email from the Fact Find. If it has no usable email, ask Paul for it and run: python3 {scripts}/run.py client {run} --email ADDRESS --said \"Paul's own words\". Never invent or guess an address."
+   ],
+   "check": "client_ok",
+   "proof": "the PDF was read by the program, it is for the client Paul named, and a usable email is settled"
+  },
+  {
+   "id": "facts",
+   "title": "Record the facts of the follow-up, each with its source",
+   "ref": ["02-facts.md"],
+   "do": [
+    "Record: python3 {scripts}/run.py facts {run} --date DD/MM/YYYY --time HH:MM --last-contact DD/MM/YYYY --contact met|spoke --topics \"Risk,RA,...\" --source \"where these came from\" [--needs \"item; item\" --needs-source \"where they came from\"]",
+    "For a RESCHEDULE only the new --date, --time and --source are needed.",
+    "The program refuses a date in the past, a follow-up date that is not after the last contact, a topic that is not in the fixed list, and 'what we need from you' items with no source. Never invent an item."
+   ],
+   "check": "facts_ok",
+   "proof": "the facts are recorded, valid and sourced"
+  },
+  {
+   "id": "build",
+   "title": "The program builds the exact invite and the message to Sitamah",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py build {run}",
+    "It writes out/invite.json (the exact arguments for the Microsoft 365 tool), out/invite.txt (the same invite in plain words) and out/sitamah.txt. You never type or edit any of them."
+   ],
+   "check": "build_ok",
+   "proof": "the invite follows every rule and is exactly what the program builds from the facts"
+  },
+  {
+   "id": "show",
+   "title": "Show Paul the full invite and the message, ask ONE question, record his yes",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py show {run}",
+    "Put everything it prints in your reply (the full invite, the message to Sitamah) and ask exactly the one question it gives. This is a REAL SEND: the client is emailed the moment the event is created. Never send before his clear yes.",
+    "When he says yes, record his own words: python3 {scripts}/run.py approve {run} --said \"his exact words\"",
+    "If anything about the invite changes, run build and show again: the earlier yes then no longer counts."
+   ],
+   "check": "show_ok",
+   "proof": "Paul's yes is recorded for exactly this invite and message, after he was shown them"
+  },
+  {
+   "id": "send",
+   "title": "Send the invite with the Microsoft 365 tool, then tell Sitamah once",
+   "ref": ["03-send.md"],
+   "do": [
+    "Follow the rules below. Then record what the tool RETURNED (copy the values it shows; do not retype them from the invite):",
+    "  python3 {scripts}/run.py receipt {run} event.id <the id>        event.subject <...>      event.start <...>      event.end <...>",
+    "  python3 {scripts}/run.py receipt {run} event.attendee <the client's email>      event.online yes   (new invite only)",
+    "  python3 {scripts}/run.py receipt {run} sitamah.sent <the message id or sent time>",
+    "For a reschedule record event.id, event.start, event.end and sitamah.sent."
+   ],
+   "check": "send_ok",
+   "proof": "what the tool returned equals the approved invite, and the Sitamah message is recorded as sent"
+  },
+  {
+   "id": "log",
+   "title": "Log the meeting on the board's Fact Find card, as today",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py log {run}",
+    "Log the lines it prints on the client's Fact Find card under Actions Taken (the board's card, as today), then record: python3 {scripts}/run.py receipt {run} log.done yes"
+   ],
+   "check": "log_ok",
+   "proof": "the logging is recorded"
+  },
+  {
+   "id": "final",
+   "title": "The final check and the SHORT AUDIT for Paul",
+   "ref": ["04-handover.md"],
+   "do": [
+    "Run: python3 {scripts}/run.py done {run} final",
+    "Put the short audit it prints in your reply exactly as it is: one line per check with a green tick or a red cross, one closing line for what is only attested. Nothing longer.",
+    "Any red cross means the job is not finished: say so."
+   ],
+   "check": "verify_final",
+   "proof": "the final checker prints no red cross"
+  }
+ ]
+}
