@@ -51,7 +51,41 @@ The third reader said the FNA request could still be dropped, in two cheap ways.
 - The glance list now shows how EVERY request line was handled, for example "line 66 -> entry L5 (quote_request, covered by fna_req)" or "line 81 dismissed: <reason>". It shows 15, then the count.
 
 **Your answers**
-- A question could name all 223 fields, and then your one answer could fill a tax number and change an ABI. Now a question names at most 10 ids, and each one must be written in the question text (as its id or its label).
+- A question could name all 223 fields, and then your one answer could fill a tax number and change an ABI. Now a question about a field names at most 10 ids, and each one must be written in the question text (as its id or its label).
+- This was true for questions about fields. It was NOT yet true for the question that frees a request line (the "dismissals" question). Round 4 below closes that.
+
+## Fix round 4 (the confirmation pass found three more routes)
+The fourth reader said every round-3 attack was closed. Three fresh ones still got through. All three are closed now. In plain words:
+
+**The wrong product's quote row**
+- The FNA line could be "covered" by a quote row for the SHORTFALL product, because both rows have the word "quote" in their label.
+- Now a quote request is covered only by the row or request field of the product its own line names: FNA, shortfall, reduced quote, RGAR or EGAR.
+- The program refuses any other product, and its message names both.
+- "Not discussed" on a product's request, type or insurer field is refused while the ledger records a quote request for that product.
+- A second (bf) FNA quote is a different thing: it is not blocked by the main FNA request.
+
+**Your answer to a question about a request line**
+- A question like "Is this fine?" with your answer "yes" could free a request line, and a wide range could free hundreds of lines.
+- Now the question must quote at least 4 words (4 letters or more) of EVERY line it names. The program checks that against the call. A line with fewer such words must be quoted in full.
+- One answer can free at most 5 lines in all. A wider range frees nothing.
+- The glance list shows, next to each freed line, the full question the chat recorded and your recorded words.
+- The checker fails, and says so, when a recorded answer does not meet these rules.
+
+**A request line next to an unrelated entry**
+- A line like "Can you also send me what BrightRock says about the cover?" counted as handled by an entry that shared only the word "send".
+- Now the shared word must be a topic word. A request verb or filler (send, email, ask, sign, need, please, would, could, your, with, that, this, have, will, also, what, says, about and a few more) does not count.
+- Otherwise the line needs its own entry, or a review that quotes it.
+
+**The glance list**
+- It now shows the TEXT of every request line (cut at 60 characters) with how it was handled.
+- With 40 request lines or fewer it shows all of them. With more, it shows every line that is not directly on an entry, plus every line of the closing minutes, and counts the rest.
+
+**Still true (I cannot close these with a program)**
+- Claude types your words itself with `run.py answer`, so "Paul said yes" is attested.
+- A doctored copy of the Teams skill, or a self-patched fingerprint, needs an outside anchor (for example the released fingerprint in the upload brief).
+- The text copies of an Overview or schedule are made by Claude.
+- A written reason is checked for form, never for truth.
+- A request worded with none of the listed words is not required by the program.
 
 ## What the skill does now
 After a Fact Find meeting it builds the **Fact Find Transcript PDF** from, in this order: the form's data file (and the form's own saved PDF), the Teams transcript, the latest Overview, and the client's other documents. A program does the work step by step; Claude cannot skip a step, and at the end the checker prints PASS or FAIL for every item. The PDF has your fixed 11 sections in your order, then "Next Steps & Next Meeting". The Fact Find Summary, the Planner note and the message to Sitamah are still made by the other two skills (once, not twice).
@@ -106,6 +140,7 @@ Every rule of the old skill is still there. A program (`tools/inventory.py`) wen
 
 14. **Request words.** The checker now treats these words as marking a request line, besides the scan's own list. HARD (cannot be dismissed; must be an entry, or you must say it is not a request): FNA, quote, shortfall, RGAR, EGAR, goal analysis, reduced, authority, payslip, appointment, next meeting, set up, follow up. SOFT (can be dismissed with a reason that quotes the line): ask, request, sign, can you, could you, would you, please, I'd like, I will need, organise, arrange, book, prepare, run the numbers, come back to me, get back to me, send me, email me, let me know. Each such line must be next to an entry that shares a word with it or be dismissed with a reason. That means a few more lines to record on a real call. **OK? Yes / No.**
 15. **The 25% / 60% limits.** If more than 25% of the call's lines, or more than 60% of its request lines, are dismissed, the step stops unless you say to go on. **Are those the right limits? Yes / No.**
+16. **Freeing a request line.** One answer of yours can free at most 5 lines, and the question must quote at least 4 words of each. Is that the right size? Yes / No.
 
 ## What I could not do or check
 - **I have not seen the form's label file, its saved PDF, or a finished PDF from the new form.** The tests use an invented form with the real field names, and a PDF I generated from it. The real first run is the real test.

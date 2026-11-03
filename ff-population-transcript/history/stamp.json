@@ -1,5 +1,5 @@
 {
- "stamp": "2026-11-03 04:22",
- "fingerprint": "d234c51b75ff0339f5a974f99c03b0c14d146b330fa8e688d23a243e3077c7c6",
- "change": "Fix round 3 after a third outside review: FNA and other quote lines must be quote requests and cannot be dismissed, covers must be about the entry, and a question can name at most 10 ids"
+ "stamp": "2026-11-03 05:31",
+ "fingerprint": "d0a33230fa2a19cdc64bddda10ce3044b477623df64e053bb7933d9ab74a7245",
+ "change": "Fix round 4 after a confirmation review: a quote request is covered only by its own product's row, a freed request line needs a question that quotes it, and a shared verb no longer counts"
 }

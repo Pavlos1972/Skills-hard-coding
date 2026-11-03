@@ -396,9 +396,13 @@ class QuoteEmptyForm(Staged):
         self.ok("claim", self.run_dir, "--all-empty")
         self.assertNotIn("fna_req", self.load("claims.json"))                       # the program did not claim it: the call mentions it
         r = self.refused("claim", self.run_dir, "--key", "fna_req", "--as", "Not discussed")
-        self.assertIn("the search finds", r.stdout + r.stderr)
-        # with a long reason the claim is recorded, but the ledger's quote_request entry then has nothing that can cover it
-        self.ok("claim", self.run_dir, "--key", "fna_req", "--as", "Not discussed", "--reviewed", "line 66 is the FNA quote but the client did not ask for it herself")
+        self.assertIn("quote request", r.stdout + r.stderr)                          # the ledger records the request (round 4: refused before any reason is asked for)
+        r = self.refused("claim", self.run_dir, "--key", "fna_req", "--as", "Not discussed", "--reviewed", "line 66 is the FNA quote but the client did not ask for it herself")
+        self.assertIn("quote request", r.stdout + r.stderr)
+        # a hand-made claim still cannot cover the ledger's quote_request entry
+        cl = self.load("claims.json")
+        cl["fna_req"] = {"as": "Not discussed", "terms": ["fna"], "hits": [66], "docs": [], "reviewed": "line 66 is the FNA quote but not a request", "searched": "", "weak": False}
+        self.write("claims.json", cl)
         self.write("overlay.json", {})
         self.ok("compose", self.run_dir)
         e = next(e for e in self.load("ledger.json")["entries"] if e["kind"] == "quote_request")

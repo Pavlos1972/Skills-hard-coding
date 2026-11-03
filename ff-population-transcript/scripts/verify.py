@@ -621,6 +621,9 @@ def check_form(run, R, lines, content):
             if numeric_value(i["value"]) not in w.digits(window_slice(lines, a["line"])):
                 R.add("WARN", g, "crosscheck %s says the call agrees with the form (%s) but the quote near line %s does not hold those digits: check" % (k, i["value"], a["line"]))
         if r == "not_on_call":
+            conf_ = quote_request_conflict(lines or [], load(os.path.join(run, w.LEDGER), {}), k)
+            if conf_:
+                fail("crosscheck %s is 'not on the call': %s" % (k, conflict_text(k, conf_, lines)))
             lay_ = w.layout()
             terms, curated = field_terms(lay_, k, i.get("label", k), row_values(fr, k) if i.get("row") else None)
             hits, _ = search_terms(run, lines or [], terms)
@@ -672,6 +675,57 @@ def quote_word(text):
     return m.group(0) if m else None
 
 
+# The products a quote request can be for, the words that name them, and the quote groups / request fields that belong to each (round 4, F1). A quote_request entry whose line names a
+# product must be covered by that product's group, and "Not discussed" on that product's request, type or insurer field is refused while such an entry exists.
+PRODUCTS = (
+    ("FNA", re.compile(r"\bfna\b|needs analysis", re.I), {"fna"}),
+    ("shortfall", re.compile(r"\bshortfall\b", re.I), {"sf", "bf_sf"}),
+    ("reduced quote", re.compile(r"\breduced\b", re.I), {"bfred"}),
+    ("RGAR", re.compile(r"\brgar\b|retirement goal", re.I), {"rgar"}),
+    ("EGAR", re.compile(r"\begar\b|education goal", re.I), {"egar"}),
+    ("goal analysis", re.compile(r"(?<!retirement )(?<!education )\bgoal analysis\b", re.I), {"rgar", "egar"}),
+)
+GROUP_TITLES = {"fna": "the FNA quote", "sf": "the shortfall quote (group risk)", "bf_sf": "the shortfall quote (bf)", "bf_fna": "the FNA quote (bf)", "bfred": "the reduced quote", "rgar": "the RGAR", "egar": "the EGAR"}
+
+
+def products_in(text):
+    """[(product name, its groups)] named in a text."""
+    return [(n, set(g)) for n, rx, g in PRODUCTS if rx.search(text or "")]
+
+
+def key_group(key):
+    """The quote group (or RGAR / EGAR) a request, type or insurer field belongs to; None for any other field."""
+    k = str(key)
+    if k in ("rgar_req",):
+        return "rgar"
+    if k in ("egar_req",):
+        return "egar"
+    for q in w.layout()["quote_groups"]:
+        if q.get("list"):
+            if k.split(".")[0] == q["list"]:
+                return q["id"]
+        elif k in (q.get("req"), q.get("type"), q.get("ins")):
+            return q["id"]
+    return None
+
+
+def quote_request_conflict(lines, ledger, key):
+    """The quote_request entry of the ledger whose line (and the lines either side) names the product the field `key` belongs to, or None."""
+    gid = key_group(key)
+    if not gid:
+        return None
+    for e in (ledger or {}).get("entries") or []:
+        if isinstance(e, dict) and e.get("kind") == "quote_request" and isinstance(e.get("line"), int) and 1 <= e["line"] <= len(lines):
+            if any(gid in g for _, g in products_in(window_text(lines, e["line"]))):
+                return e
+    return None
+
+
+def conflict_text(key, e, lines):
+    return ("the ledger records a quote request for %s at line %d (%r): fill the request from the call's words instead of saying the call did not discuss it"
+            % (GROUP_TITLES.get(key_group(key), "this product"), e["line"], lines[e["line"] - 1].strip()[:50]))
+
+
 def window_text(lines, line, span=2):
     """The text of a ledger entry's line and the `span` lines either side of it."""
     return " ".join(lines[max(0, line - 1 - span):min(len(lines), line + span)])
@@ -686,32 +740,70 @@ def hard_lines(lines):
     return {i for i, ln in enumerate(lines, 1) if hard_word(ln)}
 
 
-def paul_allowed_lines(run):
-    """{line: Paul's words} of the lines Paul's recorded answer (run.py ask --need dismissals --about "<line numbers>", then run.py answer) says are not requests."""
+DISMISS_MAX_LINES = 5
+# Words that carry no topic: a request verb or a filler. A request line is NOT handled by an entry that shares only such a word with it (round 4, F3).
+REQUEST_FILLER = frozenset("""
+send sent sending email emailed emails ask asked asking sign signed need needs please would could your with that this have will also what says about
+book booked arrange prepare organise organize request requests like come back from them they there then than when where which just very some
+""".split())
+
+
+def dismissal_problem(about, question, lines):
+    """([lines], None) when a dismissals question really frees the lines it names; otherwise ([], the plain reason). At most 5 lines in all, and the question's own text must quote
+    at least 4 words of 4 letters or more (all of them, for a line that has fewer) of EVERY named line: the program checks that against the call."""
+    nums = []
+    for tok in about or []:
+        t = S(tok).strip()
+        m = re.fullmatch(r"(?:lines?\s*)?(\d+)(?:\s*-\s*(\d+))?", t, re.I)
+        if not m:
+            return [], "--about for the dismissals question is the line numbers (for example 66 or 66-67), not %r" % t
+        lo, hi = int(m.group(1)), int(m.group(2) or m.group(1))
+        if hi < lo or hi - lo + 1 > DISMISS_MAX_LINES:
+            return [], "one answer can free at most %d lines (%r names %d)" % (DISMISS_MAX_LINES, t, max(0, hi - lo + 1))
+        nums += list(range(lo, hi + 1))
+    nums = sorted(set(nums))
+    if not nums:
+        return [], "no line is named"
+    if len(nums) > DISMISS_MAX_LINES:
+        return [], "one answer can free at most %d lines (this one names %d)" % (DISMISS_MAX_LINES, len(nums))
+    for n in nums:
+        if not 1 <= n <= len(lines):
+            return [], "line %d is not in the transcript" % n
+        cw = w.content_words(lines[n - 1])
+        need = min(4, len(set(cw)))
+        if need == 0:
+            return [], "line %d holds no word of 4 letters or more to quote" % n
+        got = len(w.shared_content_words(question or "", lines[n - 1]))
+        if got < need:
+            return [], "the question must quote at least %d words (4 letters or more) of line %d (%r): it quotes %d. Put what that line says into the question, so Paul can see it" % (need, n, lines[n - 1].strip()[:50], got)
+    return nums, None
+
+
+def paul_allowed_lines(run, lines=None):
+    """{line: {"said": Paul's recorded words, "question": the question as recorded}} of the lines Paul's recorded answer (run.py ask --need dismissals --about "<line numbers>", then run.py answer)
+    frees. A question that does not quote its lines, names more than 5 lines or a wide range frees nothing."""
+    if lines is None:
+        lines = w.read_lines(run) if os.path.exists(os.path.join(run, w.TRANSCRIPT)) else []
     out = {}
     for q in load(os.path.join(run, w.QUESTIONS), []):
-        if not isinstance(q, dict) or q.get("need") != "dismissals" or len(S(q.get("paul_said")).strip()) < 3:
+        if not isinstance(q, dict) or q.get("need") != "dismissals" or len(S(q.get("paul_said")).strip()) < 3 or not q.get("about"):
             continue
-        for tok in q.get("about") or []:
-            for m in re.finditer(r"(\d+)\s*-\s*(\d+)|(\d+)", S(tok)):
-                if m.group(3):
-                    out[int(m.group(3))] = S(q.get("paul_said")).strip()
-                elif int(m.group(2)) - int(m.group(1)) < 40:
-                    for i in range(int(m.group(1)), int(m.group(2)) + 1):
-                        out[i] = S(q.get("paul_said")).strip()
+        nums, _prob = dismissal_problem(q.get("about"), S(q.get("question")), lines)      # a question that does not meet the rules frees nothing (nums is empty)
+        for n in nums:
+            out[n] = {"said": S(q.get("paul_said")).strip(), "question": S(q.get("question")).strip()}
     return out
 
 
 def line_resolution(h, lines, ents):
-    """The entry (of a kind that must be covered) that handles request line h: one on the line itself, or within 3 lines that shares a word of 4 letters or more with the line.
-    A line with no such word at all (an 'OK, please do that') is handled by any entry within 3 lines."""
+    """The entry (of a kind that must be covered) that handles request line h: one on the line itself, or within 3 lines that shares a TOPIC word of 4 letters or more with the line (not a
+    request verb or filler such as send, please, would). A line with no such word at all (an 'OK, please do that') is handled by any entry within 3 lines."""
     cw = w.content_words(lines[h - 1]) if 1 <= h <= len(lines) else []
     best = None
     for e in ents:
         d = abs(e["line"] - h)
         if d == 0:
             return e
-        if d <= 3 and best is None and (not cw or w.shared_content_words(lines[h - 1], S(e.get("quote")))):
+        if d <= 3 and best is None and (not cw or [x for x in w.shared_content_words(lines[h - 1], S(e.get("quote"))) if x not in REQUEST_FILLER]):
             best = e
     return best
 
@@ -776,13 +868,14 @@ def cover_targets(run, ov, cross, lead, content=None):
         if name == "quotes":
             grp = next((q for q in lay["quote_groups"] if q["id"] == it.get("group")), {})
             texts.append(S(grp.get("title")))
-        t[it.get("id", name)] = {"types": types, "lines": lines, "texts": texts, "terms": terms}
+        t[it.get("id", name)] = {"types": types, "lines": lines, "texts": texts, "terms": terms,
+                                 "group": it.get("group") if name == "quotes" else (key_group(S(it.get("key"))) if it.get("key") else None)}
     cross_lines = {}
     for i in cross:
         a = i.get("answer")
         if isinstance(a, dict) and a.get("r") in ("same", "differs") and isinstance(a.get("line"), int):
             types = {"cross"} | ({"cross_differs"} if a["r"] == "differs" else set()) | ({"quote_req"} if i["key"] in req_keys else set())
-            t[i["key"]] = {"types": types, "lines": [a["line"]], "texts": [S(i.get("value"))] + ([S(a.get("value"))] if a.get("value") else []), "terms": curated_terms(lay, S(i["key"]), S(i.get("label")))}
+            t[i["key"]] = {"types": types, "lines": [a["line"]], "texts": [S(i.get("value"))] + ([S(a.get("value"))] if a.get("value") else []), "terms": curated_terms(lay, S(i["key"]), S(i.get("label"))), "group": key_group(S(i["key"]))}
             cross_lines[i["key"]] = a["line"]
     if lead:
         t["lead"] = {"types": {"lead"}, "lines": [], "texts": [], "terms": []}
@@ -795,7 +888,7 @@ def cover_targets(run, ov, cross, lead, content=None):
             if grp:
                 lines = [cross_lines[k] for k in (grp.get("req"), grp.get("type"), grp.get("ins")) if k in cross_lines]
             lines += [x["line"] for x in r.get("src") or [] if isinstance(x, dict) and isinstance(x.get("line"), int)]
-            t[r["id"]] = {"types": {"quote"}, "lines": lines, "texts": [S(r.get("label"))] + [S(b) for b in r.get("bullets") or []] + [S((grp or {}).get("title"))], "terms": []}
+            t[r["id"]] = {"types": {"quote"}, "lines": lines, "texts": [S(r.get("label"))] + [S(b) for b in r.get("bullets") or []] + [S((grp or {}).get("title"))], "terms": [], "group": r.get("quote_group")}
     return t
 
 
@@ -819,6 +912,11 @@ def cover_problem(kind, line, tid, tinfo, quote="", window=""):
         return "%s cites no line of the call, so it cannot be about this part of the call" % tid
     if not any(abs(x - line) <= COVER_SPAN for x in tinfo["lines"]):
         return "%s cites the call at line(s) %s, not within %d lines of line %d" % (tid, tinfo["lines"][:4], COVER_SPAN, line)
+    if kind == "quote_request" and tinfo.get("group"):
+        prods = products_in(window or quote or "")
+        if prods and not any(tinfo["group"] in g for _, g in prods):
+            return ("%s covers %s, but the entry's own line is about %s: a quote request is covered only by the quote row or request field of the product it names (%s)"
+                    % (tid, GROUP_TITLES.get(tinfo["group"], tinfo["group"]), " and ".join(n for n, _ in prods), ", ".join(sorted(set().union(*[g for _, g in prods])))))
     own = " ".join(tinfo.get("texts") or [])
     if not w.shared_content_words(quote or "", own) and not terms_in_text(tinfo.get("terms") or [], window or quote or ""):
         return ("%s says nothing about this part of the call: none of the field's own search words (%s) is in the entry's line, and the ledger quote's words (%s) share no word of 4 letters or more with %s's own words (%s)"
@@ -918,7 +1016,12 @@ def check_scan_resolution(run, st, lines, ledger, R):
     reviewed = reviewed_lines(ledger)
     required = required_lines(lines, st)
     hard = hard_lines(lines)
-    allowed = paul_allowed_lines(run)
+    allowed = paul_allowed_lines(run, lines)
+    for q in load(os.path.join(run, w.QUESTIONS), []):
+        if isinstance(q, dict) and q.get("need") == "dismissals" and q.get("about") and len(S(q.get("paul_said")).strip()) >= 3:
+            _, qprob = dismissal_problem(q.get("about"), S(q.get("question")), lines)
+            if qprob:
+                R.add("FAIL", g, "Paul's recorded answer to the dismissals question about %s does not free those lines: %s" % (", ".join(S(x) for x in q.get("about")), qprob))
     handled = lambda h: line_resolution(h, lines, must_ents) is not None  # noqa: E731
     resolved = lambda h: handled(h) or (h in reviewed and (h not in hard or h in allowed))  # noqa: E731
     unresolved = [h for h in required if not resolved(h)]
@@ -1297,6 +1400,9 @@ def check_rules(run, lines, content, fr, ov, R):
         row = rows.get(key) or {}
         terms, curated = field_terms(lay, key, row.get("label", key))
         if word == "Not discussed":
+            conf = quote_request_conflict(lines, load(os.path.join(run, w.LEDGER), {}), key)
+            if conf:
+                fail("claim %s 'Not discussed': %s" % (key, conflict_text(key, conf, lines)))
             hits, docs = search_terms(run, lines, list(dict.fromkeys(terms + list(cl.get("terms") or []))))
             sib = sibling_hits(lay, fr, key)
             if hits or docs or sib:
@@ -1952,12 +2058,13 @@ def dismissed_lines(ledger, lines, st, run=None):
     out = []
     for h in required_lines(lines, st):
         if h in why and line_resolution(h, lines, ents) is None:
-            out.append((h, lines[h - 1].strip(), ("on Paul's recorded answer (%s): " % allowed[h][:40] if h in allowed else "") + why[h]))
+            out.append((h, lines[h - 1].strip(), ("on Paul's recorded answer (%s): " % allowed[h]["said"][:40] if h in allowed else "") + why[h]))
     return out
 
 
 def request_resolutions(run, ledger, lines, st):
-    """One compact phrase for EVERY request line: which entry handles it (and what covers that entry), or that it was dismissed, or that it is not handled."""
+    """[(line number, directly on an entry?, phrase)] for EVERY request line: its text (cut at 60 characters) and how it was handled (the entry, and what covers that entry), or that it was
+    dismissed (on Paul's recorded answer, for a hard line), or that it is not handled."""
     ents = [e for e in (ledger or {}).get("entries") or [] if isinstance(e, dict) and e.get("kind") in KINDS_MUST_COVER and isinstance(e.get("line"), int)]
     why = {}
     for rv in (ledger or {}).get("scan_reviewed") or []:
@@ -1966,16 +2073,27 @@ def request_resolutions(run, ledger, lines, st):
         elif isinstance(rv, dict) and isinstance(rv.get("from"), int) and isinstance(rv.get("to"), int):
             for i in range(rv["from"], rv["to"] + 1):
                 why.setdefault(i, S(rv.get("reason")))
-    allowed = paul_allowed_lines(run)
+    allowed = paul_allowed_lines(run, lines)
     out = []
     for h in required_lines(lines, st):
         e = line_resolution(h, lines, ents)
+        text = lines[h - 1].strip()[:60]
         if e is not None:
-            out.append("line %d -> entry %s (%s, covered by %s)" % (h, e.get("id"), e.get("kind"), ", ".join(e.get("covered_by") or []) or "nothing yet"))
+            out.append((h, e["line"] == h, 'line %d "%s" -> entry %s (%s, covered by %s)' % (h, text, e.get("id"), e.get("kind"), ", ".join(e.get("covered_by") or []) or "nothing yet")))
         elif h in why:
-            out.append("line %d dismissed%s: %s" % (h, " on Paul's recorded answer" if h in allowed else "", why[h][:50]))
+            out.append((h, False, 'line %d "%s" dismissed%s: %s' % (h, text, " on Paul's recorded answer" if h in allowed else "", why[h][:50])))
         else:
-            out.append("line %d NOT HANDLED" % h)
+            out.append((h, False, 'line %d "%s" NOT HANDLED' % (h, text)))
+    return out
+
+
+def freed_lines_text(run, lines, st):
+    """One glance line for every hard request line that Paul's recorded answer freed: the line, the FULL question the chat recorded and Paul's recorded words."""
+    allowed = paul_allowed_lines(run, lines)
+    out = []
+    for h in sorted(allowed):
+        out.append("Line %d (%s) was freed on Paul's recorded answer. The question the chat recorded: \"%s\" Paul's recorded words (typed by the chat, attested): \"%s\""
+                   % (h, lines[h - 1].strip()[:60], allowed[h]["question"], allowed[h]["said"]))
     return out
 
 
@@ -2046,7 +2164,15 @@ def summary_lines(run, st, ledger, content):
                   "  <-- MORE THAN A QUARTER OF THE CALL WAS DISMISSED: look at the reasons" if dismissed > 0.25 * total else ""))
     rr = request_resolutions(run, ledger, lines, st)
     if rr:
-        out.append("   how every request line was handled (%s): %s%s" % ("all %d" % len(rr) if len(rr) <= 15 else "the first 15 of %d" % len(rr), "; ".join(rr[:15]), "" if len(rr) <= 15 else " ..."))
+        cz = ((st or {}).get("scan") or {}).get("closing_from") or (len(lines) + 1)
+        if len(rr) <= 40:
+            shown, rest = rr, 0
+        else:
+            shown = [x for x in rr if not x[1] or x[0] >= cz]                          # every line not directly on an entry, and the whole closing minutes
+            rest = len(rr) - len(shown)
+        out.append("   how every request line was handled (%s): %s%s" % ("all %d" % len(rr) if not rest else "%d of %d: every line not directly on an entry and every line of the closing minutes" % (len(shown), len(rr)),
+                                                                           "; ".join(x[2] for x in shown), ("; and %d more directly on an entry" % rest) if rest else ""))
+    out += freed_lines_text(run, lines, st)
     if dl:
         out.append("   dismissed lines (%s): %s%s" % ("all" if len(dl) <= 15 else "the first 15 of %d" % len(dl),
                    "; ".join("line %d (%s): %s" % (n, t[:40], r[:70]) for n, t, r in dl[:15]), "" if len(dl) <= 15 else " ..."))
@@ -2105,10 +2231,10 @@ def report(R, st, ledger, content, stage, run=None):
             print("  - " + ln)
         print("\nPROVEN BY THE PROGRAM (it read the files itself or recomputed): the form's data file as read from its saved copy and its schema, client and date; that every value of it is in the form's saved PDF (exact amounts, whole words; a Yes/No or one-character value is not compared) or was looked at; "
               "that the form's summaries, drafted actions, parking list and cost counters are not printed; that every row has a source and each source is checked: the form field, a quote found in the transcript at that line, a quote found in a document's text copy (the copy is made by the chat: it is checked to name the client, not to be the real document; a document without a copy is only listed), a recomputation, a standing rule, a 'Not discussed' claim whose search the program repeated with the field's written search words; "
-              "that every ledger entry has a line and quote found in the call and is covered by an item of a kind that can cover that kind of entry, that cites the call within 8 lines and shares a word of 4 letters or more with the entry (the KIND of each entry is chosen by the chat: the program cannot tell whether a request was filed under the right kind). A line of the call with one of the listed request words (the scan's decision/change/request words, and ask, quote, FNA, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up, sign, please, can you, could you, would you, I'd like, organise, arrange, book, prepare, run the numbers, come back to me, send me, email me, let me know) counts as HANDLED when an entry of a kind that must be covered sits on it, or sits within 3 lines of it and shares a word of 4 letters or more with it; a soft-word line may instead be dismissed with a reason that quotes it, a hard-word line (FNA, quote, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up, reduced) only on Paul's recorded answer, and an entry on a quote line must be a quote_request. A request worded with NONE of those words is not required by the program (inherent). The glance list shows how every request line was handled and every line dismissed by a review; "
+              "that every ledger entry has a line and quote found in the call and is covered by an item of a kind that can cover that kind of entry, that cites the call within 8 lines and shares a word of 4 letters or more with the entry (the KIND of each entry is chosen by the chat: the program cannot tell whether a request was filed under the right kind). A line of the call with one of the listed request words (the scan's decision/change/request words, and ask, quote, FNA, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up, sign, please, can you, could you, would you, I'd like, organise, arrange, book, prepare, run the numbers, come back to me, send me, email me, let me know) counts as HANDLED when an entry of a kind that must be covered sits on it, or sits within 3 lines of it and shares a TOPIC word of 4 letters or more with it (a request verb or filler such as send, please, would does not count); a soft-word line may instead be dismissed with a reason that quotes it, a hard-word line (FNA, quote, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up, reduced) only on Paul's recorded answer, and an entry on a quote line must be a quote_request, covered only by the quote row or request field of the product its line names (and 'Not discussed' is refused on that product's fields while the request is in the ledger). A request worded with NONE of those words is not required by the program (inherent). The glance list shows how every request line was handled and every line dismissed by a review; "
               "that an overriding 'Not discussed' rests on a written reason the program checks only for length, three different words, a cited hit line and a word from it; totals to the cent from all rows; the standing ABIs; that a quote's insurer and basis are in a source it cites; policy and other long numbers only from a recorded schedule or Overview; "
               "that every overlay entry landed in the document; the PDF rebuilt from content.json and identical, with no page numbers, no stranded heading, no split row and the font really embedded; that the save size equals the local file and the folder path starts (after the drive and liferisk.co.za) with Company - Paul or Company - WR Clients\\Paul Kafentzis (Client Files) and the folder before 2. Fact Find is named 'Surname, First' of this client.")
-        print("ONLY ATTESTED BY CLAUDE (typed or done in the chat, recorded, not proven): Paul's own words (the chat types them with run.py answer; the program checks only that they are on record, that a number used is in them, and that the question named, in its own text, the at most 10 ids it was about), the joint-meeting answer and its evidence, the real send of the PDF in the chat and the real folder save and listing (the listing is typed by the chat), the visual check, the independent re-check, the six judgment sentences, the Fact Find Summary hand-over, "
+        print("ONLY ATTESTED BY CLAUDE (typed or done in the chat, recorded, not proven): Paul's own words (the chat types them with run.py answer; the program checks only that they are on record, that a number used is in them, that the question was recorded with at most 10 field ids that its own text names, and, for a dismissals question, that it names at most 5 lines and that its text quotes at least 4 words of each line it names; every line freed that way is shown on the glance list with the full question and his recorded words), the joint-meeting answer and its evidence, the real send of the PDF in the chat and the real folder save and listing (the listing is typed by the chat), the visual check, the independent re-check, the six judgment sentences, the Fact Find Summary hand-over, "
               "that the Planner page was published and Paul said yes to the message, the Teams skill folder (it was NAMED BY THE CHAT: the program checks that it looks like the real one and prints its fingerprint for you to compare), the text copies of the Overview and Policy schedules (made by the chat), text in a document that has no recorded copy; and every rule that is only text, not a check (pending items stay pending, independent requests not waiting on each other, prior-year figures, garbled lines, comparing the Overview, other documents).")
         fnt = (st.get("build") or {}).get("font") or {}
         rc_ = load(os.path.join(run or ".", w.RECEIPT), {})

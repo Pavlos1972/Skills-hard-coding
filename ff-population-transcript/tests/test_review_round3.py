@@ -180,8 +180,8 @@ class NearEntry(Staged):
         self.ok("done", self.run_dir, "scan")
         out = "\n".join(verify.summary_lines(self.run_dir, self.load("state.json"), self.load("ledger.json"), {}))
         self.assertIn("how every request line was handled", out)
-        self.assertRegex(out, r"line \d+ -> entry L\d+ \(quote_request, covered by")      # an entry that handles a line
-        self.assertRegex(out, r"line \d+ dismissed: line \d+ says: Send me")                # a dismissal, with its reason
+        self.assertRegex(out, r'line \d+ "[^"]*" -> entry L\d+ \(quote_request, covered by')      # an entry that handles a line
+        self.assertRegex(out, r'line \d+ "[^"]*" dismissed: line \d+ says: Send me')                # a dismissal, with its reason
 
     def test_a2b_an_entry_on_the_line_or_one_that_shares_a_word_handles_it(self):
         lines = ["x", "Please send us your latest payslip", "OK, the payslip will come tomorrow", "Thanks", "unrelated chatter here"]
@@ -235,7 +235,7 @@ class HardLines(Staged):
     def test_a1_paul_can_say_a_line_is_not_a_request_and_it_is_shown_with_the_line(self):
         n = self.L("new business FNA quote")
         sh("tx.py", "scan", self.run_dir, ok=True)
-        self.ok("ask", self.run_dir, "--need", "dismissals", "--kind", "knowledge", "--question", "Line %d mentions a quote but is it a request?" % n, "--searched", "the whole call", "--about", str(n))
+        self.ok("ask", self.run_dir, "--need", "dismissals", "--kind", "knowledge", "--question", "Line %d says: For the risk cover I will ask BrightRock for a new business FNA quote for you. Is it a request?" % n, "--searched", "the whole call", "--about", str(n))
         self.refused("ledger", self.run_dir, "review", "--line", str(n), "--reason", self.reason(n))              # asked, not answered
         self.ok("answer", self.run_dir, "--need", "dismissals", "--said", "Not a request, it is only about last year's quote")
         self.ok("ledger", self.run_dir, "review", "--line", str(n), "--reason", self.reason(n))
@@ -248,7 +248,7 @@ class HardLines(Staged):
         n = self.L("new business FNA quote")
         other = self.L("Retirement Goal Analysis")
         sh("tx.py", "scan", self.run_dir, ok=True)
-        self.ok("ask", self.run_dir, "--need", "dismissals", "--kind", "knowledge", "--question", "Line %d mentions a quote but is it a request?" % n, "--searched", "the whole call", "--about", str(n))
+        self.ok("ask", self.run_dir, "--need", "dismissals", "--kind", "knowledge", "--question", "Line %d says: For the risk cover I will ask BrightRock for a new business FNA quote for you. Is it a request?" % n, "--searched", "the whole call", "--about", str(n))
         self.ok("answer", self.run_dir, "--need", "dismissals", "--said", "Not a request, it is only about last year's quote")
         self.refused("ledger", self.run_dir, "review", "--line", str(other), "--reason", "line %d only says: I will also ask for the Retirement Goal Analysis so nothing" % other)
 

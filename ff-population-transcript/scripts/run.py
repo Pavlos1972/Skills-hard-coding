@@ -575,14 +575,15 @@ NO_ABOUT_NEEDS = ("lead", "dismissals", "formpdf", "date", "form", "joint")
 ABOUT_MAX = 10
 
 
-def about_problem(about, question, need):
+def about_problem(about, question, need, run=None):
     """None when `--about` is a short list of real ids that the question itself names: at most 10 field keys, list names, quote groups or section ids, each written in the question as the id or its label
     (so a chat cannot list every field and then use the answer for any of them). For the dismissals question the ids are line numbers."""
     if len(about) > ABOUT_MAX:
         return "--about names %d ids: at most %d (a question about everything is a question about nothing)" % (len(about), ABOUT_MAX)
     if need == "dismissals":
-        bad = [x for x in about if not re.fullmatch(r"(?:lines?\s*)?\d+(?:\s*-\s*\d+)?", x.strip(), re.I)]
-        return ("--about for the dismissals question is the line numbers (for example 66 or 66-67), not %r" % bad[0]) if bad else None
+        if run is None or not os.path.exists(p(run, w.TRANSCRIPT)):
+            return "the transcript has not been prepared yet, so the lines of a dismissals question cannot be checked"
+        return verify.dismissal_problem(about, question, w.read_lines(run))[1]
     lay = w.layout()
     ok = compose.valid_ids(lay)
     specs = verify._specs(lay)
@@ -629,7 +630,7 @@ def cmd_ask(a):
         w.die("REFUSED: say what you already searched (at least 8 characters).")
     qs = load_list(a.run, w.QUESTIONS)
     about = [x.strip() for x in (a.about or "").split(",") if x.strip()]
-    ap_ = about_problem(about, q, a.need) if about else None
+    ap_ = about_problem(about, q, a.need, a.run) if about else None
     if ap_:
         w.die("REFUSED: %s." % ap_)
     if a.kind == "knowledge" and a.need not in NO_ABOUT_NEEDS and not about:
@@ -772,7 +773,7 @@ def cmd_ledger(a):
             w.die("REFUSED: that quote is not found at transcript line %d. Copy the exact words from the chunk you read." % a.line)
         st = _state(a.run)
         in_pass2 = any(r_["pass"] == 2 for r_ in st["reads"])
-        allowed_ = verify.paul_allowed_lines(a.run)
+        allowed_ = verify.paul_allowed_lines(a.run, lines)
         rw = verify.request_word(verify.window_text(lines, a.line))
         if a.kind in verify.KINDS_OPTIONAL and rw and a.line not in allowed_:
             w.die("REFUSED: line %d (or a line next to it) holds the word '%s' (a request, decision, change or quote word), so it cannot be recorded as a plain '%s'. Record it as a gap, difference, contact, quote_request, next_step, change or request. "
@@ -837,7 +838,7 @@ def cmd_ledger(a):
         if prob:
             w.die("REFUSED: %s." % prob)
         lo, hi = (a.line, a.line) if a.line is not None else (a.frm, a.to)
-        hard_in = [i for i in sorted(verify.hard_lines(lines_)) if lo <= i <= hi and i not in verify.paul_allowed_lines(a.run)]
+        hard_in = [i for i in sorted(verify.hard_lines(lines_)) if lo <= i <= hi and i not in verify.paul_allowed_lines(a.run, lines_)]
         if hard_in:
             w.die("REFUSED: line(s) %s hold a request word that cannot be dismissed (FNA, quote, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up, reduced). Record each as a ledger entry (a quote line as quote_request). "
                   "If a line really is not a request (for example 'as the quote said last year'), ask Paul: run.py ask %s --need dismissals --about \"%s\" --kind knowledge --question ... --searched ..., then run.py answer ... --said \"<his words>\"." % (hard_in[:8], a.run, ",".join(str(i) for i in hard_in[:8])))
@@ -940,6 +941,9 @@ def cmd_cross(a):
                 w.die("REFUSED: %s: 'differs' needs the call's own value, and it must differ from the form's (%r)." % (k, by[k]["value"]))
         rec = {kk: vv for kk, vv in ans.items() if vv is not None and kk in ("r", "line", "quote", "value", "reviewed")}
         if r_ == "not_on_call":
+            conf = verify.quote_request_conflict(lines, load_ledger(a.run), k)
+            if conf:
+                w.die("REFUSED: %s is 'not on the call' but %s." % (k, verify.conflict_text(k, conf, lines)))
             terms, curated, hits = search_for_item(a.run, lines, fr, lay, by[k])
             why = str(ans.get("reviewed") or "").strip()
             if hits:
@@ -1029,6 +1033,10 @@ def cmd_claim(a):
     hits, docs = verify.search_terms(a.run, lines, terms)
     sib = verify.sibling_hits(lay, fr, a.key)
     why = (a.reviewed or "").strip()
+    if a.as_ == "Not discussed":
+        conf = verify.quote_request_conflict(lines, load_ledger(a.run), a.key)
+        if conf:
+            w.die("REFUSED: %s." % verify.conflict_text(a.key, conf, lines))
     if a.as_ == "Not discussed" and (hits or docs or sib):
         prob = w.reason_hit_problem(why, hits, lines)
         if prob:
