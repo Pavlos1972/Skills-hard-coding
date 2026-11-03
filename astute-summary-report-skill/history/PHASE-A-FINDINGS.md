@@ -47,4 +47,9 @@ Full 0. Partial 5 (1 short entry page, 2 inputs, 5 evidence, 10 one reply one qu
 5. **The reply:** the PDF, the numbered flag list (most important first), as today, then the SHORT audit. Nothing is sent to anyone and no message to Sitamah is built (the funnel task only says compile and save). (Yes)
 
 ## Status
-Phase A report given to Paul 03/11/2026. Waiting for his answers.
+Phase A report given to Paul 03/11/2026.
+
+## Paul's answers (03/11/2026)
+"Agree to all": yes to 1 to 5 as recommended. (1) Route A: the chat reads the report and enters every policy and figure through the program; the program checks each figure and policy number against the report's own text, adds up the totals and draws the PDF. (2) Online product checking: one search per distinct product, source recorded; unconfirmed products say so and get an orange flag. (3) Routes: computer, Microsoft 365, Zapier, every try logged; no 8:45 window. (4) The look stays exactly as today, drawn by the program; file name unchanged; an existing file is never overwritten (`(2)`, `(3)` and Paul is told). (5) The reply: the PDF, the numbered flag list, then the short audit; nothing is sent and no Sitamah message.
+
+Next: Phase B (plan) given to Paul 03/11/2026, waiting for his approval.
