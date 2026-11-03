@@ -1,0 +1,5 @@
+{
+ "stamp": "2026-11-03 09:41",
+ "fingerprint": "a7c23b9a1afe3ba11b7a6caab48191a3f669213d4b2f9c5e9f54d4d81a5b2808",
+ "change": "Added the self-test command the packager needs (run.py preflight)"
+}

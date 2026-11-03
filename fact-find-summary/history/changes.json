@@ -1,0 +1,202 @@
+[
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Source first - never invent. Write only what is in the source material",
+  "new": "SKILL.md and references/00-rules.md (rule 1): the one source is the Fact Find Transcript PDF; the program checks every value against it.",
+  "why": "Paul, 03/11/2026 (question 1): the Summary is built from the finished Fact Find Transcript PDF and proves it matches it.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Deliver everything this skill lists, every time.",
+  "new": "references/04-handover.md and the step driver: the Summary PDF is sent in the chat and saved with a listing check; the reply is the short audit.",
+  "why": "Paul, 03/11/2026: the Planner note and the Sitamah message left this skill; the audit is short.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every correction re-opens the whole task, not just the item.",
+  "new": "references/00-rules.md rule 9: fix the Fact Find, run this skill again from the read step, re-deliver.",
+  "why": "Shortened: the program re-opens the later steps when the PDF is rebuilt.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Ask Paul to attach the file - last resort only.",
+  "new": "references/01-locate.md: Ask Paul to attach the file only once all three routes have been tried and failed; the project file list is a convenience cache.",
+  "why": "Three routes (computer, Microsoft 365, Zapier) in order, every try logged (S4).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never touch another broker's folder. Company - WR Clients holds",
+  "new": "references/01-locate.md: Never touch another broker's folder; only Paul Kafentzis (Client Files) under Company - WR Clients.",
+  "why": "Shortened: the colleague brokers' names are not needed.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This applies both to locating the Fact Find/transcript",
+  "new": "references/01-locate.md Saving: after every save, list the folder and confirm the listed size equals the local file.",
+  "why": "Workflow step names replaced by the step driver.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Debt is never excluded from an income-needed/FNA calculation",
+  "new": "references/00-rules.md rule 5 and 03-summary-structure.md: totals reconcile to the cent and debt is never left out because of credit life.",
+  "why": "The program recomputes every total (compose.py) and refuses a difference (verify.py).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "In Section 8 (Action Plan - Cover Calculations) these ABI",
+  "new": "references/03-summary-structure.md Standing values in Section 8: the ABIs are fixed; Dread Disease ABI is 3%.",
+  "why": "Paul, 02/11/2026: Dread Disease ABI is 3% always (was 5%); the Household needs line under Disability stays at 5%.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Any FNA, Shortfall or Reduced quote line in the Summary",
+  "new": "references/03-summary-structure.md (What the Client Requires): quote lines name the insurer and New Business or Servicing exactly as in the Fact Find; no default.",
+  "why": "The Fact Find (ff-population-transcript) already refuses a quote request without them, so this skill copies them.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never mix the spouses' information.",
+  "new": "references/01-locate.md Two spouses: one run per spouse; the Summary opens with the joint-meeting line; the checker looks for the other spouse's identifiers.",
+  "why": "Shortened: the program carries the joint line and the check.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "When the Fact Find covers one spouse of a couple who were seen in the same meeting",
+  "new": "references/01-locate.md Two spouses in one meeting.",
+  "why": "Shortened.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "When the \"Items Requiring Follow-Up\" section (Report Structure",
+  "new": "references/02-read-and-compose.md Who owns an item: Cameron short-term, CL Will, Valerie medical aid, Lizelle gross income and ACI.",
+  "why": "Paul, 03/11/2026: Lizelle replaces Martin; Cameron and Valerie confirmed correct; CL kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The Summary keeps this fixed nine-section structure",
+  "new": "references/03-summary-structure.md: the nine sections stay as they were (Paul, 28/10/2026).",
+  "why": "Source mapping shortened: the composer does the mapping.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Client Profile - name, DOB, ID, cell, work number",
+  "new": "references/03-summary-structure.md sections 1 to 8 (section lists reworded in plain words).",
+  "why": "Shortened.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Use reportlab SimpleDocTemplate, letter page size",
+  "new": "references/03-summary-structure.md Look: A4 (Paul, 03/11/2026, question 3), about 18 mm margins, navy and light-blue colours, red follow-up flags, no page numbers.",
+  "why": "Letter replaced by A4; the drawing is done by build.py.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This skill is specific to the Wealth Revolution WR Fact Find",
+  "new": "SKILL.md and the read step: if the PDF is not the program-drawn Fact Find Transcript, the program stops and Paul is told in one line.",
+  "why": "The old v2.0 layouts are dropped (Paul, 03/11/2026, question 7).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Standing ABIs in Section 8 (Paul, 15 October 2026)",
+  "new": "heading: Standing values in Section 8 (references/03-summary-structure.md)",
+  "why": "The dated attribution moved to history (S5).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Life Cover - Fractured Cover: Life Cover (WOL) ABI",
+  "new": "references/03-summary-structure.md: Life Cover (WOL) ABI 3% and Childcare ABI 5%; under Disability no Life Cover (WOL) ABI line, Household needs ABI 5%, Childcare ABI 5%; Dread Disease ABI 3%.",
+  "why": "Paul, 02/11/2026: Dread Disease ABI 3% (was 5%).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Quote requests: insurer and New Business vs Servicing",
+  "new": "heading removed: the rule sits in references/03-summary-structure.md under What the Client Requires.",
+  "why": "The dated attribution moved to history (S5).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Two spouses in one meeting (Paul, 15 October 2026)",
+  "new": "heading removed: the rule sits in references/01-locate.md.",
+  "why": "The dated attribution moved to history (S5).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Internal follow-up routing (reference",
+  "new": "heading: Who owns an item (references/02-read-and-compose.md).",
+  "why": "The program names the owner from the Fact Find's rows.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Cameron handles short term insurance",
+  "new": "references/02-read-and-compose.md: Cameron: short-term insurance. CL: the Will. Valerie: medical aid and gap cover. Lizelle: gross income and ACI items (BrightRock), replacing Martin.",
+  "why": "Paul, 03/11/2026: Cameron and Valerie confirmed correct; BrightRock / gross income goes to Lizelle instead of Martin; CL stays.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This is a routing convenience, not a substitute",
+  "new": "references/02-read-and-compose.md: the owner is a routing convenience: the underlying open item is still stated plainly.",
+  "why": "Kept in meaning.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Report Structure (fixed section order)",
+  "new": "heading removed: the nine sections are in references/03-summary-structure.md.",
+  "why": "Merged into the structure page.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Where each Summary section comes from in the v3.0 Fact Find",
+  "new": "compose.py does the mapping (Client Profile from Client Info, Occupation & Income from Occupation and Income & Household, and so on); references/02-read-and-compose.md describes it.",
+  "why": "The mapping is built into the program.",
+  "needs_paul": false
+ }
+]

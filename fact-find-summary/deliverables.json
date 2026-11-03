@@ -1,0 +1,21 @@
+{
+ "skill": "fact-find-summary",
+ "deliverables": [
+  {
+   "name": "Fact Find Summary PDF",
+   "file": "out/Fact Find Summary - DD.MM.YY - (First Surname).pdf",
+   "produced_by": "scripts/build.py (from content.json, composed by scripts/compose.py from the Fact Find Transcript PDF read by scripts/ffread.py)",
+   "handover": "sent in the chat; saved into the client's 2. Fact Find folder; folder listed back and the listed size compared with the local file",
+   "checked_by": "scripts/verify.py (values traced to the Fact Find, totals to the cent, standing ABIs, fixed structure, flags carried, PDF rebuilt identical, A4, file name, save size)",
+   "step": "deliver"
+  },
+  {
+   "name": "Short audit",
+   "file": "printed by scripts/verify.py; full record in out/audit-full.txt",
+   "produced_by": "scripts/verify.py",
+   "handover": "pasted into the reply as it is: one line per check with a green tick or a red cross, one closing line for what is only attested",
+   "checked_by": "scripts/run.py done final",
+   "step": "final"
+  }
+ ]
+}

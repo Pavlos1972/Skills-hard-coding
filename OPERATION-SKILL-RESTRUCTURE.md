@@ -42,7 +42,7 @@ It sits on top of SKILL-STANDARDS.md (the standards S1 to S16) and SKILL-TEMPLAT
 5. A reading lock wherever the skill reads long documents.
 6. Every output is built by program from one data file, with the same look every time.
 7. Every fact has a source. Nothing is invented.
-8. One checker prints PASS or FAIL. It separates what it proved from what was only attested. The reply carries the printout unedited.
+8. One checker prints PASS or FAIL. It separates what it proved from what was only attested. **The audit report posted in the chat after the skill has run is SHORT (Paul, 03/11/2026): one-liners in point form, each with a green tick (✅) or a red cross (❌). No long printout in the reply.** The program writes that short audit itself (one line per check) and keeps the full record on disk in the run folder. Anything only attested (not proven by the program) goes on ONE closing line, "Only attested (not proven): ...", so nothing is overclaimed.
 9. One reply, one question. Nothing is sent without Paul's yes. Teams messages go through Zapier only.
 10. Each duplicated output is moved to its one owner skill, and the other skills point to it.
 11. House conventions: DD/MM/YYYY, R for money, Athens time, actions owned by Sitamah.
@@ -75,7 +75,8 @@ It sits on top of SKILL-STANDARDS.md (the standards S1 to S16) and SKILL-TEMPLAT
 3. Report what was checked and what was only attested.
 4. Never say "done" without the checker's PASS, and never say "live" before Paul does.
 5. Side issues are written down and told to Paul. Do not chase them.
-6. Update the memory files after every phase, not only at the end.
+6. **Audit reports in the chat are SHORT (Paul, 03/11/2026):** one-liners in point form, each with ✅ or ❌, one closing line for what is only attested. Never a long printout. This applies to every skill built under this Operation.
+7. Update the memory files after every phase, not only at the end.
 
 ## Progress (update after every phase)
 
@@ -83,7 +84,7 @@ It sits on top of SKILL-STANDARDS.md (the standards S1 to S16) and SKILL-TEMPLAT
 |---|---|---|
 | `client-teams-transcript-skill` | Built BEFORE this list existed (heavier method). Not redone unless Paul asks. | v35 LIVE (Paul confirmed 03/11/2026) |
 | `ff-population-transcript` | Built BEFORE this list existed (heavier method). Not redone unless Paul asks. | v33 uploaded 03/11/2026 (reported); NOT confirmed live; Paul runs it on a real client first |
-| `fact-find-summary` | CHOSEN by Paul 03/11/2026. PHASE A DONE 03/11/2026 (read-only analysis; findings in `fact-find-summary/history/PHASE-A-FINDINGS.md`): 18 flaws, 2 duplications between skills, score 0 full / 4 partial / 7 missing / 2 not applicable. Findings Report given to Paul with a 7-question yes/no list. PAUL ANSWERED 03/11/2026: yes to 1-5 and 7; item 6 (routing names): Cameron = short-term, CL = Will, Valerie = medical aid, Lizelle = gross income / ACI (BrightRock) replacing Martin. PHASE B (plan) given to Paul 03/11/2026: waiting for his approval. Nothing built or changed. An interim text-only update was built 02/11/2026 and its upload brief made 03/11/2026 (not uploaded; on hold until Paul decides). | Finding so far (Phase A, not yet reported properly): its example script `scripts/build_report.py` appears to hold a real person's personal details (including an ID number); it is already in the live skill. Do not repeat the details. Criterion "no client data inside a skill". Known duplication: the live version also makes its own Planner note and its own Teams message to Sitamah, which `client-teams-transcript-skill` now makes. |
+| `fact-find-summary` | Operation Skill Restructure applied 03/11/2026 (Phases A to E): the program-driven `fact-find-summary` is BUILT and PACKAGED, not uploaded, not live. A program reads the Fact Find Transcript PDF (`scripts/ffread.py`, needs `pdfplumber`), composes the nine sections with totals and follow-up owners (Cameron, CL, Valerie, Lizelle; Lizelle replaces Martin), draws an A4 PDF and a checker prints a SHORT audit of green ticks and red crosses. The Planner note and the Sitamah message left this skill (the Teams skill owns them). Rule-by-rule check: 392 old rules, 13 kept, 93 reworded, 286 dropped on record, 0 unaccounted. Lint PASS. ONE end-to-end test on invented data passed on the source and on the unpacked zip. Zip: `releases/fact-find-summary-20261103-0941.zip` (15 files, 38,533 bytes). The older interim text-update zip and brief are SUPERSEDED: do not upload them. Waiting for Paul to give the real upload folder name, then the upload brief is made. Yes/no list for Paul: `fact-find-summary/history/CHANGES-FOR-PAUL.md`. Never say live before Paul confirms. | PHASES A TO E DONE; waiting for the real folder name, then the upload brief and Paul's upload. |
 | All other skills | NOT started. Paul names the next one. | |
 
 ## Running log

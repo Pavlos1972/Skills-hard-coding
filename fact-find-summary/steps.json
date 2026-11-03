@@ -1,0 +1,94 @@
+{
+ "skill": "fact-find-summary",
+ "steps": [
+  {
+   "id": "locate",
+   "title": "Find the client's folder and the Fact Find Transcript PDF (three routes, in order, every try logged)",
+   "ref": ["01-locate.md"],
+   "do": [
+    "Find, for this client and the meeting date Paul gave, the PDF `Fact Find Transcript - DD.MM.YY - (First Surname).pdf` in the client's `2. Fact Find` folder. Try the routes IN THIS ORDER and record EVERY try, failures too:",
+    "  1  device: the local drive / OneDrive through the device bridge",
+    "  2  m365: the Microsoft 365 connector (SharePoint / OneDrive)",
+    "  3  zapier: the Zapier Office 365 tools",
+    "Record each try: python3 {scripts}/run.py access {run} --route device --result failed|found --note \"what you did\"",
+    "When a route has the PDF, bring a copy into the run folder: python3 {scripts}/run.py source {run} --file <local copy of the PDF> --route <the route>",
+    "Ask Paul to attach the file ONLY after all three routes have failed. Never open another broker's folder."
+   ],
+   "check": "locate_ok",
+   "proof": "an access log that starts with the computer and tries the routes in order, and the PDF copied into the run folder by run.py source"
+  },
+  {
+   "id": "read",
+   "title": "The program reads the Fact Find PDF (it stops if this is not the program-drawn report)",
+   "ref": ["02-read-and-compose.md"],
+   "do": [
+    "Run: python3 {scripts}/run.py read {run}",
+    "It reads every section and row of the Fact Find Transcript PDF and checks that the client and the meeting date are the ones Paul asked for.",
+    "If it prints STOP, tell Paul in one line what it said. Do not guess any value and do not make a Summary from another kind of Fact Find."
+   ],
+   "check": "read_ok",
+   "proof": "fact_find.json exists and the layout check found no problem"
+  },
+  {
+   "id": "compose",
+   "title": "The program builds the nine sections, the totals and the follow-up list",
+   "ref": ["03-summary-structure.md"],
+   "do": [
+    "Run: python3 {scripts}/run.py compose {run}",
+    "Nothing is typed by you: the content is a function of the Fact Find, and the checker recomposes it and refuses a hand-edited file.",
+    "Read the follow-up items it prints. If one is wrong, the Fact Find is wrong: tell Paul (never change content.json by hand)."
+   ],
+   "check": "compose_ok",
+   "proof": "content.json exists"
+  },
+  {
+   "id": "build",
+   "title": "The program draws the Summary PDF (A4) and the page images",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py build {run}",
+    "It refuses to draw until every content check passes. Look at the page images it lists (out/page-*.png) yourself."
+   ],
+   "check": "build_ok",
+   "proof": "the PDF exists in out/ and has not changed since it was built"
+  },
+  {
+   "id": "check",
+   "title": "Check before handing over (every line must be a green tick)",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/verify.py {run} pre",
+    "Every line must be a green tick. A red cross means fix the cause (usually: the Fact Find itself is wrong, so tell Paul) and rebuild."
+   ],
+   "check": "verify_pre",
+   "proof": "the checker prints no red cross"
+  },
+  {
+   "id": "deliver",
+   "title": "Send the PDF in the chat and save it into the client's 2. Fact Find folder",
+   "ref": ["04-handover.md"],
+   "do": [
+    "1. Send the PDF in the chat as a file.",
+    "2. Save the same file into the client's `2. Fact Find` folder (the folder the PDF was found in), then LIST the folder and read the size it shows.",
+    "3. Record: python3 {scripts}/run.py receipt {run} pdf.sent yes",
+    "          python3 {scripts}/run.py receipt {run} pdf.saved_folder \"<the full folder path>\"",
+    "          python3 {scripts}/run.py receipt {run} pdf.listed_bytes <the size shown in the listing>",
+    "          python3 {scripts}/run.py receipt {run} images.looked yes   (only after you really looked at the page images)"
+   ],
+   "check": "deliver_ok",
+   "proof": "the four receipts are recorded"
+  },
+  {
+   "id": "final",
+   "title": "The final check and the SHORT AUDIT for Paul",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py done {run} final",
+    "Put the short audit it prints in your reply exactly as it is: one line per check with a green tick or a red cross, one closing line for what is only attested. Nothing longer.",
+    "Any red cross means the job is not finished: say so."
+   ],
+   "check": "verify_final",
+   "proof": "the final checker prints no red cross"
+  }
+ ]
+}

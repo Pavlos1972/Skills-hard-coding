@@ -1,0 +1,139 @@
+[
+ {
+  "from_prefix": "## Index",
+  "reason": "Replaced by the new short Index (five sections).",
+  "needs_paul": false,
+  "to_prefix": "13 | Reference script + Notes | scripts/build_report.py, tem"
+ },
+ {
+  "from_prefix": "## UNIVERSAL OPERATING RULES - READ FIRST, APPLY TO EVERY ST",
+  "reason": "The preamble and rule 1 (re-load this skill) are replaced by the program: it shows the standing rules at the start and the right page at each step, and `run.py status` tells a chat where the job is up to after a compression.",
+  "needs_paul": false,
+  "to_prefix": "Re-load this skill before you start, and again after any com"
+ },
+ {
+  "from_prefix": "Read before you write. Read the source material completely a",
+  "reason": "Rule 3 (read before you write, keyword searching is not reading) concerned the transcript. This skill reads only the Fact Find PDF, and the program reads every row of it (Paul, 03/11/2026: the job is the Fact Find PDF to the Summary).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Changes to a skill: edit the existing skill, never create a ",
+  "reason": "Rule 9 (changes go through the propose_skills card) is replaced by the standard S7: skills are changed only in Claude Code and uploaded as a zip by Paul. Rule 10 (the source order with the Audio to Text file, the transcript and the Overview) belongs to ff-population-transcript: this skill's one source is the Fact Find Transcript PDF (Paul, 03/11/2026, question 1).",
+  "needs_paul": false,
+  "to_prefix": "Source order (Paul's rule, 28/10/2026) - the same order as f"
+ },
+ {
+  "from_prefix": "Delivery gate for this skill (rules 5 and 6 applied): a run ",
+  "reason": "The Delivery gate is replaced by the program: the seven steps in order and the checker's short audit prove each item (located, built, checked, saved, listed). The Planner note and the message to Sitamah left this skill (see below).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Last Updated: 28 October 2026, 10:58 (Athens/Greece time)",
+  "reason": "The hand-typed Last Updated line, the changelog paragraphs and the changelog table are replaced by the stamp the tool sets (S2) and the Recent changes table; the full history lives in the repo history/ folder.",
+  "needs_paul": false,
+  "to_prefix": "> Whenever this SKILL.md is edited for any reason, add a new"
+ },
+ {
+  "from_prefix": "Builds a structured, client-facing/internal summary PDF from",
+  "reason": "The introduction is replaced by the new skill description and the Run it section.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "## Client File Access (standing rule — applies to every step",
+  "reason": "Replaced by references/01-locate.md (three routes, in order, every try logged; Paul asked last).",
+  "needs_paul": false,
+  "to_prefix": "Every time this skill needs a client's document, or needs to"
+ },
+ {
+  "from_prefix": "Local machine — always attempted first. Connect via the devi",
+  "reason": "Replaced by the three routes in references/01-locate.md. The 8:45am laptop-window note is dropped: Paul dropped it on 02/11/2026 (decision 16c): every run tries the computer first, then Microsoft 365, then Zapier, and logs each.",
+  "needs_paul": false,
+  "to_prefix": "SharePoint — only if the local machine genuinely can't be re"
+ },
+ {
+  "from_prefix": "## Mandatory: transcript accuracy — no mistakes allowed",
+  "reason": "The transcript-accuracy section is dropped. This skill no longer re-verifies the Fact Find against the recording: the Fact Find Transcript skill's checker proves that, and this skill proves the Summary equals the Fact Find (Paul, 03/11/2026, question 1: yes). The true story from this section stays in references/05-why.md.",
+  "needs_paul": true,
+  "to_prefix": "Applies to all three mandatory outputs, not just this one. T"
+ },
+ {
+  "from_prefix": "## Mandatory: all totals reconcile to the cent — inclusion i",
+  "reason": "Replaced by the program: every total is recomputed to the cent from its parts by compose.py and checked by verify.py; the rule text is in references/03-summary-structure.md. The story stays in references/05-why.md.",
+  "needs_paul": false,
+  "to_prefix": "A Fact Find Summary contains the same underlying figures in "
+ },
+ {
+  "from_prefix": "Compute every total programmatically from the same named com",
+  "reason": "Named variables and `assert` checks are replaced by the program (compose.py recomputes, verify.py asserts) instead of a script Claude copies and retypes.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Before delivering, explicitly cross-check every figure that ",
+  "reason": "Replaced by the checker: it cross-checks Section 8 against Sections 4 and 5 and refuses a difference. The precedent story stays in references/05-why.md.",
+  "needs_paul": false,
+  "to_prefix": "Applies wherever the same figure could appear twice — not ju"
+ },
+ {
+  "from_prefix": "## Standing default: Dread Disease Cover Target = R500,000 l",
+  "reason": "The R500,000 default is set by the Fact Find (ff-population-transcript writes it); this skill shows what the Fact Find shows (references/03-summary-structure.md).",
+  "needs_paul": false,
+  "to_prefix": "Per Paul's explicit standing instruction (15 September 2026)"
+ },
+ {
+  "from_prefix": "A different figure in the Audio to Text file or the Manual F",
+  "reason": "Replaced by the standing-values paragraph in references/03-summary-structure.md (the Fact Find already carries the standing ABIs and the checker compares). The 27/10/2026 story stays in references/05-why.md.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "When the Fact Find covers one spouse of a couple who were se",
+  "reason": "Replaced by references/01-locate.md (run once per spouse, --joint) and the program's joint-meeting line.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Section 8: each spouse's own take-home income, minus the ful",
+  "reason": "Section 8's per-spouse arithmetic is carried by the Fact Find; the cross-check is done by the checker when the other spouse's PDF is given (--spouse-pdf).",
+  "needs_paul": false,
+  "to_prefix": "Cross-check before delivering: search each finished Summary "
+ },
+ {
+  "from_prefix": "## Mandatory: this is one of three outputs — always check th",
+  "reason": "Dropped: the Planner note and the message to Sitamah are made once by client-teams-transcript-skill (Paul, 02/11/2026), and the Fact Find Transcript PDF is made by ff-population-transcript. This skill makes only the Summary PDF.",
+  "needs_paul": false,
+  "to_prefix": "If there is genuinely no source transcript available (e.g. t"
+ },
+ {
+  "from_prefix": "## Workflow",
+  "reason": "Replaced by the step driver (steps.json): locate, read, compose, build, check, deliver, final. The old-layout (v2.0) reading and the zip-of-images case are dropped (Paul, 03/11/2026, question 7: yes, the new form is the only source). The 'verify before trusting' step is dropped with the accuracy section above.",
+  "needs_paul": false,
+  "to_prefix": "Verify before trusting. Cross-check every Fact Find field ag"
+ },
+ {
+  "from_prefix": "Always include (do not omit even if not asked explicitly):",
+  "reason": "Replaced by the program: the always-include list is built into compose.py (ID or passport number, cell, work number, personal and work email, referral from), and the PDF is drawn by build.py instead of a script Claude copies.",
+  "needs_paul": false,
+  "to_prefix": "Build the PDF following the section structure and style belo"
+ },
+ {
+  "from_prefix": "Flag open items. Always include a final \"Items Requiring Fol",
+  "reason": "Replaced by the program: flags are carried by compose.py, the save and the listing are receipts in step 'deliver', and the notification step moved to client-teams-transcript-skill.",
+  "needs_paul": false,
+  "to_prefix": "Notify Sitamah in Teams — the very last step (Paul's rule, 1"
+ },
+ {
+  "from_prefix": "### Step 8: Notify Sitamah in Teams after the meeting",
+  "reason": "Moved to client-teams-transcript-skill (references/07-teams-message.md and its steps): the message wording, label, count, follow-up sentence, Zapier route and the 403 note (Paul, 02/11/2026). This skill sends nothing.",
+  "needs_paul": false,
+  "to_prefix": "Check and report: Zapier returns a message id and sent time;"
+ },
+ {
+  "from_prefix": "## Reference script",
+  "reason": "Replaced by the program: build.py draws the PDF from content.json; there is no script for Claude to copy. The old example script held a real person's details and is not carried over (S11).",
+  "needs_paul": false,
+  "to_prefix": "See scripts/build_report.py for a working reportlab template"
+ },
+ {
+  "from_prefix": "If any personal/sensitive fields (e.g. health conditions) se",
+  "reason": "Dropped: the Fact Find checker handles a toggle that disagrees with its notes; this skill copies the Fact Find's rows and flags as they are.",
+  "needs_paul": true
+ }
+]
