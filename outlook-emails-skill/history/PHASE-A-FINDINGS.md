@@ -47,4 +47,11 @@ Full 0. Partial 6 (1 short entry page, 2 inputs, 5 evidence, 7 short means short
 6. **Mail search failing:** if the Microsoft 365 search fails, the check says so and keeps looking next time; it never reports "no reply" from a failed search. (Yes)
 
 ## Status
-Phase A report given to Paul 03/11/2026. Waiting for his answers.
+Phase A report given to Paul 03/11/2026.
+
+## Paul's answers (03/11/2026)
+"Agree to all": yes to 1 to 6 as recommended. (1) This skill owns the whole scheduled reply-check (the board's page and the Teams skill later point to it; optional client folder for the dropped-file check). (2) Hourly on weekdays 08:00 to 17:00 South African time, stop for good after 5 business days with a last message. (3) "Nothing came back" is flagged at 09:00 Athens time on the second business day after sending, phone alert only. (4) No dependence on read/unread: a sender who replied is dropped from the list. (5) The Signatures section goes; one line points to `paul-email-signature`. (6) A failed mail search is reported as a failure, never as "no reply".
+
+Found while planning (not in the Phase A report): the live text never says the scheduled check may use the Microsoft 365 connector. The scheduled-task tool has a setting for which connectors a fired session may use; without it the check may not be able to read Outlook. The plan sets it (Microsoft 365 only) and asks Paul to approve that.
+
+Next: Phase B (plan) given to Paul 03/11/2026, waiting for his approval.
