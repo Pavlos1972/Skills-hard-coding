@@ -1,7 +1,7 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
 **Version 4.5 (draft for Paul to review)**
-**Last updated: 2026-11-03 08:45 (Athens time)**
+**Last updated: 2026-11-03 08:31 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
 Every future Claude Code session in this repo must read it before touching any skill
@@ -406,7 +406,7 @@ Where: `Company - Paul > Claude > Fact Find Documents > WR Fact Find - ZIP > WR 
 
 | When (Athens time) | What changed |
 |---|---|
-| 2026-11-03 08:45 | Version 4.5: Teams skill v35 confirmed LIVE by Paul ("Yes, v35 is live") |
+| 2026-11-03 08:31 | Version 4.5: Teams skill v35 confirmed LIVE by Paul ("Yes, v35 is live") |
 | 2026-11-03 08:30 | Version 4.4: `ff-population-transcript` uploaded as v33 by a Chrome chat (reported); not confirmed live; the real upload subfolder is `ff-population-transcript-skill` |
 | 2026-11-03 07:17 | Version 4.3: decision 21 (no helpers, no more test rounds); round 6 set aside; `CHAT-NOTES.md` written; round-5 `ff-population-transcript` goes to packaging |
 | 2026-11-03 05:47 | Version 4.2: `ff-population-transcript` program-driven build recorded (decision 20 status, tracker row): four independent review rounds, 319 tests, lint PASS, inventory 0 unaccounted; packaged-not-uploaded, not live |
