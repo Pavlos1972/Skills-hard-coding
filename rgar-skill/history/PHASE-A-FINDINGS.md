@@ -54,5 +54,10 @@ Full 0. Partial 6 (1 short entry page, 2 inputs, 5 evidence, 6 built by program,
 7. **A lump sum or monthly contribution of R 0 (or no recurring investment) stops the run and asks you what wording to use;** no wording is invented. The "recurring investment R 0" flag to you stays. (Yes)
 8. **Who sends and the signature:** the rebuild follows this skill (Sitamah attaches the report and sends; the board is another skill, noted for its turn), and the signature stays a one-word setting (`insert` today, `server` later), the same open question as in the Tax-Free skill: does the client see your signature once or twice? (Yes, and one answer will settle both skills)
 
+## Paul's answers (03/11/2026)
+"Agree to all": yes to 1 to 8 as recommended. Two were not plain yes/no, so they are handled like this (and told to Paul in the Phase B plan):
+- Q3 (the net target's label): the program accepts BOTH labels, "Net amount needed at retirement" (the new Fact Find) and "Net Amount Needed (today's terms)" (the old text), and the typed figure must sit on that labelled line in the Fact Find Summary; the audit says which label matched. If neither label is found the run stops and asks Paul.
+- Q8 (the signature): the rebuild keeps this skill's way (Claude inserts "Paul K New") as a one-word setting, the same open question as in `om-tax-free-skill`. STILL OPEN: does the client see the signature once or twice?
+
 ## Status
-Phase A report given to Paul 03/11/2026. Waiting for his answers. Nothing built.
+Phase A report given to Paul 03/11/2026, answers recorded. Phase B plan given 03/11/2026, waiting for his approval. Nothing built.
