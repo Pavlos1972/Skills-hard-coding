@@ -44,7 +44,7 @@ def line_of(lines, text):
     raise AssertionError("fixture text not found: " + text)
 
 
-def drive(run_dir, transcript, client=("Pat", "Samplecase"), date="05/11/2026", stop_before_teams=True):
+def drive(run_dir, transcript, client=("Pat", "Samplecase"), date="05/11/2026", stop_before_teams=True, next_text="Thu 12/11/2026 at 4pm"):
     """Start the Teams run and take it through locate .. planner; it then shows the message (its `teams` step)."""
     first, sur = client
     run(TEAMS_RUN, "start", run_dir, "--type", "first", "--client", "%s %s" % (first, sur), "--date", date)
@@ -115,7 +115,7 @@ def drive(run_dir, transcript, client=("Pat", "Samplecase"), date="05/11/2026", 
              "src": [s("Thursday the twelfth at four works")]},
         ],
         "next_steps": [{"id": "n1", "owner": "client", "text": "Pat to email the latest payslip", "src": [s("I will email it tomorrow")]}],
-        "next_appointment": {"id": "next", "text": "Thu 12/11/2026 at 4pm", "agreed": True, "check": "Fact Find form and call both show Thu 12/11/2026 at 4pm: an agreed appointment",
+        "next_appointment": {"id": "next", "text": next_text, "agreed": True, "check": "Fact Find form and call both show Thu 12/11/2026 at 4pm: an agreed appointment",
                              "src": [s("Thursday the twelfth at four works")]},
         "checks": {
             "correspondence": {"done": False, "reason": "first meeting: no correspondence for this prospect yet"},

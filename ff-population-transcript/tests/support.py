@@ -5,6 +5,7 @@ claim / receipt ...), so a test can go from `start` to the final printout, or st
 """
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -203,6 +204,7 @@ class Chat(unittest.TestCase):
         ("Thursday the twelfth at four works", "next_step", "Thursday the twelfth at four works"),
         ("send us your latest payslip", "next_step", "send us your latest payslip"),
         ("letter of authority", "request", "we also need a letter of authority from you"),
+        ("Retirement Goal Analysis", "request", "I will also ask for the Retirement Goal Analysis"),
     ]
 
     def read_pass(self, p_):
@@ -225,14 +227,21 @@ class Chat(unittest.TestCase):
         self.read_pass(2)
         self.ok("done", self.run_dir, "pass2")
 
+    def line_reason(self, n, what="only says"):
+        """A review reason that quotes the line (the program checks it holds a word of 4 letters or more from that line)."""
+        lines = slurp(self.p("transcript.txt")).split("\n")
+        return "line %d %s: %s ... so nothing needs recording" % (n, what, " ".join(lines[n - 1].split()[:8]))
+
     def s_scan(self):
-        r = sh("tx.py", "scan", self.run_dir, ok=True)
-        for ln in r.stdout.splitlines():
-            if " *" in ln[:3] or ln[:2] in ("C*", " *"):
-                n = int(ln.split()[1])
-                led = self.load("ledger.json")
-                if not any(abs(e["line"] - n) <= 3 for e in led["entries"]):
-                    self.ok("ledger", self.run_dir, "review", "--line", n, "--reason", "plain talk, nothing decided here")
+        import verify
+        sh("tx.py", "scan", self.run_dir, ok=True)
+        st = self.load("state.json")
+        lines = slurp(self.p("transcript.txt")).split("\n")
+        led = self.load("ledger.json")
+        must = [e["line"] for e in led["entries"] if e["kind"] in verify.KINDS_MUST_COVER]
+        for n in verify.required_lines(lines, st):
+            if not any(abs(n - x) <= 3 for x in must):
+                self.ok("ledger", self.run_dir, "review", "--line", n, "--reason", self.line_reason(n))
         self.ok("done", self.run_dir, "scan")
 
     def s_contact(self):
@@ -253,6 +262,7 @@ class Chat(unittest.TestCase):
             "fna_type": {"r": "same", "line": L("new business FNA quote"), "quote": "for a new business FNA quote"},
             "fna_ins": {"r": "same", "line": L("new business FNA quote"), "quote": "I will ask BrightRock for a new"},
             "loa": {"r": "same", "line": L("letter of authority"), "quote": "we also need a letter of authority from you"},
+            "rgar_req": {"r": "same", "line": L("Retirement Goal Analysis"), "quote": "I will also ask for the Retirement Goal Analysis"},
             "next_appt": {"r": "same", "line": L("Thursday the twelfth at four works"), "quote": "Thursday the twelfth at four works"},
             "next_day": {"r": "same", "line": L("Thursday the twelfth at four works"), "quote": "Thursday the twelfth at four works"},
             "next_time": {"r": "same", "line": L("Thursday the twelfth at four works"), "quote": "Thursday the twelfth at four works"},
@@ -270,19 +280,27 @@ class Chat(unittest.TestCase):
         "has_debts": ("credit life with Absa", "there is credit life with Absa on the home loan"),
     }
 
-    def s_crosscheck(self, rest_reason="read the lines the program found for this field; they are about something else, the field itself is not discussed on the call"):
+    def s_crosscheck(self):
         af = os.path.join(self.tmp, "answers.json")
         have = {i["key"] for i in self.load("crosscheck.json")}
         jdump(af, {k: v for k, v in self.answers().items() if k in have})
         r = self.ok("cross", self.run_dir, "--file", af, "--rest", "not_on_call")
-        left = [ln.strip()[2:].split(":")[0].strip() for ln in r.stdout.splitlines() if ln.strip().startswith("- ") and ":" in ln]
+        left = {}
+        for ln in r.stdout.splitlines():
+            ln = ln.strip()
+            if ln.startswith("- ") and ":" in ln:
+                key, _, what = ln[2:].partition(":")
+                left[key.strip()] = [int(x) for x in re.findall(r"\d+", what.split("]")[0])] if "call lines" in what else []
+        lines = slurp(self.p("transcript.txt")).split("\n")
         extra = {}
-        for k in left:
+        for k, hits in left.items():
             if k in self.REST_SAME and self.try_line(self.REST_SAME[k][0]):
                 where, quote = self.REST_SAME[k]
                 extra[k] = {"r": "same", "line": self.L(where), "quote": quote}
+            elif hits:
+                extra[k] = {"r": "not_on_call", "reviewed": "line %d says %r, which is about something else than this field" % (hits[0], " ".join(lines[hits[0] - 1].split()[:8]))}
             else:
-                extra[k] = {"r": "not_on_call", "reviewed": rest_reason}
+                extra[k] = {"r": "not_on_call", "reviewed": "searched the whole call for any mention of this field and read it twice, nothing found"}
         if extra:
             jdump(af, extra)
             self.ok("cross", self.run_dir, "--file", af)
@@ -320,26 +338,15 @@ class Chat(unittest.TestCase):
             ],
         }
 
-    # fields the search finds call lines for, but whose lines are about something else: each gets its own written reason
-    CLAIM_REASONS = {
-        "bf_fna_req": "line 66 is the FNA quote already recorded under the FNA quote request; nothing is said about this second (bf) quote",
-        "bf_fna_type": "line 66 is the FNA quote already recorded under the FNA quote request; nothing is said about this second (bf) quote type",
-        "bf_sf_req": "line 66 is about the FNA quote, no shortfall (group risk) quote is mentioned on the call at all",
-        "bf_sf_type": "line 66 is about the FNA quote, no shortfall (group risk) quote is mentioned on the call at all",
-        "egar_req": "line 18 is Paul asking about the client's own highest education, not an education goal analysis for the children",
-        "h_oth": "lines 60 and 63 only say no conditions and not a smoker; the form's health ticks already say No, no other issue is named",
-        "pr_life": "lines 36 and 66 mention the cover and the FNA quote, but the client never ranks any area as his priority",
-        "pr_rgar": "line 72 is Paul saying he will ask for the RGAR; the client does not rank it as a priority",
-        "pr_will": "line 54 only asks whether there is a will; no priority rank is given for it",
-        "cl_bal": "the call says credit life exists with Absa but gives no balance covered by it",
-        "cl_life": "the call says credit life exists with Absa but gives no cover amount for it",
-    }
-
     def s_content(self, overlay=None):
         self.ok("compose", self.run_dir)
         r = self.ok("claim", self.run_dir, "--all-empty")
-        for key, why in self.CLAIM_REASONS.items():
-            if key in r.stdout:
+        lines = slurp(self.p("transcript.txt")).split("\n")
+        for ln in r.stdout.splitlines():
+            m = re.match(r"^\s+- ([\w.]+) \((.*?)\): the search finds call lines \[(\d+)", ln)
+            if m and not m.group(1).startswith("debts."):
+                key, label, h = m.group(1), m.group(2), int(m.group(3))
+                why = "line %d says %r, which is about something else than %s" % (h, " ".join(lines[h - 1].split()[:8]), label)
                 self.ok("claim", self.run_dir, "--key", key, "--as", "Not discussed", "--reviewed", why)
         self.write("overlay.json", overlay if overlay is not None else self.overlay())
         self.ok("compose", self.run_dir)
@@ -349,7 +356,8 @@ class Chat(unittest.TestCase):
         """Cover each ledger entry with the kind of item that really can (a fill, an answered field, a request) - the checker refuses anything else."""
         led = self.load("ledger.json")
         by_text = {"cell number is 082": ["cell"], "one-year diploma": ["edu"], "we move freight": ["o3"], "credit life with Absa": ["o1"],
-                   "new business FNA": ["fna_req"], "Thursday the twelfth": ["next_appt"], "send us your latest payslip": ["o4"], "letter of authority": ["loa"]}
+                   "new business FNA": ["fna_req"], "Thursday the twelfth": ["next_day"], "send us your latest payslip": ["o4"], "letter of authority": ["loa"],
+                   "Retirement Goal Analysis": ["rgar_req"]}
         for e in led["entries"]:
             for frag, items in by_text.items():
                 if frag.lower() in e["quote"].lower():

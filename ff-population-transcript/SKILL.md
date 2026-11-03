@@ -15,12 +15,13 @@ description: "Builds the WR Fact Find from the Fact Find form's data file (named
 | 4 | When something goes wrong | What to do instead of improvising |
 | 5 | Where the detail lives | The pages the program shows at each step |
 
-**Last updated: 2026-11-03 01:02 (Athens time)**
+**Last updated: 2026-11-03 03:02 (Athens time)**
 
 **Recent changes** (last 5, one line each; full history in the repo `history/` folder)
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-11-03 03:02 | Fix round 2 after a second outside review: requests cannot be filed as plain facts, every override and dismissal needs a real reason and is shown to Paul, and the Teams hand-over, Paul's answers and the save folder are checked harder |
 | 2026-11-03 01:02 | Fix round 1 after an outside review: the ledger, Not discussed, overlay and Teams hand-over checks can no longer be faked, and the programs cannot change during a run |
 | 2026-11-02 23:24 | The Not discussed lists in the source report and the glance list now name each field with its key, so two fields with the same label cannot be confused |
 | 2026-11-02 23:18 | First program-driven version: the form's data file and its saved PDF are read first, then the transcript, and a checker proves the Fact Find Transcript PDF (Paul's decisions of 02/11/2026 built in) |
@@ -52,7 +53,7 @@ Never rewrite, shorten or "improve" the programs during a run, and never replace
 4. Client information comes from the client's file first; use the access routes in order (computer, Microsoft 365, Zapier), log each try, whatever the time of day. Ask Paul only after all three failed.
 5. If the form's data file is missing on all three routes, STOP and ask Paul: the Manual Fact Find PDF, or the transcript alone? Record his words.
 6. The form's schema must be 3.0; anything else stops the run with one line for Paul. The form's summaries, drafted actions, parking list and cost counters are never a source.
-7. `Not discussed` is a claim: the program searches the call, the documents and the form's own related fields first, with search words written for each field. A field the search finds something for is never called `Not discussed` without your written reason for that field. Never write it as a default.
+7. `Not discussed` is a claim: the program searches the call, the documents and the form's own related fields first, with search words written for each field. A field the search finds something for is never called `Not discussed` without your written reason that names a found call line and quotes some of its words. Never write it as a default.
 8. Totals reconcile to the cent and debt is never left out of a calculation, whatever credit life says.
 9. The standing ABIs and the Dread Disease default are written by the program; only Paul can state otherwise.
 10. An FNA, Shortfall or Reduced quote names the insurer and says New Business or Servicing. There is no default: if neither source says, ask Paul.
@@ -62,9 +63,9 @@ Never rewrite, shorten or "improve" the programs during a run, and never replace
 14. After any correction from Paul, re-open the whole task: fix it in the overlay, compose, build, redo the hand-overs that changed, run the final check again.
 15. If a rule cannot be met, stop and say exactly which one and why. Never hand over partial work as complete.
 16. Changes to this skill are made only in Claude Code and uploaded by Paul. Never say a change is live until he confirms it.
-17. Paul's own words are recorded only with `run.py ask` and `run.py answer`. The overlay points at them; it never contains them.
+17. Paul's own words are recorded only with `run.py ask` (say what it is about) and `run.py answer`. The overlay points at them; it never contains them, and a number you use must be in his words.
 18. An Overview or a Policy schedule counts only with a text copy that names the client, and a number of six or more digits is printed only when a recorded document shows it.
-19. The programs run as they are. A fingerprint of the programs, the layout, the steps and the rule pages is checked at every step; if they change during a run, start again.
+19. The programs run as they are. A fingerprint of the programs, the layout, the steps and the rule pages is checked at every step and printed in the final line; if they change during a run, start again (a change is detected unless someone also changes the checker, so Paul compares the printed fingerprint).
 
 ## When something goes wrong
 

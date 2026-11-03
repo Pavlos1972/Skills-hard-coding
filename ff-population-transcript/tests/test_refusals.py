@@ -360,7 +360,7 @@ class QuoteRequests(Chat):
         self.ok("claim", self.run_dir, "--all-empty")
         # Paul's words are recorded by the PROGRAM (ask, then answer); the overlay only refers to them
         self.ok("ask", self.run_dir, "--need", "fna_quote", "--kind", "knowledge", "--question", "Which insurer should the FNA quote be requested from, and is it New Business or Servicing?",
-                "--searched", "the form, the call, the Overview and the other documents")
+                "--searched", "the form, the call, the Overview and the other documents", "--about", "fna")
         self.ok("answer", self.run_dir, "--need", "fna_quote", "--said", "BrightRock, New Business")
         ov = {"quotes": [{"id": "o1", "group": "fna", "insurer": "BrightRock", "mode": "Servicing", "src": [{"ask": "fna_quote"}]}]}
         self.write("overlay.json", ov)

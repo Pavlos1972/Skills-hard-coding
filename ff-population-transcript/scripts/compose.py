@@ -91,6 +91,49 @@ REQUIRED = {
 }
 
 
+def paul_targets(name, it, lay_ids):
+    """What an overlay entry is about: the field, list, quote group or section it writes to (Paul's answer must have been asked about it)."""
+    t = set()
+    if it.get("key"):
+        k = str(it["key"])
+        t.add(k)
+        t.add(k.split(".")[0])
+    if name == "rows_add" and it.get("list"):
+        t.add(str(it["list"]))
+    if name == "quotes" and it.get("group"):
+        t.add(str(it["group"]))
+        for qg in w.layout()["quote_groups"]:
+            if qg["id"] == it.get("group"):
+                t |= {x for x in (qg.get("req"), qg.get("type"), qg.get("ins")) if x}
+    if name in ("notes", "flags") and it.get("section"):
+        t.add(str(it["section"]))
+    if name == "next_steps":
+        t.add("next_steps")
+        t.add("next")
+    if name == "documents_to_request":
+        t.add("docs_to_request")
+    return t
+
+
+def paul_source_problems(where, name, it, q, need, lay_ids):
+    """Paul's recorded answer may be used only for what the question was about, and a number it supplies must be in his words (the chat cannot answer its own question)."""
+    errs = []
+    about = {str(x).strip() for x in q.get("about") or [] if str(x).strip()}
+    targets = paul_targets(name, it, lay_ids)
+    if not about:
+        errs.append("%s: Paul's answer %r was recorded without saying what it is about (run.py ask ... --about <field keys, list names or section ids>): it cannot be used as a source" % (where, need))
+    elif targets and not (about & targets):
+        errs.append("%s: Paul's answer %r was asked about %s, but this entry is about %s: a question may be used only for what it asked" % (where, need, sorted(about), sorted(targets)))
+    words = str(q.get("paul_said") or "")
+    val = it.get("value") if isinstance(it.get("value"), str) else ""
+    nums = {t for t in re.findall(r"\d+(?:[.,]\d+)?", val)}
+    nums = {n.replace(",", ".").rstrip("0").rstrip(".") if "." in n.replace(",", ".") else n for n in nums}
+    missing = sorted(n for n in nums if n not in w.numbers_in(words))
+    if missing:
+        errs.append("%s: the value %r holds %s, which is not in Paul's recorded words %r: the value must be what he said" % (where, val, ", ".join(missing), words[:60]))
+    return errs
+
+
 def validate_overlay(ov, lay=None, form=None, questions=None):
     """Plain-message check of the overlay's shape and of every name it uses. Lists what is valid, so nothing has to be guessed."""
     errs = []
@@ -98,7 +141,11 @@ def validate_overlay(ov, lay=None, form=None, questions=None):
         return ["overlay.json must be an object"]
     lay = lay or w.layout()
     ok = valid_ids(lay)
-    paul = {q.get("need") for q in questions or [] if isinstance(q, dict) and len(str(q.get("paul_said") or "").strip()) >= 3}
+    qmap = {}
+    for q in questions or []:
+        if isinstance(q, dict) and len(str(q.get("paul_said") or "").strip()) >= 3:
+            qmap[q.get("need")] = q                      # the latest answer of each question
+    paul = set(qmap)
     seen = set()
     if ov.get("asked_paul"):
         errs.append("overlay.asked_paul is no longer accepted: Paul's words must be recorded by the program (run.py ask --kind knowledge ..., then run.py answer ...) and referred to with \"ask\": \"<need>\"")
@@ -132,6 +179,8 @@ def validate_overlay(ov, lay=None, form=None, questions=None):
             for x in it.get("src") or []:
                 if isinstance(x, dict) and "ask" in x and x["ask"] not in paul:
                     errs.append("%s: src names Paul's answer %r, which is not on record: run.py ask --kind knowledge --need %s ..., then run.py answer ... (recorded needs: %s)" % (where, x["ask"], x["ask"], sorted(paul) or "none"))
+                elif isinstance(x, dict) and "ask" in x:
+                    errs += paul_source_problems(where, name, it, qmap[x["ask"]], x["ask"], ok)
             for fld in ("text", "value", "insurer", "mode", "other", "found", "resolved", "with"):
                 if fld in it and not isinstance(it[fld], str):
                     errs.append("%s: `%s` must be text" % (where, fld))
@@ -167,6 +216,8 @@ def validate_overlay(ov, lay=None, form=None, questions=None):
                 errs.append("%s: %r has no standing ABI. Valid keys: %s" % (where, it.get("key"), ", ".join(ok["abi"])))
             if name == "abi_override" and it.get("ask") not in paul:
                 errs.append("%s: Paul's answer %r is not on record (run.py ask --kind knowledge --need %s ..., then run.py answer)" % (where, it.get("ask"), it.get("ask")))
+            elif name == "abi_override" and isinstance(it.get("value"), str):
+                errs += paul_source_problems(where, name, it, qmap[it["ask"]], it["ask"], ok)
             if name == "joint":
                 if it.get("list") not in ok["lists"]:
                     errs.append("%s: list %r does not exist. Valid lists: %s" % (where, it.get("list"), ", ".join(sorted(ok["lists"]))))
@@ -796,6 +847,9 @@ class Ctx:
         closing = {"title": self.lay["closing"]["title"], "rows": closing_rows + extra}
         self.policy_numbers([r for s in sections for b in s["blocks"] for r in b["rows"]] + closing["rows"])
         other = self.other_fields()
+        jr = (self.run.get("joint") or {})
+        if jr.get("answer") == "no" and jr.get("reason"):
+            self.glance.append("Recorded as NOT a joint meeting although other people speak on the call. The chat's reason (attested, not proven): \"%s\"" % str(jr["reason"])[:160])
         if self.lead.get("unavailable"):
             self.glance.append("The Outlook search for a D&R Marketing appointment email could NOT be made on any of the three routes. Paul chose to carry on without it (his words, as recorded from the chat: \"%s\"). Referral From comes from the form or the call: check it." % str(self.lead.get("paul_said", ""))[:120])
         content = {

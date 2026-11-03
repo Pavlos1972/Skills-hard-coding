@@ -19,7 +19,7 @@ REWORDED (each is covered by a recorded change):
     now: This applies to the Fact Find Summary PDF (Step 7a) too.
     why: Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.
 - old line 43: (3) the Planner / AdviceTech note (Step 7b) presented as a copy-ready Artifact page (own window, Copy note button, exact planning-area formatting);
-    now: The Planner note (Step 7b) has no durable file form — this rule doesn't apply to it.
+    now: (5) the Planner / AdviceTech note and the message to Sitamah (Steps 7b and 8) were handed to the Teams transcript program, which makes them once, and are shown in the same reply with one question;
     why: Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.
 - old line 43: (4) both PDFs saved in the client's own folder per Step 5a and the saved files checked (listed back, size and time confirmed to be the new file's);
     now: Fact Find folder per Step 5a and the saved file checked (listed back, size equal to the local file);
@@ -28,7 +28,7 @@ REWORDED (each is covered by a recorded change):
     now: The Fact Find Summary, the Planner note and the message to Sitamah are made by the other two skills, once.
     why: Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.
 - old line 45: 2026-10-28 10:45 (Athens/Greece time)
-    now: 2026-11-03 01:02 (Athens time)
+    now: 2026-11-03 03:02 (Athens time)
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 51: 2026-10-28 10:45 | New source order (rule 11):
     now: Gather inputs (source order — rule 11)
@@ -61,7 +61,7 @@ REWORDED (each is covered by a recorded change):
     now: How the sources combine (rule 11):
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 53: Life Cover (Fractured) WOL ABI 3%, Childcare ABI 5%;
-    now: Life Cover (WOL) ABI = 3% and Childcare ABI = 5%.
+    now: Life Cover (WOL) ABI 3% and Childcare ABI 5%;
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 53: Permanent Disability (Fractured) has no Life Cover (WOL) ABI, shows Household needs ABI 5% and Childcare ABI 5%;
     now: the Permanent disability fractured block has NO Life Cover (WOL) ABI line, reads Household needs ABI 5% and Childcare ABI 5%;
@@ -73,10 +73,10 @@ REWORDED (each is covered by a recorded change):
     now: the insurer and New Business or Servicing, from the form or from what was said/Paul decided (never a default)."""
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 55: 2026-10-14 15:03 | Index added;
-    now: 2026-11-03 01:02 (Athens time)
+    now: 2026-11-03 03:02 (Athens time)
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 55: client names, policy numbers and beneficiary details in examples replaced with placeholders.
-    now: self.policy_numbers([r for s in sections for b in s["blocks"] for r in b["rows"]] + closing["rows"])
+    now: Never assume Servicing because the client already holds a policy with that insurer, and never assume the insurer.
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 61: Built in Word for layout control, delivered as a PDF — see Step 5.
     now: Drawn by a program and delivered as a PDF — see Step 5.
@@ -88,7 +88,7 @@ REWORDED (each is covered by a recorded change):
     now: If the file is locked/open, tell Paul plainly, ask him to close it, and retry - never report it as saved until the listing proves it.
     why: Paul, 02/11/2026 (decision 16c): the 8:45am laptop window is dropped.
 - old line 69: Only once both the local machine and SharePoint have genuinely been tried and neither works does this skill ask Paul to upload the Audio to Text file, transcript or other source directly, or say plain
-    now: Write only what is in the source material (the Fact Find (Audio to Text) file, the transcript, the Overview, a client document or file) or in a named document this skill tells you to use.
+    now: Only mark Requested if genuinely missing after checking the Audio to Text file, the transcript, the Overview, other documents, and Outlook.
     why: Paul, 02/11/2026 (decision 16c): the 8:45am laptop window is dropped.
 - old line 76: it still produces the summary PDF, but the Planner note (now always produced via client-teams-transcript-skill's Output 1 structure and presented as its copy-ready Artifact page, per Step 7b below) ca
     now: the Fact Find Summary (fact-find-summary), and the Planner note page and the message to Sitamah (client-teams-transcript-skill, started with --type first).
@@ -142,13 +142,13 @@ REWORDED (each is covered by a recorded change):
     now: Two spouses in one meeting:
     why: The dated attribution after the heading is history (S2, S5); listed in history/dated-attributions-removed.txt.
 - old line 121: The Audio to Text file.
-    now: # Fact Find Population from the Audio to Text file and Transcript
+    now: The Audio to Text file is the base.
     why: Nothing changed: the sentence is in references/03-two-spouses.md word for word. The inventory tool's word-overlap search misses this five-word fragment (the same single miss showed in the 02/11/2026 rule-check).
 - old line 145: Re-derive the structure from the real Audio to Text PDF of that client every run (it is the template), and do not force the document into any older layout.
     now: run.py formpdf reads its text and checks that every populated value of the data file is in it.
     why: Paul, 02/11/2026 (decision 15): the layout is fixed and drawn by program; the form's schema version is checked every run instead.
 - old line 159: If a future Audio to Text file has a different version number or different sections, follow the file in front of you and tell Paul in one line.*
-    now: If a future form file has a different schema version, the program stops before building and the skill is updated once.*
+    now: If the Audio to Text layout has no Household needs ABI line, add it as the standing rule requires and say so in one line.
     why: Paul, 02/11/2026 (decisions 14 and 15): schema version checked every run; a different one stops the run.
 - old line 177: There is no default (Paul, 15/10/2026:
     now: There is no default (Paul:
@@ -169,25 +169,25 @@ REWORDED (each is covered by a recorded change):
     now: Dread Disease ABI is 3% (unless Paul stated otherwise);
     why: Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.
 - old line 224: Only keepNext on headings and cantSplit:
-    now: Paul's own words are recorded only with run.py ask and run.py answer.
+    now: say what shows it (for example 'only Pat spoke, no spouse on the call' or 'Pat and Robin were both on the call'):
     why: The same rule, in the words of the program that now draws the PDF (reportlab, not Word); the checker proves it from the finished PDF.
 - old line 224: true on every table row.
-    now: # ---------------------------------------------------------------- search terms for 'Not discussed' / 'not on the call' (every claimable field has curated ones)
+    now: table, no row split across pages.
     why: The same rule, in the words of the program that now draws the PDF (reportlab, not Word); the checker proves it from the finished PDF.
 - old line 230: Use scripts/build_fact_find.js as the starting template for the styling helpers (it already implements all Step 4 conventions, including a fieldTable cell renderer that accepts either a single string 
     now: An Overview or a Policy schedule counts only with a text copy that names the client, and a number of six or more digits is printed only when a recorded document shows it.
     why: S6/S11/S16: the old script held a real client's data and was copied and edited by hand each run. It is replaced by a program that Claude never edits; the styling it carried (Aptos 12pt, navy headings, EAF1F8 label column, bullets, no page numbers) is built into scripts/build.py and scripts/layout.json.
 - old line 230: Replace its client-specific content with the sections of Step 2, in the Audio to Text file's order;
-    now: The form also saves a PDF of the same Fact Find (Fact Find (Audio to Text) - DD.MM.YYYY - Name Surname.pdf) in the client's 2.
+    now: Attribute every statement from its content (who owns the policy, whose job, "my husband / my wife") and from the Audio to Text file(s), never from the label.
     why: S6/S11/S16: the old script held a real client's data and was copied and edited by hand each run. It is replaced by a program that Claude never edits; the styling it carried (Aptos 12pt, navy headings, EAF1F8 label column, bullets, no page numbers) is built into scripts/build.py and scripts/layout.json.
 - old line 230: don't rewrite the styling helpers or numbering config.
-    now: The program's own numbering (STEP 3 of 16) is separate.
+    now: Never rewrite, shorten or "improve" the programs during a run, and never replace the PDF with a text draft or a Word file.
     why: S6/S11/S16: the old script held a real client's data and was copied and edited by hand each run. It is replaced by a program that Claude never edits; the styling it carried (Aptos 12pt, navy headings, EAF1F8 label column, bullets, no page numbers) is built into scripts/build.py and scripts/layout.json.
 - old line 230: When populating any field that is itself a total, compute it from the same named component values used elsewhere in the document.
     now: When populating any field that is itself a total, compute it from the same named component values used elsewhere in the document (the program does this and the checker recomputes it).
     why: S6/S11/S16: the old script held a real client's data and was copied and edited by hand each run. It is replaced by a program that Claude never edits; the styling it carried (Aptos 12pt, navy headings, EAF1F8 label column, bullets, no page numbers) is built into scripts/build.py and scripts/layout.json.
 - old line 232: *The .docx built here is the internal working format only — it is never the delivered Fact Find Transcript.
-    now: it prints the exact question for Paul (use the filled-in Manual Fact Find PDF, or the transcript alone?).
+    now: the form's data file first (and its saved PDF), the Teams transcript second, the latest Overview as a reference, the Manual Fact Find only if Paul says so after the program asked him;
     why: No Word step any more: the PDF is drawn directly, and the checker fails a Word file next to it.
 - old line 232: The file saved to the client's folder is a PDF.
     now: one file, a PDF only (never a Word file), saved into the client's 2.

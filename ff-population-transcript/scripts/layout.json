@@ -17,67 +17,104 @@
   "margin_cm": 1.8,
   "label_width": 0.37
  },
- "limits": {"bullet_words": 25, "note_words": 25, "flag_words": 45, "section_notes": 6, "pages_warn": 16},
+ "limits": {
+  "bullet_words": 25,
+  "note_words": 25,
+  "flag_words": 45,
+  "section_notes": 6,
+  "pages_warn": 16
+ },
  "lookup": {
   "max_words": 40,
-  "chatter": [
-   "try again",
-   "i found no",
-   "i couldn't",
-   "i could not",
-   "i can't",
-   "i cannot",
-   "i don't",
-   "i do not",
-   "i'm not sure",
-   "i am not sure",
-   "let me know",
-   "please ",
-   "did you mean",
-   "do you mean",
-   "sorry",
-   "unable to",
-   "no company with this name",
-   "once more"
-  ]
+  "chatter": ["try again", "i found no", "i couldn't", "i could not", "i can't", "i cannot", "i don't", "i do not", "i'm not sure", "i am not sure", "let me know", "please ", "did you mean", "do you mean", "sorry", "unable to", "no company with this name", "once more"]
  },
  "standing": {
   "abi": [
-   {"key": "lc_wol", "value": "3%", "label": "Life Cover (WOL) ABI", "block": "Life cover: fractured cover"},
-   {"key": "lc_ccabi", "value": "5%", "label": "Childcare ABI", "block": "Life cover: fractured cover"},
-   {"key": "pd_hhabi", "value": "5%", "label": "Household needs ABI", "block": "Permanent disability: fractured cover", "added": true},
-   {"key": "pd_ccabi", "value": "5%", "label": "Childcare ABI", "block": "Permanent disability: fractured cover"},
-   {"key": "dd_abiv", "value": "3%", "label": "ABI value", "block": "Dread disease"},
-   {"key": "dds_abiv", "value": "3%", "label": "ABI value", "block": "Dread disease: standard"}
+   {
+    "key": "lc_wol",
+    "value": "3%",
+    "label": "Life Cover (WOL) ABI",
+    "block": "Life cover: fractured cover"
+   },
+   {
+    "key": "lc_ccabi",
+    "value": "5%",
+    "label": "Childcare ABI",
+    "block": "Life cover: fractured cover"
+   },
+   {
+    "key": "pd_hhabi",
+    "value": "5%",
+    "label": "Household needs ABI",
+    "block": "Permanent disability: fractured cover",
+    "added": true
+   },
+   {
+    "key": "pd_ccabi",
+    "value": "5%",
+    "label": "Childcare ABI",
+    "block": "Permanent disability: fractured cover"
+   },
+   {
+    "key": "dd_abiv",
+    "value": "3%",
+    "label": "ABI value",
+    "block": "Dread disease"
+   },
+   {
+    "key": "dds_abiv",
+    "value": "3%",
+    "label": "ABI value",
+    "block": "Dread disease: standard"
+   }
   ],
-  "dd_cover": {"value": "R 500 000.00", "keys": ["dd_cover", "dds_cover"]},
-  "forbidden_labels": {"Permanent disability: fractured cover": ["Life Cover (WOL) ABI"]},
+  "dd_cover": {
+   "value": "R 500 000.00",
+   "keys": ["dd_cover", "dds_cover"]
+  },
+  "forbidden_labels": {
+   "Permanent disability: fractured cover": ["Life Cover (WOL) ABI"]
+  },
   "not_set_by_rule": ["lc_abiv", "pd_abiv", "ip_abiv", "ips_abiv"]
  },
- "aci_keys": [
-  "lc_f_aci",
-  "lc_f_aciv",
-  "lc_aci",
-  "lc_aciv",
-  "pd_f_aci",
-  "pd_f_aciv",
-  "pd_aci",
-  "pd_aciv",
-  "dd_aci",
-  "dd_aciv",
-  "dds_aci",
-  "dds_aciv",
-  "ip_aci",
-  "ip_aciv",
-  "ips_aci",
-  "ips_aciv"
- ],
+ "aci_keys": ["lc_f_aci", "lc_f_aciv", "lc_aci", "lc_aciv", "pd_f_aci", "pd_f_aciv", "pd_aci", "pd_aciv", "dd_aci", "dd_aciv", "dds_aci", "dds_aciv", "ip_aci", "ip_aciv", "ips_aci", "ips_aciv"],
  "quote_groups": [
-  {"id": "fna", "title": "FNA quote", "req": "fna_req", "type": "fna_type", "ins": "fna_ins"},
-  {"id": "sf", "title": "Shortfall quote (group risk)", "req": "sf_req", "type": "sf_type", "ins": "sf_ins"},
-  {"id": "bf_fna", "title": "FNA quote (bf)", "req": "bf_fna_req", "type": "bf_fna_type", "ins": null},
-  {"id": "bf_sf", "title": "Shortfall quote (bf)", "req": "bf_sf_req", "type": "bf_sf_type", "ins": null},
-  {"id": "bfred", "title": "Reduced quote (bf)", "list": "bfred", "req": "req", "type": "type", "ins": null}
+  {
+   "id": "fna",
+   "title": "FNA quote",
+   "req": "fna_req",
+   "type": "fna_type",
+   "ins": "fna_ins"
+  },
+  {
+   "id": "sf",
+   "title": "Shortfall quote (group risk)",
+   "req": "sf_req",
+   "type": "sf_type",
+   "ins": "sf_ins"
+  },
+  {
+   "id": "bf_fna",
+   "title": "FNA quote (bf)",
+   "req": "bf_fna_req",
+   "type": "bf_fna_type",
+   "ins": null
+  },
+  {
+   "id": "bf_sf",
+   "title": "Shortfall quote (bf)",
+   "req": "bf_sf_req",
+   "type": "bf_sf_type",
+   "ins": null
+  },
+  {
+   "id": "bfred",
+   "title": "Reduced quote (bf)",
+   "list": "bfred",
+   "req": "req",
+   "type": "type",
+   "ins": null
+  }
  ],
  "reconcile": [
   {
@@ -126,7 +163,10 @@
    "means": "total household income needed = take-home net income minus childcare minus debt repayments"
   }
  ],
- "ignored": {"top": ["sum", "pa", "unplaced", "claude", "openai"], "fields": ["pa_actions"]},
+ "ignored": {
+  "top": ["sum", "pa", "unplaced", "claude", "openai"],
+  "fields": ["pa_actions"]
+ },
  "cross_skip_note": "fields marked nocross are not compared with the call (form tick boxes, dates of the form, standing values)",
  "sections": [
   {
@@ -137,46 +177,164 @@
     {
      "sub": "Meeting",
      "rows": [
-      {"key": "consent", "label": "Consent to record and transcribe", "nocross": true, "terms": ["consent", "record", "recording", "transcribe", "transcription"]},
-      {"const": "advisor", "label": "Advisor"},
-      {"key": "date", "label": "Date completed", "kind": "date", "nocross": true, "terms": ["today", "date of the meeting"]},
-      {"key": "meet", "label": "Type of meeting", "nocross": true, "terms": ["teams", "whatsapp", "face to face", "this call"]},
-      {"key": "ref", "label": "Referral from", "special": "referral", "terms": ["referred by", "referral", "recommended me", "how did you hear", "found us"]}
+      {
+       "key": "consent",
+       "label": "Consent to record and transcribe",
+       "nocross": true,
+       "terms": ["consent", "record", "recording", "transcribe", "transcription", "recorded", "transcribed", "okay to record", "fine to record"]
+      },
+      {
+       "const": "advisor",
+       "label": "Advisor"
+      },
+      {
+       "key": "date",
+       "label": "Date completed",
+       "kind": "date",
+       "nocross": true,
+       "terms": ["today", "date of the meeting", "date of today"]
+      },
+      {
+       "key": "meet",
+       "label": "Type of meeting",
+       "nocross": true,
+       "terms": ["teams", "whatsapp", "face to face", "this call", "zoom", "phone call", "in person"]
+      },
+      {
+       "key": "ref",
+       "label": "Referral from",
+       "special": "referral",
+       "terms": ["referred by", "referral", "recommended me", "how did you hear", "found us", "referred", "recommended", "heard about", "a friend", "colleague", "advert", "facebook", "d r marketing", "marketing"]
+      }
      ]
     },
     {
      "sub": "Client",
      "rows": [
-      {"key": "fname", "label": "Name", "terms": ["your name", "my name", "first name"]},
-      {"key": "sname", "label": "Surname", "terms": ["surname", "last name"]},
-      {"key": "dob", "label": "Date of birth", "kind": "date", "special": "dob", "terms": ["date of birth", "born on", "birthday", "born in"]},
-      {"key": "age", "label": "Age", "kind": "int", "special": "age", "terms": ["years old", "my age"]},
-      {"key": "idtype", "label": "ID or passport", "terms": ["id number", "passport"]},
-      {"key": "idno", "label": "ID / passport number", "kind": "id", "terms": ["id number", "identity number", "passport number", "id no"]},
-      {"key": "gender", "label": "Gender", "special": "gender", "terms": ["gender"]},
-      {"key": "nat", "label": "Nationality", "terms": ["nationality", "citizen"]},
-      {"key": "nat_other", "label": "Nationality (other)", "terms": ["nationality", "citizen"], "optional": true},
-      {"key": "tax", "label": "Income tax number", "kind": "id", "terms": ["tax number", "income tax", "tax no", "sars"]}
+      {
+       "key": "fname",
+       "label": "Name",
+       "terms": ["your name", "my name", "first name", "name is", "spell your"]
+      },
+      {
+       "key": "sname",
+       "label": "Surname",
+       "terms": ["surname", "last name", "name is"]
+      },
+      {
+       "key": "dob",
+       "label": "Date of birth",
+       "kind": "date",
+       "special": "dob",
+       "terms": ["date of birth", "born on", "birthday", "born in", "birth date", "when were you born", "how old"]
+      },
+      {
+       "key": "age",
+       "label": "Age",
+       "kind": "int",
+       "special": "age",
+       "terms": ["years old", "my age", "how old", "turning"]
+      },
+      {
+       "key": "idtype",
+       "label": "ID or passport",
+       "terms": ["id number", "passport", "identity", "id book", "id document", "south african id"]
+      },
+      {
+       "key": "idno",
+       "label": "ID / passport number",
+       "kind": "id",
+       "terms": ["id number", "identity number", "passport number", "id no", "identity", "id document", "south african id"]
+      },
+      {
+       "key": "gender",
+       "label": "Gender",
+       "special": "gender",
+       "terms": ["gender", "male", "female"]
+      },
+      {
+       "key": "nat",
+       "label": "Nationality",
+       "terms": ["nationality", "citizen", "south african", "permanent resident", "foreign"]
+      },
+      {
+       "key": "nat_other",
+       "label": "Nationality (other)",
+       "terms": ["nationality", "citizen"],
+       "optional": true
+      },
+      {
+       "key": "tax",
+       "label": "Income tax number",
+       "kind": "id",
+       "terms": ["tax number", "income tax", "tax no", "sars", "tax reference", "tax ref"]
+      }
      ]
     },
     {
      "sub": "Contact details",
      "rows": [
-      {"key": "cell", "label": "Cell number", "kind": "id", "terms": ["cell number", "cell phone", "mobile number", "phone number", "contact number"]},
-      {"key": "work", "label": "Work number", "kind": "id", "terms": ["work number", "office number", "work phone"]},
-      {"key": "home", "label": "Home number", "kind": "id", "terms": ["home number", "landline", "home phone"]},
-      {"key": "pemail", "label": "Personal email", "kind": "id", "terms": ["email address", "e-mail", "gmail", "personal email"]},
-      {"key": "wemail", "label": "Work email", "kind": "id", "terms": ["work email", "work e-mail", "office email"]}
+      {
+       "key": "cell",
+       "label": "Cell number",
+       "kind": "id",
+       "terms": ["cell number", "cell phone", "mobile number", "phone number", "contact number", "cell", "mobile", "reach you on", "call you on", "whatsapp number"]
+      },
+      {
+       "key": "work",
+       "label": "Work number",
+       "kind": "id",
+       "terms": ["work number", "office number", "work phone", "office phone", "direct line"]
+      },
+      {
+       "key": "home",
+       "label": "Home number",
+       "kind": "id",
+       "terms": ["home number", "landline", "home phone", "landline number"]
+      },
+      {
+       "key": "pemail",
+       "label": "Personal email",
+       "kind": "id",
+       "terms": ["email address", "e-mail", "gmail", "personal email", "email", "e mail", "outlook", "dot co dot za", "dot com"]
+      },
+      {
+       "key": "wemail",
+       "label": "Work email",
+       "kind": "id",
+       "terms": ["work email", "work e-mail", "office email", "work address", "company email"]
+      }
      ]
     },
     {
      "sub": "Background",
      "rows": [
-      {"key": "smoker", "label": "Smoker", "terms": ["smoke", "smoker", "smoking", "cigarette"]},
-      {"key": "edu", "label": "Highest education", "terms": ["education", "degree", "diploma", "matric", "qualification"]},
-      {"key": "edu_notes", "label": "Qualification details", "terms": ["degree", "diploma", "qualification", "studied"], "optional": true},
-      {"key": "profile", "label": "Client profile", "optional": true},
-      {"key": "n_info", "label": "Notes", "notes": true}
+      {
+       "key": "smoker",
+       "label": "Smoker",
+       "terms": ["smoke", "smoker", "smoking", "cigarette", "smokes", "vape", "vaping", "tobacco", "cigarettes"]
+      },
+      {
+       "key": "edu",
+       "label": "Highest education",
+       "terms": ["education", "degree", "diploma", "matric", "qualification", "qualifications", "studied", "university", "college", "honours", "masters", "certificate", "highest education"]
+      },
+      {
+       "key": "edu_notes",
+       "label": "Qualification details",
+       "terms": ["degree", "diploma", "qualification", "studied", "major", "certificate", "honours", "masters"],
+       "optional": true
+      },
+      {
+       "key": "profile",
+       "label": "Client profile",
+       "optional": true
+      },
+      {
+       "key": "n_info",
+       "label": "Notes",
+       "notes": true
+      }
      ]
     }
    ]
@@ -189,56 +347,183 @@
     {
      "sub": "Work",
      "rows": [
-      {"key": "employed", "label": "Employed", "terms": ["self-employed", "self employed", "work for", "employed by"]},
-      {"key": "employer", "label": "Employer", "terms": ["employer", "work at", "works at", "work for"]},
-      {"key": "co_does", "label": "What the company does", "special": "lookup", "terms": ["company does", "business does", "industry", "sector"]},
-      {"key": "bizowner", "label": "Business owner", "terms": ["own business", "business owner", "own a business", "my business"]},
-      {"key": "occ", "label": "Occupation", "terms": ["occupation", "job title", "do for a living", "work as", "my position"]},
-      {"key": "ft", "label": "Full time or contract", "terms": ["full time", "full-time", "contract", "permanent"]},
-      {"key": "years", "label": "Years in this occupation", "special": "years", "terms": ["years in", "how long have you", "started in", "started working"]}
+      {
+       "key": "employed",
+       "label": "Employed",
+       "terms": ["self-employed", "self employed", "work for", "employed by", "employed", "unemployed", "retired", "permanent", "part time"]
+      },
+      {
+       "key": "employer",
+       "label": "Employer",
+       "terms": ["employer", "work at", "works at", "work for", "company i work", "works for", "employed at"]
+      },
+      {
+       "key": "co_does",
+       "label": "What the company does",
+       "special": "lookup",
+       "terms": ["company does", "business does", "industry", "sector", "what do they do", "what the company", "your company"]
+      },
+      {
+       "key": "bizowner",
+       "label": "Business owner",
+       "terms": ["own business", "business owner", "own a business", "my business", "my company", "director", "self employed"]
+      },
+      {
+       "key": "occ",
+       "label": "Occupation",
+       "terms": ["occupation", "job title", "do for a living", "work as", "my position", "profession", "what is your job", "your job"]
+      },
+      {
+       "key": "ft",
+       "label": "Full time or contract",
+       "terms": ["full time", "full-time", "contract", "permanent", "part time", "freelance", "temporary", "on contract"]
+      },
+      {
+       "key": "years",
+       "label": "Years in this occupation",
+       "special": "years",
+       "terms": ["years in", "how long have you", "started in", "started working", "years with", "been there", "been working", "since 20"]
+      }
      ]
     },
     {
      "sub": "Business",
      "rows": [
-      {"key": "biz_name", "label": "Business name", "terms": ["business name", "company name", "trading as"]},
-      {"key": "biz_struct", "label": "Business structure", "terms": ["pty", "close corporation", "sole proprietor", "partnership", "trust"]},
-      {"key": "biz_struct_other", "label": "Business structure (other)", "optional": true},
-      {"key": "biz_does", "label": "What the business does", "terms": ["business does", "what the business"]},
-      {"key": "biz_partners", "label": "Partners", "terms": ["partner", "partners", "co-owner", "shareholder"]},
-      {"key": "biz_pct", "label": "Ownership percentage", "kind": "pct", "terms": ["percent of the business", "my share", "shares in the business", "i own"]},
-      {"key": "biz_loans", "label": "Business loans", "terms": ["business loan", "overdraft", "loan in the business"]},
-      {"key": "biz_assur", "label": "Business assurance in place", "terms": ["business assurance", "buy and sell", "buy-and-sell", "key man", "keyman"]}
+      {
+       "key": "biz_name",
+       "label": "Business name",
+       "terms": ["business name", "company name", "trading as", "registered name"]
+      },
+      {
+       "key": "biz_struct",
+       "label": "Business structure",
+       "terms": ["pty", "close corporation", "sole proprietor", "partnership", "trust", "ltd", "limited", "company"]
+      },
+      {
+       "key": "biz_struct_other",
+       "label": "Business structure (other)",
+       "optional": true
+      },
+      {
+       "key": "biz_does",
+       "label": "What the business does",
+       "terms": ["business does", "what the business"]
+      },
+      {
+       "key": "biz_partners",
+       "label": "Partners",
+       "terms": ["partner", "partners", "co-owner", "shareholder", "co director", "shareholders"]
+      },
+      {
+       "key": "biz_pct",
+       "label": "Ownership percentage",
+       "kind": "pct",
+       "terms": ["percent of the business", "my share", "shares in the business", "i own", "per cent of the business"]
+      },
+      {
+       "key": "biz_loans",
+       "label": "Business loans",
+       "terms": ["business loan", "overdraft", "loan in the business", "business debt", "company loan"]
+      },
+      {
+       "key": "biz_assur",
+       "label": "Business assurance in place",
+       "terms": ["business assurance", "buy and sell", "buy-and-sell", "key man", "keyman", "shareholder protection"]
+      }
      ],
-     "when": {"key": "bizowner", "in": ["yes", "y", "true"]}
+     "when": {
+      "key": "bizowner",
+      "in": ["yes", "y", "true"]
+     }
     },
     {
      "sub": "Business policies",
      "list": "bizpol",
      "item": "Business policy",
      "cols": "generic",
-     "when": {"key": "bizowner", "in": ["yes", "y", "true"]},
+     "when": {
+      "key": "bizowner",
+      "in": ["yes", "y", "true"]
+     },
      "terms": ["business policy"],
      "optional": true
     },
     {
      "sub": "Duties split (percentages)",
      "rows": [
-      {"key": "d_desk", "label": "Desk work", "kind": "pct", "special": "duty", "terms": ["desk", "at an office", "computer"]},
-      {"key": "d_supo", "label": "Supervising from an office", "kind": "pct", "special": "duty", "terms": ["supervising", "supervise", "supervisor", "from the office"]},
-      {"key": "d_trav", "label": "Travelling", "kind": "pct", "special": "duty", "terms": ["travel", "travelling", "on the road", "depots", "site visits"]},
-      {"key": "d_sups", "label": "Supervising on site", "kind": "pct", "special": "duty", "terms": ["on site", "supervising on site", "site supervisor"]},
-      {"key": "d_light", "label": "Light manual work", "kind": "pct", "special": "duty", "terms": ["light manual", "light work"]},
-      {"key": "d_mod", "label": "Moderate manual work", "kind": "pct", "special": "duty", "terms": ["moderate manual", "manual work"]},
-      {"key": "d_heavy", "label": "Heavy manual work", "kind": "pct", "special": "duty", "terms": ["heavy manual", "heavy work", "lifting"]},
-      {"key": "d_tot", "label": "Total", "kind": "pct", "special": "duties_total", "nocross": true, "terms": ["percent", "percentage", "split of your time"]}
+      {
+       "key": "d_desk",
+       "label": "Desk work",
+       "kind": "pct",
+       "special": "duty",
+       "terms": ["desk", "at an office", "computer", "behind a desk", "office work", "sitting"]
+      },
+      {
+       "key": "d_supo",
+       "label": "Supervising from an office",
+       "kind": "pct",
+       "special": "duty",
+       "terms": ["supervising", "supervise", "supervisor", "from the office", "managing"]
+      },
+      {
+       "key": "d_trav",
+       "label": "Travelling",
+       "kind": "pct",
+       "special": "duty",
+       "terms": ["travel", "travelling", "on the road", "depots", "site visits", "driving", "visits", "client sites"]
+      },
+      {
+       "key": "d_sups",
+       "label": "Supervising on site",
+       "kind": "pct",
+       "special": "duty",
+       "terms": ["on site", "supervising on site", "site supervisor", "site manager", "on the floor"]
+      },
+      {
+       "key": "d_light",
+       "label": "Light manual work",
+       "kind": "pct",
+       "special": "duty",
+       "terms": ["light manual", "light work", "light duties"]
+      },
+      {
+       "key": "d_mod",
+       "label": "Moderate manual work",
+       "kind": "pct",
+       "special": "duty",
+       "terms": ["moderate manual", "manual work"]
+      },
+      {
+       "key": "d_heavy",
+       "label": "Heavy manual work",
+       "kind": "pct",
+       "special": "duty",
+       "terms": ["heavy manual", "heavy work", "lifting", "heavy duties", "physical work"]
+      },
+      {
+       "key": "d_tot",
+       "label": "Total",
+       "kind": "pct",
+       "special": "duties_total",
+       "nocross": true,
+       "terms": ["percent", "percentage", "split of your time"]
+      }
      ]
     },
     {
      "sub": "Duties",
      "rows": [
-      {"key": "d_desc", "label": "Brief description of duties", "terms": ["duties", "day-to-day", "what do you do", "responsibilities"], "optional": true},
-      {"key": "n_occ", "label": "Notes", "notes": true}
+      {
+       "key": "d_desc",
+       "label": "Brief description of duties",
+       "terms": ["duties", "day-to-day", "what do you do", "responsibilities", "your job involves", "tell me about work", "role involves", "describe your"],
+       "optional": true
+      },
+      {
+       "key": "n_occ",
+       "label": "Notes",
+       "notes": true
+      }
      ]
     }
    ]
@@ -251,30 +536,89 @@
     {
      "sub": "Income",
      "rows": [
-      {"key": "gross", "label": "Gross monthly income", "kind": "money", "terms": ["gross salary", "gross income", "gross"]},
-      {"key": "dnet", "label": "Direct net income", "kind": "money", "terms": ["after tax", "net income", "nett income"]},
-      {"key": "net", "label": "Take-home net income", "kind": "money", "terms": ["take-home", "take home", "net income"]},
-      {"key": "exp", "label": "Monthly expenses / budget", "kind": "money", "terms": ["expenses", "budget", "monthly costs"]},
-      {"key": "disp", "label": "Disposable income", "kind": "money", "special": "disposable", "terms": ["disposable", "left over each month"]},
-      {"key": "n_income", "label": "Notes", "notes": true}
+      {
+       "key": "gross",
+       "label": "Gross monthly income",
+       "kind": "money",
+       "terms": ["gross salary", "gross income", "gross", "before tax", "salary", "package", "you earn"]
+      },
+      {
+       "key": "dnet",
+       "label": "Direct net income",
+       "kind": "money",
+       "terms": ["after tax", "net income", "nett income", "nett", "take home pay"]
+      },
+      {
+       "key": "net",
+       "label": "Take-home net income",
+       "kind": "money",
+       "terms": ["take-home", "take home", "net income", "nett", "in the bank", "after deductions"]
+      },
+      {
+       "key": "exp",
+       "label": "Monthly expenses / budget",
+       "kind": "money",
+       "terms": ["expenses", "budget", "monthly costs", "living costs", "monthly spend", "you spend"]
+      },
+      {
+       "key": "disp",
+       "label": "Disposable income",
+       "kind": "money",
+       "special": "disposable",
+       "terms": ["disposable", "left over each month", "left each month", "surplus"]
+      },
+      {
+       "key": "n_income",
+       "label": "Notes",
+       "notes": true
+      }
      ]
     },
     {
      "sub": "Household",
      "rows": [
-      {"key": "marital", "label": "Marital status", "terms": ["married", "single", "divorced", "widow", "my wife", "my husband", "partner"]},
-      {"key": "marr_date", "label": "Date of marriage", "kind": "date", "terms": ["married on", "wedding", "marriage date", "married in"]},
-      {"key": "sp_name", "label": "Spouse / partner name", "terms": ["my wife", "my husband", "spouse", "partner"]},
-      {"key": "sp_tel", "label": "Spouse / partner contact number", "kind": "id", "terms": ["wife's number", "husband's number", "spouse's number", "partner's number"]},
+      {
+       "key": "marital",
+       "label": "Marital status",
+       "terms": ["married", "single", "divorced", "widow", "my wife", "my husband", "partner", "engaged", "life partner", "separated", "widower", "spouse"]
+      },
+      {
+       "key": "marr_date",
+       "label": "Date of marriage",
+       "kind": "date",
+       "terms": ["married on", "wedding", "marriage date", "married in", "marriage", "anniversary", "married since"]
+      },
+      {
+       "key": "sp_name",
+       "label": "Spouse / partner name",
+       "terms": ["my wife", "my husband", "spouse", "partner", "wife", "husband"]
+      },
+      {
+       "key": "sp_tel",
+       "label": "Spouse / partner contact number",
+       "kind": "id",
+       "terms": ["wife's number", "husband's number", "spouse's number", "partner's number", "wife's cell", "husband's cell", "her number", "his number", "spouse number"]
+      },
       {
        "key": "sp_occ",
        "label": "Spouse / partner occupation",
-       "terms": ["wife works", "husband works", "spouse works", "partner works", "my wife is a", "my husband is a"]
+       "terms": ["wife works", "husband works", "spouse works", "partner works", "my wife is a", "my husband is a", "she works", "he works", "wife is a", "husband is a"]
       },
-      {"key": "has_debts", "label": "Has debts", "terms": ["debt", "loan", "bond", "instalment"]},
-      {"key": "has_kids", "label": "Has children", "terms": ["children", "kids", "child", "daughter"]}
+      {
+       "key": "has_debts",
+       "label": "Has debts",
+       "terms": ["debt", "loan", "bond", "instalment", "mortgage", "car finance", "credit card", "you owe", "debts"]
+      },
+      {
+       "key": "has_kids",
+       "label": "Has children",
+       "terms": ["children", "kids", "child", "daughter", "daughters", "sons", "baby", "toddler", "boy", "girl"]
+      }
      ],
-     "na_when": {"key": "marital", "in": ["single", "divorced", "widowed", "widow", "widower", "separated", "never married"]},
+     "na_when": {
+      "key": "marital",
+      "in": ["single", "divorced", "widowed", "widow", "widower", "separated", "never married"]
+     },
      "na_keys": ["marr_date", "sp_name", "sp_tel", "sp_occ"]
     }
    ]
@@ -287,15 +631,27 @@
     {
      "sub": "Personal risk cover",
      "rows": [
-      {"key": "has_risk", "label": "Has personal risk cover", "terms": ["life cover", "risk cover", "disability cover", "insured"]},
-      {"key": "joint", "label": "Joint cover with spouse", "terms": ["joint cover", "joint policy", "both of you"]},
+      {
+       "key": "has_risk",
+       "label": "Has personal risk cover",
+       "terms": ["life cover", "risk cover", "disability cover", "insured", "life insurance", "dread disease", "critical illness", "income protection", "assurance", "policy"]
+      },
+      {
+       "key": "joint",
+       "label": "Joint cover with spouse",
+       "terms": ["joint cover", "joint policy", "both of you"]
+      },
       {
        "key": "ps_risk",
        "label": "Providers (personal risk)",
-       "terms": ["brightrock", "discovery life", "old mutual", "liberty", "sanlam", "momentum", "bidvest"],
+       "terms": ["brightrock", "discovery life", "old mutual", "liberty", "sanlam", "momentum", "bidvest", "bright rock", "hollard", "outsurance", "clientele", "assupol", "metropolitan", "generali", "pps", "cardinal", "absa life", "fnb life", "discovery"],
        "optional": true
       },
-      {"key": "ps_risk_ot", "label": "Other provider (personal risk)", "optional": true}
+      {
+       "key": "ps_risk_ot",
+       "label": "Other provider (personal risk)",
+       "optional": true
+      }
      ],
      "gate": "has_risk"
     },
@@ -304,30 +660,86 @@
      "list": "risk",
      "item": "Policy",
      "cols": [
-      {"col": "prov", "label": "Provider", "terms": ["life cover", "risk cover", "insured"]},
-      {"col": "spend", "label": "Monthly spend", "kind": "money", "terms": ["premium", "per month", "a month"]},
-      {"col": "broker", "label": "Broker on record", "terms": ["broker", "adviser", "advisor"]},
-      {"col": "notes", "label": "Notes"}
+      {
+       "col": "prov",
+       "label": "Provider",
+       "terms": ["life cover", "risk cover", "insured", "bright rock", "hollard", "outsurance", "discovery", "momentum", "sanlam", "old mutual", "liberty"]
+      },
+      {
+       "col": "spend",
+       "label": "Monthly spend",
+       "kind": "money",
+       "terms": ["premium", "per month", "a month", "premiums", "monthly", "costs me"]
+      },
+      {
+       "col": "broker",
+       "label": "Broker on record",
+       "terms": ["broker", "adviser", "advisor"]
+      },
+      {
+       "col": "notes",
+       "label": "Notes"
+      }
      ],
      "terms": ["life cover", "risk cover", "policy", "insured"]
     },
     {
      "sub": "Group risk through the employer",
      "rows": [
-      {"key": "has_group", "label": "Group risk through employer", "terms": ["group risk", "employer cover", "through work", "group life"]},
-      {"key": "ps_grp", "label": "Providers (group risk)", "optional": true},
-      {"key": "ps_grp_ot", "label": "Other provider (group risk)", "optional": true}
+      {
+       "key": "has_group",
+       "label": "Group risk through employer",
+       "terms": ["group risk", "employer cover", "through work", "group life", "work benefits", "death benefit", "funeral benefit", "company scheme"]
+      },
+      {
+       "key": "ps_grp",
+       "label": "Providers (group risk)",
+       "optional": true
+      },
+      {
+       "key": "ps_grp_ot",
+       "label": "Other provider (group risk)",
+       "optional": true
+      }
      ],
      "gate": "has_group"
     },
-    {"sub": "Group risk benefits", "list": "grp", "item": "Group risk benefit", "cols": "generic", "terms": ["group risk", "group life"], "optional": true},
-    {"sub": "Cover notes", "rows": [{"key": "n_cover", "label": "Notes", "notes": true}]},
+    {
+     "sub": "Group risk benefits",
+     "list": "grp",
+     "item": "Group risk benefit",
+     "cols": "generic",
+     "terms": ["group risk", "group life"],
+     "optional": true
+    },
+    {
+     "sub": "Cover notes",
+     "rows": [
+      {
+       "key": "n_cover",
+       "label": "Notes",
+       "notes": true
+      }
+     ]
+    },
     {
      "sub": "Retirement annuity",
      "rows": [
-      {"key": "has_ra", "label": "Has retirement annuity", "terms": ["retirement annuity"]},
-      {"key": "ps_ra", "label": "Providers (retirement annuity)", "optional": true},
-      {"key": "ps_ra_ot", "label": "Other provider (retirement annuity)", "optional": true}
+      {
+       "key": "has_ra",
+       "label": "Has retirement annuity",
+       "terms": ["retirement annuity", "retirement annuities", "ra with", "annuity"]
+      },
+      {
+       "key": "ps_ra",
+       "label": "Providers (retirement annuity)",
+       "optional": true
+      },
+      {
+       "key": "ps_ra_ot",
+       "label": "Other provider (retirement annuity)",
+       "optional": true
+      }
      ],
      "gate": "has_ra"
     },
@@ -336,20 +748,54 @@
      "list": "ret_ra",
      "item": "Retirement annuity",
      "cols": [
-      {"col": "prov", "label": "Provider / administrator", "terms": ["retirement annuity"]},
-      {"col": "status", "label": "Status", "terms": ["paid up", "active", "contributing"]},
-      {"col": "val", "label": "Value", "kind": "money", "terms": ["value", "worth"]},
-      {"col": "contrib", "label": "Monthly contribution", "kind": "money", "terms": ["contribute", "contribution", "per month"]},
-      {"col": "broker", "label": "Broker on record", "terms": ["broker", "adviser", "advisor"]}
+      {
+       "col": "prov",
+       "label": "Provider / administrator",
+       "terms": ["retirement annuity", "annuity", "ra with"]
+      },
+      {
+       "col": "status",
+       "label": "Status",
+       "terms": ["paid up", "active", "contributing", "paid-up", "stopped"]
+      },
+      {
+       "col": "val",
+       "label": "Value",
+       "kind": "money",
+       "terms": ["value", "worth", "fund value", "balance"]
+      },
+      {
+       "col": "contrib",
+       "label": "Monthly contribution",
+       "kind": "money",
+       "terms": ["contribute", "contribution", "per month", "contributions", "monthly", "debit order"]
+      },
+      {
+       "col": "broker",
+       "label": "Broker on record",
+       "terms": ["broker", "adviser", "advisor"]
+      }
      ],
      "terms": ["retirement annuity"]
     },
     {
      "sub": "Pension / provident fund",
      "rows": [
-      {"key": "has_pp", "label": "Has pension / provident fund", "terms": ["pension fund", "provident fund", "retirement fund"]},
-      {"key": "ps_pp", "label": "Providers (pension / provident)", "optional": true},
-      {"key": "ps_pp_ot", "label": "Other provider (pension / provident)", "optional": true}
+      {
+       "key": "has_pp",
+       "label": "Has pension / provident fund",
+       "terms": ["pension fund", "provident fund", "retirement fund", "pension", "provident", "umbrella fund", "preservation fund"]
+      },
+      {
+       "key": "ps_pp",
+       "label": "Providers (pension / provident)",
+       "optional": true
+      },
+      {
+       "key": "ps_pp_ot",
+       "label": "Other provider (pension / provident)",
+       "optional": true
+      }
      ],
      "gate": "has_pp"
     },
@@ -358,15 +804,46 @@
      "list": "ret_pp",
      "item": "Pension / provident fund",
      "cols": [
-      {"col": "type", "label": "Type", "terms": ["pension fund", "provident fund"]},
-      {"col": "prov", "label": "Provider / administrator", "terms": ["pension fund", "provident fund"]},
-      {"col": "val", "label": "Value", "kind": "money", "terms": ["value", "worth"]},
-      {"col": "contrib", "label": "Monthly contribution", "kind": "money", "terms": ["contribute", "contribution"]},
-      {"col": "broker", "label": "Broker on record", "terms": ["broker", "adviser", "advisor"]}
+      {
+       "col": "type",
+       "label": "Type",
+       "terms": ["pension fund", "provident fund", "pension", "provident", "umbrella fund", "preservation fund"]
+      },
+      {
+       "col": "prov",
+       "label": "Provider / administrator",
+       "terms": ["pension fund", "provident fund", "pension", "provident", "umbrella fund"]
+      },
+      {
+       "col": "val",
+       "label": "Value",
+       "kind": "money",
+       "terms": ["value", "worth", "fund value", "balance"]
+      },
+      {
+       "col": "contrib",
+       "label": "Monthly contribution",
+       "kind": "money",
+       "terms": ["contribute", "contribution", "contributions", "monthly"]
+      },
+      {
+       "col": "broker",
+       "label": "Broker on record",
+       "terms": ["broker", "adviser", "advisor"]
+      }
      ],
      "terms": ["pension fund", "provident fund", "retirement fund"]
     },
-    {"sub": "Retirement notes", "rows": [{"key": "n_retire", "label": "Notes", "notes": true}]}
+    {
+     "sub": "Retirement notes",
+     "rows": [
+      {
+       "key": "n_retire",
+       "label": "Notes",
+       "notes": true
+      }
+     ]
+    }
    ]
   },
   {
@@ -377,9 +854,21 @@
     {
      "sub": "Investments",
      "rows": [
-      {"key": "has_inv", "label": "Has investments", "terms": ["unit trust", "tax-free", "tax free", "endowment", "invest"]},
-      {"key": "ps_inv", "label": "Providers (investments)", "optional": true},
-      {"key": "ps_inv_ot", "label": "Other provider (investments)", "optional": true}
+      {
+       "key": "has_inv",
+       "label": "Has investments",
+       "terms": ["unit trust", "tax-free", "tax free", "endowment", "invest*", "unit trusts", "tfsa", "investment", "shares", "etf", "money market", "offshore", "savings"]
+      },
+      {
+       "key": "ps_inv",
+       "label": "Providers (investments)",
+       "optional": true
+      },
+      {
+       "key": "ps_inv_ot",
+       "label": "Other provider (investments)",
+       "optional": true
+      }
      ],
      "gate": "has_inv"
     },
@@ -388,16 +877,54 @@
      "list": "inv",
      "item": "Investment",
      "cols": [
-      {"col": "type", "label": "Type", "terms": ["unit trust", "tax-free", "tax free", "endowment", "invest"]},
-      {"col": "prov", "label": "Provider", "terms": ["invest", "unit trust", "tax-free"]},
-      {"col": "val", "label": "Value", "kind": "money", "terms": ["value", "worth"]},
-      {"col": "prem", "label": "Monthly contribution", "kind": "money", "terms": ["contribute", "per month"]},
-      {"col": "broker", "label": "Broker on record", "terms": ["broker", "adviser", "advisor"]}
+      {
+       "col": "type",
+       "label": "Type",
+       "terms": ["unit trust", "tax-free", "tax free", "endowment", "invest*", "unit trusts", "tfsa", "investment", "shares", "etf", "money market", "offshore"]
+      },
+      {
+       "col": "prov",
+       "label": "Provider",
+       "terms": ["invest*", "unit trust", "tax-free", "investment", "tfsa", "etf", "money market"]
+      },
+      {
+       "col": "val",
+       "label": "Value",
+       "kind": "money",
+       "terms": ["value", "worth", "fund value", "balance"]
+      },
+      {
+       "col": "prem",
+       "label": "Monthly contribution",
+       "kind": "money",
+       "terms": ["contribute", "per month", "contributions", "monthly", "debit order"]
+      },
+      {
+       "col": "broker",
+       "label": "Broker on record",
+       "terms": ["broker", "adviser", "advisor"]
+      }
      ],
-     "terms": ["unit trust", "tax-free", "tax free", "endowment", "invest"]
+     "terms": ["unit trust", "tax-free", "tax free", "endowment", "invest*"]
     },
-    {"sub": "Shares", "list": "shares", "item": "Shares", "cols": "generic", "terms": ["shares"], "optional": true},
-    {"sub": "Investment notes", "rows": [{"key": "n_inv", "label": "Notes", "notes": true}]}
+    {
+     "sub": "Shares",
+     "list": "shares",
+     "item": "Shares",
+     "cols": "generic",
+     "terms": ["shares"],
+     "optional": true
+    },
+    {
+     "sub": "Investment notes",
+     "rows": [
+      {
+       "key": "n_inv",
+       "label": "Notes",
+       "notes": true
+      }
+     ]
+    }
    ]
   },
   {
@@ -408,49 +935,151 @@
     {
      "sub": "Medical aid",
      "rows": [
-      {"key": "ma", "label": "Has medical aid", "terms": ["medical aid", "discovery health", "bonitas", "gems"]},
-      {"key": "ma_prov", "label": "Provider", "terms": ["medical aid", "discovery health", "bonitas", "gems"]},
-      {"key": "ma_plan", "label": "Plan", "terms": ["medical aid plan", "medical aid option", "classic saver", "comprehensive plan"]},
-      {"key": "ma_broker", "label": "Broker on record", "terms": ["medical aid broker", "medical aid adviser"]},
-      {"key": "n_ma", "label": "Notes", "notes": true}
+      {
+       "key": "ma",
+       "label": "Has medical aid",
+       "terms": ["medical aid", "discovery health", "bonitas", "gems", "medical scheme", "momentum health", "fedhealth", "bestmed", "medshield", "profmed", "medihelp"]
+      },
+      {
+       "key": "ma_prov",
+       "label": "Provider",
+       "terms": ["medical aid", "discovery health", "bonitas", "gems", "medical scheme", "momentum health", "fedhealth", "bestmed", "medshield", "profmed", "medihelp"]
+      },
+      {
+       "key": "ma_plan",
+       "label": "Plan",
+       "terms": ["medical aid plan", "medical aid option", "classic saver", "comprehensive plan", "hospital plan", "network plan", "medical aid savings", "comprehensive"]
+      },
+      {
+       "key": "ma_broker",
+       "label": "Broker on record",
+       "terms": ["medical aid broker", "medical aid adviser", "broker for the medical aid", "medical aid consultant"]
+      },
+      {
+       "key": "n_ma",
+       "label": "Notes",
+       "notes": true
+      }
      ],
      "gate": "ma"
     },
     {
      "sub": "Gap cover",
      "rows": [
-      {"key": "gap", "label": "Has gap cover", "terms": ["gap cover"]},
-      {"key": "gap_prov", "label": "Provider", "terms": ["gap cover"]},
-      {"key": "gap_broker", "label": "Broker on record", "terms": ["gap cover broker"]},
-      {"key": "n_gap", "label": "Notes", "notes": true}
+      {
+       "key": "gap",
+       "label": "Has gap cover",
+       "terms": ["gap cover", "gap policy"]
+      },
+      {
+       "key": "gap_prov",
+       "label": "Provider",
+       "terms": ["gap cover", "gap policy"]
+      },
+      {
+       "key": "gap_broker",
+       "label": "Broker on record",
+       "terms": ["gap cover broker"]
+      },
+      {
+       "key": "n_gap",
+       "label": "Notes",
+       "notes": true
+      }
      ],
      "gate": "gap"
     },
     {
      "sub": "Will",
      "rows": [
-      {"key": "will", "label": "Has a will", "terms": ["a will", "my will", "the will", "testament"]},
-      {"key": "will_up", "label": "Will up to date", "terms": ["will up to date", "will updated", "will been updated", "updated my will"]},
-      {"key": "will_where", "label": "Will held with", "terms": ["will held", "will is with", "safe custody", "attorney"]},
-      {"key": "will_where_other", "label": "Will held with (other)", "optional": true},
-      {"key": "will_broker", "label": "Broker on record", "terms": ["will broker"]},
-      {"key": "will_date", "label": "Will last updated", "kind": "date", "terms": ["will was drawn", "will last updated", "will drawn up"]},
-      {"key": "n_will", "label": "Notes", "notes": true}
+      {
+       "key": "will",
+       "label": "Has a will",
+       "terms": ["a will", "my will", "the will", "testament", "wills", "last will", "will and testament", "executor", "estate"]
+      },
+      {
+       "key": "will_up",
+       "label": "Will up to date",
+       "terms": ["will up to date", "will updated", "will been updated", "updated my will", "up to date", "updated", "outdated", "out of date", "not been updated", "needs updating", "update the will", "not updated"]
+      },
+      {
+       "key": "will_where",
+       "label": "Will held with",
+       "terms": ["will held", "will is with", "safe custody", "attorney", "lawyer", "safe", "kept", "held by", "executor"]
+      },
+      {
+       "key": "will_where_other",
+       "label": "Will held with (other)",
+       "optional": true
+      },
+      {
+       "key": "will_broker",
+       "label": "Broker on record",
+       "terms": ["will broker", "capital legacy"]
+      },
+      {
+       "key": "will_date",
+       "label": "Will last updated",
+       "kind": "date",
+       "terms": ["will was drawn", "will last updated", "will drawn up", "updated", "last updated", "not updated", "been updated", "drawn up", "signed", "last time", "when was your will"]
+      },
+      {
+       "key": "n_will",
+       "label": "Notes",
+       "notes": true
+      }
      ],
      "gate": "will"
     },
     {
      "sub": "Short-term insurance",
      "rows": [
-      {"key": "sti", "label": "Has short-term insurance", "terms": ["short-term insurance", "short term insurance", "car insurance", "household contents"]},
-      {"key": "sti_broker", "label": "Broker on record", "terms": ["short-term broker", "insurance broker"]},
-      {"key": "sti_car", "label": "Car insurance", "terms": ["car insurance", "vehicle insurance", "motor insurance"]},
-      {"key": "sti_house", "label": "Household contents", "terms": ["household contents", "home contents"]},
-      {"key": "sti_struct", "label": "Structural (buildings)", "terms": ["structural", "buildings insurance"]},
-      {"key": "sti_personal", "label": "Personal items", "terms": ["all risk", "personal items", "jewellery"]},
-      {"key": "sti_biz", "label": "Business insurance", "terms": ["business insurance"]},
-      {"key": "sti_biz_spend", "label": "Business insurance spend", "kind": "money", "terms": ["business insurance"]},
-      {"key": "n_sti", "label": "Notes", "notes": true}
+      {
+       "key": "sti",
+       "label": "Has short-term insurance",
+       "terms": ["short-term insurance", "short term insurance", "car insurance", "household contents", "short term", "insurance on", "all risk", "buildings", "vehicle cover", "comprehensive"]
+      },
+      {
+       "key": "sti_broker",
+       "label": "Broker on record",
+       "terms": ["short-term broker", "insurance broker", "cameron", "short term broker"]
+      },
+      {
+       "key": "sti_car",
+       "label": "Car insurance",
+       "terms": ["car insurance", "vehicle insurance", "motor insurance", "insure the car", "vehicle cover", "comprehensive"]
+      },
+      {
+       "key": "sti_house",
+       "label": "Household contents",
+       "terms": ["household contents", "home contents", "contents", "household"]
+      },
+      {
+       "key": "sti_struct",
+       "label": "Structural (buildings)",
+       "terms": ["structural", "buildings insurance", "buildings", "structure"]
+      },
+      {
+       "key": "sti_personal",
+       "label": "Personal items",
+       "terms": ["all risk", "personal items", "jewellery", "jewelry", "laptop", "cellphone insurance"]
+      },
+      {
+       "key": "sti_biz",
+       "label": "Business insurance",
+       "terms": ["business insurance", "commercial insurance", "business assets"]
+      },
+      {
+       "key": "sti_biz_spend",
+       "label": "Business insurance spend",
+       "kind": "money",
+       "terms": ["business insurance", "commercial insurance"]
+      },
+      {
+       "key": "n_sti",
+       "label": "Notes",
+       "notes": true
+      }
      ],
      "gate": "sti"
     }
@@ -466,27 +1095,98 @@
      "list": "debts",
      "item": "Debt",
      "cols": [
-      {"col": "type", "label": "Type", "terms": ["loan", "bond", "vehicle finance", "credit card", "overdraft", "finance"]},
-      {"col": "prov", "label": "Provider / lender", "terms": ["bank", "absa", "fnb", "nedbank", "standard bank", "wesbank", "capitec"]},
-      {"col": "desc", "label": "Description", "terms": ["residence", "car", "vehicle", "home", "property"]},
-      {"col": "owner", "label": "Owner", "terms": ["in my name", "in her name", "in his name", "joint", "owner"]},
-      {"col": "payer", "label": "Payer", "terms": ["pays", "paying", "debit order", "who pays"]},
-      {"col": "term", "label": "Term left", "terms": ["years left", "months left", "years to go", "remaining"]},
-      {"col": "inst", "label": "Monthly instalment", "kind": "money", "terms": ["instalment", "installment", "repayment", "a month"]},
-      {"col": "bal", "label": "Outstanding balance", "kind": "money", "terms": ["balance", "outstanding", "owe"]},
-      {"col": "asset", "label": "Asset value", "kind": "money", "terms": ["worth", "valued", "value of the"]},
-      {"col": "cl", "label": "Credit life with lender", "terms": ["credit life"]},
-      {"col": "surety", "label": "Surety signed", "terms": ["surety"]},
-      {"col": "notes", "label": "Notes"}
+      {
+       "col": "type",
+       "label": "Type",
+       "terms": ["loan", "bond", "vehicle finance", "credit card", "overdraft", "finance", "home loan", "mortgage", "car finance", "personal loan", "student loan", "store account"]
+      },
+      {
+       "col": "prov",
+       "label": "Provider / lender",
+       "terms": ["bank", "absa", "fnb", "nedbank", "standard bank", "wesbank", "capitec", "firstrand", "investec", "discovery bank", "tyme", "african bank", "mfc", "toyota finance", "vw financial", "bmw finance"]
+      },
+      {
+       "col": "desc",
+       "label": "Description",
+       "terms": ["residence", "car", "vehicle", "home", "property", "house", "flat", "motor"]
+      },
+      {
+       "col": "owner",
+       "label": "Owner",
+       "terms": ["in my name", "in her name", "in his name", "joint", "owner", "bond is in", "whose name"]
+      },
+      {
+       "col": "payer",
+       "label": "Payer",
+       "terms": ["pays", "paying", "debit order", "who pays", "pays the bond", "paying the"]
+      },
+      {
+       "col": "term",
+       "label": "Term left",
+       "terms": ["years left", "months left", "years to go", "remaining", "years remaining", "paid off"]
+      },
+      {
+       "col": "inst",
+       "label": "Monthly instalment",
+       "kind": "money",
+       "terms": ["instalment", "installment", "repayment", "a month", "repayments", "monthly payment", "debit order"]
+      },
+      {
+       "col": "bal",
+       "label": "Outstanding balance",
+       "kind": "money",
+       "terms": ["balance", "outstanding", "owe", "owing", "settlement"]
+      },
+      {
+       "col": "asset",
+       "label": "Asset value",
+       "kind": "money",
+       "terms": ["worth", "valued", "value of the", "market value", "value of the house", "value of the car"]
+      },
+      {
+       "col": "cl",
+       "label": "Credit life with lender",
+       "terms": ["credit life", "creditor life", "life cover on the", "insured on the bond", "bond cover"]
+      },
+      {
+       "col": "surety",
+       "label": "Surety signed",
+       "terms": ["surety", "suretyship", "guarantor", "co signed", "signed surety"]
+      },
+      {
+       "col": "notes",
+       "label": "Notes"
+      }
      ],
      "totals": [
-      {"id": "debts_monthly", "label": "Total monthly repayments", "col": "inst"},
-      {"id": "debts_liabilities", "label": "Total liabilities (balances)", "col": "bal"},
-      {"id": "debts_assets", "label": "Total asset value", "col": "asset"}
+      {
+       "id": "debts_monthly",
+       "label": "Total monthly repayments",
+       "col": "inst"
+      },
+      {
+       "id": "debts_liabilities",
+       "label": "Total liabilities (balances)",
+       "col": "bal"
+      },
+      {
+       "id": "debts_assets",
+       "label": "Total asset value",
+       "col": "asset"
+      }
      ],
      "terms": ["debt", "loan", "bond", "instalment", "finance"]
     },
-    {"sub": "Debt notes", "rows": [{"key": "n_debts", "label": "Notes", "notes": true}]}
+    {
+     "sub": "Debt notes",
+     "rows": [
+      {
+       "key": "n_debts",
+       "label": "Notes",
+       "notes": true
+      }
+     ]
+    }
    ]
   },
   {
@@ -499,18 +1199,64 @@
      "list": "kids",
      "item": "Child",
      "cols": [
-      {"col": "name", "label": "Name", "terms": ["child", "kids", "daughter", "son"]},
-      {"col": "sname", "label": "Surname", "terms": ["surname"]},
-      {"col": "gender", "label": "Gender", "terms": ["girl", "boy", "daughter", "son"]},
-      {"col": "dob", "label": "Date of birth", "kind": "date", "terms": ["born", "birthday", "date of birth"]},
-      {"col": "age", "label": "Age", "kind": "int", "terms": ["years old", "age"]},
-      {"col": "stage", "label": "Education stage", "terms": ["school", "grade", "creche", "university", "college", "primary", "high school"]},
-      {"col": "cost", "label": "Monthly cost", "kind": "money", "terms": ["school fees", "aftercare", "per month", "cost"]}
+      {
+       "col": "name",
+       "label": "Name",
+       "terms": ["child", "kids", "daughter", "son", "daughters", "sons"]
+      },
+      {
+       "col": "sname",
+       "label": "Surname",
+       "terms": ["surname"]
+      },
+      {
+       "col": "gender",
+       "label": "Gender",
+       "terms": ["girl", "boy", "daughter", "son"]
+      },
+      {
+       "col": "dob",
+       "label": "Date of birth",
+       "kind": "date",
+       "terms": ["born", "birthday", "date of birth", "born in"]
+      },
+      {
+       "col": "age",
+       "label": "Age",
+       "kind": "int",
+       "terms": ["years old", "age", "how old"]
+      },
+      {
+       "col": "stage",
+       "label": "Education stage",
+       "terms": ["school", "grade", "creche", "university", "college", "primary", "high school", "primary school", "grade r", "preschool", "pre school", "nursery", "matric", "tertiary", "varsity"]
+      },
+      {
+       "col": "cost",
+       "label": "Monthly cost",
+       "kind": "money",
+       "terms": ["school fees", "aftercare", "per month", "cost", "extra murals", "tuition", "fees"]
+      }
      ],
-     "totals": [{"id": "kids_total", "label": "Total childcare (monthly)", "col": "cost"}],
+     "totals": [
+      {
+       "id": "kids_total",
+       "label": "Total childcare (monthly)",
+       "col": "cost"
+      }
+     ],
      "terms": ["children", "kids", "child", "daughter", "son"]
     },
-    {"sub": "Children notes", "rows": [{"key": "n_kids", "label": "Notes", "notes": true}]}
+    {
+     "sub": "Children notes",
+     "rows": [
+      {
+       "key": "n_kids",
+       "label": "Notes",
+       "notes": true
+      }
+     ]
+    }
    ]
   },
   {
@@ -521,17 +1267,41 @@
     {
      "sub": "Health",
      "rows": [
-      {"key": "h_gen", "label": "General health good", "terms": ["health", "healthy", "good health"]},
-      {"key": "h_dia", "label": "Diabetes / high sugar", "terms": ["diabet", "sugar"]},
-      {"key": "h_chol", "label": "High cholesterol", "terms": ["cholesterol"]},
-      {"key": "h_bp", "label": "High blood pressure", "terms": ["blood pressure", "hypertension"]},
-      {"key": "h_bmi", "label": "High BMI", "terms": ["bmi", "overweight"]},
+      {
+       "key": "h_gen",
+       "label": "General health good",
+       "terms": ["health", "healthy", "good health", "no conditions", "any conditions", "health issues", "medical history"]
+      },
+      {
+       "key": "h_dia",
+       "label": "Diabetes / high sugar",
+       "terms": ["diabet*", "sugar", "diabetes", "diabetic"]
+      },
+      {
+       "key": "h_chol",
+       "label": "High cholesterol",
+       "terms": ["cholesterol"]
+      },
+      {
+       "key": "h_bp",
+       "label": "High blood pressure",
+       "terms": ["blood pressure", "hypertension", "high blood"]
+      },
+      {
+       "key": "h_bmi",
+       "label": "High BMI",
+       "terms": ["bmi", "overweight", "weight", "obese"]
+      },
       {
        "key": "h_oth",
        "label": "Other health issues",
-       "terms": ["health", "healthy", "medical condition", "medication", "operation", "surgery", "illness", "asthma", "any conditions"]
+       "terms": ["health", "healthy", "medical condition", "medication", "operation", "surgery", "illness", "asthma", "any conditions", "condition", "conditions", "doctor", "hospital", "chronic", "operations"]
       },
-      {"key": "h_notes", "label": "Health notes", "optional": true}
+      {
+       "key": "h_notes",
+       "label": "Health notes",
+       "optional": true
+      }
      ]
     }
    ]
@@ -544,29 +1314,82 @@
     {
      "sub": "Personal risk quotes",
      "rows": [
-      {"key": "pr_life", "label": "Risk: priority", "terms": ["life cover", "risk cover", "disability cover", "dread disease", "income protection"]},
-      {"key": "pr_life_cm", "label": "Risk: comment", "optional": true},
-      {"key": "bf_fna_req", "label": "FNA quote (bf): requested", "kind": "yn", "terms": ["fna", "needs analysis", "quote"]},
-      {"key": "bf_fna_type", "label": "FNA quote (bf): New Business or Servicing", "terms": ["new business", "servicing", "fna"], "needs": "bf_fna_req"},
-      {"key": "fna_req", "label": "FNA quote: requested", "kind": "yn", "terms": ["fna", "needs analysis", "quote"]},
-      {"key": "fna_type", "label": "FNA quote: New Business or Servicing", "terms": ["new business", "servicing", "fna"], "needs": "fna_req"},
+      {
+       "key": "pr_life",
+       "label": "Risk: priority",
+       "terms": ["life cover", "risk cover", "disability cover", "dread disease", "income protection", "life insurance", "funeral cover", "premium"]
+      },
+      {
+       "key": "pr_life_cm",
+       "label": "Risk: comment",
+       "optional": true
+      },
+      {
+       "key": "bf_fna_req",
+       "label": "FNA quote (bf): requested",
+       "kind": "yn",
+       "terms": ["fna", "needs analysis", "quote", "fna quote", "needs analysis quote"]
+      },
+      {
+       "key": "bf_fna_type",
+       "label": "FNA quote (bf): New Business or Servicing",
+       "terms": ["new business", "servicing", "fna"],
+       "needs": "bf_fna_req"
+      },
+      {
+       "key": "fna_req",
+       "label": "FNA quote: requested",
+       "kind": "yn",
+       "terms": ["fna", "needs analysis", "quote", "fna quote", "needs analysis quote"]
+      },
+      {
+       "key": "fna_type",
+       "label": "FNA quote: New Business or Servicing",
+       "terms": ["new business", "servicing", "fna"],
+       "needs": "fna_req"
+      },
       {
        "key": "fna_ins",
        "label": "FNA quote: insurer",
-       "terms": ["brightrock", "discovery", "old mutual", "liberty", "sanlam", "momentum", "bidvest", "hollard", "insurer", "fna"],
+       "terms": ["brightrock", "discovery", "old mutual", "liberty", "sanlam", "momentum", "bidvest", "hollard", "insurer", "fna", "bright rock", "outsurance", "clientele", "assupol", "metropolitan", "generali"],
        "needs": "fna_req"
       },
-      {"key": "bf_sf_req", "label": "Shortfall quote (bf): requested", "kind": "yn", "terms": ["shortfall", "group risk", "quote"]},
-      {"key": "bf_sf_type", "label": "Shortfall quote (bf): New Business or Servicing", "terms": ["new business", "servicing", "shortfall"], "needs": "bf_sf_req"},
-      {"key": "sf_req", "label": "Shortfall quote (group risk): requested", "kind": "yn", "terms": ["shortfall", "group risk", "quote"]},
-      {"key": "sf_type", "label": "Shortfall quote: New Business or Servicing", "terms": ["new business", "servicing", "shortfall"], "needs": "sf_req"},
+      {
+       "key": "bf_sf_req",
+       "label": "Shortfall quote (bf): requested",
+       "kind": "yn",
+       "terms": ["shortfall", "group risk", "quote", "shortfall quote", "group risk quote"]
+      },
+      {
+       "key": "bf_sf_type",
+       "label": "Shortfall quote (bf): New Business or Servicing",
+       "terms": ["new business", "servicing", "shortfall"],
+       "needs": "bf_sf_req"
+      },
+      {
+       "key": "sf_req",
+       "label": "Shortfall quote (group risk): requested",
+       "kind": "yn",
+       "terms": ["shortfall", "group risk", "quote", "shortfall quote", "group risk quote"]
+      },
+      {
+       "key": "sf_type",
+       "label": "Shortfall quote: New Business or Servicing",
+       "terms": ["new business", "servicing", "shortfall"],
+       "needs": "sf_req"
+      },
       {
        "key": "sf_ins",
        "label": "Shortfall quote: insurer",
        "terms": ["brightrock", "discovery", "old mutual", "liberty", "sanlam", "momentum", "insurer", "shortfall"],
        "needs": "sf_req"
       },
-      {"key": "pref_spend", "label": "Preferred monthly spend", "kind": "money", "terms": ["afford", "per month for cover", "comfortable paying"]}
+      {
+       "key": "pref_spend",
+       "label": "Preferred monthly spend",
+       "kind": "money",
+       "terms": ["afford", "per month for cover", "comfortable paying", "budget for cover", "spend on cover", "per month on cover"]
+      }
      ]
     },
     {
@@ -574,36 +1397,114 @@
      "list": "bfred",
      "item": "Reduced quote",
      "cols": [
-      {"col": "req", "label": "Requested", "terms": ["reduced quote"]},
-      {"col": "type", "label": "New Business or Servicing", "terms": ["new business", "servicing"]},
-      {"col": "amt", "label": "Amount", "kind": "money", "terms": ["reduced quote"]}
+      {
+       "col": "req",
+       "label": "Requested",
+       "terms": ["reduced quote", "reduced"]
+      },
+      {
+       "col": "type",
+       "label": "New Business or Servicing",
+       "terms": ["new business", "servicing"]
+      },
+      {
+       "col": "amt",
+       "label": "Amount",
+       "kind": "money",
+       "terms": ["reduced quote"]
+      }
      ],
      "terms": ["reduced quote"],
      "optional": true
     },
-    {"sub": "Reduced quotes", "list": "redq", "item": "Reduced quote", "cols": "generic", "terms": ["reduced quote"], "optional": true},
+    {
+     "sub": "Reduced quotes",
+     "list": "redq",
+     "item": "Reduced quote",
+     "cols": "generic",
+     "terms": ["reduced quote"],
+     "optional": true
+    },
     {
      "sub": "Retirement & investment quotes",
      "rows": [
-      {"key": "pr_ra", "label": "Retirement annuity: priority", "terms": ["retirement annuity"]},
-      {"key": "pr_ra_cm", "label": "Retirement annuity: comment", "optional": true},
-      {"key": "pr_rgar", "label": "RGAR: priority", "terms": ["rgar", "retirement goal"]},
-      {"key": "pr_rgar_cm", "label": "RGAR: comment", "optional": true},
-      {"key": "rgar_req", "label": "RGAR requested", "kind": "yn", "terms": ["rgar", "retirement goal analysis", "retirement goal"]},
-      {"key": "ret_age", "label": "Retirement age", "kind": "int", "terms": ["retire at", "retirement age", "retire by"]},
-      {"key": "ret_net", "label": "Net amount needed at retirement", "kind": "money", "terms": ["need at retirement", "net a month at retirement"]},
-      {"key": "pr_egar", "label": "EGAR: priority", "terms": ["egar", "education goal"]},
-      {"key": "pr_egar_cm", "label": "EGAR: comment", "optional": true},
-      {"key": "egar_req", "label": "EGAR requested", "kind": "yn", "terms": ["egar", "education goal", "education"]},
-      {"key": "pr_inv", "label": "Investment: priority", "terms": ["unit trust", "tax-free", "tax free", "endowment", "invest"]},
-      {"key": "pr_inv_cm", "label": "Investment: comment", "optional": true}
+      {
+       "key": "pr_ra",
+       "label": "Retirement annuity: priority",
+       "terms": ["retirement annuity", "retirement annuities", "ra priority"]
+      },
+      {
+       "key": "pr_ra_cm",
+       "label": "Retirement annuity: comment",
+       "optional": true
+      },
+      {
+       "key": "pr_rgar",
+       "label": "RGAR: priority",
+       "terms": ["rgar", "retirement goal", "retirement goal analysis"]
+      },
+      {
+       "key": "pr_rgar_cm",
+       "label": "RGAR: comment",
+       "optional": true
+      },
+      {
+       "key": "rgar_req",
+       "label": "RGAR requested",
+       "kind": "yn",
+       "terms": ["rgar", "retirement goal analysis", "retirement goal", "retirement analysis"]
+      },
+      {
+       "key": "ret_age",
+       "label": "Retirement age",
+       "kind": "int",
+       "terms": ["retire at", "retirement age", "retire by", "retire", "retiring"]
+      },
+      {
+       "key": "ret_net",
+       "label": "Net amount needed at retirement",
+       "kind": "money",
+       "terms": ["need at retirement", "net a month at retirement", "net a month", "a month net", "income at retirement", "live on at retirement"]
+      },
+      {
+       "key": "pr_egar",
+       "label": "EGAR: priority",
+       "terms": ["egar", "education goal", "education goal analysis", "education analysis", "education fund"]
+      },
+      {
+       "key": "pr_egar_cm",
+       "label": "EGAR: comment",
+       "optional": true
+      },
+      {
+       "key": "egar_req",
+       "label": "EGAR requested",
+       "kind": "yn",
+       "terms": ["egar", "education goal", "education", "education goal analysis", "education analysis", "education fund for the children"]
+      },
+      {
+       "key": "pr_inv",
+       "label": "Investment: priority",
+       "terms": ["unit trust", "tax-free", "tax free", "endowment", "invest*", "unit trusts", "investments", "savings"]
+      },
+      {
+       "key": "pr_inv_cm",
+       "label": "Investment: comment",
+       "optional": true
+      }
      ]
     },
     {
      "sub": "Retirement annuity quotes",
      "list": "raq",
      "item": "Retirement annuity quote",
-     "cols": [{"col": "req", "label": "Requested", "terms": ["retirement annuity quote"]}],
+     "cols": [
+      {
+       "col": "req",
+       "label": "Requested",
+       "terms": ["retirement annuity quote"]
+      }
+     ],
      "terms": ["retirement annuity quote"],
      "optional": true
     },
@@ -611,38 +1512,118 @@
      "sub": "Investment quotes",
      "list": "invq",
      "item": "Investment quote",
-     "cols": [{"col": "purpose", "label": "Purpose", "terms": ["investment quote", "purpose"]}],
+     "cols": [
+      {
+       "col": "purpose",
+       "label": "Purpose",
+       "terms": ["investment quote", "purpose"]
+      }
+     ],
      "terms": ["investment quote"],
      "optional": true
     },
     {
      "sub": "Referrals & documents",
      "rows": [
-      {"key": "pr_st", "label": "Short-term: priority", "terms": ["short-term", "short term", "car insurance", "household contents"]},
-      {"key": "pr_st_cm", "label": "Short-term: comment", "optional": true},
-      {"key": "ref_sti", "label": "Short-term (Cameron)", "kind": "yn", "terms": ["cameron"]},
-      {"key": "pr_med", "label": "Medical aid and gap: priority", "terms": ["medical aid", "gap cover"]},
-      {"key": "pr_med_cm", "label": "Medical aid and gap: comment", "optional": true},
-      {"key": "ref_med", "label": "Medical & gap (Valerie)", "kind": "yn", "terms": ["valerie"]},
-      {"key": "pr_will", "label": "Will: priority", "terms": ["a will", "my will", "the will", "testament"]},
-      {"key": "pr_will_cm", "label": "Will: comment", "optional": true},
-      {"key": "ref_will", "label": "Will (Capital Legacy)", "kind": "yn", "terms": ["capital legacy"]}
+      {
+       "key": "pr_st",
+       "label": "Short-term: priority",
+       "terms": ["short-term", "short term", "car insurance", "household contents", "short term insurance", "vehicle insurance"]
+      },
+      {
+       "key": "pr_st_cm",
+       "label": "Short-term: comment",
+       "optional": true
+      },
+      {
+       "key": "ref_sti",
+       "label": "Short-term (Cameron)",
+       "kind": "yn",
+       "terms": ["cameron"]
+      },
+      {
+       "key": "pr_med",
+       "label": "Medical aid and gap: priority",
+       "terms": ["medical aid", "gap cover", "medical scheme", "gap policy"]
+      },
+      {
+       "key": "pr_med_cm",
+       "label": "Medical aid and gap: comment",
+       "optional": true
+      },
+      {
+       "key": "ref_med",
+       "label": "Medical & gap (Valerie)",
+       "kind": "yn",
+       "terms": ["valerie"]
+      },
+      {
+       "key": "pr_will",
+       "label": "Will: priority",
+       "terms": ["a will", "my will", "the will", "testament", "update the will", "new will", "draw up a will", "wills"]
+      },
+      {
+       "key": "pr_will_cm",
+       "label": "Will: comment",
+       "optional": true
+      },
+      {
+       "key": "ref_will",
+       "label": "Will (Capital Legacy)",
+       "kind": "yn",
+       "terms": ["capital legacy"]
+      }
      ]
     },
     {
      "sub": "Credit life",
      "rows": [
-      {"key": "cl_req", "label": "Credit life: requested", "kind": "yn", "terms": ["credit life"], "siblings": ["debts.*.cl"]},
-      {"key": "cl_lender", "label": "Credit life: lender", "terms": ["credit life", "lender"], "siblings": ["debts.*.cl", "cl_req"], "needs": "cl_req"},
-      {"key": "cl_bal", "label": "Credit life: balance", "kind": "money", "terms": ["credit life", "balance"], "siblings": ["debts.*.cl", "cl_req"], "needs": "cl_req"},
-      {"key": "cl_life", "label": "Credit life: cover", "terms": ["credit life", "cover on the"], "siblings": ["debts.*.cl", "cl_req"], "needs": "cl_req"}
+      {
+       "key": "cl_req",
+       "label": "Credit life: requested",
+       "kind": "yn",
+       "terms": ["credit life", "creditor life", "life cover on the", "insured on the bond", "bond cover"],
+       "siblings": ["debts.*.cl"]
+      },
+      {
+       "key": "cl_lender",
+       "label": "Credit life: lender",
+       "terms": ["credit life", "lender", "creditor life"],
+       "siblings": ["debts.*.cl", "cl_req"],
+       "needs": "cl_req"
+      },
+      {
+       "key": "cl_bal",
+       "label": "Credit life: balance",
+       "kind": "money",
+       "terms": ["credit life", "balance", "creditor life", "outstanding balance"],
+       "siblings": ["debts.*.cl", "cl_req"],
+       "needs": "cl_req"
+      },
+      {
+       "key": "cl_life",
+       "label": "Credit life: cover",
+       "terms": ["credit life", "cover on the", "creditor life", "life cover on the"],
+       "siblings": ["debts.*.cl", "cl_req"],
+       "needs": "cl_req"
+      }
      ]
     },
     {
      "sub": "Business assurance",
      "rows": [
-      {"key": "bs_req", "label": "Business assurance: requested", "kind": "yn", "terms": ["business assurance", "buy and sell", "buy-and-sell", "key man", "shareholder"]},
-      {"key": "bs_ins", "label": "Business assurance: insurer", "terms": ["business assurance", "buy and sell", "buy-and-sell", "insurer"], "needs": "bs_req"},
+      {
+       "key": "bs_req",
+       "label": "Business assurance: requested",
+       "kind": "yn",
+       "terms": ["business assurance", "buy and sell", "buy-and-sell", "key man", "shareholder", "shareholder protection"]
+      },
+      {
+       "key": "bs_ins",
+       "label": "Business assurance: insurer",
+       "terms": ["business assurance", "buy and sell", "buy-and-sell", "insurer"],
+       "needs": "bs_req"
+      },
       {
        "key": "bs_value",
        "label": "Business assurance: value",
@@ -650,24 +1631,78 @@
        "terms": ["business assurance", "buy and sell", "value of the business"],
        "needs": "bs_req"
       },
-      {"key": "bs_basis", "label": "Business assurance: basis", "terms": ["business assurance", "buy and sell", "buy-and-sell"], "needs": "bs_req"},
-      {"key": "bs_own", "label": "Business assurance: owner", "terms": ["business assurance", "buy and sell", "owner of the policy"], "needs": "bs_req"}
+      {
+       "key": "bs_basis",
+       "label": "Business assurance: basis",
+       "terms": ["business assurance", "buy and sell", "buy-and-sell"],
+       "needs": "bs_req"
+      },
+      {
+       "key": "bs_own",
+       "label": "Business assurance: owner",
+       "terms": ["business assurance", "buy and sell", "owner of the policy"],
+       "needs": "bs_req"
+      }
      ],
-     "when": {"key": "bizowner", "in": ["yes", "y", "true"]}
+     "when": {
+      "key": "bizowner",
+      "in": ["yes", "y", "true"]
+     }
     },
     {
      "sub": "Key man",
      "rows": [
-      {"key": "km_req", "label": "Key man: requested", "kind": "yn", "terms": ["key man", "keyman", "key person"]},
-      {"key": "km_name", "label": "Key man: name", "terms": ["key man", "keyman", "key person"], "needs": "km_req"},
-      {"key": "km_role", "label": "Key man: role", "terms": ["key man", "keyman", "key person"], "needs": "km_req"},
-      {"key": "km_amt", "label": "Key man: amount", "kind": "money", "terms": ["key man", "keyman", "key person"], "needs": "km_req"},
-      {"key": "km_basis", "label": "Key man: basis", "terms": ["key man", "keyman", "key person"], "needs": "km_req"}
+      {
+       "key": "km_req",
+       "label": "Key man: requested",
+       "kind": "yn",
+       "terms": ["key man", "keyman", "key person"]
+      },
+      {
+       "key": "km_name",
+       "label": "Key man: name",
+       "terms": ["key man", "keyman", "key person"],
+       "needs": "km_req"
+      },
+      {
+       "key": "km_role",
+       "label": "Key man: role",
+       "terms": ["key man", "keyman", "key person"],
+       "needs": "km_req"
+      },
+      {
+       "key": "km_amt",
+       "label": "Key man: amount",
+       "kind": "money",
+       "terms": ["key man", "keyman", "key person"],
+       "needs": "km_req"
+      },
+      {
+       "key": "km_basis",
+       "label": "Key man: basis",
+       "terms": ["key man", "keyman", "key person"],
+       "needs": "km_req"
+      }
      ],
-     "when": {"key": "bizowner", "in": ["yes", "y", "true"]}
+     "when": {
+      "key": "bizowner",
+      "in": ["yes", "y", "true"]
+     }
     },
-    {"sub": "Documents to request", "overlay": "documents_to_request"},
-    {"sub": "Priorities", "rows": [{"key": "n_prio", "label": "Notes", "notes": true}]}
+    {
+     "sub": "Documents to request",
+     "overlay": "documents_to_request"
+    },
+    {
+     "sub": "Priorities",
+     "rows": [
+      {
+       "key": "n_prio",
+       "label": "Notes",
+       "notes": true
+      }
+     ]
+    }
    ]
   },
   {
@@ -678,105 +1713,360 @@
     {
      "sub": "Life cover: fractured cover",
      "rows": [
-      {"key": "lc_hh", "label": "Total household income needed", "kind": "money", "special": "calc", "terms": ["household needs", "household income", "income needed"]},
-      {"key": "lc_cc", "label": "Childcare (monthly)", "kind": "money", "special": "calc", "terms": ["childcare", "child care", "school fees", "aftercare"]},
+      {
+       "key": "lc_hh",
+       "label": "Total household income needed",
+       "kind": "money",
+       "special": "calc",
+       "terms": ["household needs", "household income", "income needed"]
+      },
+      {
+       "key": "lc_cc",
+       "label": "Childcare (monthly)",
+       "kind": "money",
+       "special": "calc",
+       "terms": ["childcare", "child care", "school fees", "aftercare"]
+      },
       {
        "key": "lc_dr",
        "label": "Debt repayments (monthly)",
        "kind": "money",
        "special": "calc",
-       "terms": ["debt repayments", "instalments", "repayments", "bond", "car payment"]
+       "terms": ["debt repayments", "instalments", "repayments", "bond", "car payment", "debt repayment"]
       },
-      {"key": "lc_need", "label": "Total needed", "kind": "money", "terms": ["how much cover", "cover needed", "need in total"]},
-      {"key": "lc_f_aci", "label": "Annual contribution increase (ACI)", "special": "aci"},
-      {"key": "lc_f_aciv", "label": "ACI value", "special": "aci"},
-      {"key": "lc_wol", "label": "Life Cover (WOL) ABI", "kind": "pct", "special": "abi", "nocross": true},
-      {"key": "lc_ccabi", "label": "Childcare ABI", "kind": "pct", "special": "abi", "nocross": true}
+      {
+       "key": "lc_need",
+       "label": "Total needed",
+       "kind": "money",
+       "terms": ["how much cover", "cover needed", "need in total", "total needed"]
+      },
+      {
+       "key": "lc_f_aci",
+       "label": "Annual contribution increase (ACI)",
+       "special": "aci"
+      },
+      {
+       "key": "lc_f_aciv",
+       "label": "ACI value",
+       "special": "aci"
+      },
+      {
+       "key": "lc_wol",
+       "label": "Life Cover (WOL) ABI",
+       "kind": "pct",
+       "special": "abi",
+       "nocross": true
+      },
+      {
+       "key": "lc_ccabi",
+       "label": "Childcare ABI",
+       "kind": "pct",
+       "special": "abi",
+       "nocross": true
+      }
      ]
     },
     {
      "sub": "Life cover: standard",
      "rows": [
-      {"key": "lc_sa", "label": "Sum assured", "kind": "money", "terms": ["sum assured", "life cover of", "cover of", "million"]},
-      {"key": "lc_term", "label": "Term", "terms": ["until age", "for how long", "whole of life", "life cover term"]},
-      {"key": "lc_termv", "label": "Term value", "terms": ["until age", "for how long", "whole of life", "life cover term"]},
-      {"key": "lc_aci", "label": "ACI", "special": "aci"},
-      {"key": "lc_aciv", "label": "ACI value", "special": "aci"},
-      {"key": "lc_abiv", "label": "ABI value", "kind": "pct", "special": "aci"},
-      {"key": "lc_cmt", "label": "Comment", "optional": true}
+      {
+       "key": "lc_sa",
+       "label": "Sum assured",
+       "kind": "money",
+       "terms": ["sum assured", "life cover of", "cover of", "million", "lump sum"]
+      },
+      {
+       "key": "lc_term",
+       "label": "Term",
+       "terms": ["until age", "for how long", "whole of life", "life cover term", "until retirement", "to age"]
+      },
+      {
+       "key": "lc_termv",
+       "label": "Term value",
+       "terms": ["until age", "for how long", "whole of life", "life cover term", "until retirement", "to age"]
+      },
+      {
+       "key": "lc_aci",
+       "label": "ACI",
+       "special": "aci"
+      },
+      {
+       "key": "lc_aciv",
+       "label": "ACI value",
+       "special": "aci"
+      },
+      {
+       "key": "lc_abiv",
+       "label": "ABI value",
+       "kind": "pct",
+       "special": "aci"
+      },
+      {
+       "key": "lc_cmt",
+       "label": "Comment",
+       "optional": true
+      }
      ]
     },
     {
      "sub": "Permanent disability: fractured cover",
      "rows": [
-      {"key": "pd_f_aci", "label": "Annual contribution increase (ACI)", "special": "aci"},
-      {"key": "pd_f_aciv", "label": "ACI value", "special": "aci"},
-      {"const": "pd_hhabi", "label": "Household needs ABI", "special": "abi"},
-      {"key": "pd_ccabi", "label": "Childcare ABI", "kind": "pct", "special": "abi", "nocross": true}
+      {
+       "key": "pd_f_aci",
+       "label": "Annual contribution increase (ACI)",
+       "special": "aci"
+      },
+      {
+       "key": "pd_f_aciv",
+       "label": "ACI value",
+       "special": "aci"
+      },
+      {
+       "const": "pd_hhabi",
+       "label": "Household needs ABI",
+       "special": "abi"
+      },
+      {
+       "key": "pd_ccabi",
+       "label": "Childcare ABI",
+       "kind": "pct",
+       "special": "abi",
+       "nocross": true
+      }
      ]
     },
     {
      "sub": "Permanent disability: standard",
      "rows": [
-      {"key": "pd_sa", "label": "Sum assured", "kind": "money", "terms": ["permanent disability", "disability cover of", "sum assured"]},
-      {"key": "pd_term", "label": "Term", "terms": ["permanent disability", "until age"]},
-      {"key": "pd_termv", "label": "Term value", "terms": ["permanent disability", "until age"]},
-      {"key": "pd_aci", "label": "ACI", "special": "aci"},
-      {"key": "pd_aciv", "label": "ACI value", "special": "aci"},
-      {"key": "pd_abiv", "label": "ABI value", "kind": "pct", "special": "aci"},
-      {"key": "pd_cmt", "label": "Comment", "optional": true}
+      {
+       "key": "pd_sa",
+       "label": "Sum assured",
+       "kind": "money",
+       "terms": ["permanent disability", "disability cover of", "sum assured", "disability cover"]
+      },
+      {
+       "key": "pd_term",
+       "label": "Term",
+       "terms": ["permanent disability", "until age"]
+      },
+      {
+       "key": "pd_termv",
+       "label": "Term value",
+       "terms": ["permanent disability", "until age"]
+      },
+      {
+       "key": "pd_aci",
+       "label": "ACI",
+       "special": "aci"
+      },
+      {
+       "key": "pd_aciv",
+       "label": "ACI value",
+       "special": "aci"
+      },
+      {
+       "key": "pd_abiv",
+       "label": "ABI value",
+       "kind": "pct",
+       "special": "aci"
+      },
+      {
+       "key": "pd_cmt",
+       "label": "Comment",
+       "optional": true
+      }
      ]
     },
     {
      "sub": "Dread disease",
      "rows": [
-      {"key": "dd_cover", "label": "Cover target", "kind": "money", "special": "ddcover", "terms": ["dread disease", "critical illness", "cancer", "heart attack"]},
-      {"key": "dd_term", "label": "Term", "terms": ["dread disease", "critical illness"]},
-      {"key": "dd_termv", "label": "Term value", "terms": ["dread disease", "critical illness"]},
-      {"key": "dd_aci", "label": "ACI", "special": "aci"},
-      {"key": "dd_aciv", "label": "ACI value", "special": "aci"},
-      {"key": "dd_abiv", "label": "ABI value", "kind": "pct", "special": "abi", "nocross": true},
-      {"key": "dd_cmt", "label": "Comment", "optional": true}
+      {
+       "key": "dd_cover",
+       "label": "Cover target",
+       "kind": "money",
+       "special": "ddcover",
+       "terms": ["dread disease", "critical illness", "cancer", "heart attack", "stroke", "severe illness"]
+      },
+      {
+       "key": "dd_term",
+       "label": "Term",
+       "terms": ["dread disease", "critical illness"]
+      },
+      {
+       "key": "dd_termv",
+       "label": "Term value",
+       "terms": ["dread disease", "critical illness"]
+      },
+      {
+       "key": "dd_aci",
+       "label": "ACI",
+       "special": "aci"
+      },
+      {
+       "key": "dd_aciv",
+       "label": "ACI value",
+       "special": "aci"
+      },
+      {
+       "key": "dd_abiv",
+       "label": "ABI value",
+       "kind": "pct",
+       "special": "abi",
+       "nocross": true
+      },
+      {
+       "key": "dd_cmt",
+       "label": "Comment",
+       "optional": true
+      }
      ]
     },
     {
      "sub": "Dread disease: standard",
      "rows": [
-      {"key": "dds_cover", "label": "Cover target", "kind": "money", "special": "ddcover", "terms": ["dread disease", "critical illness", "cancer", "heart attack"]},
-      {"key": "dds_term", "label": "Term", "terms": ["dread disease", "critical illness"]},
-      {"key": "dds_termv", "label": "Term value", "terms": ["dread disease", "critical illness"]},
-      {"key": "dds_aci", "label": "ACI", "special": "aci"},
-      {"key": "dds_aciv", "label": "ACI value", "special": "aci"},
-      {"key": "dds_abiv", "label": "ABI value", "kind": "pct", "special": "abi", "nocross": true},
-      {"key": "dds_cmt", "label": "Comment", "optional": true}
+      {
+       "key": "dds_cover",
+       "label": "Cover target",
+       "kind": "money",
+       "special": "ddcover",
+       "terms": ["dread disease", "critical illness", "cancer", "heart attack", "stroke", "severe illness"]
+      },
+      {
+       "key": "dds_term",
+       "label": "Term",
+       "terms": ["dread disease", "critical illness"]
+      },
+      {
+       "key": "dds_termv",
+       "label": "Term value",
+       "terms": ["dread disease", "critical illness"]
+      },
+      {
+       "key": "dds_aci",
+       "label": "ACI",
+       "special": "aci"
+      },
+      {
+       "key": "dds_aciv",
+       "label": "ACI value",
+       "special": "aci"
+      },
+      {
+       "key": "dds_abiv",
+       "label": "ABI value",
+       "kind": "pct",
+       "special": "abi",
+       "nocross": true
+      },
+      {
+       "key": "dds_cmt",
+       "label": "Comment",
+       "optional": true
+      }
      ]
     },
     {
      "sub": "Income protection / sickness benefit",
      "rows": [
-      {"key": "ip_age", "label": "Age until", "kind": "int", "terms": ["income protection", "sickness benefit", "until age"]},
-      {"key": "ip_amt", "label": "Monthly amount", "kind": "money", "terms": ["income protection", "sickness benefit", "monthly benefit"]},
-      {"key": "ip_hh", "label": "Household needs", "kind": "money", "terms": ["income protection", "household needs"]},
-      {"key": "ip_wait", "label": "Waiting period", "terms": ["waiting period", "wait period", "sick leave"]},
-      {"key": "ip_aci", "label": "ACI", "special": "aci"},
-      {"key": "ip_aciv", "label": "ACI value", "special": "aci"},
-      {"key": "ip_abiv", "label": "ABI value", "kind": "pct", "special": "aci"},
-      {"key": "ip_cmt", "label": "Comment", "optional": true}
+      {
+       "key": "ip_age",
+       "label": "Age until",
+       "kind": "int",
+       "terms": ["income protection", "sickness benefit", "until age", "until retirement", "to age"]
+      },
+      {
+       "key": "ip_amt",
+       "label": "Monthly amount",
+       "kind": "money",
+       "terms": ["income protection", "sickness benefit", "monthly benefit", "disability income", "monthly amount"]
+      },
+      {
+       "key": "ip_hh",
+       "label": "Household needs",
+       "kind": "money",
+       "terms": ["income protection", "household needs"]
+      },
+      {
+       "key": "ip_wait",
+       "label": "Waiting period",
+       "terms": ["waiting period", "wait period", "sick leave", "wait for"]
+      },
+      {
+       "key": "ip_aci",
+       "label": "ACI",
+       "special": "aci"
+      },
+      {
+       "key": "ip_aciv",
+       "label": "ACI value",
+       "special": "aci"
+      },
+      {
+       "key": "ip_abiv",
+       "label": "ABI value",
+       "kind": "pct",
+       "special": "aci"
+      },
+      {
+       "key": "ip_cmt",
+       "label": "Comment",
+       "optional": true
+      }
      ]
     },
     {
      "sub": "Income protection: standard",
      "rows": [
-      {"key": "ips_age", "label": "Age until", "kind": "int", "terms": ["income protection", "sickness benefit", "until age"]},
-      {"key": "ips_amt", "label": "Monthly amount", "kind": "money", "terms": ["income protection", "sickness benefit", "monthly benefit"]},
-      {"key": "ips_wait", "label": "Waiting period", "terms": ["waiting period", "wait period", "sick leave"]},
-      {"key": "ips_aci", "label": "ACI", "special": "aci"},
-      {"key": "ips_aciv", "label": "ACI value", "special": "aci"},
-      {"key": "ips_abiv", "label": "ABI value", "kind": "pct", "special": "aci"},
-      {"key": "ips_cmt", "label": "Comment", "optional": true}
+      {
+       "key": "ips_age",
+       "label": "Age until",
+       "kind": "int",
+       "terms": ["income protection", "sickness benefit", "until age", "until retirement", "to age"]
+      },
+      {
+       "key": "ips_amt",
+       "label": "Monthly amount",
+       "kind": "money",
+       "terms": ["income protection", "sickness benefit", "monthly benefit", "disability income", "monthly amount"]
+      },
+      {
+       "key": "ips_wait",
+       "label": "Waiting period",
+       "terms": ["waiting period", "wait period", "sick leave", "wait for"]
+      },
+      {
+       "key": "ips_aci",
+       "label": "ACI",
+       "special": "aci"
+      },
+      {
+       "key": "ips_aciv",
+       "label": "ACI value",
+       "special": "aci"
+      },
+      {
+       "key": "ips_abiv",
+       "label": "ABI value",
+       "kind": "pct",
+       "special": "aci"
+      },
+      {
+       "key": "ips_cmt",
+       "label": "Comment",
+       "optional": true
+      }
      ]
     },
-    {"sub": "Risk calculation notes", "rows": [{"key": "n_calc", "label": "Notes", "notes": true}]}
+    {
+     "sub": "Risk calculation notes",
+     "rows": [
+      {
+       "key": "n_calc",
+       "label": "Notes",
+       "notes": true
+      }
+     ]
+    }
    ]
   }
  ],
@@ -784,10 +2074,26 @@
   "id": "next",
   "title": "Next Steps & Next Meeting",
   "rows": [
-   {"key": "loa", "label": "Letter of authority", "terms": ["letter of authority"]},
-   {"key": "next_appt", "label": "Next appointment", "terms": ["next appointment", "next meeting", "follow up", "meet again"]},
-   {"key": "next_day", "label": "Day", "terms": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday"]},
-   {"key": "next_time", "label": "Time", "terms": ["o'clock", "in the afternoon", "in the morning", "in the evening"]}
+   {
+    "key": "loa",
+    "label": "Letter of authority",
+    "terms": ["letter of authority", "authority", "authorise", "authorize", "letter of appointment"]
+   },
+   {
+    "key": "next_appt",
+    "label": "Next appointment",
+    "terms": ["next appointment", "next meeting", "follow up", "meet again", "follow-up", "see you", "next week", "come back to you", "diary"]
+   },
+   {
+    "key": "next_day",
+    "label": "Day",
+    "terms": ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday", "tomorrow", "next week", "weekend"]
+   },
+   {
+    "key": "next_time",
+    "label": "Time",
+    "terms": ["o'clock", "in the afternoon", "in the morning", "in the evening", "pm", "p m", "at one", "at two", "at three", "at four", "at five", "at six", "at seven", "at eight", "at nine", "at ten", "at eleven", "at twelve"]
+   }
   ]
  }
 }

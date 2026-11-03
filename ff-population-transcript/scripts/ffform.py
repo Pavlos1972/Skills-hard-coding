@@ -424,6 +424,11 @@ def pdf_identity_problems(form, text):
 def cmd_pdf(a):
     form = w.load_json(os.path.join(a.run, w.FORM), "form_read.json (run `run.py form` first)")
     rec = {"file": None, "sha256": None, "checked": 0, "not_found": [], "reviews": {}, "missing": None}
+    if getattr(a, "paul_go_on", None):
+        rec["paul_go_on"] = a.paul_go_on
+        w.save_json(os.path.join(a.run, w.FORMPDF), rec)
+        print("recorded: Paul said to go on with the data file alone (his words: %r). The saved PDF was NOT used; Paul will see this in the glance list." % a.paul_go_on)
+        return
     if a.none:
         if len(a.none.strip()) < 8:
             w.die("REFUSED: say why there is no saved PDF (what was searched, at least 8 characters).")
@@ -443,7 +448,8 @@ def cmd_pdf(a):
             print("PROBLEM: " + i_)
         if checked and len(missing) > 0.25 * checked:
             print("PROBLEM: %d of the %d populated values of the data file are not in this PDF" % (len(missing), checked))
-        print("\nSTOP. This does not look like the saved PDF of this data file (nothing was recorded). Find the right PDF, or tell Paul in one line.")
+        print("\nSTOP. This does not look like the saved PDF of this data file (nothing was recorded). Find the right PDF, or tell Paul in one line. "
+              "If Paul says to go on with the data file alone: run.py ask --need formpdf --kind knowledge ..., then run.py answer ..., then run.py formpdf <run> --paul-go-on.")
         sys.exit(5)
     with open(os.path.join(a.run, "form_pdf.txt"), "w", encoding="utf-8") as f:
         f.write(text)

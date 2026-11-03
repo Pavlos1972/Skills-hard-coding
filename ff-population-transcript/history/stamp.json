@@ -1,5 +1,5 @@
 {
- "stamp": "2026-11-03 01:02",
- "fingerprint": "fa7315b5537179bc5bb7274f4df56b88d5aafcb70c8d3e2814702e900de53118",
- "change": "Fix round 1 after an outside review: the ledger, Not discussed, overlay and Teams hand-over checks can no longer be faked, and the programs cannot change during a run"
+ "stamp": "2026-11-03 03:02",
+ "fingerprint": "cb29e3fb7b7bbea927706ad0742e6030bf72e639dbf338ecd8a45c69c1340d8d",
+ "change": "Fix round 2 after a second outside review: requests cannot be filed as plain facts, every override and dismissal needs a real reason and is shown to Paul, and the Teams hand-over, Paul's answers and the save folder are checked harder"
 }

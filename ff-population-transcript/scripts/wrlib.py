@@ -260,6 +260,84 @@ def last_name_token(surname):
     return toks[-1] if toks else ""
 
 
+# ------------------------------------------------------------------ reasons and content words (a written reason must say something about THIS line or field)
+STOP_WORDS = frozenset("""
+that this with have from your what when they them then there here were been would could should about which their into just only some very more much than does done
+also each such like make made take took come came back over after before while where these those other another because still really right know
+think said says tell told give gave goes going good well yeah okay thanks thank please sure fine
+""".split())
+NUMBER_WORDS = {"zero": 0, "one": 1, "two": 2, "three": 3, "four": 4, "five": 5, "six": 6, "seven": 7, "eight": 8, "nine": 9, "ten": 10, "eleven": 11, "twelve": 12,
+                "thirteen": 13, "fourteen": 14, "fifteen": 15, "sixteen": 16, "seventeen": 17, "eighteen": 18, "nineteen": 19, "twenty": 20, "thirty": 30, "forty": 40,
+                "fifty": 50, "sixty": 60, "seventy": 70, "eighty": 80, "ninety": 90, "hundred": 100}
+
+
+def content_words(text, minlen=4):
+    """The lower-case words of a text that carry meaning: letters only, at least `minlen` of them, not a filler word."""
+    out = []
+    for x in re.findall(r"[A-Za-z][A-Za-z'-]*", str(text or "")):
+        x = x.lower().strip("'-")
+        if len(x) >= minlen and x not in STOP_WORDS:
+            out.append(x)
+    return out
+
+
+def _stem(x):
+    return x[:5] if len(x) > 5 else x
+
+
+def shared_content_words(a, b):
+    """Content words that two texts share (a plural or an ending does not matter: the first five letters are compared)."""
+    sb = {_stem(x): x for x in content_words(b)}
+    return sorted({sb[_stem(x)] for x in content_words(a) if _stem(x) in sb})
+
+
+def numbers_in(text):
+    """Every number in a text, written in digits or in words (twenty five, eight), as a set of Decimals-as-strings without a trailing .0."""
+    out = set()
+    for m in re.finditer(r"\d+(?:[.,]\d+)?", str(text or "")):
+        t = m.group(0).replace(",", ".")
+        out.add(t.rstrip("0").rstrip(".") if "." in t else t)
+    toks = re.findall(r"[a-z]+", str(text or "").lower())
+    i = 0
+    while i < len(toks):
+        if toks[i] in NUMBER_WORDS:
+            v = NUMBER_WORDS[toks[i]]
+            if v >= 20 and v < 100 and i + 1 < len(toks) and toks[i + 1] in NUMBER_WORDS and 0 < NUMBER_WORDS[toks[i + 1]] < 10:
+                v += NUMBER_WORDS[toks[i + 1]]
+                i += 1
+            out.add(str(v))
+        i += 1
+    return out
+
+
+def reason_problem(reason, minchars=15):
+    """None when a written reason could really be one; otherwise the plain reason it is refused (too short, one word, one repeated character)."""
+    r = str(reason or "").strip()
+    if len(r) < minchars:
+        return "give a real reason (at least %d characters)" % minchars
+    letters = [c for c in r.lower() if not c.isspace()]
+    if letters and max(letters.count(c) for c in set(letters)) > 0.5 * len(letters):
+        return "that reason is mostly one repeated character: say what you found"
+    if len({x for x in re.findall(r"[a-z0-9]+", r.lower())}) < 3:
+        return "a reason needs at least three different words"
+    return None
+
+
+def reason_hit_problem(reason, hit_lines, lines):
+    """For a reason that overrides search hits: it must be a real reason, name at least one of the hit lines by number, and hold a content word from that line."""
+    p = reason_problem(reason)
+    if p or not hit_lines:
+        return p
+    r = str(reason)
+    cited = [h for h in hit_lines if isinstance(h, int) and re.search(r"(?<![\d])%d(?![\d])" % h, r)]
+    if not cited:
+        return "the search found call line(s) %s: name at least one of them by number in the reason, and say why it does not answer this" % list(hit_lines)[:8]
+    bare = re.sub(r"\d+", " ", r)
+    if not any(1 <= h <= len(lines) and shared_content_words(bare, lines[h - 1]) for h in cited):
+        return "the reason names line %s but holds no word (4 letters or more) from what that line says: quote its words" % cited[0]
+    return None
+
+
 FINGERPRINT_FILES = ("steps.json", "deliverables.json")
 
 

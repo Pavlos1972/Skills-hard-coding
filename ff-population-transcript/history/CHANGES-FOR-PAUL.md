@@ -3,7 +3,35 @@
 For Paul. **Not uploaded, not live.** This is the program-driven version of `ff-population-transcript` (your decision 20, 02/11/2026). Your older version stays in the skill's version history in claude.ai (that is the backup).
 
 ## Fix round 1 (an outside reader attacked the first build)
-A second reader tried to get a wrong or empty Fact Find through the checker, and found real holes. All of them are closed and each is now a test that must refuse. The big three: (1) a request or next step on the call could be "covered" by pointing at the lead search, so it never reached the PDF; (2) "Not discussed" was written after a search nobody could pass (only the field's label), so a call that said "ask BrightRock for an FNA quote" printed "FNA quote: Not discussed"; (3) an overlay entry with a wrong section or list name vanished without a word. The rest: the Teams hand-over is now proven against the Teams program's own records, a made-up Overview or Paul's words can no longer be typed in, the form's saved PDF is matched by exact amounts and whole words, the save folder must be the client's own, a run folder, form, PDF or transcript of another client or date is refused, and the programs cannot change during a run. Details are in the lists below.
+A second reader tried to get a wrong or empty Fact Find through the checker, and found real holes. Those were closed in round 1, each with a test that must refuse; a second reader then found more (see Fix round 2 below). The big three: (1) a request or next step on the call could be "covered" by pointing at the lead search, so it never reached the PDF; (2) "Not discussed" was written after a search nobody could pass (only the field's label), so a call that said "ask BrightRock for an FNA quote" printed "FNA quote: Not discussed"; (3) an overlay entry with a wrong section or list name vanished without a word. The rest: the Teams hand-over is now proven against the Teams program's own records, a made-up Overview or Paul's words can no longer be typed in, the form's saved PDF is matched by exact amounts and whole words, the save folder must be the client's own, a run folder, form, PDF or transcript of another client or date is refused, and a change to the programs during a run is detected (unless someone also changes the checker). Details are in the lists below.
+
+## Fix round 2 (a second reader attacked the program again)
+The second reader said most of round 1 held. One big hole and several smaller ones were left. All of them are now closed, each with a test that must refuse. In plain words:
+
+**The big hole**
+- Claude could file the call's "ask BrightRock for an FNA quote" as a plain "fact", set it aside, and give every flagged field a nonsense reason such as "xxxxxxxxxxxxxxxxxxxx". The run still passed, and the PDF said "FNA quote: Not discussed".
+- Now a line with a request, decision, change or quote word cannot be filed as a plain fact, and cannot be set aside as plain talk.
+- Such a line must be next to a real entry, or dismissed with a reason that quotes some of the line's own words.
+- Every dismissed line is named on your glance list, with its line number and the reason.
+- A "Not discussed" that goes against what the search found needs a reason that names a found line by number and quotes a word from it.
+- The program refuses a reason that is one repeated character, or has fewer than three different words.
+- The printout counts how many "Not discussed" went against the search and how many rest on a weak search.
+
+**Smaller holes**
+- A cover must be about the same thing: a fill "sti_car = No" can no longer cover "credit life with Absa", and a note "Noted" can no longer cover "letter of authority".
+- Claude could answer its own question to you. Now a question says what it is about, and your answer can be used only for that. A number Claude uses must be in your words.
+- "Not a joint meeting" is refused when the form's spouse, or anyone else, speaks on the call, unless Claude gives a reason that is shown to you.
+- The Teams skill folder is named by Claude, so a fake folder could say PASS. Now the program checks it looks like the real one (its steps, its size, its marks). It prints a fingerprint of the Teams checker, driver and steps for you to compare. The Teams run must also have been made from this run's transcript.
+- The save folder: the path must start (after the drive and liferisk.co.za) with Company - Paul or Company - WR Clients\Paul Kafentzis (Client Files). A different spelling of the client's folder needs a real sentence that names the surname, and it is shown to you.
+- Dismissing the call: three reviews of 40 lines, or one entry with every other line dismissed one by one, no longer get through. More than a quarter of the call, or more than 60% of the request lines, dismissed stops the step unless you say to go on.
+- A note with "policy AB1234" (a short code, no "number" word) must now be in a recorded schedule.
+- If the form's saved PDF does not match and the program stops, there is now a way on: Claude asks you, records your words, and the data file alone is used. This is shown to you.
+- The search words had gaps ("will updated" was missing for "Will last updated"). I added 497 words across 155 fields: plurals, stems ("diabet*"), South African wording, the lender and insurer names, "creditor life", "short term", "medical scheme", and similar. The list of what was added is in the summary at the end of this file. The search now also finds plurals by itself.
+- The printout's wording is more careful. It says the kind of each ledger entry is chosen by Claude, that the Teams folder and the document text copies are made by Claude, and exactly what the save-folder check covers.
+
+**Two contacts I looked at (reader's question)**
+- `references/04-contact-and-lead.md` names the sender of the D&R Marketing lead emails (Di Heath, with a mweb.co.za address). It is a business contact your old skill used to recognise the lead emails. It is not client data. I left it. **Is it right to keep a named person's own address in the skill? Keep / Remove.**
+- `history/SKILL.2026-10-28.redacted.md` line 295 holds the Teams chat id of your chat with Sitamah (used for the Zapier send). It is the skill's own operating detail, not client data, and the live Teams skill carries it too. I left it. It is in `history/`, which is not in the zip.
 
 ## What the skill does now
 After a Fact Find meeting it builds the **Fact Find Transcript PDF** from, in this order: the form's data file (and the form's own saved PDF), the Teams transcript, the latest Overview, and the client's other documents. A program does the work step by step; Claude cannot skip a step, and at the end the checker prints PASS or FAIL for every item. The PDF has your fixed 11 sections in your order, then "Next Steps & Next Meeting". The Fact Find Summary, the Planner note and the message to Sitamah are still made by the other two skills (once, not twice).
@@ -19,9 +47,9 @@ After a Fact Find meeting it builds the **Fact Find Transcript PDF** from, in th
 - **Checks that everything the call adds is really in the document.** Every gap, difference, contact detail, quote request, next step and request on the call is a ledger entry, and each must be covered by the right kind of item that cites the same part of the call (within 8 lines): a quote request only by a quote row or an answered request field, a gap only by a fill or a search-backed "Not discussed", and so on. The lead search and a "Not discussed" can no longer be used to tick off a request or a next step.
 - **Every entry in the overlay must land.** The program lists the valid section, list, group and field names and refuses a name that does not exist (a note in a section that does not exist used to disappear without a word); a valid entry that still ends up nowhere in the document fails the checker.
 - **Paul's own words are recorded only by the program** (`run.py ask`, then `run.py answer`). The overlay can only point at them; words typed into the overlay are refused. An ABI you changed is always put on your glance list with your recorded words.
-- **A document is accepted only if it can be checked.** An Overview or a Policy schedule is accepted only with a text copy that mentions the client's surname or ID number; any number of six or more digits printed in the document must be in a recorded schedule or Overview; the insurer and New Business / Servicing of a quote request must be in a source that the entry cites.
+- **A document is accepted only with a text copy that can be checked.** An Overview or a Policy schedule needs a text copy that mentions the client's surname or ID number. The copy is made by Claude, so the program checks that it names the client and that quotes and figures are in it, not that it is the real document; Claude says so and the printout shows a fingerprint of each copy. Any number of six or more digits printed in the document must be in a recorded schedule or Overview; the insurer and New Business / Servicing of a quote request must be in a source that the entry cites.
 - **The Teams hand-over is checked, not just written down.** The program runs the Teams program's own checker on the Teams run, and fails unless every Teams step before its message step is done, its Planner page and message exist, and the follow-up appointment is carried as an action for Sitamah.
-- **The programs cannot change during a run.** A fingerprint of the programs, the layout, the steps and the rule pages is taken at the start and compared at every step and at the end.
+- **A change to the programs during a run is detected.** A fingerprint of the programs, the layout, the steps and the rule pages is taken at the start and compared at every step and at the end. It is NOT proof: someone who also changes the checker could hide it. So the fingerprint is printed in the last line for you to compare with the released one.
 - **Refuses a quote request without an insurer and New Business or Servicing**, and never lets "Servicing" appear unless the form, the call or you said it. It then tells Claude to ask you.
 - **Takes policy numbers only from a policy schedule.**
 - **Fills the business parts only when Business owner = Yes** (otherwise nothing is printed there and the glance list says so).
@@ -51,16 +79,180 @@ Every rule of the old skill is still there. A program (`tools/inventory.py`) wen
 9. **Overview.** The latest Overview is required: read it, or record that none exists after two routes were tried. **OK? Yes / No.**
 10. **Rules that are only text or only a warning (nothing stops a run if they are broken).** I listed every one so that nothing is claimed as checked when it is not. **OK to leave them like this? Yes / No.**
     - *Only text, no check at all:* correcting a source document on file when a policy number conflicts (for example the Overview spreadsheet); the "Out of scope" rule (a completed Fact Find with no transcript goes straight to `fact-find-summary`); "pending items stay pending"; "a prior-year figure is never shown as current"; "a garbled line is flagged, not turned into a fact"; "compare the Overview and the client's other documents"; the visual look at the page images; the independent re-check by a second reader; that the Planner page was really published and you said yes to the message.
-    - *Only a warning (the run can still pass):* a transcript that states no meeting date; a gap between joined transcripts; reading forced past a completeness warning; no ledger entry from the closing minutes; a form text longer than 25 words (never rewritten); a flag longer than 45 words; a PDF of more than 16 pages; the font being a substitute for Aptos (or plain Helvetica); the skill being updated while a run is going; a document read without a text copy (only possible for kinds other than the Overview and a Policy schedule); two requests worded as one waiting on the other.
+    - *Only a warning (the run can still pass):* a transcript that states no meeting date; a gap between joined transcripts; reading forced past a completeness warning; no ledger entry from the closing minutes; a form text longer than 25 words (never rewritten); a flag longer than 45 words; a PDF of more than 16 pages; the font being a substitute for Aptos (or plain Helvetica); a Yes/No value or a one-character value of the form, which is never compared with the form's saved PDF (known limit: the PDF could show the opposite and nobody would be told); the skill being updated while a run is going; a document read without a text copy (only possible for kinds other than the Overview and a Policy schedule); two requests worded as one waiting on the other.
 11. **Decided for now, tell me if wrong.** (a) A text copy of the Overview and of any Policy schedule is REQUIRED, otherwise the checker fails the run (before, the program only warned). (b) A different ABI is accepted only if your own words are recorded through the program, and it is always on your glance list. (c) The checker counts how much of the call was dismissed as "plain talk" in the keyword scan: one dismissal covers at most 40 lines, each needs its own reason, and more than a quarter of the call dismissed is put in front of you. (d) A "Not discussed" that rests on a weak search is always on your glance list. **OK? Yes / No.**
 12. **The "Not discussed" tick-box rows.** About 30 empty tick-box and detail rows in sections 10 and 11 print "Not discussed" (for example the provider pick-lists and the detail rows under a "No"). I left them as they are. The sample PDF shows them. **Keep them printing, or hide them? Keep / Hide.**
 13. **Two small header sizes.** The title block at the top of page 1 has a brand line at 11 pt and a tag line at 8 pt, smaller than the 12 pt body, because that is how the old script drew it. **Make them 12 pt like everything else? Yes / No.**
+
+14. **Request words.** The checker now treats these words as marking a request line, besides the scan's own list: ask, request, quote, FNA, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up, sign. Each such line must be next to an entry or be dismissed with a reason. That means a few more lines to record on a real call. **OK? Yes / No.**
+15. **The 25% / 60% limits.** If more than 25% of the call's lines, or more than 60% of its request lines, are dismissed, the step stops unless you say to go on. **Are those the right limits? Yes / No.**
 
 ## What I could not do or check
 - **I have not seen the form's label file, its saved PDF, or a finished PDF from the new form.** The tests use an invented form with the real field names, and a PDF I generated from it. The real first run is the real test.
 - **No real client file, real transcript or real Overview was used.**
 - **I could not run it inside your chat.** The access routes (computer, Microsoft 365, Zapier), the folder save, the page tool, the Agent tool and the other two skills are only attested in the checker, not proven.
 - **Several transcripts for one meeting** are joined and each part checked, but I have only seen the layouts the Teams skill already reads.
+- **Claude still chooses the kind of each ledger entry** (a request, a gap, a next step ...). The program cannot tell if a request was filed under the right kind. It makes every request line be next to an entry or dismissed with a reason that quotes it, and a cover must share a word with the entry. That is strict, but it is not understanding.
+- **A "Not discussed" reason is checked only for form**: length, three different words, a named found line and a word from it. The program cannot tell whether the reason is true. Every override is counted and named on your glance list for that reason.
+- **The Teams skill folder and the text copies of documents are made or named by Claude.** The program checks they look real (and prints fingerprints), not that they are the real ones.
 - **The Teams skill has no program fingerprint of its own.** Its programs can be edited during one of its runs without its checker noticing (this skill now guards its own programs). I did not touch the Teams skill: this is **to fix in the next Teams change**.
 - **The follow-up appointment in the Teams hand-over** is checked from the Teams program's own records. That the page was published in a window you could see and that you said yes are things only Claude can attest.
 - The 13-ingredient scorecard is in the report that came with this change.
+
+## Search words added in round 2 (every field's new words; the plural of a word is found automatically)
+
+- age: how old, turning
+- bf_fna_req: fna quote, needs analysis quote
+- bf_sf_req: shortfall quote, group risk quote
+- bfred.req: reduced
+- biz_assur: shareholder protection
+- biz_loans: business debt, company loan
+- biz_name: registered name
+- biz_partners: co director, shareholders
+- biz_pct: per cent of the business
+- biz_struct: ltd, limited, company
+- bizowner: my company, director, self employed
+- bs_req: shareholder protection
+- cell: cell, mobile, reach you on, call you on, whatsapp number
+- cl_bal: creditor life, outstanding balance
+- cl_lender: creditor life
+- cl_life: creditor life, life cover on the
+- cl_req: creditor life, life cover on the, insured on the bond, bond cover
+- co_does: what do they do, what the company, your company
+- consent: recorded, transcribed, okay to record, fine to record
+- d_desc: your job involves, tell me about work, role involves, describe your
+- d_desk: behind a desk, office work, sitting
+- d_heavy: heavy duties, physical work
+- d_light: light duties
+- d_supo: managing
+- d_sups: site manager, on the floor
+- d_trav: driving, visits, client sites
+- date: date of today
+- dd_cover: stroke, severe illness
+- dds_cover: stroke, severe illness
+- debts.asset: market value, value of the house, value of the car
+- debts.bal: owing, settlement
+- debts.cl: creditor life, life cover on the, insured on the bond, bond cover
+- debts.desc: house, flat, motor
+- debts.inst: repayments, monthly payment, debit order
+- debts.owner: bond is in, whose name
+- debts.payer: pays the bond, paying the
+- debts.prov: firstrand, investec, discovery bank, tyme, african bank, mfc, toyota finance, vw financial, bmw finance
+- debts.surety: suretyship, guarantor, co signed, signed surety
+- debts.term: years remaining, paid off
+- debts.type: home loan, mortgage, car finance, personal loan, student loan, store account
+- disp: left each month, surplus
+- dnet: nett, take home pay
+- dob: birth date, when were you born, how old
+- edu: qualifications, studied, university, college, honours, masters, certificate, highest education
+- edu_notes: major, certificate, honours, masters
+- egar_req: education goal analysis, education analysis, education fund for the children
+- employed: employed, unemployed, retired, permanent, part time
+- employer: company i work, works for, employed at
+- exp: living costs, monthly spend, you spend
+- fna_ins: bright rock, outsurance, clientele, assupol, metropolitan, generali
+- fna_req: fna quote, needs analysis quote
+- fname: name is, spell your
+- ft: part time, freelance, temporary, on contract
+- gap: gap policy
+- gap_prov: gap policy
+- gender: male, female
+- gross: before tax, salary, package, you earn
+- h_bmi: weight, obese
+- h_bp: high blood
+- h_dia: diabetes, diabetic
+- h_gen: no conditions, any conditions, health issues, medical history
+- h_oth: condition, conditions, doctor, hospital, chronic, operations
+- has_debts: mortgage, car finance, credit card, you owe, debts
+- has_group: work benefits, death benefit, funeral benefit, company scheme
+- has_inv: unit trusts, tfsa, investment, shares, etf, money market, offshore, savings
+- has_kids: daughters, sons, baby, toddler, boy, girl
+- has_pp: pension, provident, umbrella fund, preservation fund
+- has_ra: retirement annuities, ra with, annuity
+- has_risk: life insurance, dread disease, critical illness, income protection, assurance, policy
+- home: landline number
+- idno: identity, id document, south african id
+- idtype: identity, id book, id document, south african id
+- inv.prem: contributions, monthly, debit order
+- inv.prov: investment, tfsa, etf, money market
+- inv.type: unit trusts, tfsa, investment, shares, etf, money market, offshore
+- inv.val: fund value, balance
+- ip_age: until retirement, to age
+- ip_amt: disability income, monthly amount
+- ip_wait: wait for
+- ips_age: until retirement, to age
+- ips_amt: disability income, monthly amount
+- ips_wait: wait for
+- kids.age: how old
+- kids.cost: extra murals, tuition, fees
+- kids.dob: born in
+- kids.name: daughters, sons
+- kids.stage: primary school, grade r, preschool, pre school, nursery, matric, tertiary, varsity
+- lc_dr: debt repayment
+- lc_need: total needed
+- lc_sa: lump sum
+- lc_term: until retirement, to age
+- lc_termv: until retirement, to age
+- loa: authority, authorise, authorize, letter of appointment
+- ma: medical scheme, momentum health, fedhealth, bestmed, medshield, profmed, medihelp
+- ma_broker: broker for the medical aid, medical aid consultant
+- ma_plan: hospital plan, network plan, medical aid savings, comprehensive
+- ma_prov: medical scheme, momentum health, fedhealth, bestmed, medshield, profmed, medihelp
+- marital: engaged, life partner, separated, widower, spouse
+- marr_date: marriage, anniversary, married since
+- meet: zoom, phone call, in person
+- nat: south african, permanent resident, foreign
+- net: nett, in the bank, after deductions
+- next_appt: follow-up, see you, next week, come back to you, diary
+- next_day: sunday, tomorrow, next week, weekend
+- next_time: pm, p m, at one, at two, at three, at four, at five, at six, at seven, at eight, at nine, at ten, at eleven, at twelve
+- occ: profession, what is your job, your job
+- pd_sa: disability cover
+- pemail: email, e mail, outlook, dot co dot za, dot com
+- pr_egar: education goal analysis, education analysis, education fund
+- pr_inv: unit trusts, investments, savings
+- pr_life: life insurance, funeral cover, premium
+- pr_med: medical scheme, gap policy
+- pr_ra: retirement annuities, ra priority
+- pr_rgar: retirement goal analysis
+- pr_st: short term insurance, vehicle insurance
+- pr_will: update the will, new will, draw up a will, wills
+- pref_spend: budget for cover, spend on cover, per month on cover
+- ps_risk: bright rock, hollard, outsurance, clientele, assupol, metropolitan, generali, pps, cardinal, absa life, fnb life, discovery
+- ref: referred, recommended, heard about, a friend, colleague, advert, facebook, d r marketing, marketing
+- ret_age: retire, retiring
+- ret_net: net a month, a month net, income at retirement, live on at retirement
+- ret_pp.contrib: contributions, monthly
+- ret_pp.prov: pension, provident, umbrella fund
+- ret_pp.type: pension, provident, umbrella fund, preservation fund
+- ret_pp.val: fund value, balance
+- ret_ra.contrib: contributions, monthly, debit order
+- ret_ra.prov: annuity, ra with
+- ret_ra.status: paid-up, stopped
+- ret_ra.val: fund value, balance
+- rgar_req: retirement analysis
+- risk.prov: bright rock, hollard, outsurance, discovery, momentum, sanlam, old mutual, liberty
+- risk.spend: premiums, monthly, costs me
+- sf_req: shortfall quote, group risk quote
+- smoker: smokes, vape, vaping, tobacco, cigarettes
+- sname: name is
+- sp_name: wife, husband
+- sp_occ: she works, he works, wife is a, husband is a
+- sp_tel: wife's cell, husband's cell, her number, his number, spouse number
+- sti: short term, insurance on, all risk, buildings, vehicle cover, comprehensive
+- sti_biz: commercial insurance, business assets
+- sti_biz_spend: commercial insurance
+- sti_broker: cameron, short term broker
+- sti_car: insure the car, vehicle cover, comprehensive
+- sti_house: contents, household
+- sti_personal: jewelry, laptop, cellphone insurance
+- sti_struct: buildings, structure
+- tax: tax reference, tax ref
+- wemail: work address, company email
+- will: wills, last will, will and testament, executor, estate
+- will_broker: capital legacy
+- will_date: updated, last updated, not updated, been updated, drawn up, signed, last time, when was your will
+- will_up: up to date, updated, outdated, out of date, not been updated, needs updating, update the will, not updated
+- will_where: lawyer, safe, kept, held by, executor
+- work: office phone, direct line
+- years: years with, been there, been working, since 20

@@ -370,7 +370,12 @@ def ck_pass2(run, rj):
 
 
 def ck_scan(run, rj):
-    return [] if _state(run).get("scan") else ["the keyword scan has not been run (tx.py scan)"]
+    st = _state(run)
+    if not st.get("scan"):
+        return ["the keyword scan has not been run (tx.py scan)"]
+    R = verify.Results()
+    verify.check_scan_resolution(run, st, w.read_lines(run), load_ledger(run), R)
+    return fails_of(R)
 
 
 def ck_joint(run, rj):
@@ -546,7 +551,8 @@ def cmd_source(a):
                 w.die("REFUSED: a %s is accepted only with a text copy (--text-file, for a PDF: pdftotext \"<file>\" /tmp/<name>.txt): without it nothing in it can be checked." % a.kind)
             if not os.path.exists(a.text_file):
                 w.die("REFUSED: text file not found: %s" % a.text_file)
-            txt = open(a.text_file, encoding="utf-8", errors="replace").read()
+            with open(a.text_file, encoding="utf-8", errors="replace") as fh_:
+                txt = fh_.read()
             cl_ = load_run(a.run)["client"]
             fr_ = w.load_opt(p(a.run, w.FORM), {})
             idd = w.digits(((fr_.get("fields") or {}).get("idno") or {}).get("v", ""))
@@ -563,6 +569,9 @@ def cmd_source(a):
     w.save_json(p(a.run, w.SOURCES), srcs)
     print("recorded %s source (%d so far)%s." % (a.kind, len(srcs), "" if a.none or srcs[-1].get("text") else
           ". NOTE: no --text-file given, so quotes and figures from this document cannot be machine-checked (Paul will be told)"))
+
+
+NO_ABOUT_NEEDS = ("lead", "dismissals", "formpdf", "date", "form", "joint")
 
 
 def cmd_ask(a):
@@ -586,7 +595,10 @@ def cmd_ask(a):
     if len(a.searched.strip()) < 8:
         w.die("REFUSED: say what you already searched (at least 8 characters).")
     qs = load_list(a.run, w.QUESTIONS)
-    qs.append({"t": w.now(), "need": a.need, "question": q, "searched": a.searched, "kind": a.kind})
+    about = [x.strip() for x in (a.about or "").split(",") if x.strip()]
+    if a.kind == "knowledge" and a.need not in NO_ABOUT_NEEDS and not about:
+        w.die("REFUSED: say what this question is about, so his answer can only be used for that: --about <field keys, list names, quote groups or section ids, separated by commas> (for example --about dd_abiv or --about fna).")
+    qs.append({"t": w.now(), "need": a.need, "question": q, "searched": a.searched, "kind": a.kind, "about": about})
     w.save_json(p(a.run, w.QUESTIONS), qs)
     print("RECORDED. Now STOP and ask Paul, in plain words, exactly this, and wait for his answer:\n")
     print("  %s" % q)
@@ -637,13 +649,19 @@ def cmd_formpdf(a):
     if rj.get("form_mode") != "form":
         w.die("REFUSED: read the form's data file first (run.py form).")
     acc = [e for e in load_list(a.run, w.ACCESS) if e.get("need") == "formpdf"]
+    if a.paul_go_on:
+        q = next((q for q in reversed(load_list(a.run, w.QUESTIONS)) if q.get("need") == "formpdf" and len(str(q.get("paul_said") or "").strip()) >= 3), None)
+        if not q:
+            w.die("REFUSED: going on with the data file alone is Paul's decision. Ask him first: run.py ask %s --need formpdf --kind knowledge --question \"The saved PDF does not match the data file (<what the program said>). Go on with the data file alone, or find the right PDF?\" --searched \"<where you looked>\", then run.py answer %s --need formpdf --said \"<his words>\"." % (a.run, a.run))
+        ffform.cmd_pdf(types.SimpleNamespace(run=a.run, file=None, none=None, paul_go_on=str(q["paul_said"]).strip()))
+        return
     if a.none:
         failed = {e["route"] for e in acc if e["result"] == "fail"}
         if set(w.ROUTES) - failed:
             w.die("REFUSED: the saved PDF may be called missing only after all three routes were tried and logged (run.py access --need formpdf ... --result fail). Not yet tried: %s" % [r_ for r_ in w.ROUTES if r_ not in failed])
     elif not any(e["result"] == "ok" for e in acc):
         w.die("REFUSED: log how you got the form's saved PDF first (run.py access --need formpdf --route ... --result ok).")
-    ffform.cmd_pdf(types.SimpleNamespace(run=a.run, file=a.file, none=a.none))
+    ffform.cmd_pdf(types.SimpleNamespace(run=a.run, file=a.file, none=a.none, paul_go_on=None))
 
 
 def cmd_pdfreview(a):
@@ -718,6 +736,10 @@ def cmd_ledger(a):
             w.die("REFUSED: that quote is not found at transcript line %d. Copy the exact words from the chunk you read." % a.line)
         st = _state(a.run)
         in_pass2 = any(r_["pass"] == 2 for r_ in st["reads"])
+        rw = verify.request_word(lines[a.line - 1])
+        if a.kind in verify.KINDS_OPTIONAL and rw:
+            w.die("REFUSED: line %d holds the word '%s' (a request, decision, change or quote word), so it cannot be recorded as a plain '%s'. Record it as a gap, difference, contact, quote_request, next_step, change or request. "
+                  "If it truly needs nothing, dismiss it with: run.py ledger review --line %d --reason \"<a reason that quotes the words of that line>\"." % (a.line, rw, a.kind, a.line))
         e = {"id": "L%d" % (len(led["entries"]) + 1), "line": a.line, "kind": a.kind, "quote": a.quote, "pass": 2 if in_pass2 else 1, "covered_by": []}
         if a.speaker:
             e["speaker"] = a.speaker
@@ -752,14 +774,16 @@ def cmd_ledger(a):
             w.die("no ledger entry %s" % a.id)
         if ent[a.id]["kind"] not in verify.KINDS_OPTIONAL:
             w.die("REFUSED: a %s entry cannot be excluded: it must map to a fill, difference, note or answer." % ent[a.id]["kind"])
-        if len(a.reason.strip()) < 8:
-            w.die("REFUSED: give a real reason (at least 8 characters).")
+        if w.reason_problem(a.reason, 8):
+            w.die("REFUSED: %s." % w.reason_problem(a.reason, 8))
+        lines_ = w.read_lines(a.run)
+        rw = verify.request_word(lines_[ent[a.id]["line"] - 1]) if 1 <= ent[a.id]["line"] <= len(lines_) else None
+        if rw:
+            w.die("REFUSED: line %d holds the word '%s' (a request, decision, change or quote word): it cannot be set aside as plain talk. Dismiss it with a review whose reason quotes its words (run.py ledger review --line %d --reason ...), or record it properly." % (ent[a.id]["line"], rw, ent[a.id]["line"]))
         ent[a.id]["excluded"] = a.reason
         save()
         print("%s excluded: %s" % (a.id, a.reason))
     elif a.action == "review":
-        if len(a.reason.strip()) < 6:
-            w.die("REFUSED: give a real reason.")
         if a.line is None and (a.frm is None or a.to is None):
             w.die("REFUSED: give --line N or --from A --to B.")
         span = 1 if a.line is not None else (a.to - a.frm + 1)
@@ -767,7 +791,11 @@ def cmd_ledger(a):
             w.die("REFUSED: one review may dismiss at most 40 lines (this one is %d). Dismiss each stretch of plain talk on its own, with its own reason." % span)
         if any(w.norm(r_.get("reason", "")) == w.norm(a.reason) for r_ in led["scan_reviewed"]):
             w.die("REFUSED: that reason was already used for another review. Say what is in THESE lines and why nothing needs recording.")
+        lines_ = w.read_lines(a.run)
         rec = {"line": a.line, "reason": a.reason} if a.line is not None else {"from": a.frm, "to": a.to, "reason": a.reason}
+        prob = verify.review_problem(rec, lines_, verify.required_lines(lines_, _state(a.run)))
+        if prob:
+            w.die("REFUSED: %s." % prob)
         led["scan_reviewed"].append(rec)
         save()
         print("scan hit(s) %s reviewed: %s" % (a.line if a.line is not None else "%d-%d" % (a.frm, a.to), a.reason))
@@ -869,11 +897,13 @@ def cmd_cross(a):
         if r_ == "not_on_call":
             terms, curated, hits = search_for_item(a.run, lines, fr, lay, by[k])
             why = str(ans.get("reviewed") or "").strip()
-            if hits and len(why) < 15:
-                w.die("REFUSED: %s is 'not on the call' but the call mentions it (searched %s: lines %s). Read them and answer same or differs with the exact words, or give --reviewed saying why those lines are not about this field (at least 15 characters)." % (k, terms[:4], hits[:8]))
-            if not curated and len(why) < 15:
-                w.die("REFUSED: %s: only its label words could be searched (a WEAK search). Give --reviewed saying what you checked for this field (at least 15 characters)." % k)
-            rec.update(searched=terms[:8], hits=len(hits), weak=not curated)
+            if hits:
+                prob = w.reason_hit_problem(why, hits, lines)
+                if prob:
+                    w.die("REFUSED: %s is 'not on the call' but the call mentions it (searched %s: lines %s). Read them and answer same or differs with the exact words, or give --reviewed saying why those lines are not about this field: %s." % (k, terms[:4], hits[:8], prob))
+            if not curated and w.reason_problem(why):
+                w.die("REFUSED: %s: only its label words could be searched (a WEAK search). Give --reviewed saying what you checked for this field: %s." % (k, w.reason_problem(why)))
+            rec.update(searched=terms[:8], hits=len(hits), hit_lines=hits[:12], weak=not curated)
         by[k]["answer"] = rec
     if a.rest:
         left_hits = []
@@ -954,14 +984,16 @@ def cmd_claim(a):
     hits, docs = verify.search_terms(a.run, lines, terms)
     sib = verify.sibling_hits(lay, fr, a.key)
     why = (a.reviewed or "").strip()
-    if a.as_ == "Not discussed" and (hits or docs or sib) and len(why) < 15:
-        w.die("REFUSED: the search finds %s%s%s. 'Not discussed' is a claim: read them, then give --reviewed saying why they do not answer it (at least 15 characters), or fill the field." % (("call lines %s" % hits[:8]) if hits else "", (" documents " + str(docs)) if docs else "", ("; the form itself says " + "; ".join(sib[:3])) if sib else ""))
-    if a.as_ == "Not discussed" and not curated and len(why) < 15:
-        w.die("REFUSED: only this field's label words could be searched (a WEAK search): give --reviewed saying what you checked (at least 15 characters).")
+    if a.as_ == "Not discussed" and (hits or docs or sib):
+        prob = w.reason_hit_problem(why, hits, lines)
+        if prob:
+            w.die("REFUSED: the search finds %s%s%s. 'Not discussed' is a claim: read them, then fill the field, or give --reviewed saying why they do not answer it: %s." % (("call lines %s" % hits[:8]) if hits else "", (" documents " + str(docs)) if docs else "", ("; the form itself says " + "; ".join(sib[:3])) if sib else "", prob))
+    if a.as_ == "Not discussed" and not curated and w.reason_problem(why):
+        w.die("REFUSED: only this field's label words could be searched (a WEAK search): give --reviewed saying what you checked: %s." % w.reason_problem(why))
     if a.as_ == "Requested" and (not a.key.startswith("debts.") or not lead.get("searched") or len(a.searched or "") < 20):
         w.die("REFUSED: 'Requested' is for a debt detail only, and only after the form, the call, the Overview, other documents AND Outlook were checked: a recorded Outlook search (run.py lead) and what was searched (--searched, at least 20 characters) are needed.")
-    if a.as_ == "N/A" and len(why) < 15:
-        w.die("REFUSED: 'N/A' needs the reason (--reviewed, at least 15 characters).")
+    if a.as_ == "N/A" and w.reason_problem(why):
+        w.die("REFUSED: 'N/A' needs the reason (--reviewed): %s." % w.reason_problem(why))
     if a.key in verify.CONTACT_KEYS and not lead.get("searched"):
         w.die("REFUSED: contact details are called 'Not discussed' only after the lead-source search (run.py lead).")
     record(a.key, a.as_, terms, hits, docs, why, a.searched or "", weak=not curated)
@@ -971,13 +1003,24 @@ def cmd_claim(a):
 
 def cmd_joint(a):
     rj = load_run(a.run)
-    if len(a.evidence.strip()) < 15:
-        w.die("REFUSED: say what shows it (for example 'only Pat spoke, no spouse on the call' or 'Pat and Robin were both on the call'): at least 15 characters.")
+    if w.reason_problem(a.evidence):
+        w.die("REFUSED: say what shows it (for example 'only Pat spoke, no spouse on the call' or 'Pat and Robin were both on the call'): %s." % w.reason_problem(a.evidence))
     if a.answer == "yes" and not rj.get("spouse"):
         w.die("REFUSED: a joint meeting with a spouse needs one run per spouse. Start this job again with --spouse \"Other Surname\" --spouse-run <their run folder> (and a second run for the other spouse).")
     if a.answer == "no" and rj.get("spouse"):
         w.die("REFUSED: this run was started with --spouse, so it is for one spouse of a joint meeting. Answer yes, or start a new run without --spouse.")
+    if a.answer == "no" and os.path.exists(p(a.run, w.TRANSCRIPT)):
+        lines = w.read_lines(a.run)
+        others = verify.other_speakers(lines, rj.get("client") or {})
+        fr = w.load_opt(p(a.run, w.FORM), {})
+        spn = ((fr.get("fields") or {}).get("sp_name") or {}).get("v", "") if fr else ""
+        spouse_speaks = bool(spn) and any(w.last_name_token(spn) and w.last_name_token(spn) in w.norm(lab) for lab in others)
+        if (others or spouse_speaks) and w.reason_problem(a.reason or ""):
+            w.die("REFUSED: these people speak on the call as well as Paul and the client: %s (the form's spouse is %r). Answer yes (one run per spouse), or say who they are and why this is still not a joint meeting: run.py joint %s --answer no --evidence \"...\" --reason \"<who they are and why not>\" (the reason is shown to Paul)."
+                  % (", ".join("%s (line %s)" % (k, v[0]) for k, v in sorted(others.items())[:4]) or "none by name", spn, a.run))
     rj["joint"] = {"answer": a.answer, "evidence": a.evidence, "t": w.now()}
+    if a.reason:
+        rj["joint"]["reason"] = a.reason
     save_run(a.run, rj)
     print("recorded: joint meeting with a spouse = %s (%s)%s" % (a.answer, a.evidence, ". Page 03 of the rules (two spouses) applies to every step from here." if a.answer == "yes" else "."))
 
@@ -1082,6 +1125,7 @@ def main():
     sp.add_argument("--question")
     sp.add_argument("--searched", required=True)
     sp.add_argument("--kind", choices=["file", "knowledge"], default="file")
+    sp.add_argument("--about", help="what the question is about (field keys, list names, quote groups or section ids, comma separated): his answer can be used only for those")
     sp = add("answer", cmd_answer, "run")
     sp.add_argument("--need", required=True)
     sp.add_argument("--said", required=True)
@@ -1091,6 +1135,7 @@ def main():
     sp = add("formpdf", cmd_formpdf, "run")
     sp.add_argument("file", nargs="?")
     sp.add_argument("--none")
+    sp.add_argument("--paul-go-on", dest="paul_go_on", action="store_true", help="after the saved PDF did not match and Paul said (ask, then answer) to go on with the data file alone")
     sp = add("pdfreview", cmd_pdfreview, "run")
     sp.add_argument("--key", required=True)
     sp.add_argument("--result", required=True, choices=["format_only", "disagree"])
@@ -1128,6 +1173,7 @@ def main():
     sp = add("joint", cmd_joint, "run")
     sp.add_argument("--answer", required=True, choices=["yes", "no"])
     sp.add_argument("--evidence", required=True)
+    sp.add_argument("--reason", help="when the answer is no although other people speak on the call: who they are and why this is not a joint meeting")
     add("spouse", cmd_spouse, "run")
     sp = add("receipt", cmd_receipt, "run")
     sp.add_argument("--set", action="append", default=[])

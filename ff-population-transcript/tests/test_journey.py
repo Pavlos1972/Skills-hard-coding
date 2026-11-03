@@ -33,7 +33,9 @@ class Journey(Chat):
         self.assertTrue(os.path.exists(os.path.join(teams_run, "out", "teams_message.txt")))
         self.assertTrue(os.path.exists(os.path.join(teams_run, "out", "planner_note.html")))
         self.assertIn("has every step before its message step done", out)
-        self.assertIn("its own checker (verify.py --skip-teams) printed RESULT: PASS", out)
+        self.assertIn("verify.py --skip-teams, in the Teams skill folder the chat named) printed RESULT: PASS", out)
+        self.assertIn("Teams program fingerprint", out)                       # N4: the fingerprint of the named Teams folder is printed for Paul to compare
+        self.assertIn("program fingerprint", out)                            # N9
         st = jload(self.p("state.json"))
         pdf = os.path.join(self.p("out"), st["build"]["pdf"])
         self.assertEqual(os.path.getsize(pdf), st["build"]["pdf_size"])

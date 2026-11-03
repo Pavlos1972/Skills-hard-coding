@@ -246,22 +246,59 @@ def transcript_date(lines):
 
 
 def save_folder_problem(folder, client, spelling=""):
-    """The client's own `2. Fact Find` folder under Company - Paul or Company - WR Clients\\Paul Kafentzis (Client Files): never another client's or another broker's."""
+    """The client's own `2. Fact Find` folder. The root must be the FIRST part of the path: (drive, user, ...) liferisk.co.za, then Company - Paul or
+    Company - WR Clients\\Paul Kafentzis (Client Files); the folder before `2. Fact Find` must be 'Surname, First' of this client (a different spelling needs a written reason
+    that names the surname). It does not look at anything else: that the folder really exists is read from the listing the chat records, which is attested."""
     segs = [x for x in re.split(r"[\\/]+", S(folder)) if x.strip()]
     low = [x.strip().lower() for x in segs]
     if not low or low[-1] != "2. fact find":
         return "the folder %r does not end in the client's '2. Fact Find' folder" % folder
-    root_ok = "company - paul" in low or any(low[i] == "company - wr clients" and i + 1 < len(low) and low[i + 1] == "paul kafentzis (client files)" for i in range(len(low)))
+    k = next((i for i, x in enumerate(low) if x == "liferisk.co.za"), None)
+    start = 0 if low[0] in ("company - paul", "company - wr clients") else (k + 1 if k is not None and k <= 3 else None)
+    root_ok = False
+    if start is not None and start < len(low):
+        root_ok = low[start] == "company - paul" or (low[start] == "company - wr clients" and start + 1 < len(low) and low[start + 1] == "paul kafentzis (client files)")
     if not root_ok:
-        return "the folder %r is not under 'Company - Paul' or 'Company - WR Clients\\Paul Kafentzis (Client Files)' (never another broker's folder)" % folder
-    if len(segs) < 2:
+        return ("the folder %r does not start (after the drive and liferisk.co.za) with 'Company - Paul' or 'Company - WR Clients\\Paul Kafentzis (Client Files)' (never another broker's folder, never another disk)" % folder)
+    if len(segs) < 3:
         return "the folder has no client folder before '2. Fact Find'"
     want = w.norm("%s, %s" % (client.get("surname", ""), client.get("first", "")))
     got = w.norm(segs[-2])
-    if got != want and not (len(spelling.strip()) >= 10):
-        return ("the client folder is %r but this run is for %s, %s: save only into the client's own folder (if the folder is really spelled differently, say so in saved.folder_spelling)"
-                % (segs[-2], client.get("surname"), client.get("first")))
+    if got != want:
+        sp = S(spelling).strip()
+        if w.reason_problem(sp) or w.last_name_token(client.get("surname", "")) not in w.norm(sp):
+            return ("the client folder is %r but this run is for %s, %s: save only into the client's own folder (if the folder is really spelled differently, say so in saved.folder_spelling in a real sentence that names the surname; it is then shown to Paul)"
+                    % (segs[-2], client.get("surname"), client.get("first")))
     return None
+
+
+SPEAKER_FIRST = re.compile(r"^\s*\d{1,2}:\d{2}(?::\d{2})?\s+([A-Za-z][A-Za-z'-]*(?:\s+[A-Za-z][A-Za-z.'()-]*){1,4})\s*$")
+SPEAKER_LAST = re.compile(r"^([A-Za-z][A-Za-z'-]*(?:\s+[A-Za-z][A-Za-z.'()-]*){1,4}?)\s+\d{1,2}:\d{2}(?::\d{2})?\s*$")
+SPEAKER_SUFFIX = re.compile(r"(?i)\s+(?:started|stopped|joined|left)\b.*$")
+
+
+def speaker_labels(lines):
+    """[(line number, label)] of every speaker heading of the transcript (time then name, or name then time)."""
+    out = []
+    for i, ln in enumerate(lines, 1):
+        m = SPEAKER_FIRST.match(ln) or SPEAKER_LAST.match(ln)
+        if m:
+            label = SPEAKER_SUFFIX.sub("", m.group(1)).strip()
+            if label:
+                out.append((i, label))
+    return out
+
+
+def other_speakers(lines, client):
+    """{label: [lines]} of the speakers who are neither the advisor nor the client."""
+    me = [w.norm(w.layout().get("advisor", "")), w.norm("%s %s" % (client.get("first", ""), client.get("surname", "")))]
+    out = {}
+    for i, label in speaker_labels(lines):
+        n = w.norm(label)
+        if any(m and (m in n or n in m) for m in me):
+            continue
+        out.setdefault(label, []).append(i)
+    return out
 
 
 # ---------------------------------------------------------------- A reading lock
@@ -482,7 +519,8 @@ def check_form(run, R, lines, content):
             fail("the form's Date completed is %s but Paul's meeting date is %s: ask Paul which is right (run.py ask --need date, then run.py answer)" % (fr["date"], rj.get("date")))
     # the form's own parking list, summaries and drafted actions are never a source and never printed
     try:
-        raw = json.load(open(src_path, encoding="utf-8-sig"))
+        with open(src_path, encoding="utf-8-sig") as fh_:
+            raw = json.load(fh_)
     except (OSError, ValueError):
         raw = {}
     ignored_texts = []
@@ -511,6 +549,12 @@ def check_form(run, R, lines, content):
     fp = load(os.path.join(run, w.FORMPDF), None)
     if not isinstance(fp, dict):
         fail("the form's saved PDF was not read (run.py formpdf), nor recorded as missing after all three routes")
+    elif fp.get("paul_go_on"):
+        qs_ = [q for q in load(os.path.join(run, w.QUESTIONS), []) if isinstance(q, dict) and q.get("need") == "formpdf" and S(q.get("paul_said")).strip() == S(fp["paul_go_on"]).strip()]
+        if not qs_:
+            fail("the form's saved PDF is recorded as set aside on Paul's word, but his answer is not on record (run.py ask --need formpdf ..., then run.py answer)")
+        else:
+            R.add("WARN", g, "the form's saved PDF did not match the data file and was NOT used: Paul said to go on with the data file alone (his words, as the chat recorded them: %r)" % S(fp["paul_go_on"])[:80])
     elif fp.get("missing"):
         acc = [e for e in load(os.path.join(run, w.ACCESS), []) if isinstance(e, dict) and e.get("need") == "formpdf" and e.get("result") == "fail"]
         if {e.get("route") for e in acc} < set(w.ROUTES):
@@ -522,7 +566,8 @@ def check_form(run, R, lines, content):
         if not os.path.exists(txt_path):
             fail("form_pdf.txt is missing: read the saved PDF with run.py formpdf")
         else:
-            ptxt = open(txt_path, encoding="utf-8").read()
+            with open(txt_path, encoding="utf-8") as fh_:
+                ptxt = fh_.read()
             checked, missing = ffform.pdf_check(fr, ptxt)
             if json.dumps(missing, sort_keys=True) != json.dumps(fp.get("not_found"), sort_keys=True):
                 fail("form_pdf.json is not what the program finds when it checks the data file against the PDF text (edited by hand?)")
@@ -580,10 +625,11 @@ def check_form(run, R, lines, content):
             terms, curated = field_terms(lay_, k, i.get("label", k), row_values(fr, k) if i.get("row") else None)
             hits, _ = search_terms(run, lines or [], terms)
             why = S(a.get("reviewed")).strip()
-            if hits and len(why) < 15:
-                fail("crosscheck %s is 'not on the call' but the call mentions it (searched %s: lines %s): answer same or differs with the words, or say why those lines are not about it" % (k, terms[:4], hits[:6]))
-            elif not curated and len(why) < 15:
-                fail("crosscheck %s is 'not on the call' on a WEAK search (only its label words were searched): write a reason for this field" % k)
+            prob = w.reason_hit_problem(why, hits, lines or []) if hits else (w.reason_problem(why) if not curated else None)
+            if hits and prob:
+                fail("crosscheck %s is 'not on the call' but the call mentions it (searched %s: lines %s): answer same or differs with the words, or give a reason: %s" % (k, terms[:4], hits[:6], prob))
+            elif not curated and prob:
+                fail("crosscheck %s is 'not on the call' on a WEAK search (only its label words were searched): write a reason for this field (%s)" % (k, prob))
             if re.search(r"\d", i["value"]) and len(w.digits(i["value"])) >= 4 and not i.get("row") and w.digits(i["value"]) in w.digits(" ".join(lines or [])):
                 R.add("WARN", g, "crosscheck %s: marked not on the call, yet the digits of %r appear in the transcript: check" % (k, i["value"]))
     if not probs:
@@ -597,6 +643,22 @@ def check_form(run, R, lines, content):
 
 
 # ---------------------------------------------------------------- B ledger and coverage
+# Lines of the call that carry a request, a decision, a change or a quote word. The scan's own list (tx.HIGH_RE) plus the words of this skill's job (an FNA, a letter of
+# authority, a payslip, an appointment ...). Every such line must be within 3 lines of a ledger entry of a kind that has to be covered, or be dismissed with a reason that
+# quotes its words: a chat cannot file it away as a plain "fact" (round 2, finding N1).
+EXTRA_RE = re.compile(r"\b(?:ask(?:ed|ing)?|request\w*|quot(?:e|es|ed|ing)|fna|shortfall|rgar|egar|goal analysis|authori[sz]\w*|authority|payslip\w*|appointment\w*|next meeting|set up|follow[- ]?up|sign(?:ed|ing|ature)?)\b", re.I)
+
+
+def request_word(text):
+    m = tx.HIGH_RE.search(text or "") or EXTRA_RE.search(text or "")
+    return m.group(0) if m else None
+
+
+def required_lines(lines, st):
+    hits = set(((st or {}).get("scan") or {}).get("hits") or [])
+    return sorted(hits | {i for i, ln in enumerate(lines, 1) if request_word(ln)})
+
+
 # What may cover which kind of ledger entry (A1). A "lead" or a claim is never a blanket cover, and every cover must cite the same part of the call.
 KIND_ALLOWED = {
     "contact": {"fill", "cross", "lead", "claim"},
@@ -611,8 +673,28 @@ OVERLAY_TYPE = {"fills": "fill", "rows_add": "fill", "lookup": "fill", "notes": 
                 "policy_numbers": "policy", "abi_override": "abi", "documents_to_request": "request", "next_steps": "request"}
 
 
+def key_texts(lay, key, label=""):
+    """The words a field stands for: its label and its curated search terms (for a list cell: the column's)."""
+    out = [label]
+    specs = _specs(lay)
+    parts = str(key).split(".")
+    r = specs.get(key)
+    if r:
+        out.append(r.get("label", ""))
+    if len(parts) == 3 and parts[1].isdigit():
+        g = specs.get("list:" + parts[0])
+        if g and isinstance(g.get("cols"), list):
+            col = next((c for c in g["cols"] if c["col"] == parts[2]), None)
+            if col:
+                out.append(col.get("label", "") or col["col"])
+        out.append(parts[2].replace("_", " "))
+    terms, _ = field_terms(lay, key, label)
+    out += terms
+    return [S(x) for x in out if x]
+
+
 def cover_targets(run, ov, cross, lead, content=None):
-    """Everything a ledger entry can be covered by: id -> {types, lines (the call lines it cites)}."""
+    """Everything a ledger entry can be covered by: id -> {types, lines (the call lines it cites), texts (what it says: its own words, never the chat's copy of the call)}."""
     lay = w.layout()
     req_keys = {q["req"] for q in lay["quote_groups"] if not q.get("list")}
     t = {}
@@ -622,18 +704,26 @@ def cover_targets(run, ov, cross, lead, content=None):
         if name == "fills" and it.get("key") in req_keys:
             types.add("quote_req")
         lines = [x["line"] for x in it.get("src") or [] if isinstance(x, dict) and isinstance(x.get("line"), int)]
-        t[it.get("id", name)] = {"types": types, "lines": lines}
+        texts = [S(it.get(f)) for f in ("text", "value", "other", "label", "insurer", "mode", "found", "resolved", "with") if isinstance(it.get(f), str)]
+        if isinstance(it.get("cells"), dict):
+            texts += [S(v) for v in it["cells"].values()]
+        if it.get("key"):
+            texts += key_texts(lay, S(it["key"]))
+        if name == "quotes":
+            grp = next((q for q in lay["quote_groups"] if q["id"] == it.get("group")), {})
+            texts.append(S(grp.get("title")))
+        t[it.get("id", name)] = {"types": types, "lines": lines, "texts": texts}
     cross_lines = {}
     for i in cross:
         a = i.get("answer")
         if isinstance(a, dict) and a.get("r") in ("same", "differs") and isinstance(a.get("line"), int):
             types = {"cross"} | ({"cross_differs"} if a["r"] == "differs" else set()) | ({"quote_req"} if i["key"] in req_keys else set())
-            t[i["key"]] = {"types": types, "lines": [a["line"]]}
+            t[i["key"]] = {"types": types, "lines": [a["line"]], "texts": key_texts(lay, S(i["key"]), S(i.get("label"))) + [S(i.get("value"))]}
             cross_lines[i["key"]] = a["line"]
     if lead:
-        t["lead"] = {"types": {"lead"}, "lines": []}
+        t["lead"] = {"types": {"lead"}, "lines": [], "texts": []}
     for k, cl in load(os.path.join(run, w.CLAIMS), {}).items():
-        t["claim:" + k] = {"types": {"claim"}, "lines": [x for x in (cl.get("hits") or []) if isinstance(x, int)]}
+        t["claim:" + k] = {"types": {"claim"}, "lines": [x for x in (cl.get("hits") or []) if isinstance(x, int)], "texts": key_texts(lay, k) + [S(x) for x in cl.get("terms") or []]}
     for _, _, r in iter_rows(content or {}):
         if str(r.get("id", "")).startswith("quote."):
             grp = next((q for q in lay["quote_groups"] if q["id"] == r.get("quote_group")), None)
@@ -641,7 +731,7 @@ def cover_targets(run, ov, cross, lead, content=None):
             if grp:
                 lines = [cross_lines[k] for k in (grp.get("req"), grp.get("type"), grp.get("ins")) if k in cross_lines]
             lines += [x["line"] for x in r.get("src") or [] if isinstance(x, dict) and isinstance(x.get("line"), int)]
-            t[r["id"]] = {"types": {"quote"}, "lines": lines}
+            t[r["id"]] = {"types": {"quote"}, "lines": lines, "texts": [S(r.get("label"))] + [S(b) for b in r.get("bullets") or []] + [S((grp or {}).get("title"))]}
     return t
 
 
@@ -663,6 +753,10 @@ def cover_problem(kind, line, tid, tinfo, quote=""):
         return "%s cites no line of the call, so it cannot be about this part of the call" % tid
     if not any(abs(x - line) <= COVER_SPAN for x in tinfo["lines"]):
         return "%s cites the call at line(s) %s, not within %d lines of line %d" % (tid, tinfo["lines"][:4], COVER_SPAN, line)
+    own = " ".join(tinfo.get("texts") or [])
+    if not w.shared_content_words(quote or "", own):
+        return ("%s says nothing about this part of the call: the ledger quote's words (%s) share no word of 4 letters or more with %s's own words (%s)"
+                % (tid, ", ".join(w.content_words(quote)[:6]) or "none", tid, ", ".join(dict.fromkeys(w.content_words(own)))[:80] or "none"))
     return None
 
 
@@ -721,8 +815,8 @@ def check_ledger(run, st, lines, ledger, targets, R):
             if kind in KINDS_MUST_COVER:
                 R.add("FAIL", g, "%s (%s, line %d) is not covered by any fill, difference, note, request or answer: %r" % (where, kind, ln, e.get("quote")))
                 bad += 1
-            elif len(S(e.get("excluded")).strip()) < 8:
-                R.add("FAIL", g, "%s (%s) is neither covered nor excluded with a reason" % (where, kind))
+            elif w.reason_problem(S(e.get("excluded")), 8):
+                R.add("FAIL", g, "%s (%s) is neither covered nor excluded with a real reason (%s)" % (where, kind, w.reason_problem(S(e.get("excluded")), 8) or "give one"))
                 bad += 1
             continue
         if kind in KINDS_MUST_COVER:
@@ -744,16 +838,73 @@ def check_ledger(run, st, lines, ledger, targets, R):
     if cz and not any(isinstance(e.get("line"), int) and e["line"] >= cz for e in ents):
         R.add("WARN", g, "no ledger entry from the closing minutes (lines %d+): requests there are the easiest to miss" % cz)
     if sc:
-        near = sorted(e["line"] for e in ents if isinstance(e.get("line"), int))
-        reviewed = reviewed_lines(ledger)
-        res = lambda h: h in reviewed or any(abs(h - n) <= 3 for n in near)  # noqa: E731
-        unresolved = [h for h in sc["hits"] if not res(h)]
-        if unresolved:
-            closing = [h for h in unresolved if cz and h >= cz]
-            R.add("FAIL", g, "%d decision/change/request keyword hits are not covered by a ledger entry within 3 lines or a recorded review%s: lines %s%s"
-                  % (len(unresolved), " (%d in the closing minutes)" % len(closing) if closing else "", unresolved[:15], "..." if len(unresolved) > 15 else ""))
-        else:
-            R.add("PASS", g, "every decision/change/request keyword hit is covered by a ledger entry or a recorded review")
+        check_scan_resolution(run, st, lines, ledger, R)
+
+
+def check_scan_resolution(run, st, lines, ledger, R):
+    """Every line of the call with a decision, change, request or quote word is within 3 lines of a ledger entry that must be covered, or dismissed with a real reason; and not too much is dismissed."""
+    g = "B"
+    sc = st.get("scan") or {}
+    cz = sc.get("closing_from")
+    ents = [e for e in (ledger or {}).get("entries") or [] if isinstance(e, dict)]
+    must = sorted(e["line"] for e in ents if e.get("kind") in KINDS_MUST_COVER and isinstance(e.get("line"), int))
+    reviewed = reviewed_lines(ledger)
+    required = required_lines(lines, st)
+    covered = lambda h: any(abs(h - n) <= 3 for n in must)  # noqa: E731
+    unresolved = [h for h in required if not covered(h) and h not in reviewed]
+    if unresolved:
+        closing = [h for h in unresolved if cz and h >= cz]
+        R.add("FAIL", g, "%d line(s) of the call with a decision, change, request or quote word are not covered by a ledger entry that must be covered (within 3 lines) or a recorded review with a reason that quotes the line%s: lines %s%s"
+              % (len(unresolved), " (%d in the closing minutes)" % len(closing) if closing else "", unresolved[:15], "..." if len(unresolved) > 15 else ""))
+    else:
+        R.add("PASS", g, "every line of the call with a decision, change, request or quote word (%d lines) is within 3 lines of a ledger entry that must be covered, or was dismissed with a reason" % len(required))
+    # a request cannot be filed away as a plain fact or figure
+    for e in ents:
+        if e.get("kind") in KINDS_OPTIONAL and isinstance(e.get("line"), int) and 1 <= e["line"] <= len(lines) and request_word(lines[e["line"] - 1]):
+            R.add("FAIL", g, "ledger %s is recorded as '%s' but line %d holds the word '%s' (a request, decision, change or quote word): record it as a gap, difference, contact, quote_request, next_step, change or request, or dismiss the line with a review whose reason quotes its words"
+                  % (e.get("id"), e.get("kind"), e["line"], request_word(lines[e["line"] - 1])))
+    # every dismissal needs a reason that says something about THAT line
+    bad_rv = 0
+    for rv in ledger.get("scan_reviewed") or []:
+        prob = review_problem(rv, lines, required)
+        if prob:
+            bad_rv += 1
+            R.add("FAIL", g, "scan review %s: %s" % (("of line %s" % rv.get("line")) if rv.get("line") is not None else ("of lines %s-%s" % (rv.get("from"), rv.get("to"))), prob))
+    # dismissing too much is not a review
+    qs = load(os.path.join(run, w.QUESTIONS), [])
+    go_on = any(isinstance(q, dict) and q.get("need") == "dismissals" and len(S(q.get("paul_said")).strip()) >= 3 for q in qs)
+    dismissed_req = [h for h in required if h in reviewed and not covered(h)]
+    in_call = len([i for i in reviewed if 1 <= i <= len(lines)])
+    share_call = in_call / float(len(lines) or 1)
+    share_req = len(dismissed_req) / float(len(required) or 1)
+    if (share_call > 0.25 or share_req > 0.60) and not go_on:
+        R.add("FAIL", g, "too much of the call was dismissed instead of recorded: %d%% of its lines and %d%% of its decision/change/request/quote lines (the limits are 25%% and 60%%). Record what the call says, or ask Paul: run.py ask --need dismissals --kind knowledge ..., then run.py answer"
+              % (round(100 * share_call), round(100 * share_req)))
+    elif (share_call > 0.25 or share_req > 0.60) and go_on:
+        R.add("WARN", g, "%d%% of the call's lines and %d%% of its decision/change/request/quote lines were dismissed; Paul's recorded answer says to go on" % (round(100 * share_call), round(100 * share_req)))
+
+
+def review_problem(rv, lines, required):
+    """None when a scan review is real: its reason must be a reason and quote a content word of every decision/change/request line it dismisses (or of the line itself)."""
+    if not isinstance(rv, dict):
+        return "is not an entry"
+    p = w.reason_problem(S(rv.get("reason")))
+    if p:
+        return p
+    if isinstance(rv.get("line"), int):
+        span = [rv["line"]]
+    elif isinstance(rv.get("from"), int) and isinstance(rv.get("to"), int):
+        span = [i for i in required if rv["from"] <= i <= rv["to"]]
+        if rv["to"] - rv["from"] + 1 > 40:
+            return "dismisses more than 40 lines at once"
+    else:
+        return "names no line"
+    for i in span:
+        if not 1 <= i <= len(lines):
+            return "names line %s, which is not in the transcript" % i
+        if not w.shared_content_words(S(rv.get("reason")), lines[i - 1]):
+            return "the reason holds no word (4 letters or more) from line %d (%r): quote what the line says and why nothing needs recording" % (i, lines[i - 1].strip()[:50])
+    return None
 
 
 # ---------------------------------------------------------------- C source trace
@@ -886,6 +1037,12 @@ def check_content(run, lines, content, fr, refs, ov, R):
                 if len(S(s["paul"]).strip()) < 3 or paul_words.get(S(s.get("need"))) != S(s["paul"]).strip():
                     R.add("FAIL", g, "%s: Paul's words %r are not the ones the program recorded (run.py ask --kind knowledge --need ..., then run.py answer): words typed into the overlay are not accepted" % (rid, s.get("paul")))
                     problems += 1
+                elif all(isinstance(x_, dict) and "paul" in x_ for x_ in srcs):
+                    row_nums = {n.replace(",", ".").rstrip("0").rstrip(".") if "." in n.replace(",", ".") else n for n in re.findall(r"\d+(?:[.,]\d+)?", text)}
+                    gone = sorted(n for n in row_nums if n not in w.numbers_in(S(s["paul"])))
+                    if gone:
+                        R.add("FAIL", g, "%s: it prints %s, which is not in Paul's recorded words %r: a value sourced only to Paul must be what he said" % (rid, ", ".join(gone), S(s["paul"])[:60]))
+                        problems += 1
                 evidence.append(text)
             else:
                 R.add("FAIL", g, "%s: a source needs form, line+quote, doc+ref+quote, derived, total_of, standing, rule, claim or paul" % rid)
@@ -924,7 +1081,7 @@ def check_content(run, lines, content, fr, refs, ov, R):
 
 
 # ---------------------------------------------------------------- D the skill's rules
-POLICY_NO = re.compile(r"(?i)\bpolic(?:y|ies)\s*(?:no\.?|number|nr\.?|#)\s*[:\-]?\s*([A-Z0-9][A-Z0-9\-/]{4,})")
+POLICY_NO = re.compile(r"(?i)\bpolic(?:y|ies)\b\s*(?:(?:no\.?|number|nr\.?|#)\s*[:\-]?\s*([A-Z0-9][A-Z0-9\-/]{4,})|[:\-]?\s*([A-Z]{0,4}\d{3,}[A-Z0-9\-/]*))")
 FLAG_REF = re.compile(r"(?i)\bsee\s+(?:the\s+)?(flag|flags|notes?)\b")
 YEAR_LINE = re.compile(r"^(19|20)\d{2}\s*:\s*\S")
 DEPENDS = re.compile(r"\b(pending|once|until|after|when|awaiting|waiting for)\b", re.I)
@@ -935,7 +1092,17 @@ DOC_WORDS = re.compile(r"\b(report|medical|psychiatric|document|payslip|statemen
 def search_terms(run, lines, terms):
     """Lines of the call (and recorded documents) that mention any of the terms."""
     hits = []
-    nterms = [" %s " % w.norm(t) for t in terms if w.norm(t)]
+    nterms = []
+    for t in terms:
+        nt = w.norm(str(t).rstrip().rstrip("*"))
+        if not nt:
+            continue
+        if str(t).rstrip().endswith("*"):
+            nterms.append(" %s" % nt)                    # a stem: diabet* finds diabetes and diabetic
+        else:
+            nterms.append(" %s " % nt)
+            if not nt.endswith("s"):
+                nterms += [" %ss " % nt, " %ses " % nt]     # a plural is the same word
     for i, ln in enumerate(lines, 1):
         n = " %s " % w.norm(ln)
         if any(t in n for t in nterms):
@@ -1040,20 +1207,23 @@ def check_rules(run, lines, content, fr, ov, R):
         if word == "Not discussed":
             hits, docs = search_terms(run, lines, list(dict.fromkeys(terms + list(cl.get("terms") or []))))
             sib = sibling_hits(lay, fr, key)
-            if (hits or docs or sib) and len(why) < 15:
-                fail("claim %s 'Not discussed': the search still finds %s%s%s. Read it, then fill the field or record why it does not answer it (run.py claim --reviewed)"
-                     % (key, ("call lines %s" % hits[:6]) if hits else "", (" and documents %s" % docs) if docs else "", (" and the form itself says %s" % "; ".join(sib[:3])) if sib else ""))
+            if hits or docs or sib:
+                prob = w.reason_hit_problem(why, hits, lines)
+                if prob:
+                    fail("claim %s 'Not discussed': the search still finds %s%s%s. Read it, then fill the field or record why it does not answer it (run.py claim --reviewed): %s"
+                         % (key, ("call lines %s" % hits[:6]) if hits else "", (" and documents %s" % docs) if docs else "", (" and the form itself says %s" % "; ".join(sib[:3])) if sib else "", prob))
             if not curated:
                 weak += 1
-                if len(why) < 15:
-                    fail("claim %s 'Not discussed' rests on a WEAK search (only the field's label words): write a reason for this field (run.py claim --key %s --reviewed ...)" % (key, key))
+                prob = w.reason_problem(why)
+                if prob:
+                    fail("claim %s 'Not discussed' rests on a WEAK search (only the field's label words): write a reason for this field (run.py claim --key %s --reviewed ...): %s" % (key, key, prob))
             if key in CONTACT_KEYS and not lead.get("searched"):
                 fail("claim %s: contact details may be called 'Not discussed' only after the lead-source search and the documents were checked (run.py lead)" % key)
         elif word == "Requested":
             if not key.startswith("debts.") or not lead.get("searched") or len(S(cl.get("searched"))) < 20:
                 fail("claim %s 'Requested': only a debt detail that is truly missing after the form, the call, the Overview, other documents AND Outlook (a recorded lead search) were checked; say what was searched in --searched" % key)
-        elif len(why) < 15:
-            fail("claim %s 'N/A' needs the reason (--reviewed)" % key)
+        elif w.reason_problem(why):
+            fail("claim %s 'N/A' needs the reason (--reviewed): %s" % (key, w.reason_problem(why)))
     # every overlay entry must have landed in the document (nothing may be dropped silently)
     for oid in content.get("overlay_unused") or []:
         fail("overlay entry %r landed nowhere in the document (a section, list, key or group that does not apply here): fix it or remove it" % oid)
@@ -1152,8 +1322,9 @@ def check_rules(run, lines, content, fr, ov, R):
     for rid, r in rows.items():
         for b in r["bullets"]:
             for m in POLICY_NO.finditer(b):
-                if m.group(1) not in pns:
-                    fail("%s prints policy number %r that is not confirmed by a policy schedule (overlay `policy_numbers`)" % (rid, m.group(1)))
+                code = m.group(1) or m.group(2)
+                if code not in pns:
+                    fail("%s prints policy number %r that is not confirmed by a policy schedule (overlay `policy_numbers`)" % (rid, code))
     # Business Assurance only if Business Owner = Yes
     biz = (fr["fields"].get("bizowner", {}).get("v") if fr else "") or next((f.get("value") for f in ov.get("fills") or [] if isinstance(f, dict) and f.get("key") == "bizowner"), "")
     if w.norm(biz) not in ("yes", "y", "true"):
@@ -1215,6 +1386,13 @@ def check_rules(run, lines, content, fr, ov, R):
         fail("the question 'Is this a joint meeting with a spouse?' was not answered (run.py joint)")
     elif (jn["answer"] == "yes") != bool(rj_.get("spouse")):
         fail("the joint-meeting answer is %r but this run was %sstarted with --spouse: start one run per spouse" % (jn["answer"], "" if rj_.get("spouse") else "not "))
+    elif jn["answer"] == "no":
+        others = other_speakers(lines, rj_.get("client") or {})
+        spn = S(((fr or {}).get("fields") or {}).get("sp_name", {}).get("v")) if fr else ""
+        spouse_speaks = bool(spn) and any(w.last_name_token(spn) and w.last_name_token(spn) in w.norm(lab) for lab in others)
+        if (others or spouse_speaks) and w.reason_problem(S(jn.get("reason"))):
+            fail("the joint-meeting answer is 'no' but these people speak on the call: %s (the form's spouse is %r): answer yes (one run per spouse), or record why not with run.py joint --answer no --reason \"<who they are and why this is not a joint meeting>\""
+                 % (", ".join("%s (line %s)" % (k, v[0]) for k, v in sorted(others.items())[:4]), spn))
     if rj_.get("spouse"):
         for name_, it_ in compose.overlay_items(ov):
             if any(isinstance(x_, dict) and "line" in x_ for x_ in it_.get("src") or []) and len(S(it_.get("attrib")).strip()) < 10:
@@ -1396,12 +1574,59 @@ def check_pdf(run, st, content, R):
 
 
 # ---------------------------------------------------------------- F receipt and driver
-def check_teams_handoff(run, rj, content, tm):
-    """None when the Teams run is really there and finished up to the message; otherwise the plain reason. Reads the Teams program's own records and runs its own checker."""
-    sd, rd = S(tm.get("skill_dir")), S(tm.get("run_folder"))
+TEAMS_STEPS = ("locate", "prep", "pass1", "pass2", "scan", "content", "build", "check", "planner", "teams", "final")
+TEAMS_MARKERS = {
+    os.path.join("scripts", "verify.py"): ("--skip-teams", "def near_source", "KINDS_MUST_COVER", "COVER_SPAN"),
+    os.path.join("scripts", "run.py"): ("def cmd_ledger", "def cmd_done", "def cmd_receipt"),
+}
+
+
+def teams_fingerprint(sd):
+    """sha256 (first 16 hex) of the Teams program's verify.py, run.py and steps.json, so Paul can compare them with the released ones."""
+    out = {}
+    for rel in (os.path.join("scripts", "verify.py"), os.path.join("scripts", "run.py"), "steps.json"):
+        try:
+            out[rel.replace(os.sep, "/")] = w.sha256_file(os.path.join(S(sd), rel))[:16]
+        except OSError:
+            out[rel.replace(os.sep, "/")] = "missing"
+    return out
+
+
+def teams_skill_problem(sd):
+    """None when the folder the chat named looks like the real Teams skill (the step names, the size and the marks of its checker and driver); otherwise why not.
+    This is a plausibility check, not a proof: the folder was named by the chat, so its fingerprint is printed for Paul to compare."""
     md = os.path.join(sd, "SKILL.md")
-    if not os.path.exists(md) or not re.search(r'(?m)^name:\s*"?client-teams-transcript-skill"?\s*$', open(md, encoding="utf-8", errors="replace").read()):
+    md_text = ""
+    if os.path.exists(md):
+        with open(md, encoding="utf-8", errors="replace") as fh_:
+            md_text = fh_.read()
+    if not re.search(r'(?m)^name:\s*"?client-teams-transcript-skill"?\s*$', md_text):
         return "%r is not the folder of client-teams-transcript-skill (its SKILL.md must say so)" % sd
+    steps = load(os.path.join(sd, "steps.json"), {}).get("steps", [])
+    first = [x.get("id") for x in steps if isinstance(x, dict) and "first" in (x.get("applies") or [])]
+    if [x for x in TEAMS_STEPS if x not in first]:
+        return "%r has not the steps of a first-meeting run (%s): it does not look like the real Teams program" % (sd, ", ".join(x for x in TEAMS_STEPS if x not in first))
+    for rel, marks in TEAMS_MARKERS.items():
+        try:
+            with open(os.path.join(sd, rel), encoding="utf-8", errors="replace") as f:
+                txt = f.read()
+        except OSError:
+            return "%r has no %s: it does not look like the real Teams program" % (sd, rel)
+        if rel.endswith("verify.py") and txt.count("\n") < 500:
+            return "%s in %r is only %d lines: the real Teams checker is much longer, so this is not the real Teams program" % (rel, sd, txt.count("\n"))
+        missing = [m for m in marks if m not in txt]
+        if missing:
+            return "%s in %r lacks %s: it does not look like the real Teams program" % (rel, sd, ", ".join(missing))
+    return None
+
+
+def check_teams_handoff(run, rj, content, tm):
+    """None when the Teams run is really there and finished up to the message; otherwise the plain reason. Reads the Teams program's own records and runs its own checker.
+    The Teams skill folder is named by the chat: it is checked for plausibility and its fingerprint is printed, which Paul compares with the released one."""
+    sd, rd = S(tm.get("skill_dir")), S(tm.get("run_folder"))
+    prob = teams_skill_problem(sd)
+    if prob:
+        return prob
     tr = load(os.path.join(rd, w.RUN), None)
     cl = rj.get("client") or {}
     if not isinstance(tr, dict):
@@ -1415,10 +1640,15 @@ def check_teams_handoff(run, rj, content, tm):
     open_ = [x for x in before if (tr.get("steps", {}).get(x) or {}).get("state") != "done"]
     if open_:
         return "the Teams run has not finished these steps before its message step: %s (drive it with its own run.py until it shows the message to Sitamah)" % open_
+    mine = load(os.path.join(run, w.STATE), {})
+    theirs = load(os.path.join(rd, w.STATE), None)
+    if not isinstance(theirs, dict) or not mine.get("sha256") or theirs.get("sha256") != mine.get("sha256"):
+        return "the Teams run was made from another transcript than this run's (its transcript fingerprint %s is not %s): run the Teams program on the same transcript" % (str((theirs or {}).get("sha256"))[:12], str(mine.get("sha256"))[:12])
     for f in ("planner_note.html", "teams_message.txt"):
         if not os.path.exists(os.path.join(rd, "out", f)):
             return "the Teams run has no out/%s: its Planner page and message were not built" % f
-    msg = open(os.path.join(rd, "out", "teams_message.txt"), encoding="utf-8").read()
+    with open(os.path.join(rd, "out", "teams_message.txt"), encoding="utf-8") as f_:
+        msg = f_.read()
     if w.norm("%s %s" % (cl.get("first"), cl.get("surname"))) not in w.norm(msg) or rj.get("date") not in msg:
         return "the Teams message does not name %s %s and %s" % (cl.get("first"), cl.get("surname"), rj.get("date"))
     r = subprocess.run([sys.executable, os.path.join(sd, "scripts", "verify.py"), rd, "--skip-teams"], capture_output=True, text=True)
@@ -1507,7 +1737,7 @@ def check_receipt(run, st, content, R, skip=()):
         if msg:
             fail("Teams hand-over: " + msg)
         else:
-            R.add("ATTEST", g, "Planner note page and message to Sitamah: the Teams run at %s has every step before its message step done, and its own checker (verify.py --skip-teams) printed RESULT: PASS when this checker ran it; the page was published, the message shown and Paul's yes obtained by Claude (attested); next appointment carried: %s"
+            R.add("ATTEST", g, "Planner note page and message to Sitamah: the Teams run at %s has every step before its message step done, was made from this run's transcript, and its own checker (verify.py --skip-teams, in the Teams skill folder the chat named) printed RESULT: PASS when this checker ran it; that the folder is the real released Teams skill is attested (its fingerprint is on the glance list); the page was published, the message shown and Paul's yes obtained by Claude (attested); next appointment carried: %s"
                   % (tm["run_folder"], str(tm["next_appointment_carried"])[:60]))
     if rj.get("spouse"):
         sp = rc.get("spouse") if isinstance(rc.get("spouse"), dict) else {}
@@ -1595,6 +1825,45 @@ def run_checks(run, stage, skip=()):
     return R, st, ledger, content
 
 
+def claim_stats(run, lines, fr, content):
+    """For the report: every 'Not discussed' claim and every 'not on the call' answer, with what the search found now (the search is repeated here) and whether it rests on a weak search."""
+    lay = w.layout()
+    rows = {r["id"]: r for _, _, r in iter_rows(content or {})}
+    out = []
+    for key, cl in load(os.path.join(run, w.CLAIMS), {}).items():
+        if not isinstance(cl, dict) or cl.get("as") != "Not discussed":
+            continue
+        label = (rows.get(key) or {}).get("label", key)
+        terms, curated = field_terms(lay, key, label)
+        hits, docs = search_terms(run, lines, list(dict.fromkeys(terms + list(cl.get("terms") or []))))
+        out.append({"key": key, "label": label, "hits": hits, "docs": docs, "sib": sibling_hits(lay, fr, key), "weak": not curated, "reason": S(cl.get("reviewed")), "kind": "claim"})
+    for i in load(os.path.join(run, w.CROSS), []):
+        a = i.get("answer") if isinstance(i, dict) else None
+        if isinstance(a, dict) and a.get("r") == "not_on_call" and (a.get("hit_lines") or a.get("weak")):
+            out.append({"key": i["key"], "label": i.get("label", i["key"]), "hits": list(a.get("hit_lines") or []), "docs": [], "sib": [], "weak": bool(a.get("weak")), "reason": S(a.get("reviewed")), "kind": "not_on_call"})
+    return out
+
+
+def dismissed_lines(ledger, lines, st):
+    """[(line, text, reason)] of the decision/change/request/quote lines that were dismissed by a review instead of being recorded."""
+    ents = [e for e in (ledger or {}).get("entries") or [] if isinstance(e, dict)]
+    must = [e["line"] for e in ents if e.get("kind") in KINDS_MUST_COVER and isinstance(e.get("line"), int)]
+    why = {}
+    for rv in (ledger or {}).get("scan_reviewed") or []:
+        if not isinstance(rv, dict):
+            continue
+        if isinstance(rv.get("line"), int):
+            why[rv["line"]] = S(rv.get("reason"))
+        elif isinstance(rv.get("from"), int) and isinstance(rv.get("to"), int):
+            for i in range(rv["from"], rv["to"] + 1):
+                why.setdefault(i, S(rv.get("reason")))
+    out = []
+    for h in required_lines(lines, st):
+        if h in why and not any(abs(h - n) <= 3 for n in must):
+            out.append((h, lines[h - 1].strip(), why[h]))
+    return out
+
+
 def source_report(run, st, content):
     rep = content.get("report") or {}
     out = []
@@ -1619,7 +1888,16 @@ def source_report(run, st, content):
     for x in d:
         out.append("      %s: form/first source %s | other %s (%s)" % (x.get("label"), x.get("form"), x.get("other"), x.get("where")))
     nd, rq = rep.get("not_discussed") or [], rep.get("requested") or []
-    out.append("(d) Left Not discussed (%d, each searched): %s" % (len(nd), ", ".join("%s (%s)" % (l, k) for k, l in nd) or "none"))
+    try:
+        lines_ = w.read_lines(run)
+        cs = claim_stats(run, lines_, load(os.path.join(run, w.FORM), {}), content)
+    except Exception:
+        cs = []
+    over = [c for c in cs if c["kind"] == "claim" and (c["hits"] or c["docs"] or c["sib"])]
+    weakn = [c for c in cs if c["weak"]]
+    over_cross = [c for c in cs if c["kind"] == "not_on_call" and c["hits"]]
+    out.append("(d) Left Not discussed (%d, each searched with the field's own search words; %d of them overrode search hits on a written reason, %d rest on a weak search; plus %d 'not on the call' answers that overrode hits): %s"
+               % (len(nd), len(over), len([c for c in weakn if c["kind"] == "claim"]), len(over_cross), ", ".join("%s (%s)" % (l, k) for k, l in nd) or "none"))
     out.append("    Marked Requested (%d): %s" % (len(rq), ", ".join("%s (%s)" % (l, k) for k, l in rq) or "none"))
     if rep.get("standing"):
         out.append("    Standing rules applied: " + "; ".join(rep["standing"]))
@@ -1637,17 +1915,51 @@ def summary_lines(run, st, ledger, content):
     fp = load(os.path.join(run, w.FORMPDF), {})
     if fp.get("missing"):
         out.append("The form's saved PDF was not found (%s): only its data file was used." % fp["missing"])
+    if fp.get("paul_go_on"):
+        out.append("The form's saved PDF did NOT match the data file and was not used; the chat recorded that Paul said to go on with the data file alone: \"%s\" (attested)." % S(fp["paul_go_on"])[:100])
     acc = load(os.path.join(run, w.ACCESS), [])
     routes = sorted({e.get("route") for e in acc if isinstance(e, dict)})
     out.append("Access routes used: %s" % ", ".join(routes))
     ents = (ledger or {}).get("entries") or []
-    dismissed = len(reviewed_lines(ledger or {}))
+    lines = w.read_lines(run)
+    dismissed = len([i for i in reviewed_lines(ledger or {}) if 1 <= i <= len(lines)])
     total = st.get("total_lines") or 1
-    out.append("Ledger: %d entries; %d keyword-scan lines dismissed with a reason (%d%% of the %d lines of the call)%s" % (
-        len(ents), dismissed, round(100.0 * dismissed / total), total, "  <-- MORE THAN A QUARTER OF THE CALL WAS DISMISSED: look at the reasons" if dismissed > 0.25 * total else ""))
-    rv = [r for r in (ledger or {}).get("scan_reviewed") or [] if isinstance(r, dict)]
-    if rv:
-        out.append("   scan dismissals: " + "; ".join("%s: %s" % (("line %s" % r["line"]) if r.get("line") is not None else ("lines %s-%s" % (r.get("from"), r.get("to"))), S(r.get("reason"))[:50]) for r in rv[:6]) + (" ..." if len(rv) > 6 else ""))
+    req = required_lines(lines, st)
+    dl = dismissed_lines(ledger, lines, st)
+    out.append("Ledger: %d entries; %d lines of the call dismissed with a reason (%d%% of the %d lines); %d of the call's %d decision/change/request/quote lines were dismissed instead of recorded (%d%%)%s"
+               % (len(ents), dismissed, round(100.0 * dismissed / total), total, len(dl), len(req), round(100.0 * len(dl) / (len(req) or 1)),
+                  "  <-- MORE THAN A QUARTER OF THE CALL WAS DISMISSED: look at the reasons" if dismissed > 0.25 * total else ""))
+    if dl:
+        out.append("   dismissed lines (%s): %s%s" % ("all" if len(dl) <= 15 else "the first 15 of %d" % len(dl),
+                   "; ".join("line %d (%s): %s" % (n, t[:40], r[:70]) for n, t, r in dl[:15]), "" if len(dl) <= 15 else " ..."))
+    # 'Not discussed' that overrode the search
+    cs = claim_stats(run, lines, load(os.path.join(run, w.FORM), {}), content)
+    over = [c for c in cs if c["hits"] or c["docs"] or c["sib"]]
+    if over:
+        def what(c):
+            if c["hits"]:
+                return "call lines %s" % c["hits"][:4]
+            return ("documents %s" % c["docs"][:2]) if c["docs"] else ("the form says " + "; ".join(c["sib"][:1]))
+        out.append("%d 'Not discussed' / 'not on the call' answer(s) overrode what the search found, on the chat's written reason (the program checks only its length, three different words, a cited hit line and a word from it): %s%s"
+                   % (len(over), "; ".join("%s (%s), %s: %s" % (c["label"], c["key"], what(c), c["reason"][:60]) for c in over[:15]), " ..." if len(over) > 15 else ""))
+    # Teams program and this skill's program: fingerprints to compare with the released ones
+    rc = load(os.path.join(run, w.RECEIPT), {})
+    tm = (rc.get("teams") or {}) if isinstance(rc, dict) else {}
+    if tm.get("skill_dir"):
+        out.append("Teams program fingerprint, sha256 first 16 characters (the Teams skill folder was NAMED BY THE CHAT; compare these with the released Teams skill): %s" % ", ".join("%s %s" % kv for kv in sorted(teams_fingerprint(tm["skill_dir"]).items())))
+    out.append("This skill's program fingerprint (sha256, first 16 characters) %s (taken at the start of the run and compared at every step: a change during the run is detected unless someone also changes the checker; compare it with the released one)." % w.program_fingerprint()[:16])
+    # text copies of documents are made by the chat
+    docs_dir = os.path.join(run, w.DOCS)
+    srcs = [e for e in load(os.path.join(run, w.SOURCES), []) if isinstance(e, dict) and e.get("read") == "yes" and e.get("text")]
+    if srcs:
+        out.append("Text copies of documents were MADE BY THE CHAT (their authenticity is attested; the program checks that they name the client and that quoted words and figures are in them). sha256: %s"
+                   % "; ".join("%s %s" % (source_ref(e), w.sha256_file(os.path.join(docs_dir, source_ref(e) + ".txt"))[:12]) for e in srcs if os.path.exists(os.path.join(docs_dir, source_ref(e) + ".txt"))))
+    sv = (rc.get("saved") or {}) if isinstance(rc, dict) else {}
+    if S(sv.get("folder_spelling")).strip():
+        out.append("The PDF was saved in a folder that is not named 'Surname, First': %s (the chat's reason: \"%s\")." % (S(sv.get("folder")), S(sv["folder_spelling"])[:100]))
+    jn = load(os.path.join(run, w.RUN), {}).get("joint") or {}
+    if jn.get("answer"):
+        out.append("Joint meeting with a spouse: %s (the chat's evidence, attested: \"%s\")." % (jn["answer"], S(jn.get("evidence"))[:100]))
     return out
 
 
@@ -1673,17 +1985,21 @@ def report(R, st, ledger, content, stage, run=None):
         print("\nWHAT PAUL SHOULD GLANCE AT (the program counted these; it cannot judge them):")
         for ln in summary_lines(run or ".", st, ledger, content):
             print("  - " + ln)
-        print("\nPROVEN BY THE PROGRAM (it read the files itself or recomputed): the form's data file as read from its saved copy and its schema, client and date; that every value of it is in the form's saved PDF (exact amounts, whole words) or was looked at; "
-              "that the form's summaries, drafted actions, parking list and cost counters are not printed; that every row has a source and each source is checked: the form field, a quote found in the transcript at that line, a quote found in a document FOR WHICH A TEXT COPY WAS RECORDED (a document without a copy is only listed), a recomputation, a standing rule, a search-backed claim; "
-              "that every ledger entry is covered by the kind of item that can cover it and that item cites the call within 8 lines; totals to the cent from all rows; the standing ABIs; that a quote's insurer and basis are in a source it cites; policy and other long numbers only from a recorded schedule or Overview; "
-              "that every overlay entry landed in the document; the PDF rebuilt from content.json and identical, with no page numbers, no stranded heading, no split row and the font really embedded; that the save size equals the local file and the save folder is the client's own.")
-        print("ONLY ATTESTED BY CLAUDE (typed or done in the chat, recorded, not proven): Paul's own words (the program records what the chat typed), the real send of the PDF in the chat and the real folder save and listing, the visual check, the independent re-check, the six judgment sentences, the Fact Find Summary hand-over, "
-              "that the Planner page was published and Paul said yes to the message; text in a document that has no recorded copy; and every rule that is only text, not a check (pending items stay pending, independent requests not waiting on each other, prior-year figures, garbled lines, comparing the Overview, other documents).")
+        print("\nPROVEN BY THE PROGRAM (it read the files itself or recomputed): the form's data file as read from its saved copy and its schema, client and date; that every value of it is in the form's saved PDF (exact amounts, whole words; a Yes/No or one-character value is not compared) or was looked at; "
+              "that the form's summaries, drafted actions, parking list and cost counters are not printed; that every row has a source and each source is checked: the form field, a quote found in the transcript at that line, a quote found in a document's text copy (the copy is made by the chat: it is checked to name the client, not to be the real document; a document without a copy is only listed), a recomputation, a standing rule, a 'Not discussed' claim whose search the program repeated with the field's written search words; "
+              "that every ledger entry has a line and quote found in the call and is covered by an item of a kind that can cover that kind of entry, that cites the call within 8 lines and shares a word of 4 letters or more with the entry (the KIND of each entry is chosen by the chat: the program cannot tell whether a request was filed under the right kind, so it requires every line with a request, decision, change or quote word to be near a must-cover entry or dismissed with a reason that quotes it); "
+              "that an overriding 'Not discussed' rests on a written reason the program checks only for length, three different words, a cited hit line and a word from it; totals to the cent from all rows; the standing ABIs; that a quote's insurer and basis are in a source it cites; policy and other long numbers only from a recorded schedule or Overview; "
+              "that every overlay entry landed in the document; the PDF rebuilt from content.json and identical, with no page numbers, no stranded heading, no split row and the font really embedded; that the save size equals the local file and the folder path starts (after the drive and liferisk.co.za) with Company - Paul or Company - WR Clients\\Paul Kafentzis (Client Files) and the folder before 2. Fact Find is named 'Surname, First' of this client.")
+        print("ONLY ATTESTED BY CLAUDE (typed or done in the chat, recorded, not proven): Paul's own words (the chat types them with run.py answer; the program checks only that they are on record, that a number used is in them and what the question was about), the joint-meeting answer and its evidence, the real send of the PDF in the chat and the real folder save and listing (the listing is typed by the chat), the visual check, the independent re-check, the six judgment sentences, the Fact Find Summary hand-over, "
+              "that the Planner page was published and Paul said yes to the message, the Teams skill folder (it was NAMED BY THE CHAT: the program checks that it looks like the real one and prints its fingerprint for you to compare), the text copies of the Overview and Policy schedules (made by the chat), text in a document that has no recorded copy; and every rule that is only text, not a check (pending items stay pending, independent requests not waiting on each other, prior-year figures, garbled lines, comparing the Overview, other documents).")
         fnt = (st.get("build") or {}).get("font") or {}
+        rc_ = load(os.path.join(run or ".", w.RECEIPT), {})
+        tsd = ((rc_.get("teams") or {}) if isinstance(rc_, dict) else {}).get("skill_dir")
         print("\nDELIVERY LINE (copy into the reply, unedited):")
         print("Skill version: %s. Transcript read in full TWICE (Pass 1 and Pass 2, %d lines each, %d chunks, every chunk acknowledged in the ledger); %d ledger entries; "
-              "every row of the Fact Find Transcript source-traced (%d sources); FONT: %s."
-              % (w.version_short(), st["total_lines"], k, len(ledger["entries"]), n_src, "Aptos" if fnt.get("aptos") else "NOT Aptos: %s (a substitute)" % (fnt.get("family") or "?")))
+              "every row of the Fact Find Transcript source-traced (%d sources); FONT: %s. Program fingerprint (sha256, first 16 characters) %s (a change during a run is detected unless someone also changes the checker; compare it with the released one)%s."
+              % (w.version_short(), st["total_lines"], k, len(ledger["entries"]), n_src, "Aptos" if fnt.get("aptos") else "NOT Aptos: %s (a substitute)" % (fnt.get("family") or "?"),
+                 w.program_fingerprint()[:16], ("; Teams program fingerprint, sha256 first 16 characters (folder named by the chat) %s" % ", ".join("%s %s" % kv for kv in sorted(teams_fingerprint(tsd).items()))) if tsd else ""))
     elif fails:
         print("\nNOT COMPLETE. You may not tell Paul this run is finished. Fix every FAIL above and re-run.")
 
