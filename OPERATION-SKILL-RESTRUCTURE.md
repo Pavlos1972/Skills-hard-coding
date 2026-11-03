@@ -122,6 +122,7 @@ Others on Paul's list (not yet sized): `advicetech-website-knowledge`, `alpha-ba
 
 ## Running log
 - 03/11/2026: `wr-sroa-builder` Phase B plan approved by Paul ("I approve"). Building.
+- 03/11/2026: `wr-sroa-builder` brief made (folder `wr-sroa-builder`, confirmed by Paul) and sent with the zip, the change list and the backup. Waiting for the upload report from the Chrome chat.
 - 03/11/2026: `wr-sroa-builder` Phases C to E done in one pass (no helpers, ONE test, passed on the source and on the unpacked zip). Zip made (17 files); backup of the old skill made. Two fixes in the fixed script found while testing (flat-list premium ordering; "No change (value)"). Waiting: Paul's real folder name, then brief + send.
 - 03/11/2026: `wr-sroa-builder` Phase A answers recorded (agree to all six; condition: the skill must work as intended). Phase B plan given; waiting for approval.
 - 03/11/2026: `wr-sroa-builder` Phase A done (no helpers, no tests). Main finding: two ID-style numbers (both pass the SA ID checksum) in the live files; figures and file name typed with no proof; R20 only a soft warning; no save method. Side issue: the board and `wr-roa-builder` disagree on the ROA date rule. Waiting for Paul's answers.
