@@ -55,3 +55,5 @@ Phase A report given to Paul 03/11/2026.
 "Agree to all - as long as the skill works as it was intended to execute": yes to 1 to 6 as recommended, with one condition: the rebuilt skill must produce the same SROA as it was meant to. (1) No real-looking client data in the rebuilt skill. (2) Derive from the documents, ONE confirmation table, one question. (3) Figures proven against the documents, "No change" computed, the R20 rule enforced (Paul did not say R20 had changed). (4) `build_sroa.py` stays the fixed base; the checker reads the PDF back. (5) The file name derived by the program, one run per policy. (6) Saving through computer, Microsoft 365, Zapier in order, never overwriting without his yes.
 
 Next: Phase B (plan) given to Paul 03/11/2026, waiting for his approval.
+
+Phase B plan approved by Paul 03/11/2026 ("I approve"). Phase C built 03/11/2026 (see CHANGES-FOR-PAUL.md).

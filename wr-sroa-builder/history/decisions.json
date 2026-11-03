@@ -1,0 +1,57 @@
+[
+ {
+  "from_prefix": "# WR SROA Builder",
+  "reason": "Replaced by the new short title.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "## Index",
+  "reason": "Replaced by the new short Index (five sections).",
+  "needs_paul": false,
+  "to_prefix": "Reference material and scope | Schema, template, logo, build script; p"
+ },
+ {
+  "from_prefix": "Universal operating rules | Nine rules that apply to every step, and t",
+  "reason": "The preamble is replaced by the short intro of references/00-rules.md; the program shows the rules at the start and the right page at each step.",
+  "needs_paul": false,
+  "to_prefix": "These rules come before everything else in this skill. They apply from"
+ },
+ {
+  "from_prefix": "Re-load this skill before you start, and again after any compression. ",
+  "reason": "Rule 1 (re-load this skill) is replaced by the program: it shows the standing rules at the start and the right page at each step, and `run.py status` tells a chat where the job is up to after a compression.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Read before you write. Read the source material completely and careful",
+  "reason": "Rule 3 (read before you write) is replaced by the reading lock: the program serves the documents page by page and each page is acknowledged.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Deliver everything this skill lists, every time. A run is not finished",
+  "reason": "Rule 5 (deliver everything) is replaced by deliverables.json and the checker: a run is finished only with a PASS audit.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Changes to a skill: edit the existing skill, never create a new one. U",
+  "reason": "Rule 9 (changes through the propose_skills card) is replaced by standard S7: skills are changed only in Claude Code and uploaded as a zip by Paul; the 'never say it is live' part is standing rule 7 in SKILL.md.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Last updated, standing rules, changelog | Athens stamp, the edit rule,",
+  "reason": "The hand-typed stamp, the changelog, the two maintenance and packaging notes are replaced by the stamp program (S2) and the packaging program (S7); the full history is in the repo's history folder.",
+  "needs_paul": false,
+  "to_prefix": ">    described as \"already live\" or as needing no further action."
+ },
+ {
+  "from_prefix": "If more than one quote type was compiled (Step 1), also ask whether th",
+  "reason": "The question 'do you want the non-accepted quote(s) referenced for completeness?' is dropped: since the four-block structure was added, Blocks 1-3 already show every compiled quote's own figures, so there is nothing left to reference. Paul: say No if you still want the question.",
+  "needs_paul": true,
+  "to_prefix": "wants it just because a second quote existed."
+ },
+ {
+  "from_prefix": "references/sroa_data_schema.md — exact JSON schema for",
+  "reason": "The reference list is replaced by the index of pages in SKILL.md. The old template asset 'WR_Generic_Servicing_Record_of_Advice.pdf' was REMOVED: it was not a PDF but a zipped page image, the script never used it, and the same image is archived in history/original-template-layout.jpeg. The rule 'extend the script rather than hand-edit' is replaced by 'the script is fixed during a run'. The logo stays in assets/ and the script still falls back to a text header if it is missing.",
+  "needs_paul": true,
+  "to_prefix": "case."
+ }
+]

@@ -1,0 +1,114 @@
+{
+ "skill": "wr-sroa-builder",
+ "steps": [
+  {
+   "id": "locate",
+   "title": "Find the client's documents (three routes, every try logged) and register each one",
+   "ref": [
+    "01-locate.md"
+   ],
+   "do": [
+    "Find the documents the page below lists, for THIS policy, in the client's own folders. Try the routes IN THIS ORDER and record EVERY try, failures too:",
+    "  1  device: the computer (local drive / OneDrive)    2  m365: the Microsoft 365 connector    3  zapier: the Zapier Office 365 tools",
+    "Record each try: python3 {scripts}/run.py access {run} --purpose locate --route device|m365|zapier --result failed|found --note \"what you did\"",
+    "Register each document you bring: python3 {scripts}/run.py doc {run} --role ROLE --file <local copy> --route <the route>   (ROLE is on the page below; for current_ps also --policy <this run's policy number> [--pages 3-5])",
+    "A document that really does not exist: ask Paul, then python3 {scripts}/run.py doc {run} --missing ROLE --said \"Paul's words\"",
+    "The program checks every file is readable and keeps its text so every figure you enter can be checked against it."
+   ],
+   "check": "locate_ok",
+   "proof": "the tries are logged in order, the Current Policy Schedule pages of this policy and at least one quote are registered, and the acceptance email and Fact Find Summary are registered (or Paul said they do not exist)"
+  },
+  {
+   "id": "read",
+   "title": "Read the policy's schedule pages, the quotes and the acceptance email, one page at a time",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py read {run}",
+    "The program shows the text page by page. Read each page fully, then acknowledge it with a one-line note (`run.py read {run} --ack ROLE:PAGE --note \"...\"`). Pages are acknowledged in order; a page with no readable text must be viewed as an image by you."
+   ],
+   "check": "read_ok",
+   "proof": "every page was served in order and acknowledged"
+  },
+  {
+   "id": "answers",
+   "title": "Enter the answers with their sources; the program checks every figure against the documents",
+   "ref": [
+    "02-answers.md"
+   ],
+   "do": [
+    "Write ONE answers file in the layout the page below describes, every answer with its source, then run: python3 {scripts}/run.py answers {run} --file <your answers file>",
+    "The program refuses a name, ID, date, CP number or figure it cannot find in the right document's text, a premium line that is not 'Premium (incl. R20 policy fee)', a heading out of order, and any unresolved conflict between sources (then STOP and ask Paul, quoting both values and their sources).",
+    "Ask Paul for what only he can give: the reason for the change in his own words, whether the policy is investment-linked (and the portfolio reason), and anything the program cannot settle. Never type a figure from memory and never copy one from another client."
+   ],
+   "check": "answers_ok",
+   "proof": "the answers are valid, sourced, free of conflicts, and every name, ID, date, CP number and figure was found in the right document's text"
+  },
+  {
+   "id": "confirm",
+   "title": "Show Paul the confirmation table, ask ONE question, record his yes",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py show {run}",
+    "Put the whole table it prints in your reply and ask exactly the one question it gives. Nothing is built before his clear yes.",
+    "When he says yes, record his own words: python3 {scripts}/run.py approve {run} --said \"his exact words\"",
+    "If an answer changes, run answers and show again: the earlier yes then no longer counts."
+   ],
+   "check": "confirm_ok",
+   "proof": "Paul was shown exactly these answers and said yes"
+  },
+  {
+   "id": "build",
+   "title": "The program assembles the data and builds the SROA with the fixed script",
+   "ref": [
+    "03-build-rules.md"
+   ],
+   "do": [
+    "Run: python3 {scripts}/run.py build {run}",
+    "It assembles the data from your confirmed answers (never typed), draws the PDF with the fixed script and names the file. You never edit a script, the data or the PDF."
+   ],
+   "check": "build_ok",
+   "proof": "the SROA is exactly what the program builds from the confirmed answers, and the script printed no warning"
+  },
+  {
+   "id": "check",
+   "title": "The program opens the finished PDF and proves the pre-delivery checks; you look at the pages",
+   "ref": [
+    "04-check-save.md"
+   ],
+   "do": [
+    "Run: python3 {scripts}/run.py check {run}",
+    "Every line must be a green tick. Then look at EVERY page image it saves (logo top left and clear of the title; nothing crowded; two signature lines with blank space above). If something is wrong, tell Paul; never hand-patch the PDF: fix the answers and rebuild."
+   ],
+   "check": "check_ok",
+   "proof": "every program check on the finished PDF is a green tick"
+  },
+  {
+   "id": "save",
+   "title": "Save the SROA in the client's Servicing folder, never overwriting without Paul's yes",
+   "ref": [],
+   "do": [
+    "List the policy's `Servicing` folder (computer first, then Microsoft 365, then Zapier; record every try with --purpose save) and note the file names already there. Then: python3 {scripts}/run.py name {run} --existing \"name one.pdf;name two.pdf\"",
+    "If a file with the same name exists the program stops: ask Paul; only with his yes run it again with --overwrite-yes \"his words\".",
+    "Save exactly the file it names, then list the folder again and record what it shows:",
+    "  python3 {scripts}/run.py receipt {run} save.folder <the folder path>      python3 {scripts}/run.py receipt {run} save.listed_bytes <the size the listing shows>",
+    "If no route can carry a PDF, give the file to Paul in the chat and tell him exactly which folder to drop it in; say plainly it was not saved."
+   ],
+   "check": "save_ok",
+   "proof": "the derived name was used, nothing was overwritten without Paul's yes, the folder is Servicing and the listed size equals the local file"
+  },
+  {
+   "id": "final",
+   "title": "The final check and the SHORT AUDIT for Paul",
+   "ref": [
+    "05-handover.md"
+   ],
+   "do": [
+    "Run: python3 {scripts}/run.py done {run} final",
+    "Put in your reply, as it is: the saved file's name and folder, the PDF in the chat, then the short audit. Nothing longer.",
+    "Any red cross means the job is not finished: say so."
+   ],
+   "check": "verify_final",
+   "proof": "the final checker prints no red cross"
+  }
+ ]
+}

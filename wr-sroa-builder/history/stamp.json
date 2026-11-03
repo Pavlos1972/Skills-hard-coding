@@ -1,0 +1,5 @@
+{
+ "stamp": "2026-11-03 15:15",
+ "fingerprint": "8f6fb3c36ef8b28ec3cadd7dd0bb08e010ab59229c8b70235cc40a43e84588a4",
+ "change": "First program-driven version: documents served page by page, answers checked against their text, 'No change' computed, R20 label enforced, fixed script, the finished PDF read back, short audit"
+}

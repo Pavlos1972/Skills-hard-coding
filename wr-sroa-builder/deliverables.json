@@ -1,0 +1,21 @@
+{
+ "skill": "wr-sroa-builder",
+ "deliverables": [
+  {
+   "name": "The Servicing Record of Advice (.pdf), one per policy",
+   "file": "out/SROA - [Insurer]_[Policy Number] - [DD.MM.YY] - ([First]_[Surname]).pdf",
+   "produced_by": "scripts/run.py build (scripts/sroa.py assembles the data, scripts/build_sroa.py draws the PDF)",
+   "handover": "saved into the client's Servicing folder through the three routes in order, never overwriting without Paul's yes, and sent in the chat",
+   "checked_by": "scripts/verify.py + scripts/pdfcheck.py (reopen the PDF and prove the pre-delivery checks)",
+   "step": "save"
+  },
+  {
+   "name": "Short audit",
+   "file": "printed by scripts/verify.py; full record in out_record/audit-full.txt",
+   "produced_by": "scripts/verify.py",
+   "handover": "pasted into the reply as it is: one line per check with a green tick or a red cross, one closing line for what is only attested",
+   "checked_by": "scripts/run.py done final",
+   "step": "final"
+  }
+ ]
+}
