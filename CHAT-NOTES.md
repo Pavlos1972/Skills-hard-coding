@@ -24,7 +24,7 @@ Every one of Paul's claude.ai skills must be restructured so that **a program go
 | Skill | State |
 |---|---|
 | `client-teams-transcript-skill` | LIVE v34 (Paul confirmed 30/10/2026). The 02/11/2026 15:55 build (follow-up appointment IS an action for Sitamah) was uploaded as v35 by a Chrome chat; **Paul has not confirmed it live yet**. The new Fact Find skill needs v35. |
-| `ff-population-transcript` | **Program-driven build finished (round 5, commit d434670, stamp 2026-11-03 06:12).** Lint PASS, inventory 0 unaccounted (568 old sentences: 391 kept, 68 reworded, 109 dropped on record), 356 tests (builder's count; the packager reruns them). NOT uploaded, NOT live. Zip and upload brief: `releases/` (once the packager has passed). |
+| `ff-population-transcript` | **Program-driven build finished (round 5, commit d434670, stamp 2026-11-03 06:12).** Lint PASS, inventory 0 unaccounted (568 old sentences: 391 kept, 68 reworded, 109 dropped on record), 356 tests (builder's count; the packager reruns them). NOT uploaded, NOT live. **Packaged 03/11/2026 on Paul's instruction WITHOUT the packager's two test runs (`--skip-tests`)**: lint PASS, zip `releases/ff-population-transcript-20261103-0612.zip` (165,944 bytes, 24 files) and its upload brief. Proof on the zip itself: unpacked it elsewhere and the end-to-end journey test (invented data, with the real Teams program) passed against its scripts. The full suite was NOT rerun on the zip or on this final code by me (the builder reported 356 passing). |
 | `fact-find-summary` | Interim TEXT update only (02/11/2026): zip and brief in the scratchpad `interim/out/`, outside the repo, NOT uploaded. It removes the skill's own Sitamah message so only the Teams skill makes it. Program-driven rebuild NOT started: only when Paul says go, and without helpers. |
 | `planner-interim-procedure`, `ff-to-ff-populate` | FORGET (Paul). Never convert them. |
 
@@ -42,7 +42,7 @@ Every one of Paul's claude.ai skills must be restructured so that **a program go
 - Paul's open yes/no questions (items 1 to 17 in CHANGES-FOR-PAUL.md): labels written by me, Aptos substitute, header sizes, "Not discussed" tick-box rows, request words, dismissal limits, credit life as a hard word, keep/remove a business contact's address in references/04.
 
 ## 7. What happens next (in this order, one thing at a time)
-1. Packager passes for `ff-population-transcript` (runs lint and every test twice, in the background). Then `tools/make_upload_brief.py <zip> --folder "C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New\ff-population-transcript"`.
+1. DONE: the zip is packaged (see section 4) and its brief made with `tools/make_upload_brief.py <zip> --folder "C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New\ff-population-transcript"`.
 2. Paul puts the zip in that folder and pastes the brief into a chat that has Claude in Chrome. Expect ONE entry and a "Replace" box: the upload replaces the skill and the old version stays in its version history (that is the backup). Test with a fresh chat: quote the "Last updated" line and the first section title.
 3. Paul confirms v35 of the Teams skill is live, then confirms the new Fact Find skill is live after his first real run. Never say "live" before that.
 4. Upload the interim `fact-find-summary` text update too, so the Sitamah message is made once (by the Teams skill) and not twice.
