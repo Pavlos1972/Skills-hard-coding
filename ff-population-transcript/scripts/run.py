@@ -777,7 +777,7 @@ def cmd_ledger(a):
         rw = verify.request_word(verify.window_text(lines, a.line))
         if a.kind in verify.KINDS_OPTIONAL and rw and a.line not in allowed_:
             w.die("REFUSED: line %d (or a line next to it) holds the word '%s' (a request, decision, change or quote word), so it cannot be recorded as a plain '%s'. Record it as a gap, difference, contact, quote_request, next_step, change or request. "
-                  "If it truly needs nothing, dismiss it with: run.py ledger review --line %d --reason \"<a reason that quotes the words of that line>\" (a line with FNA, quote, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up or reduced can only be dismissed on Paul's recorded answer)." % (a.line, rw, a.kind, a.line))
+                  "If it truly needs nothing, dismiss it with: run.py ledger review --line %d --reason \"<a reason that quotes the words of that line>\" (a line with FNA, quote, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up, reduced or credit life can only be dismissed on Paul's recorded answer)." % (a.line, rw, a.kind, a.line))
         qw = verify.quote_word(lines[a.line - 1])
         if qw and a.kind != "quote_request" and a.line not in allowed_:
             w.die("REFUSED: line %d holds the word '%s' (an FNA, quote, shortfall, RGAR, EGAR or reduced quote line), so the entry must be kind quote_request, not '%s'. If the line is not a request at all, ask Paul: run.py ask %s --need dismissals --about \"%d\" --kind knowledge --question ... --searched ..., then run.py answer." % (a.line, qw, a.kind, a.run, a.line))
@@ -810,6 +810,11 @@ def cmd_ledger(a):
         ent[a.id]["covered_by"] = sorted(set(ent[a.id].get("covered_by") or []) | set(a.items))
         save()
         print("%s covered by %s" % (a.id, ent[a.id]["covered_by"]))
+        lines_c = w.read_lines(a.run)
+        must_c = [x for x in led["entries"] if x.get("kind") in verify.KINDS_MUST_COVER and isinstance(x.get("line"), int)]
+        for h_, gaps_ in verify.open_topics(lines_c, must_c, targets, ent[a.id]):
+            print("STILL OPEN: line %d (%r) names %s and is not covered for %s yet: cover it from each product's own quote row or request field (a credit-life line: a fill or an answer of a credit-life field)."
+                  % (h_, lines_c[h_ - 1].strip()[:60], " and ".join(n for n, _ in verify.line_topics(lines_c[h_ - 1])), " and ".join(gaps_)))
     elif a.action == "exclude":
         if a.id not in ent:
             w.die("no ledger entry %s" % a.id)
@@ -840,7 +845,7 @@ def cmd_ledger(a):
         lo, hi = (a.line, a.line) if a.line is not None else (a.frm, a.to)
         hard_in = [i for i in sorted(verify.hard_lines(lines_)) if lo <= i <= hi and i not in verify.paul_allowed_lines(a.run, lines_)]
         if hard_in:
-            w.die("REFUSED: line(s) %s hold a request word that cannot be dismissed (FNA, quote, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up, reduced). Record each as a ledger entry (a quote line as quote_request). "
+            w.die("REFUSED: line(s) %s hold a request word that cannot be dismissed (FNA, quote, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up, reduced, credit life). Record each as a ledger entry (a quote line as quote_request). "
                   "If a line really is not a request (for example 'as the quote said last year'), ask Paul: run.py ask %s --need dismissals --about \"%s\" --kind knowledge --question ... --searched ..., then run.py answer ... --said \"<his words>\"." % (hard_in[:8], a.run, ",".join(str(i) for i in hard_in[:8])))
         led["scan_reviewed"].append(rec)
         save()
@@ -1002,7 +1007,7 @@ def cmd_claim(a):
                 need.append((key, label, "run.py lead first: contact details are called 'Not discussed' only after the lead-source search"))
                 continue
             if key.startswith("debts.") and key.count(".") == 2:
-                need.append((key, label, "a debt detail: find it in the form, the call, the Overview, other documents or Outlook; if truly missing: run.py claim --key %s --as Requested --searched \"<what was searched, the Outlook search included>\"" % key))
+                need.append((key, label, "a debt detail: find it in the form, the call, the Overview, other documents or Outlook; if truly missing, and the call does not mention it: run.py claim --key %s --as Requested --searched \"<what was searched, the Outlook search included>\"" % key))
                 continue
             terms, curated = verify.field_terms(lay, key, label)
             hits, docs = verify.search_terms(a.run, lines, terms)
@@ -1033,10 +1038,9 @@ def cmd_claim(a):
     hits, docs = verify.search_terms(a.run, lines, terms)
     sib = verify.sibling_hits(lay, fr, a.key)
     why = (a.reviewed or "").strip()
-    if a.as_ == "Not discussed":
-        conf = verify.quote_request_conflict(lines, load_ledger(a.run), a.key)
-        if conf:
-            w.die("REFUSED: %s." % verify.conflict_text(a.key, conf, lines))
+    conf = verify.quote_request_conflict(lines, load_ledger(a.run), a.key)         # whatever the word (Not discussed, N/A, Requested): the call asked for it (round 5, G1)
+    if conf:
+        w.die("REFUSED: '%s' on %s: %s." % (a.as_, a.key, verify.conflict_text(a.key, conf, lines)))
     if a.as_ == "Not discussed" and (hits or docs or sib):
         prob = w.reason_hit_problem(why, hits, lines)
         if prob:
@@ -1045,8 +1049,16 @@ def cmd_claim(a):
         w.die("REFUSED: only this field's label words could be searched (a WEAK search): give --reviewed saying what you checked: %s." % w.reason_problem(why))
     if a.as_ == "Requested" and (not a.key.startswith("debts.") or not lead.get("searched") or len(a.searched or "") < 20):
         w.die("REFUSED: 'Requested' is for a debt detail only, and only after the form, the call, the Overview, other documents AND Outlook were checked: a recorded Outlook search (run.py lead) and what was searched (--searched, at least 20 characters) are needed.")
+    if a.as_ == "Requested" and hits:                                              # 'Requested' says nobody told us: the call must not mention the field (round 5, G2)
+        prob = w.reason_hit_problem(why, hits, lines)
+        if prob:
+            w.die("REFUSED: the call mentions this field (searched %s: call lines %s), so it was not 'Requested' from nobody. Read them and fill the field from what they say, or give --reviewed saying why those lines do not answer it: %s."
+                  % (terms[:3], hits[:8], prob))
     if a.as_ == "N/A" and w.reason_problem(why):
         w.die("REFUSED: 'N/A' needs the reason (--reviewed): %s." % w.reason_problem(why))
+    if a.as_ == "N/A" and hits and w.reason_hit_problem(why, hits, lines):          # 'N/A' is as much a claim of silence as 'Not discussed' (round 5)
+        w.die("REFUSED: the call mentions this field (searched %s: call lines %s), so 'N/A' cannot rest on silence. Read them and fill the field, or give --reviewed saying why those lines do not answer it: %s."
+              % (terms[:3], hits[:8], w.reason_hit_problem(why, hits, lines)))
     if a.key in verify.CONTACT_KEYS and not lead.get("searched"):
         w.die("REFUSED: contact details are called 'Not discussed' only after the lead-source search (run.py lead).")
     record(a.key, a.as_, terms, hits, docs, why, a.searched or "", weak=not curated)

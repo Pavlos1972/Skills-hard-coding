@@ -66,7 +66,7 @@ The fourth reader said every round-3 attack was closed. Three fresh ones still g
 
 **Your answer to a question about a request line**
 - A question like "Is this fine?" with your answer "yes" could free a request line, and a wide range could free hundreds of lines.
-- Now the question must quote at least 4 words (4 letters or more) of EVERY line it names. The program checks that against the call. A line with fewer such words must be quoted in full.
+- Now the question must name at least 4 of the line's words (4 letters or more) for EVERY line it frees. The program checks that against the call. A line with fewer such words must have all of them in the question. (Round 5 below says exactly how the program counts.)
 - One answer can free at most 5 lines in all. A wider range frees nothing.
 - The glance list shows, next to each freed line, the full question the chat recorded and your recorded words.
 - The checker fails, and says so, when a recorded answer does not meet these rules.
@@ -82,6 +82,45 @@ The fourth reader said every round-3 attack was closed. Three fresh ones still g
 
 **Still true (I cannot close these with a program)**
 - Claude types your words itself with `run.py answer`, so "Paul said yes" is attested.
+- A doctored copy of the Teams skill, or a self-patched fingerprint, needs an outside anchor (for example the released fingerprint in the upload brief).
+- The text copies of an Overview or schedule are made by Claude.
+- A written reason is checked for form, never for truth.
+- A request worded with none of the listed words is not required by the program.
+
+## Fix round 5 (the last pass found two more routes)
+The reader said the round-4 routes were closed. Two more still got through. Both are closed now. In plain words:
+
+**A quote line that names two products**
+- A line like "ask BrightRock for a new business FNA quote and a shortfall quote" was covered by the shortfall row only.
+- The FNA fields were then marked "N/A", and the PDF said "FNA quote: requested N/A".
+- Now a line that names two products needs a cover for EACH, from that product's own quote row or its own request field.
+- The checker names the product that is missing. The cover command says "STILL OPEN" until both are done.
+- The same holds when the second product is named on the next line.
+- A request field answered "N/A" or "Not discussed" covers nothing.
+- "Not discussed", "N/A" and "not on the call" are all refused on a product's fields while the request stands. Before, only "Not discussed" was.
+
+**Credit life**
+- Credit life on the call was dismissed as a soft line. Then the credit-life fields were marked "Not discussed" and the Absa loan was marked "Requested".
+- Now "credit life", "creditor life" and "life cover on the bond" are hard words. Such a line cannot be dismissed. It must be an entry.
+- Only you can say that a credit-life line is not a request.
+- A credit-life line is covered only by a fill or an answer of a credit-life field: requested, lender, balance, cover, or a debt's "Credit life with lender". A note does not cover it.
+- "Credit life: requested" cannot be "Not discussed" or "N/A" while the call talks about credit life. The balance and the cover still can be, with a reason.
+- "Requested" on a debt detail is refused when the call mentions that detail.
+- It needs the same reason as an overriding "Not discussed": the reason names a line by number and holds a word from it.
+
+**The glance list**
+- A request line with a hard word is printed in full. It is no longer cut at 60 characters.
+- Each line shows the products found around it, for example "products: FNA, shortfall".
+- Each line shows the group of every row that covers it, for example "quote.bf_sf [the shortfall quote (bf)]".
+
+**A wording fix**
+- Earlier pages said your question must "quote" 4 words of each line it frees.
+- The program really checks that the question names at least 4 of the line's words.
+- It compares the first 5 letters of each word, in any order. So a question that names the words but does not copy the sentence still counts.
+- The checker's page and this page now say so.
+
+**Still true (I cannot close these with a program)**
+- Claude types your words itself with `run.py answer`, so "Paul said yes" is attested. A question that names the line's words and an answer typed by the same chat cannot be told from a real one.
 - A doctored copy of the Teams skill, or a self-patched fingerprint, needs an outside anchor (for example the released fingerprint in the upload brief).
 - The text copies of an Overview or schedule are made by Claude.
 - A written reason is checked for form, never for truth.
@@ -138,9 +177,10 @@ Every rule of the old skill is still there. A program (`tools/inventory.py`) wen
 12. **The "Not discussed" tick-box rows.** About 30 empty tick-box and detail rows in sections 10 and 11 print "Not discussed" (for example the provider pick-lists and the detail rows under a "No"). I left them as they are. The sample PDF shows them. **Keep them printing, or hide them? Keep / Hide.**
 13. **Two small header sizes.** The title block at the top of page 1 has a brand line at 11 pt and a tag line at 8 pt, smaller than the 12 pt body, because that is how the old script drew it. **Make them 12 pt like everything else? Yes / No.**
 
-14. **Request words.** The checker now treats these words as marking a request line, besides the scan's own list. HARD (cannot be dismissed; must be an entry, or you must say it is not a request): FNA, quote, shortfall, RGAR, EGAR, goal analysis, reduced, authority, payslip, appointment, next meeting, set up, follow up. SOFT (can be dismissed with a reason that quotes the line): ask, request, sign, can you, could you, would you, please, I'd like, I will need, organise, arrange, book, prepare, run the numbers, come back to me, get back to me, send me, email me, let me know. Each such line must be next to an entry that shares a word with it or be dismissed with a reason. That means a few more lines to record on a real call. **OK? Yes / No.**
+14. **Request words.** The checker now treats these words as marking a request line, besides the scan's own list. HARD (cannot be dismissed; must be an entry, or you must say it is not a request): FNA, quote, shortfall, RGAR, EGAR, goal analysis, reduced, authority, payslip, appointment, next meeting, set up, follow up, credit life (also creditor life and life cover on the bond). SOFT (can be dismissed with a reason that quotes the line): ask, request, sign, can you, could you, would you, please, I'd like, I will need, organise, arrange, book, prepare, run the numbers, come back to me, get back to me, send me, email me, let me know. Each such line must be next to an entry that shares a word with it or be dismissed with a reason. That means a few more lines to record on a real call. **OK? Yes / No.**
 15. **The 25% / 60% limits.** If more than 25% of the call's lines, or more than 60% of its request lines, are dismissed, the step stops unless you say to go on. **Are those the right limits? Yes / No.**
-16. **Freeing a request line.** One answer of yours can free at most 5 lines, and the question must quote at least 4 words of each. Is that the right size? Yes / No.
+16. **Freeing a request line.** One answer of yours can free at most 5 lines, and the question must name at least 4 of the line's words for each. Is that the right size? Yes / No.
+17. **Credit life is a hard word.** "Credit life", "creditor life" and "life cover on the bond" now mark a request line that cannot be dismissed (you have a special rule for credit life). Such a line must be an entry, and only a fill or an answer of a credit-life field covers it. **Is that what you want? Yes / No.**
 
 ## What I could not do or check
 - **I have not seen the form's label file, its saved PDF, or a finished PDF from the new form.** The tests use an invented form with the real field names, and a PDF I generated from it. The real first run is the real test.

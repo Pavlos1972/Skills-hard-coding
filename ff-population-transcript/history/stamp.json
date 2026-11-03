@@ -1,5 +1,5 @@
 {
- "stamp": "2026-11-03 05:31",
- "fingerprint": "d0a33230fa2a19cdc64bddda10ce3044b477623df64e053bb7933d9ab74a7245",
- "change": "Fix round 4 after a confirmation review: a quote request is covered only by its own product's row, a freed request line needs a question that quotes it, and a shared verb no longer counts"
+ "stamp": "2026-11-03 06:12",
+ "fingerprint": "c87e1f197ce76214abb2e18910e3497e5d163a63f5d8547aa509e0abe4e921bd",
+ "change": "Fix round 5 after a confirmation review: a quote line naming two products needs a cover for each, N/A and not-on-the-call are refused like Not discussed, credit life is a hard word, and Requested is refused when the call mentions the field"
 }

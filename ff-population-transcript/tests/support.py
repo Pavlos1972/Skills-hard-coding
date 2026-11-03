@@ -349,9 +349,11 @@ class Chat(unittest.TestCase):
         self.ok("compose", self.run_dir)
         r = self.ok("claim", self.run_dir, "--all-empty")
         lines = slurp(self.p("transcript.txt")).split("\n")
+        ov_ = overlay if overlay is not None else self.overlay()
+        filled = {f.get("key") for f in ov_.get("fills") or [] if isinstance(f, dict)}      # a field the overlay fills is not claimed 'Not discussed' first (round 5: the program now refuses that for credit life)
         for ln in r.stdout.splitlines():
             m = re.match(r"^\s+- ([\w.]+) \((.*?)\): the search finds call lines \[(\d+)", ln)
-            if m and not m.group(1).startswith("debts."):
+            if m and not m.group(1).startswith("debts.") and m.group(1) not in filled:
                 key, label, h = m.group(1), m.group(2), int(m.group(3))
                 why = "line %d says %r, which is about something else than %s" % (h, " ".join(lines[h - 1].split()[:8]), label)
                 self.ok("claim", self.run_dir, "--key", key, "--as", "Not discussed", "--reviewed", why)

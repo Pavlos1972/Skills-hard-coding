@@ -647,14 +647,15 @@ def check_form(run, R, lines, content):
 
 # ---------------------------------------------------------------- B ledger and coverage
 # Lines of the call that carry a request, a decision, a change or a quote word. The scan's own list (tx.HIGH_RE) plus the words of this skill's job.
-#  HARD words (FNA, quote, shortfall, RGAR, EGAR, goal analysis, reduced, authority, payslip, appointment, next meeting, set up, follow up): a line that holds one can NOT be
+#  HARD words (FNA, quote, shortfall, RGAR, EGAR, goal analysis, reduced, authority, payslip, appointment, next meeting, set up, follow up, credit life): a line that holds one can NOT be
 #  dismissed by a review at all; it must be an entry of a kind that has to be covered, unless Paul's recorded answer says that line is not a request (round 3, A1).
 #  QUOTE words (FNA, quote, shortfall, RGAR, EGAR, goal analysis, reduced): an entry on such a line must be kind quote_request (round 3, A3).
 #  SOFT words (ask, request, sign, can you, could you, would you, please, I'd like, I will need, organise, arrange, book, prepare, run the numbers, come back to me, get back to me,
 #  send me, email me, let me know): with the scan's own words (send, email, tomorrow ...) these lines may be dismissed with a reason that quotes the line.
 # Every such line must be within 3 lines of a ledger entry of a kind that must be covered AND share a word of 4 letters or more with it (a line with no such word: any near
 # entry), or be dismissed with a reason that quotes it. A request line cannot be filed as a plain "fact" (N1), also when the entry sits a line or two away (A8).
-HARD_RE = re.compile(r"\b(?:fna|quot(?:e|es|ed|ing)|shortfall|rgar|egar|goal analysis|reduced|authori[sz]\w*|authority|payslip\w*|appointment\w*|next meeting|set up|follow[- ]?up)\b", re.I)
+CREDIT_LIFE_RE = re.compile(r"\bcredit(?:or)?[ -]?life\b|\blife cover on the (?:bond|home loan|loan)\b", re.I)        # Paul has a special rule for credit life (round 5, G2)
+HARD_RE = re.compile(r"\b(?:fna|quot(?:e|es|ed|ing)|shortfall|rgar|egar|goal analysis|reduced|authori[sz]\w*|authority|payslip\w*|appointment\w*|next meeting|set up|follow[- ]?up)\b|" + CREDIT_LIFE_RE.pattern, re.I)
 QUOTE_RE = re.compile(r"\b(?:fna|quot(?:e|es|ed|ing)|shortfall|rgar|egar|goal analysis|reduced)\b", re.I)
 SOFT_RE = re.compile(r"\b(?:ask(?:ed|ing)?|request\w*|sign(?:ed|ing|ature)?|can you|could you|would you|please|i['\u2019]?d like|i would like|i will need|organi[sz]\w*|arrange\w*|book(?:ed|ing)?|prepare\w*|run the numbers|come back to me|get back to me|send me|email me|let me know)\b", re.I)
 EXTRA_RE = re.compile(HARD_RE.pattern + "|" + SOFT_RE.pattern, re.I)
@@ -711,6 +712,11 @@ def key_group(key):
 
 def quote_request_conflict(lines, ledger, key):
     """The quote_request entry of the ledger whose line (and the lines either side) names the product the field `key` belongs to, or None."""
+    if str(key) == "cl_req":                                  # the credit-life answer: refused while the ledger records credit life on the call (round 5, G2)
+        for e in (ledger or {}).get("entries") or []:
+            if isinstance(e, dict) and e.get("kind") in KINDS_MUST_COVER and isinstance(e.get("line"), int) and 1 <= e["line"] <= len(lines) and CREDIT_LIFE_RE.search(lines[e["line"] - 1]):
+                return e
+        return None
     gid = key_group(key)
     if not gid:
         return None
@@ -722,7 +728,10 @@ def quote_request_conflict(lines, ledger, key):
 
 
 def conflict_text(key, e, lines):
-    return ("the ledger records a quote request for %s at line %d (%r): fill the request from the call's words instead of saying the call did not discuss it"
+    if str(key) == "cl_req":
+        return ("the ledger records credit life on the call at line %d (%r): fill the field from the call's words; 'Not discussed', 'N/A' and 'not on the call' are all refused while the call talks about credit life"
+                % (e["line"], lines[e["line"] - 1].strip()[:50]))
+    return ("the ledger records a quote request for %s at line %d (%r): fill the request from the call's words; 'Not discussed', 'N/A' and 'not on the call' are all refused while the request stands"
             % (GROUP_TITLES.get(key_group(key), "this product"), e["line"], lines[e["line"] - 1].strip()[:50]))
 
 
@@ -750,7 +759,7 @@ book booked arrange prepare organise organize request requests like come back fr
 
 def dismissal_problem(about, question, lines):
     """([lines], None) when a dismissals question really frees the lines it names; otherwise ([], the plain reason). At most 5 lines in all, and the question's own text must quote
-    at least 4 words of 4 letters or more (all of them, for a line that has fewer) of EVERY named line: the program checks that against the call."""
+    at least 4 of the words (4 letters or more, compared by their first 5 letters, in any order; all of them for a line that has fewer) of EVERY named line: the program checks that against the call."""
     nums = []
     for tok in about or []:
         t = S(tok).strip()
@@ -775,7 +784,7 @@ def dismissal_problem(about, question, lines):
             return [], "line %d holds no word of 4 letters or more to quote" % n
         got = len(w.shared_content_words(question or "", lines[n - 1]))
         if got < need:
-            return [], "the question must quote at least %d words (4 letters or more) of line %d (%r): it quotes %d. Put what that line says into the question, so Paul can see it" % (need, n, lines[n - 1].strip()[:50], got)
+            return [], "the question must name at least %d of the words (4 letters or more) of line %d (%r): it names %d. Put what that line says into the question, so Paul can see it" % (need, n, lines[n - 1].strip()[:50], got)
     return nums, None
 
 
@@ -850,6 +859,14 @@ def curated_terms(lay, key, label=""):
     return list(terms) if curated else []
 
 
+CL_KEY_RE = re.compile(r"cl_(?:req|lender|bal|life)|debts\.\d+\.cl")
+
+
+def credit_life_key(key):
+    """True for a credit-life field: the four credit-life answers (requested, lender, balance, cover) and a debt's 'Credit life with lender' cell (round 5, G2)."""
+    return bool(CL_KEY_RE.fullmatch(str(key or "")))
+
+
 def cover_targets(run, ov, cross, lead, content=None):
     """Everything a ledger entry can be covered by: id -> {types, lines (the call lines it cites), texts (its own words: value, text ...; never the field's label), terms (the field's curated search words)}."""
     lay = w.layout()
@@ -868,14 +885,18 @@ def cover_targets(run, ov, cross, lead, content=None):
         if name == "quotes":
             grp = next((q for q in lay["quote_groups"] if q["id"] == it.get("group")), {})
             texts.append(S(grp.get("title")))
-        t[it.get("id", name)] = {"types": types, "lines": lines, "texts": texts, "terms": terms,
+        cl = credit_life_key(S(it.get("key"))) or (name == "rows_add" and it.get("list") == "debts" and isinstance(it.get("cells"), dict) and bool(S(it["cells"].get("cl")).strip()))
+        t[it.get("id", name)] = {"types": types, "lines": lines, "texts": texts, "terms": terms, "cl": cl,
                                  "group": it.get("group") if name == "quotes" else (key_group(S(it.get("key"))) if it.get("key") else None)}
+        if name == "fills":
+            t[it.get("id", name)]["value"] = S(it.get("value"))
     cross_lines = {}
     for i in cross:
         a = i.get("answer")
         if isinstance(a, dict) and a.get("r") in ("same", "differs") and isinstance(a.get("line"), int):
             types = {"cross"} | ({"cross_differs"} if a["r"] == "differs" else set()) | ({"quote_req"} if i["key"] in req_keys else set())
-            t[i["key"]] = {"types": types, "lines": [a["line"]], "texts": [S(i.get("value"))] + ([S(a.get("value"))] if a.get("value") else []), "terms": curated_terms(lay, S(i["key"]), S(i.get("label"))), "group": key_group(S(i["key"]))}
+            t[i["key"]] = {"types": types, "lines": [a["line"]], "texts": [S(i.get("value"))] + ([S(a.get("value"))] if a.get("value") else []), "terms": curated_terms(lay, S(i["key"]), S(i.get("label"))), "group": key_group(S(i["key"])),
+                      "cl": credit_life_key(S(i["key"])), "value": S(a.get("value")) if a["r"] == "differs" else S(i.get("value"))}
             cross_lines[i["key"]] = a["line"]
     if lead:
         t["lead"] = {"types": {"lead"}, "lines": [], "texts": [], "terms": []}
@@ -893,6 +914,9 @@ def cover_targets(run, ov, cross, lead, content=None):
 
 
 LEAD_WORDS = re.compile(r"(?i)\b(referr\w*|recommend\w*|heard (?:about|of)|found (?:you|us)|d\s*&\s*r|marketing|lead|introduced)\b")
+
+
+NOT_AN_ANSWER = frozenset(("", "na", "notapplicable", "notdiscussed", "none", "requested", "tbc"))
 
 
 def cover_problem(kind, line, tid, tinfo, quote="", window=""):
@@ -917,11 +941,76 @@ def cover_problem(kind, line, tid, tinfo, quote="", window=""):
         if prods and not any(tinfo["group"] in g for _, g in prods):
             return ("%s covers %s, but the entry's own line is about %s: a quote request is covered only by the quote row or request field of the product it names (%s)"
                     % (tid, GROUP_TITLES.get(tinfo["group"], tinfo["group"]), " and ".join(n for n, _ in prods), ", ".join(sorted(set().union(*[g for _, g in prods])))))
+    if kind == "quote_request" and "quote_req" in tinfo["types"] and "value" in tinfo and re.sub(r"[^a-z]+", "", S(tinfo["value"]).lower()) in NOT_AN_ANSWER:
+        return "%s says %r, which is not an answer to a quote request: a request field that covers one must say whether the quote is wanted (Yes or No) from the call's own words" % (tid, S(tinfo["value"]))
     own = " ".join(tinfo.get("texts") or [])
     if not w.shared_content_words(quote or "", own) and not terms_in_text(tinfo.get("terms") or [], window or quote or ""):
         return ("%s says nothing about this part of the call: none of the field's own search words (%s) is in the entry's line, and the ledger quote's words (%s) share no word of 4 letters or more with %s's own words (%s)"
                 % (tid, ", ".join((tinfo.get("terms") or [])[:5]) or "none", ", ".join(w.content_words(quote)[:6]) or "none", tid, ", ".join(dict.fromkeys(w.content_words(own)))[:80] or "none"))
     return None
+
+
+def handling_entries(h, lines, ents):
+    """EVERY entry (of a kind that must be covered) that handles request line h: one on the line, or within 3 lines and sharing a topic word with it (line_resolution gives only the first)."""
+    cw = w.content_words(lines[h - 1]) if 1 <= h <= len(lines) else []
+    out = []
+    for e in ents:
+        d = abs(e["line"] - h)
+        if d == 0 or (d <= 3 and (not cw or [x for x in w.shared_content_words(lines[h - 1], S(e.get("quote"))) if x not in REQUEST_FILLER])):
+            out.append(e)
+    return out
+
+
+def line_topics(line):
+    """[(name, quote groups or None for credit life)] of the topics a line of the call names: each product a quote can be for, and credit life (round 5)."""
+    out = [(n, g) for n, g in products_in(line)]
+    if CREDIT_LIFE_RE.search(line or ""):
+        out.append(("credit life", None))
+    return out
+
+
+def topic_gaps(h, lines, ents, targets):
+    """The topics that request line h names (each product, and credit life) that no entry handling the line is REALLY covered for: a quote line that names two products needs a cover from
+    each product's own quote row or request field, and a credit-life line needs a fill or an answer of a credit-life field (round 5, G1 and G2)."""
+    hand = handling_entries(h, lines, ents)
+    gaps = []
+    for name, groups in line_topics(lines[h - 1]):
+        done = False
+        for e in hand:
+            for c in e.get("covered_by") or []:
+                t = targets.get(c)
+                if not t or cover_problem(e["kind"], e["line"], c, t, S(e.get("quote")), window_text(lines, e["line"])):
+                    continue
+                if (t.get("group") in groups) if groups is not None else t.get("cl"):
+                    done = True
+        if not done:
+            gaps.append(name)
+    return gaps
+
+
+def topic_gap_text(h, lines, gaps, ents, targets):
+    named = [n for n, _ in line_topics(lines[h - 1])]
+    now = ["%s on line %d" % (cover_label(c, targets), e["line"]) for e in handling_entries(h, lines, ents) for c in e.get("covered_by") or []]
+    return ("line %d (%r) names %s, but it is not covered for %s: a line that names several products needs a cover from EACH product's own quote row or request field, and a credit-life line "
+            "needs a fill or an answer of a credit-life field (cl_req, cl_lender, cl_bal, cl_life, or a debt's 'Credit life with lender'). Covered now: %s"
+            % (h, lines[h - 1].strip()[:70], " and ".join(named), " and ".join(gaps), "; ".join(now) or "nothing"))
+
+
+def open_topics(lines, ents, targets, entry):
+    """[(line, missing topics)] of the hard request lines that `entry` handles and that still lack a cover for something they name (shown when a cover is added)."""
+    out = []
+    for h in sorted(hard_lines(lines)):
+        if entry in handling_entries(h, lines, ents):
+            gaps = topic_gaps(h, lines, ents, targets)
+            if gaps:
+                out.append((h, gaps))
+    return out
+
+
+def cover_label(c, targets):
+    t = (targets or {}).get(c) or {}
+    lab = GROUP_TITLES.get(t.get("group")) or t.get("group") or ("a credit-life field" if t.get("cl") else None)
+    return "%s [%s]" % (c, lab) if lab else c
 
 
 def reviewed_lines(ledger):
@@ -988,6 +1077,18 @@ def check_ledger(run, st, lines, ledger, targets, R):
             if all(probs):
                 R.add("FAIL", g, "%s (%s, line %d) is not really covered: %s" % (where, kind, ln, "; ".join(probs)))
                 bad += 1
+    must_ents = [e for e in ents if e.get("kind") in KINDS_MUST_COVER and isinstance(e.get("line"), int) and 1 <= e["line"] <= len(lines)]
+    freed = paul_allowed_lines(run, lines)
+    for h in sorted(hard_lines(lines)):
+        if h in freed:
+            continue
+        hand = handling_entries(h, lines, must_ents)
+        if not any(e.get("covered_by") for e in hand):                 # nothing handles it (already a FAIL) or nothing is covered yet (already a FAIL)
+            continue
+        gaps = topic_gaps(h, lines, must_ents, targets)
+        if gaps:
+            R.add("FAIL", g, topic_gap_text(h, lines, gaps, must_ents, targets))
+            bad += 1
     if not bad:
         must = sum(1 for e in ents if e.get("kind") in KINDS_MUST_COVER)
         R.add("PASS", g, "%d ledger entries, every quote found verbatim; all %d gap/difference/contact/quote/next-step entries are covered by the kind of item that can cover them (a fill, a difference, a quote row, a request, an answer) and that item cites the call within %d lines of the entry" % (len(ents), must, COVER_SPAN))
@@ -1028,7 +1129,7 @@ def check_scan_resolution(run, st, lines, ledger, R):
     hard_open = [h for h in unresolved if h in hard]
     soft_open = [h for h in unresolved if h not in hard]
     if hard_open:
-        R.add("FAIL", g, "%d line(s) of the call hold a request word that cannot be dismissed (FNA, quote, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up, reduced) and are not handled by an entry of a kind that must be covered on the line or within 3 lines of it that shares a word with it: lines %s%s. "
+        R.add("FAIL", g, "%d line(s) of the call hold a request word that cannot be dismissed (FNA, quote, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up, reduced, credit life) and are not handled by an entry of a kind that must be covered on the line or within 3 lines of it that shares a word with it: lines %s%s. "
               "Record each as an entry (a quote line as quote_request), or, if a line really is not a request, ask Paul (run.py ask --need dismissals --about \"<the line numbers>\" --kind knowledge ..., then run.py answer)"
               % (len(hard_open), hard_open[:15], "..." if len(hard_open) > 15 else ""))
     if soft_open:
@@ -1399,10 +1500,10 @@ def check_rules(run, lines, content, fr, ov, R):
         why = S(cl.get("reviewed")).strip()
         row = rows.get(key) or {}
         terms, curated = field_terms(lay, key, row.get("label", key))
+        conf = quote_request_conflict(lines, load(os.path.join(run, w.LEDGER), {}), key)         # for every claim word: Not discussed, N/A and Requested (round 5, G1)
+        if conf:
+            fail("claim %s '%s': %s" % (key, word, conflict_text(key, conf, lines)))
         if word == "Not discussed":
-            conf = quote_request_conflict(lines, load(os.path.join(run, w.LEDGER), {}), key)
-            if conf:
-                fail("claim %s 'Not discussed': %s" % (key, conflict_text(key, conf, lines)))
             hits, docs = search_terms(run, lines, list(dict.fromkeys(terms + list(cl.get("terms") or []))))
             sib = sibling_hits(lay, fr, key)
             if hits or docs or sib:
@@ -1420,8 +1521,19 @@ def check_rules(run, lines, content, fr, ov, R):
         elif word == "Requested":
             if not key.startswith("debts.") or not lead.get("searched") or len(S(cl.get("searched"))) < 20:
                 fail("claim %s 'Requested': only a debt detail that is truly missing after the form, the call, the Overview, other documents AND Outlook (a recorded lead search) were checked; say what was searched in --searched" % key)
-        elif w.reason_problem(why):
-            fail("claim %s 'N/A' needs the reason (--reviewed): %s" % (key, w.reason_problem(why)))
+            req_hits, _ = search_terms(run, lines, list(dict.fromkeys(terms + list(cl.get("terms") or []))))
+            if req_hits:                                                    # 'Requested' says nobody told us: the call must not mention the field (round 5, G2)
+                prob = w.reason_hit_problem(why, req_hits, lines)
+                if prob:
+                    fail("claim %s 'Requested' but the call mentions it (searched %s: lines %s). Read them, then fill the field from what they say, or record why they do not answer it (run.py claim --reviewed): %s"
+                         % (key, terms[:3], req_hits[:6], prob))
+        else:
+            if w.reason_problem(why):
+                fail("claim %s 'N/A' needs the reason (--reviewed): %s" % (key, w.reason_problem(why)))
+            na_hits, _ = search_terms(run, lines, list(dict.fromkeys(terms + list(cl.get("terms") or []))))
+            if na_hits and w.reason_hit_problem(why, na_hits, lines):         # 'N/A' is as much a claim of silence as 'Not discussed' (round 5)
+                fail("claim %s 'N/A' but the call mentions it (searched %s: lines %s). Read them, then fill the field from what they say, or record why they do not answer it (run.py claim --reviewed): %s"
+                     % (key, terms[:3], na_hits[:6], w.reason_hit_problem(why, na_hits, lines)))
     # every overlay entry must have landed in the document (nothing may be dropped silently)
     for oid in content.get("overlay_unused") or []:
         fail("overlay entry %r landed nowhere in the document (a section, list, key or group that does not apply here): fix it or remove it" % oid)
@@ -2029,12 +2141,12 @@ def claim_stats(run, lines, fr, content):
     rows = {r["id"]: r for _, _, r in iter_rows(content or {})}
     out = []
     for key, cl in load(os.path.join(run, w.CLAIMS), {}).items():
-        if not isinstance(cl, dict) or cl.get("as") != "Not discussed":
+        if not isinstance(cl, dict) or cl.get("as") not in ("Not discussed", "Requested"):
             continue
         label = (rows.get(key) or {}).get("label", key)
         terms, curated = field_terms(lay, key, label)
         hits, docs = search_terms(run, lines, list(dict.fromkeys(terms + list(cl.get("terms") or []))))
-        out.append({"key": key, "label": label, "hits": hits, "docs": docs, "sib": sibling_hits(lay, fr, key), "weak": not curated, "reason": S(cl.get("reviewed")), "kind": "claim"})
+        out.append({"key": key, "label": label, "hits": hits, "docs": docs, "sib": sibling_hits(lay, fr, key), "weak": not curated, "reason": S(cl.get("reviewed")), "kind": "claim", "as": cl.get("as")})
     for i in load(os.path.join(run, w.CROSS), []):
         a = i.get("answer") if isinstance(i, dict) else None
         if isinstance(a, dict) and a.get("r") == "not_on_call" and (a.get("hit_lines") or a.get("weak")):
@@ -2062,9 +2174,9 @@ def dismissed_lines(ledger, lines, st, run=None):
     return out
 
 
-def request_resolutions(run, ledger, lines, st):
-    """[(line number, directly on an entry?, phrase)] for EVERY request line: its text (cut at 60 characters) and how it was handled (the entry, and what covers that entry), or that it was
-    dismissed (on Paul's recorded answer, for a hard line), or that it is not handled."""
+def request_resolutions(run, ledger, lines, st, targets=None):
+    """[(line number, directly on an entry?, phrase)] for EVERY request line: its text (the FULL line when it holds a hard word, otherwise cut at 60 characters), the products named in its window,
+    and how it was handled (the entry, and what covers that entry, with each cover's group), or that it was dismissed (on Paul's recorded answer, for a hard line), or that it is not handled."""
     ents = [e for e in (ledger or {}).get("entries") or [] if isinstance(e, dict) and e.get("kind") in KINDS_MUST_COVER and isinstance(e.get("line"), int)]
     why = {}
     for rv in (ledger or {}).get("scan_reviewed") or []:
@@ -2077,13 +2189,16 @@ def request_resolutions(run, ledger, lines, st):
     out = []
     for h in required_lines(lines, st):
         e = line_resolution(h, lines, ents)
-        text = lines[h - 1].strip()[:60]
+        full = lines[h - 1].strip()
+        text = full if hard_word(full) else full[:60]                         # a hard-word line is never cut: Paul reads the whole request
+        prods = [n for n, _ in products_in(window_text(lines, h))]
+        where = '%s"%s"%s' % ("line %d " % h, text, (" [products: %s]" % ", ".join(prods)) if prods else "")
         if e is not None:
-            out.append((h, e["line"] == h, 'line %d "%s" -> entry %s (%s, covered by %s)' % (h, text, e.get("id"), e.get("kind"), ", ".join(e.get("covered_by") or []) or "nothing yet")))
+            out.append((h, e["line"] == h, '%s -> entry %s (%s, covered by %s)' % (where, e.get("id"), e.get("kind"), ", ".join(cover_label(c, targets) for c in e.get("covered_by") or []) or "nothing yet")))
         elif h in why:
-            out.append((h, False, 'line %d "%s" dismissed%s: %s' % (h, text, " on Paul's recorded answer" if h in allowed else "", why[h][:50])))
+            out.append((h, False, '%s dismissed%s: %s' % (where, " on Paul's recorded answer" if h in allowed else "", why[h][:50])))
         else:
-            out.append((h, False, 'line %d "%s" NOT HANDLED' % (h, text)))
+            out.append((h, False, '%s NOT HANDLED' % where))
     return out
 
 
@@ -2126,12 +2241,13 @@ def source_report(run, st, content):
         cs = claim_stats(run, lines_, load(os.path.join(run, w.FORM), {}), content)
     except Exception:
         cs = []
-    over = [c for c in cs if c["kind"] == "claim" and (c["hits"] or c["docs"] or c["sib"])]
-    weakn = [c for c in cs if c["weak"]]
+    over = [c for c in cs if c["kind"] == "claim" and c["as"] == "Not discussed" and (c["hits"] or c["docs"] or c["sib"])]
+    over_req = [c for c in cs if c["kind"] == "claim" and c["as"] == "Requested" and c["hits"]]
+    weakn = [c for c in cs if c["weak"] and c.get("as") != "Requested"]
     over_cross = [c for c in cs if c["kind"] == "not_on_call" and c["hits"]]
     out.append("(d) Left Not discussed (%d, each searched with the field's own search words; %d of them overrode search hits on a written reason, %d rest on a weak search; plus %d 'not on the call' answers that overrode hits): %s"
                % (len(nd), len(over), len([c for c in weakn if c["kind"] == "claim"]), len(over_cross), ", ".join("%s (%s)" % (l, k) for k, l in nd) or "none"))
-    out.append("    Marked Requested (%d): %s" % (len(rq), ", ".join("%s (%s)" % (l, k) for k, l in rq) or "none"))
+    out.append("    Marked Requested (%d; %d of them overrode call hits on a written reason): %s" % (len(rq), len(over_req), ", ".join("%s (%s)" % (l, k) for k, l in rq) or "none"))
     if rep.get("standing"):
         out.append("    Standing rules applied: " + "; ".join(rep["standing"]))
     if rep.get("derived"):
@@ -2162,7 +2278,12 @@ def summary_lines(run, st, ledger, content):
     out.append("Ledger: %d entries; %d lines of the call dismissed with a reason (%d%% of the %d lines); %d of the call's %d decision/change/request/quote lines were dismissed instead of recorded (%d%%)%s"
                % (len(ents), dismissed, round(100.0 * dismissed / total), total, len(dl), len(req), round(100.0 * len(dl) / (len(req) or 1)),
                   "  <-- MORE THAN A QUARTER OF THE CALL WAS DISMISSED: look at the reasons" if dismissed > 0.25 * total else ""))
-    rr = request_resolutions(run, ledger, lines, st)
+    try:                                                              # the covering items' groups for the glance list (a synthetic folder has no inputs: then none are shown)
+        inp_ = compose.load_inputs(run)
+        targets_ = cover_targets(run, inp_["overlay"], inp_["cross"] if dict_list(inp_["cross"]) else [], inp_["lead"], content if isinstance(content, dict) and content else None)
+    except Exception:
+        targets_ = {}
+    rr = request_resolutions(run, ledger, lines, st, targets_)
     if rr:
         cz = ((st or {}).get("scan") or {}).get("closing_from") or (len(lines) + 1)
         if len(rr) <= 40:
@@ -2184,7 +2305,7 @@ def summary_lines(run, st, ledger, content):
             if c["hits"]:
                 return "call lines %s" % c["hits"][:4]
             return ("documents %s" % c["docs"][:2]) if c["docs"] else ("the form says " + "; ".join(c["sib"][:1]))
-        out.append("%d 'Not discussed' / 'not on the call' answer(s) overrode what the search found, on the chat's written reason (the program checks only its length, three different words, a cited hit line and a word from it): %s%s"
+        out.append("%d 'Not discussed' / 'Requested' / 'not on the call' answer(s) overrode what the search found, on the chat's written reason (the program checks only its length, three different words, a cited hit line and a word from it): %s%s"
                    % (len(over), "; ".join("%s (%s), %s: %s" % (c["label"], c["key"], what(c), c["reason"][:60]) for c in over[:15]), " ..." if len(over) > 15 else ""))
     # Teams program and this skill's program: fingerprints to compare with the released ones
     rc = load(os.path.join(run, w.RECEIPT), {})
@@ -2231,10 +2352,10 @@ def report(R, st, ledger, content, stage, run=None):
             print("  - " + ln)
         print("\nPROVEN BY THE PROGRAM (it read the files itself or recomputed): the form's data file as read from its saved copy and its schema, client and date; that every value of it is in the form's saved PDF (exact amounts, whole words; a Yes/No or one-character value is not compared) or was looked at; "
               "that the form's summaries, drafted actions, parking list and cost counters are not printed; that every row has a source and each source is checked: the form field, a quote found in the transcript at that line, a quote found in a document's text copy (the copy is made by the chat: it is checked to name the client, not to be the real document; a document without a copy is only listed), a recomputation, a standing rule, a 'Not discussed' claim whose search the program repeated with the field's written search words; "
-              "that every ledger entry has a line and quote found in the call and is covered by an item of a kind that can cover that kind of entry, that cites the call within 8 lines and shares a word of 4 letters or more with the entry (the KIND of each entry is chosen by the chat: the program cannot tell whether a request was filed under the right kind). A line of the call with one of the listed request words (the scan's decision/change/request words, and ask, quote, FNA, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up, sign, please, can you, could you, would you, I'd like, organise, arrange, book, prepare, run the numbers, come back to me, send me, email me, let me know) counts as HANDLED when an entry of a kind that must be covered sits on it, or sits within 3 lines of it and shares a TOPIC word of 4 letters or more with it (a request verb or filler such as send, please, would does not count); a soft-word line may instead be dismissed with a reason that quotes it, a hard-word line (FNA, quote, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up, reduced) only on Paul's recorded answer, and an entry on a quote line must be a quote_request, covered only by the quote row or request field of the product its line names (and 'Not discussed' is refused on that product's fields while the request is in the ledger). A request worded with NONE of those words is not required by the program (inherent). The glance list shows how every request line was handled and every line dismissed by a review; "
+              "that every ledger entry has a line and quote found in the call and is covered by an item of a kind that can cover that kind of entry, that cites the call within 8 lines and shares a word of 4 letters or more with the entry (the KIND of each entry is chosen by the chat: the program cannot tell whether a request was filed under the right kind). A line of the call with one of the listed request words (the scan's decision/change/request words, and ask, quote, FNA, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up, sign, please, can you, could you, would you, I'd like, organise, arrange, book, prepare, run the numbers, come back to me, send me, email me, let me know) counts as HANDLED when an entry of a kind that must be covered sits on it, or sits within 3 lines of it and shares a TOPIC word of 4 letters or more with it (a request verb or filler such as send, please, would does not count); a soft-word line may instead be dismissed with a reason that quotes it, a hard-word line (FNA, quote, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up, reduced) only on Paul's recorded answer, and an entry on a quote line must be a quote_request, covered only by the quote row or request field of the product its line names; a quote line that names two products must be covered for each product by that product's own row or request field (a request field answered N/A or Not discussed covers nothing), and the quote-request conflict applies to 'Not discussed', 'N/A' and 'not on the call' (and to 'Requested') on that product's fields while the request is in the ledger. A credit-life line (credit life, creditor life, life cover on the bond) is a hard line, and only a fill or an answer of a credit-life field covers it; 'Requested' is refused while the call mentions the field, unless a reason cites that line and quotes it. A request worded with NONE of those words is not required by the program (inherent). The glance list shows how every request line was handled and every line dismissed by a review; "
               "that an overriding 'Not discussed' rests on a written reason the program checks only for length, three different words, a cited hit line and a word from it; totals to the cent from all rows; the standing ABIs; that a quote's insurer and basis are in a source it cites; policy and other long numbers only from a recorded schedule or Overview; "
               "that every overlay entry landed in the document; the PDF rebuilt from content.json and identical, with no page numbers, no stranded heading, no split row and the font really embedded; that the save size equals the local file and the folder path starts (after the drive and liferisk.co.za) with Company - Paul or Company - WR Clients\\Paul Kafentzis (Client Files) and the folder before 2. Fact Find is named 'Surname, First' of this client.")
-        print("ONLY ATTESTED BY CLAUDE (typed or done in the chat, recorded, not proven): Paul's own words (the chat types them with run.py answer; the program checks only that they are on record, that a number used is in them, that the question was recorded with at most 10 field ids that its own text names, and, for a dismissals question, that it names at most 5 lines and that its text quotes at least 4 words of each line it names; every line freed that way is shown on the glance list with the full question and his recorded words), the joint-meeting answer and its evidence, the real send of the PDF in the chat and the real folder save and listing (the listing is typed by the chat), the visual check, the independent re-check, the six judgment sentences, the Fact Find Summary hand-over, "
+        print("ONLY ATTESTED BY CLAUDE (typed or done in the chat, recorded, not proven): Paul's own words (the chat types them with run.py answer; the program checks only that they are on record, that a number used is in them, that the question was recorded with at most 10 field ids that its own text names, and, for a dismissals question, that it names at most 5 lines and that its text names at least 4 of the line's words (compared by their first 5 letters, in any order) for each line it frees; every line freed that way is shown on the glance list with the full question and his recorded words), the joint-meeting answer and its evidence, the real send of the PDF in the chat and the real folder save and listing (the listing is typed by the chat), the visual check, the independent re-check, the six judgment sentences, the Fact Find Summary hand-over, "
               "that the Planner page was published and Paul said yes to the message, the Teams skill folder (it was NAMED BY THE CHAT: the program checks that it looks like the real one and prints its fingerprint for you to compare), the text copies of the Overview and Policy schedules (made by the chat), text in a document that has no recorded copy; and every rule that is only text, not a check (pending items stay pending, independent requests not waiting on each other, prior-year figures, garbled lines, comparing the Overview, other documents).")
         fnt = (st.get("build") or {}).get("font") or {}
         rc_ = load(os.path.join(run or ".", w.RECEIPT), {})

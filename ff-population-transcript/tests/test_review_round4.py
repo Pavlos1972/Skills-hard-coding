@@ -147,7 +147,7 @@ class DismissalQuestion(Staged):
         n = self.L("new business FNA quote")
         r = self.ask(str(n), "Is this fine?")
         self.assertNotEqual(r.returncode, 0)
-        self.assertIn("quote at least", r.stdout + r.stderr)
+        self.assertIn("name at least", r.stdout + r.stderr)
 
     def test_f2_the_question_must_quote_every_named_line(self):
         n, other = self.L("new business FNA quote"), self.L("Retirement Goal Analysis")
@@ -213,7 +213,7 @@ class DismissalQuestion(Staged):
         lines_, prob = verify.dismissal_problem(["2"], "Is this about the risk cover, the BrightRock business quote?", lines)
         self.assertIsNone(prob)
         lines_, prob = verify.dismissal_problem(["2"], "Is this fine?", lines)
-        self.assertIn("quote at least", prob)
+        self.assertIn("name at least", prob)
         lines_, prob = verify.dismissal_problem(["3"], "Is this fine?", lines)
         self.assertIn("not in the transcript", prob)
 
@@ -292,4 +292,4 @@ class Wording(Chat):
         src = inspect.getsource(verify.report)
         self.assertNotIn("the at most 10 ids it was about", src)
         self.assertIn("at most 5 lines", src)
-        self.assertIn("quotes at least 4 words", src)
+        self.assertIn("names at least 4 of the line's words", src)
