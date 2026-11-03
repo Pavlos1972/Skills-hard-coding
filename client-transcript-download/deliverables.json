@@ -1,0 +1,21 @@
+{
+ "skill": "client-transcript-download",
+ "deliverables": [
+  {
+   "name": "Teams meeting transcript (.docx) in the client's 2. Fact Find folder",
+   "file": "out/Teams meeting transcript - DD.MM.YY - (First Surname).docx",
+   "produced_by": "scripts/run.py name (from the received transcript, read by scripts/trread.py)",
+   "handover": "copied (never moved, never overwritten) into the client's 2. Fact Find folder; folder listed back and the listed size compared with the local file",
+   "checked_by": "scripts/verify.py (meeting, fetch routes, header, length, gaps, derived name, save size and folder)",
+   "step": "save"
+  },
+  {
+   "name": "Short audit",
+   "file": "printed by scripts/verify.py; full record in out_record/audit-full.txt",
+   "produced_by": "scripts/verify.py",
+   "handover": "pasted into the reply as it is: one line per check with a green tick or a red cross, one line for what is only attested, one line for the next skill",
+   "checked_by": "scripts/run.py done final",
+   "step": "final"
+  }
+ ]
+}

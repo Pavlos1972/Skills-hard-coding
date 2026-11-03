@@ -1,0 +1,66 @@
+[
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Source first - never invent.",
+  "new": "references/00-rules.md rule 1 and SKILL.md standing rule 1: save only what Teams gave; never edit, summarise, complete or rebuild a transcript.",
+  "why": "Shortened to what applies to a download.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Paul asks for a client's Teams meeting transcript",
+  "new": "SKILL.md description: after a client meeting or when Paul asks to save a transcript; only for transcripts that exist in Teams for that meeting (references/01-fetch-routes.md, If there is no transcript).",
+  "why": "Moved into the description and the routes page.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This skill is Paul's explicit instruction to use Claude in Chrome",
+  "new": "references/00-rules.md rules 3 to 5 and 01-fetch-routes.md: Teams is for reading the recap and its transcript only; never delete anything; the file is copied, never moved, and the original stays where it is.",
+  "why": "Chrome is now the third route, after the Microsoft 365 connector and Zapier (Paul, 03/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Identify the client and the meeting date",
+  "new": "steps.json steps identify, fetch, check, name, save and final, with the Chrome steps in references/01-fetch-routes.md and the folder and copy rules in references/02-save.md.",
+  "why": "The eight steps are replaced by a program that shows one step at a time; the Python read of the .docx is replaced by the checker (2 minutes, 10-minute gap).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If Teams will not open, Paul is not signed in",
+  "new": "references/00-rules.md rule 7: stop after 2 or 3 attempts on a route, say exactly what happened, then the next route; when all three fail tell Paul exactly what was tried.",
+  "why": "Now one rule per route instead of a single Chrome-only rule.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "After saving, Paul may ask for the summary",
+  "new": "The final audit's Next line: a first meeting goes to ff-population-transcript (then fact-find-summary), a follow-up to client-teams-transcript-skill.",
+  "why": "Paul, 03/11/2026, question 5: yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every correction re-opens the whole task",
+  "new": "references/00-rules.md rule 11.",
+  "why": "Kept in meaning.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Deliver everything this skill lists, every time.",
+  "new": "references/03-handover.md and the step driver: the transcript is copied into the client's folder and listed back; the reply is the short audit.",
+  "why": "The delivery list is now the program's steps and the audit.",
+  "needs_paul": false
+ }
+]

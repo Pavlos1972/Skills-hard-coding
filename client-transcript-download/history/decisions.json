@@ -1,0 +1,45 @@
+[
+ {
+  "from_prefix": "1 | Universal operating rules + Delivery gate | The nine rul",
+  "reason": "Replaced by the new short Index (five sections).",
+  "needs_paul": false,
+  "to_prefix": "7 | Related | Hand-off to client-teams-transcript-skill |"
+ },
+ {
+  "from_prefix": "## UNIVERSAL OPERATING RULES - READ FIRST, APPLY TO EVERY ST",
+  "reason": "The preamble is replaced by the short intro of references/00-rules.md; the program shows the rules at the start and the right page at each step.",
+  "needs_paul": false,
+  "to_prefix": "These rules come before everything else in this skill. They "
+ },
+ {
+  "from_prefix": "Re-load this skill before you start, and again after any com",
+  "reason": "Rule 1 (re-load this skill) is replaced by the program: it shows the standing rules at the start and the right page at each step, and `run.py status` tells a chat where the job is up to after a compression.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Read before you write. Read the source material completely a",
+  "reason": "Rule 3 (read before you write) concerned drafting from a source. This skill drafts nothing: it saves what Teams gave, and the program reads the file itself.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Changes to a skill: edit the existing skill, never create a ",
+  "reason": "Rule 9 (changes go through the propose_skills card) is replaced by standard S7: skills are changed only in Claude Code and uploaded as a zip by Paul.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Delivery gate for this skill (rules 5 and 6 applied): a run ",
+  "reason": "The Delivery gate is replaced by the program: the six steps in order and the checker's short audit prove each item (identified, fetched, complete, named, saved and listed).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Last updated: 2026-10-14 14:41 (Athens time)",
+  "reason": "The hand-typed Last updated line, the changelog paragraphs and the changelog table are replaced by the stamp the tool sets (S2) and the Recent changes table; the full history lives in the repo history/ folder.",
+  "needs_paul": false,
+  "to_prefix": "> Standing rule: whenever this SKILL.md is edited, add a one"
+ },
+ {
+  "from_prefix": "Do not try Graph/Zapier/MS365 connector routes first - they ",
+  "reason": "Replaced (Paul, 03/11/2026, question 1: yes): the Microsoft 365 connector now holds OnlineMeetingTranscript.Read.All, so it is tried first, then Zapier, then Chrome, every try logged (S4).",
+  "needs_paul": false
+ }
+]

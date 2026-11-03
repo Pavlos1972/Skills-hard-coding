@@ -1,0 +1,82 @@
+{
+ "skill": "client-transcript-download",
+ "steps": [
+  {
+   "id": "identify",
+   "title": "Identify the client's meeting (title, date and length)",
+   "ref": [],
+   "do": [
+    "Work out which meeting: Paul's message gives the client and the meeting date (DD/MM/YYYY). If it does not, take the most recent completed client meeting on his calendar (`outlook_calendar_search` through the Microsoft 365 connector).",
+    "Find its title, start time and length (the calendar entry, the Teams recap, or ask Paul). Then record it:",
+    "  python3 {scripts}/run.py meeting {run} --title \"the meeting title\" --started \"DD/MM/YYYY, HH:MM\" --length \"1h 36m 2s\" --via m365|zapier|chrome|paul",
+    "The program refuses it unless all three are readable, and warns when the date is not the one Paul asked for. If it warns, stop and check with Paul."
+   ],
+   "check": "identify_ok",
+   "proof": "the meeting is recorded and its date equals the date Paul gave"
+  },
+  {
+   "id": "fetch",
+   "title": "Fetch the transcript (Microsoft 365, then Zapier, then Chrome; every try logged)",
+   "ref": ["01-fetch-routes.md"],
+   "do": [
+    "Try the routes IN THIS ORDER and record EVERY try, failures too (stop after 2 or 3 attempts on a route, then go to the next):",
+    "  1  m365: the Microsoft 365 connector (it holds the transcript permission)",
+    "  2  zapier: the Zapier Microsoft Teams tools",
+    "  3  chrome: Claude in Chrome (the route that has always worked)",
+    "Record each try: python3 {scripts}/run.py access {run} --purpose fetch --route m365|zapier|chrome --result failed|found --note \"what you did and what came back\"",
+    "When a route gives you the transcript as a file (.docx, .vtt or text), bring a copy into the run folder: python3 {scripts}/run.py source {run} --file <the local file> --route <the route>",
+    "If all three fail, tell Paul exactly what happened (for example transcription was not started in the meeting). Do not invent or rebuild a transcript."
+   ],
+   "check": "fetch_ok",
+   "proof": "the fetch tries are logged in order, one of them found the file, and run.py source brought it into the run folder"
+  },
+  {
+   "id": "check",
+   "title": "The program checks the transcript (header, length, gaps)",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py check {run}",
+    "It reads the file itself. A transcript is complete when its header shows the meeting title and date and its last time stamp is within 2 minutes of the meeting length, with no gap longer than 10 minutes between two time stamps.",
+    "If it prints a red cross, tell Paul exactly what it says and what is missing. Never save an incomplete transcript as if it were complete."
+   ],
+   "check": "check_ok",
+   "proof": "no red cross for the header, the length or the gaps"
+  },
+  {
+   "id": "name",
+   "title": "The program builds the file under its derived name",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py name {run}",
+    "It builds `Teams meeting transcript - DD.MM.YY - (First Surname).docx` in out/ (a Teams .docx is copied unchanged; text from the connector is written as a .docx). You never type the file name."
+   ],
+   "check": "name_ok",
+   "proof": "out/ holds exactly one file, correctly named, that reads back with the same time stamps"
+  },
+  {
+   "id": "save",
+   "title": "Save a COPY into the client's 2. Fact Find folder and list it",
+   "ref": ["02-save.md"],
+   "do": [
+    "Follow the rules below. Record every try to find or reach the folder: python3 {scripts}/run.py access {run} --purpose save --route device|m365|zapier --result failed|found --note \"...\"",
+    "Then record: python3 {scripts}/run.py receipt {run} save.folder \"<the full folder path>\"",
+    "              python3 {scripts}/run.py receipt {run} save.already_existed no     (yes means STOP and tell Paul)",
+    "              python3 {scripts}/run.py receipt {run} save.listed_bytes <the size shown when you listed the folder>"
+   ],
+   "check": "save_ok",
+   "proof": "the save tries are logged and the three receipts are recorded"
+  },
+  {
+   "id": "final",
+   "title": "The final check and the SHORT AUDIT for Paul",
+   "ref": ["03-handover.md"],
+   "do": [
+    "Run: python3 {scripts}/run.py done {run} final",
+    "Put the short audit it prints in your reply exactly as it is: one line per check with a green tick or a red cross, one line for what is only attested, one line for the next skill. Add one plain sentence: the client folder and file name saved and, if the Chrome route was used, that the original is still in Downloads for Paul to delete.",
+    "Any red cross means the job is not finished: say so."
+   ],
+   "check": "verify_final",
+   "proof": "the final checker prints no red cross"
+  }
+ ]
+}
