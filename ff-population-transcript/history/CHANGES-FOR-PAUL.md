@@ -126,6 +126,40 @@ The reader said the round-4 routes were closed. Two more still got through. Both
 - A written reason is checked for form, never for truth.
 - A request worded with none of the listed words is not required by the program.
 
+## Fix round 6 (the glance list never showed the VALUE)
+The reader said both round-5 routes were closed. Two fresh tries still ended in PASS, silently, because the glance list showed WHICH field covered a request line but never the VALUE the chat wrote. In plain words:
+
+**A "No" that covers a request**
+- The call said "ask BrightRock for a new business FNA quote". The chat wrote "No" in the FNA request field, and the page said "FNA quote: requested No".
+- Now a bare "No" (or "None") cannot cover a line that asks for something. The line asks when it holds a word like ask, request, send, quote, will need, would like, can you or please, and no word like no, not, don't, never, none, without, decline or cancel.
+- A request field that covers a quote line must say "Yes".
+- A real "No" still works when the line itself says it, for example "I do not want an FNA quote".
+- If the client really said no and the line does not show it, the chat must ask you about that field and record your words. Your words must say no. They are then shown next to the cover.
+- A bad value is refused even when another item also covers the line.
+
+**Credit life with a "No"**
+- The call said there is credit life with Absa on the home loan. The chat wrote "No" for "Credit life with lender" and for "Credit life: requested".
+- Now "No" for a credit-life field is refused when the sentence it cites says credit life exists and has no "no", "not", "none", "never" or "without" in it.
+- If the cited line is a question ("is there credit life on it?"), the answer after it decides.
+- "No" for the other loan ("The WesBank car finance has none") is accepted, because that sentence says none.
+- You can still say no: your recorded words about the field let it through, and are shown.
+
+**The glance list shows every value**
+- Every covering item now shows what it wrote: "fna_req = No", a quote row's insurer and basis, the first 40 characters of a note or a request.
+- One new line, "Values written to cover the call", lists every fill that covers any line: key = value (line n). It shows the first 40, then the count.
+
+**What the program can and cannot know**
+- The VALUE of a fill that covers a request line is the chat's own reading of the call. The program prints it and refuses a bare No when the line asks for something. It cannot know what the client really said.
+- The old message said "from the call's own words". It now says what the program really checks.
+
+**Still true (I cannot close these with a program)**
+- Claude types your words itself with `run.py answer`, so "Paul said no" is attested.
+- A doctored copy of the Teams skill, or a self-patched fingerprint, needs an outside anchor (for example the released fingerprint in the upload brief).
+- The text copies of an Overview or schedule are made by Claude.
+- A written reason is checked for form, never for truth.
+- A request worded with none of the listed words is not required by the program.
+- A wrong value that is not a bare "No" (a wrong date, a wrong insurer) is shown on the glance list, but only you can tell it is wrong.
+
 ## What the skill does now
 After a Fact Find meeting it builds the **Fact Find Transcript PDF** from, in this order: the form's data file (and the form's own saved PDF), the Teams transcript, the latest Overview, and the client's other documents. A program does the work step by step; Claude cannot skip a step, and at the end the checker prints PASS or FAIL for every item. The PDF has your fixed 11 sections in your order, then "Next Steps & Next Meeting". The Fact Find Summary, the Planner note and the message to Sitamah are still made by the other two skills (once, not twice).
 
@@ -181,6 +215,7 @@ Every rule of the old skill is still there. A program (`tools/inventory.py`) wen
 15. **The 25% / 60% limits.** If more than 25% of the call's lines, or more than 60% of its request lines, are dismissed, the step stops unless you say to go on. **Are those the right limits? Yes / No.**
 16. **Freeing a request line.** One answer of yours can free at most 5 lines, and the question must name at least 4 of the line's words for each. Is that the right size? Yes / No.
 17. **Credit life is a hard word.** "Credit life", "creditor life" and "life cover on the bond" now mark a request line that cannot be dismissed (you have a special rule for credit life). Such a line must be an entry, and only a fill or an answer of a credit-life field covers it. **Is that what you want? Yes / No.**
+18. **A "No" on a request line.** A bare "No" cannot cover a line that asks for something, unless the line itself says no or you say no about that field (your words are then shown). **Is that what you want? Yes / No.**
 
 ## What I could not do or check
 - **I have not seen the form's label file, its saved PDF, or a finished PDF from the new form.** The tests use an invented form with the real field names, and a PDF I generated from it. The real first run is the real test.

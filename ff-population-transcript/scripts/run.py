@@ -804,9 +804,14 @@ def cmd_ledger(a):
         if bad:
             w.die("REFUSED: these items do not exist (overlay ids, answered cross-check keys, 'lead', 'claim:<key>', quote rows such as quote.fna): %s" % bad)
         e_ = ent[a.id]
-        probs = [verify.cover_problem(e_["kind"], e_["line"], i, targets[i], e_["quote"], verify.window_text(w.read_lines(a.run), e_["line"])) for i in a.items]
+        lines_v = w.read_lines(a.run)
+        probs = [verify.cover_problem(e_["kind"], e_["line"], i, targets[i], e_["quote"], verify.window_text(lines_v, e_["line"]), lines_v) for i in a.items]
         if all(probs) and e_["kind"] in verify.KINDS_MUST_COVER:
             w.die("REFUSED: %s" % "; ".join(probs))
+        if e_["kind"] in verify.KINDS_MUST_COVER:                       # an item that writes a bad VALUE is refused even when another item in the same call would cover the entry (round 6)
+            bad_v = [vp for vp in (verify.value_problem(e_["kind"], e_["line"], i, targets[i], verify.window_text(lines_v, e_["line"]), lines_v) for i in a.items) if vp]
+            if bad_v:
+                w.die("REFUSED: %s" % "; ".join(bad_v))
         ent[a.id]["covered_by"] = sorted(set(ent[a.id].get("covered_by") or []) | set(a.items))
         save()
         print("%s covered by %s" % (a.id, ent[a.id]["covered_by"]))

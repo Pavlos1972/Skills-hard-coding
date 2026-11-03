@@ -1,5 +1,5 @@
 {
- "stamp": "2026-11-03 06:12",
- "fingerprint": "c87e1f197ce76214abb2e18910e3497e5d163a63f5d8547aa509e0abe4e921bd",
- "change": "Fix round 5 after a confirmation review: a quote line naming two products needs a cover for each, N/A and not-on-the-call are refused like Not discussed, credit life is a hard word, and Requested is refused when the call mentions the field"
+ "stamp": "2026-11-03 06:50",
+ "fingerprint": "4a0e63db4461af88b7e1875f808ebbe8a2865852fa8ed12ef1f6df3e943fe113",
+ "change": "Fix round 6 after a confirmation review: the glance list shows the value every covering fill wrote, a bare No cannot cover a line that asks for something, and No for credit life is refused when the cited line says it exists"
 }
