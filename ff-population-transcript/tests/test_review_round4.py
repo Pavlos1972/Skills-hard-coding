@@ -74,7 +74,7 @@ class QuoteProduct(Staged):
                 e["covered_by"] = ["quote.bf_sf"]
         self.write("ledger.json", led)
         out = self.verify("--stage", "pre")
-        self.assertTrue(any("shortfall" in ln.lower() and "FNA" in ln for ln in fails(out)), fails(out))
+        self.assertTrue(any("not really covered" in ln and "shortfall" in ln.lower() and "FNA" in ln for ln in fails(out)), fails(out))
 
     def test_f1_not_discussed_on_the_fna_request_is_refused_while_the_ledger_records_the_request(self):
         self.ok("compose", self.run_dir)

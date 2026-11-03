@@ -124,6 +124,17 @@ class TwoProducts(Staged):
         out = self.verify("--stage", "pre")
         self.assertFalse([ln for ln in fails(out) if "names FNA and shortfall" in ln], fails(out))
 
+    def test_g1_a_cover_that_is_not_an_answer_does_not_count_for_its_product(self):
+        ov = self.shortfall_only()
+        ov["fills"].append({"id": "z0", "key": "fna_req", "value": "N/A", "src": self.src()})
+        self.write("overlay.json", ov)
+        self.ok("compose", self.run_dir)
+        self.cover_with("z0", "quote.bf_sf")                      # the FNA request field says N/A: it cannot be the FNA's cover, whatever else covers the entry
+        out = self.verify("--stage", "pre")
+        bad = [ln for ln in fails(out) if "names FNA and shortfall" in ln]
+        self.assertTrue(bad, fails(out))
+        self.assertIn("not covered for FNA", bad[0])
+
     def test_g1_the_two_product_rule_works_on_the_helper_too(self):
         lines = ["x", TWO]
         ents = [{"id": "L1", "line": 2, "kind": "quote_request", "quote": "new business FNA quote and a shortfall quote", "covered_by": ["a"]}]
