@@ -1,0 +1,29 @@
+{
+ "skill": "astute-summary-report-skill",
+ "deliverables": [
+  {
+   "name": "The Astute Report Summary PDF (landscape A4)",
+   "file": "out/Astute Report Summary - DD.MM.YY - (First Surname).pdf",
+   "produced_by": "scripts/run.py build (scripts/model.py composes, scripts/build.py draws), from data entered in a fixed layout and checked against the report's own text",
+   "handover": "saved into the client's 5. Astute folder beside the report (never overwriting) and sent in the chat",
+   "checked_by": "scripts/verify.py (recomputes the content, reads the PDF back, compares the folder listing)",
+   "step": "save"
+  },
+  {
+   "name": "The numbered flag list (most important first)",
+   "file": "printed by run.py done final, from content.json",
+   "produced_by": "scripts/model.py all_flags",
+   "handover": "in the chat reply, before the short audit",
+   "checked_by": "scripts/verify.py",
+   "step": "final"
+  },
+  {
+   "name": "Short audit",
+   "file": "printed by scripts/verify.py; full record in out_record/audit-full.txt",
+   "produced_by": "scripts/verify.py",
+   "handover": "pasted into the reply as it is: one line per check with a green tick or a red cross, one closing line for what is only attested",
+   "checked_by": "scripts/run.py done final",
+   "step": "final"
+  }
+ ]
+}

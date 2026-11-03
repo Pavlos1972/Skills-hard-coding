@@ -1,0 +1,234 @@
+[
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Source first - never invent. Write only what is in the Ast",
+  "new": "references/00-rules.md rule 1: every client figure comes from the report, research confirms product names and terms only; the program refuses an entry it cannot find in the report's text.",
+  "why": "Shortened; the program now enforces it.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Check before you claim. Never say something is done, saved",
+  "new": "references/00-rules.md rule 11: never say it is saved until the folder was listed and the size matched.",
+  "why": "Enforced by the save receipts.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every correction re-opens the whole task. When Paul correc",
+  "new": "references/00-rules.md rule 13: a correction re-opens the whole task; the program re-opens the later steps.",
+  "why": "Enforced by the driver.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never lower the standard. A frustrated user, a short reque",
+  "new": "references/00-rules.md rule 13: never lower the standard; stop and say so when a rule cannot be met.",
+  "why": "Rules 7 and 8 merged.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Delivery gate for this skill (rules 5 and 6 applied): a ru",
+  "new": "scripts/verify.py: each of the five checks of the old Delivery gate is a green tick or a red cross in the short audit; what stays attested is on the closing line.",
+  "why": "The Delivery gate is now done by the checker.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Purpose and when to use it",
+  "new": "SKILL.md description and Index; references/00-rules.md rule 10.",
+  "why": "The section heading became part of the description and the rules.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Step 1: Locate the Astute report (exact to the letter)",
+  "new": "steps.json (locate) and references/01-locate.md.",
+  "why": "Step 1 is now the locate step.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Step 2: Read the whole report (exact to the letter)",
+  "new": "steps.json (read) and scripts/run.py read.",
+  "why": "Step 2 is now the read step with a reading lock.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Step 3: Verify product descriptions (judgment, within the ru",
+  "new": "steps.json (products) and references/03-products-flags.md.",
+  "why": "Step 3 is now the products step.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Step 4: Content and report structure (fixed section order)",
+  "new": "steps.json (data, flags, build), references/02-data.md and 04-build-save.md.",
+  "why": "Step 4 is now the data, flags and build steps.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Step 5: Build the PDF (a pattern to follow)",
+  "new": "steps.json (build) and scripts/build.py.",
+  "why": "Step 5 is now the build step.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Step 6: Save and deliver (exact to the letter)",
+  "new": "steps.json (save, final) and references/04-build-save.md and 05-handover.md.",
+  "why": "Step 6 is now the save and final steps.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Verification checklist (run before saying it is done)",
+  "new": "scripts/verify.py and steps.json (final).",
+  "why": "The checklist is now the checker.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Turns a client's Astute Consolidated Client Portfolio (CCP) ",
+  "new": "SKILL.md description and references/00-rules.md rule 10: it turns the Astute CCP report into a verified summary PDF; it does not analyse policies (life-policy-schedule-analyzer) and does not draw the report (Sitamah).",
+  "why": "Shortened and moved.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Follow this order every time, without asking first:",
+  "new": "references/01-locate.md and steps.json (locate): the three routes in order, every try logged; scripts/run.py access and source.",
+  "why": "The 8:45 window is dropped and Zapier is added (Paul's answer 3, 03/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Local machine first. Through the device bridge, check both",
+  "new": "references/01-locate.md; scripts/run.py source (a real PDF, page count, image-only pages, more than one report needs a reason); never touch another broker's folder.",
+  "why": "Local-first rule replaced by the standard route order; the PDF check is done by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Read every page. Record the report reference, report date, c",
+  "new": "steps.json (read) and scripts/run.py read: the report's text is served one page at a time and each page is acknowledged in order; the header facts and every provider block are entered in the data file (references/02-data.md).",
+  "why": "The reading lock replaces 'read every page'.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "For every product, search the web for the insurer's own curr",
+  "new": "steps.json (products), references/03-products-flags.md and scripts/model.py: one search per distinct product, the source recorded, a description of at most 30 words; an unconfirmed product is flagged.",
+  "why": "Paul's answer 2: one search per distinct product, source recorded.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Header: title, client name, ID number, date of birth, report",
+  "new": "scripts/model.py compose (header_lines, intro) and references/04-build-save.md: the header with title, client name, ID number, date of birth, report reference and date, requested by, and the cross-check note.",
+  "why": "Built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Section 1: Active Policies - Personal Risk Covers and Invest",
+  "new": "references/02-data.md and scripts/model.py (policy_view, section_of, schema_problems) and scripts/build.py: Section 1 with risk covers first then investments, one gold band per insurer, the table columns, stand-alone or accelerated for every benefit, a premium pattern for every policy, parties and beneficiaries with percentages.",
+  "why": "Built by the program from the entered data.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Section 2: Group Risk and Retirement Funds. Table: Categor",
+  "new": "references/02-data.md (section2) and scripts/model.py compose (s2_rows): the Category / Reflected on Astute? / Details table.",
+  "why": "Built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Section 3: Paid-Up Policies. List every policy Astute labe",
+  "new": "scripts/model.py section_of: only a policy whose Astute status says paid-up goes in Section 3.",
+  "why": "Decided by the program from the status as Astute shows it.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Additional Notes: Inactive, Lapsed or Surrendered Policies.*",
+  "new": "scripts/model.py section_of and compose (additional): lapsed, surrendered, inactive and unrecognised statuses go in Additional Notes with the same full details.",
+  "why": "Decided by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "General Verification Notes. Always include the cession not",
+  "new": "scripts/model.py CESSION_NOTE and compose (general): the cession note is always there, one line names providers that returned no data, and the totals added up by the program.",
+  "why": "Built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Flag boxes (orange). Place a flag directly above the affec",
+  "new": "scripts/model.py computed_flags and references/03-products-flags.md: the orange flags, placed directly above the affected table (scripts/build.py flag_box).",
+  "why": "The computable flags are raised by the program; the judgement ones are added with a reason.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Use ReportLab Platypus in the workspace (pip install report",
+  "new": "scripts/build.py and references/04-build-save.md: the look (landscape A4, 15 mm margins, colours, repeated header rows, footer) is drawn by the program; every total is added up by the program; every page is rendered to an image.",
+  "why": "The drawing code is fixed in the skill instead of rewritten each run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Filename: Astute Report Summary - DD.MM.YY - (FirstName S",
+  "new": "references/04-build-save.md, scripts/run.py name and steps.json (save, final): the derived file name, saved in the same 5. Astute folder through the routes in order, never overwriting (numbered (2), (3)), the folder listing checked, the PDF sent in the chat, a numbered flag list.",
+  "why": "Paul's answers 3 to 5.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The deliverable is always a PDF, never chat text alone.",
+  "new": "references/00-rules.md rules 2 to 9: the standing rules, one line each.",
+  "why": "Kept, shortened.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every page of the report was read, and the file was complete",
+  "new": "scripts/verify.py: each item of the old checklist is a check in the short audit; what stays attested is on the closing line.",
+  "why": "Done by the checker.",
+  "needs_paul": false
+ }
+]

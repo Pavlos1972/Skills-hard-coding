@@ -1,0 +1,51 @@
+[
+ {
+  "from_prefix": "# Astute Summary Report Skill",
+  "reason": "Replaced by the new short title.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "# | Section | What it covers |",
+  "reason": "Replaced by the new short Index (five sections).",
+  "needs_paul": false,
+  "to_prefix": "13 | Verification checklist | Run before saying it is done |"
+ },
+ {
+  "from_prefix": "## UNIVERSAL OPERATING RULES - READ FIRST, APPLY TO EVERY STEP OF THE ",
+  "reason": "The preamble and heading are replaced by the short intro of references/00-rules.md; the program shows the rules at the start and the right page at each step.",
+  "needs_paul": false,
+  "to_prefix": "These rules come before everything else in this skill. They apply from"
+ },
+ {
+  "from_prefix": "Re-load this skill before you start, and again after any compression. ",
+  "reason": "Rule 1 (re-load this skill) is replaced by the program: it shows the standing rules at the start and the right page at each step, and `run.py status` tells a chat where the job is up to after a compression.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Read before you write. Read the Astute report and the relevant product",
+  "reason": "Rule 3 (read before you write) is replaced by the reading lock: the program serves the report page by page and each page is acknowledged.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Deliver everything this skill lists, every time. A run is not finished",
+  "reason": "Rule 5 (deliver everything) is replaced by deliverables.json and the checker: a run is finished only with a PASS audit.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Changes to a skill: edit the existing skill, never create a duplicate.",
+  "reason": "Rule 9 (changes through the propose_skills card) is replaced by standard S7: skills are changed only in Claude Code and uploaded as a zip by Paul; the 'never say it is live' part is standing rule 6 in SKILL.md.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Last updated: 2026-10-14 12:21 (Athens/Greece time)",
+  "reason": "The hand-typed stamp, the Recent changes table and the maintenance note are replaced by the stamp program (S2); the full history is in the repo's history folder.",
+  "needs_paul": false,
+  "to_prefix": "> Whenever this skill is edited: add a new one-line row at the top of "
+ },
+ {
+  "from_prefix": "## Key contacts and tools",
+  "reason": "The Key contacts and tools section is replaced by the steps: the routes are in references/01-locate.md, and the program needs pdfplumber, reportlab and pdftoppm (checked at the start). The pdf-reading skill never existed; web search is used in the products step; the chat sends the PDF itself.",
+  "needs_paul": false,
+  "to_prefix": "SendUserFile | Delivering the PDF in the chat |"
+ }
+]

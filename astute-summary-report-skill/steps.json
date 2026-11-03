@@ -1,0 +1,105 @@
+{
+ "skill": "astute-summary-report-skill",
+ "steps": [
+  {
+   "id": "locate",
+   "title": "Find the client's Astute report and bring a copy into the run folder",
+   "ref": ["01-locate.md"],
+   "do": [
+    "Find the client's Astute report (a PDF) in the client's `5. Astute` folder. Try the routes IN THIS ORDER and record EVERY try, failures too:",
+    "  1  device: the computer (local drive / OneDrive)    2  m365: the Microsoft 365 connector    3  zapier: the Zapier Office 365 tools",
+    "Record each try: python3 {scripts}/run.py access {run} --purpose locate --route device|m365|zapier --result failed|found --note \"what you did\"",
+    "Bring a copy into the run folder: python3 {scripts}/run.py source {run} --file <local copy of the report> --route <the route> [--folder-count N --chosen \"which report and why\"]",
+    "The program checks it is a real PDF, counts the pages and notes any page with no readable text."
+   ],
+   "check": "locate_ok",
+   "proof": "the tries are logged in order and the report is in the run folder as a real PDF"
+  },
+  {
+   "id": "read",
+   "title": "Read the report, one page at a time, acknowledging each page",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py read {run}",
+    "The program shows the report's text page by page. Read each page fully, then acknowledge it with a one-line note of what is on it (`run.py read {run} --ack N --note \"...\"`). Pages are acknowledged in order; a page with no readable text must be viewed as an image by you.",
+    "Record while you read: the report reference, report date, the client's name (and the name Astute holds, if different), ID number, date of birth, who requested it, and EVERY provider block, including providers that returned 'client record not found', 'unable to match' or no row."
+   ],
+   "check": "read_ok",
+   "proof": "every page was served in order and acknowledged"
+  },
+  {
+   "id": "data",
+   "title": "Enter the report's data in the fixed layout; the program checks every entry against the report's text",
+   "ref": ["02-data.md"],
+   "do": [
+    "Write ONE data file in the layout the page below describes, then run: python3 {scripts}/run.py data {run} --file <your data file>",
+    "The program refuses a file with a missing label or pattern, then looks for every policy number, figure, date and name in the report's own text. Anything it cannot find is listed: fix the file and run `data` again. Never 'fix' a figure by guessing; if the report does not show it, leave it empty (it is then flagged).",
+    "It adds up the totals itself. Never type a total."
+   ],
+   "check": "data_ok",
+   "proof": "the data is in the fixed layout and every entry was found in the report's text (or the report has no text and the program says so)"
+  },
+  {
+   "id": "products",
+   "title": "Check each distinct product online, one search each, and record the source",
+   "ref": ["03-products-flags.md"],
+   "do": [
+    "For EACH distinct product the program listed, search the insurer's own current product page (one search per product name, not per policy). Then record it:",
+    "  python3 {scripts}/run.py product {run} --name \"product name\" --source <web address> --desc \"short description, at most 30 words\"",
+    "  or, if it cannot be confirmed:  python3 {scripts}/run.py product {run} --name \"product name\" --unconfirmed",
+    "Online research confirms product names, structure and terms only. Every client figure comes from the report."
+   ],
+   "check": "products_ok",
+   "proof": "every product has a recorded source, or is recorded as unconfirmed (which raises an orange flag)"
+  },
+  {
+   "id": "flags",
+   "title": "Add the judgement flags, or say none are needed",
+   "ref": [],
+   "do": [
+    "The program raises the flags it can decide itself (a provider with no data, zero or missing values, a policy with zero values but no paid-up label, an unconfirmed product, a total that does not match the report, a status it does not recognise, a bank's insurance arm).",
+    "You add the ones only a person can judge: a status contradiction (for example a package marked Active whose underlying policies are Inactive), an unknown or thinly described product, an RA versus endowment wrapper ambiguity, or another thing Paul should verify:",
+    "  python3 {scripts}/run.py flag {run} --kind status_contradiction|unknown_product|wrapper_ambiguity|bank_arm|other --text \"the reason in words\" [--policy NUMBER]",
+    "If there are none: python3 {scripts}/run.py flag {run} --none --note \"why none applies\""
+   ],
+   "check": "flags_ok",
+   "proof": "the judgement flags were considered: added with a reason, or declared not needed with a reason"
+  },
+  {
+   "id": "build",
+   "title": "The program composes the content and draws the PDF",
+   "ref": ["04-build-save.md"],
+   "do": [
+    "Run: python3 {scripts}/run.py build {run}",
+    "It composes the content from your data (never typed), draws the PDF in the fixed look, reads it back and saves page images. Look at every page image for clipped text or a stranded heading; if you see a fault, tell Paul, never edit the PDF."
+   ],
+   "check": "build_ok",
+   "proof": "the content is exactly what the program composes, and the PDF read back has every policy number, the 5 headings in order, landscape A4 and the footer"
+  },
+  {
+   "id": "save",
+   "title": "Save the PDF in the client's 5. Astute folder, never overwriting",
+   "ref": [],
+   "do": [
+    "List the client's `5. Astute` folder (computer first, then Microsoft 365, then Zapier; record every try with --purpose save) and note the file names already there. Then: python3 {scripts}/run.py name {run} --existing \"name one.pdf;name two.pdf\"",
+    "Save exactly the file it names, into the SAME `5. Astute` folder the report came from. Then list the folder again and record what it shows:",
+    "  python3 {scripts}/run.py receipt {run} save.folder <the folder path>      python3 {scripts}/run.py receipt {run} save.listed_bytes <the size the listing shows>",
+    "If the client's folder cannot be found (the report was attached by Paul), deliver in the chat only and say plainly that it was not saved."
+   ],
+   "check": "save_ok",
+   "proof": "the derived name was used (numbered if one existed), the folder is 5. Astute and the listed size equals the local file"
+  },
+  {
+   "id": "final",
+   "title": "The final check, the numbered flag list and the SHORT AUDIT for Paul",
+   "ref": ["05-handover.md"],
+   "do": [
+    "Run: python3 {scripts}/run.py done {run} final",
+    "Put in your reply, as it is: the saved file's name and folder, the numbered flag list (most important first), the PDF itself, then the short audit. Nothing longer.",
+    "Any red cross means the job is not finished: say so."
+   ],
+   "check": "verify_final",
+   "proof": "the final checker prints no red cross"
+  }
+ ]
+}

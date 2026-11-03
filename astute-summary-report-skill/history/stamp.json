@@ -1,0 +1,5 @@
+{
+ "stamp": "2026-11-03 13:50",
+ "fingerprint": "e60b583a1409122e869e0384a5ae8adc535ad9adf38b2a3a7342ed2623d7c35f",
+ "change": "First program-driven version: a program serves the report page by page, checks every entry against the report's text, adds up the totals, draws the PDF and prints a short audit"
+}
