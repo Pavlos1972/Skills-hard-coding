@@ -53,6 +53,6 @@ Phase A report given to Paul 03/11/2026.
 
 ## Paul's answers (03/11/2026)
 - 1 to 5 and 7: YES, as recommended (job = build the Summary from the finished Fact Find Transcript PDF and prove it matches, no full re-verification against the recording; Planner note and Sitamah message removed from this skill; A4; drop the 8:45am note and `propose_skills`; invented example person and build by program; drop v2.0 layout and the zip-of-images case).
-- 6 (routing names): "they are correct. Valerie and Cameron are correct BUT Brightrock is Lizelle". Not yet clear whether Lizelle REPLACES Martin (gross income / ACI) or is ADDED for BrightRock matters, and CL (Will) was not mentioned. Asking Paul one question. Do not guess.
+- 6 (routing names): "they are correct. Valerie and Cameron are correct BUT Brightrock is Lizelle". CLARIFIED by Paul (03/11/2026, chosen option "Lizelle replaces Martin"): the new routing list is Cameron = short-term insurance, CL = Will, Valerie = medical aid, **Lizelle = confirms gross income / ACI items (BrightRock), replacing Martin**. Martin is removed.
 
-Next: Phase B (plan) once item 6 is clear.
+Next: Phase B (plan): given to Paul 03/11/2026, waiting for his approval.
