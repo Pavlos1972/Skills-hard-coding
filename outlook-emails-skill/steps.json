@@ -1,0 +1,79 @@
+{
+ "skill": "outlook-emails-skill",
+ "steps": [
+  {
+   "id": "email",
+   "title": "Record the email that needs a reply, with its source",
+   "ref": ["01-email.md"],
+   "do": [
+    "Find the email in Paul's Sent Items with the Microsoft 365 connector (outlook_email_search, `recipient` filter, no folder). If it is a draft Paul has not sent yet, there is nothing to find: use today's date as the date sent. Record EVERY try, failures too:",
+    "  python3 {scripts}/run.py access {run} --route m365|zapier|device --result found|failed --note \"what you did and what came back\"",
+    "Then record the email: python3 {scripts}/run.py email {run} --senders \"a@x.com,b@y.com\" --subject \"the subject\" --sent DD/MM/YYYY --why \"why a reply is needed\" --source \"where these came from\" [--folder \"client folder to also watch for a dropped file\"]",
+    "The program refuses a missing or bad address, Paul's own address, a date in the future, an email so old that the watching time is over, and a missing reason or source. If you cannot say why a reply is needed, the email does not need tracking: tell Paul and stop."
+   ],
+   "check": "email_ok",
+   "proof": "the email is recorded with its sources, the lookup try is logged, and the program accepted every fact"
+  },
+  {
+   "id": "plan",
+   "title": "The program builds the two scheduled-task files",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py build {run}",
+    "It writes out/watch.json (the hourly watcher), out/flag.json (the one-time silence flag) and out/plan.txt. You never type or edit any of them."
+   ],
+   "check": "plan_ok",
+   "proof": "the plan follows every rule and is exactly what the program builds from the email"
+  },
+  {
+   "id": "show",
+   "title": "Show Paul the plan (no question: it is his standing rule)",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py show {run}",
+    "Put the plan it prints in your reply. There is no question to ask: Paul made this a standing rule and nothing is sent to anyone. If you rebuild, show it again."
+   ],
+   "check": "show_ok",
+   "proof": "the plan was shown for exactly this build"
+  },
+  {
+   "id": "create",
+   "title": "Create the two scheduled tasks with exactly the program's settings",
+   "ref": ["02-create.md"],
+   "do": [
+    "Follow the rules below, then record what each create_trigger call returned (copy the values; do not retype them from the files):",
+    "  python3 {scripts}/run.py receipt {run} watch.id <the id>        python3 {scripts}/run.py receipt {run} watch.connector_ok yes|no",
+    "  python3 {scripts}/run.py receipt {run} flag.id <the id>         python3 {scripts}/run.py receipt {run} flag.connector_ok yes|no",
+    "connector_ok is `no` if the result warns that the task stores no connectors: then STOP and tell Paul."
+   ],
+   "check": "create_ok",
+   "proof": "both tasks were created and the tool returned an id for each without a connector warning"
+  },
+  {
+   "id": "readback",
+   "title": "Read the tasks back and let the program compare them with the plan",
+   "ref": ["03-readback.md"],
+   "do": [
+    "Follow the rules below. Call list_triggers and record, for each of the two tasks, what it shows:",
+    "  watch.name  watch.cron  watch.enabled yes|no  watch.next_run  watch.new_session yes|no",
+    "  flag.name  flag.run_once_at  flag.enabled yes|no  flag.next_run  flag.new_session yes|no",
+    "  with: python3 {scripts}/run.py receipt {run} KEY VALUE",
+    "Save each task's stored instruction text exactly as list_triggers shows it to a file, then: python3 {scripts}/run.py promptfile {run} watch --file <file>    and the same for flag."
+   ],
+   "check": "readback_ok",
+   "proof": "what list_triggers shows equals the plan: names, schedule, fire time, switched on, fresh chat, instruction text"
+  },
+  {
+   "id": "final",
+   "title": "The final check and the SHORT AUDIT for Paul",
+   "ref": ["04-handover.md"],
+   "do": [
+    "Run: python3 {scripts}/run.py done {run} final",
+    "Put the short audit it prints in your reply exactly as it is: one line per check with a green tick or a red cross, one closing line for what is only attested. Nothing longer.",
+    "Any red cross means the job is not finished: say so."
+   ],
+   "check": "verify_final",
+   "proof": "the final checker prints no red cross"
+  }
+ ]
+}

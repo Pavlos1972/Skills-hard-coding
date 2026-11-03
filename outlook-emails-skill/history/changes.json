@@ -1,0 +1,98 @@
+[
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Source first - never invent. Write only what is in the sou",
+  "new": "references/00-rules.md rule 2 and SKILL.md standing rule 2: the senders, subject, date and reason come from the sent email or Paul, each with a source; never invent.",
+  "why": "Shortened to what applies; the program records the source and refuses a missing one.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Check before you claim. Never tell the user something is d",
+  "new": "references/00-rules.md rule 3: never say tracking is set up until both tasks were read back and compared; the checker does the comparing.",
+  "why": "Same rule, now enforced by receipts.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every correction re-opens the whole task, not just the item.",
+  "new": "references/00-rules.md rule 8: a correction means build and show again and compare again.",
+  "why": "The program voids the 'shown' record when the plan is rebuilt.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never lower the standard. A correction, a frustrated user,",
+  "new": "references/00-rules.md rule 9: never lower the standard; stop and say so when a rule cannot be met.",
+  "why": "Rules 7 and 8 merged into one line.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Tracking emails that require a response",
+  "new": "SKILL.md title and Index; references/00-rules.md rule 1.",
+  "why": "The section heading became the skill's own title and the first rule.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Why this exists: Paul routinely sends or has Claude send e",
+  "new": "references/00-rules.md rule 1 and SKILL.md standing rule 1.",
+  "why": "Shortened: it is Paul's standing rule, so there is no question each time.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The rule: any time Claude sends, or drafts for Paul to sen",
+  "new": "references/00-rules.md rule 1 and steps.json (email, plan, show, create, readback, final).",
+  "why": "Now a six-step program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Track it. Identify the sender(s) whose reply is expected, ",
+  "new": "scripts/run.py email and track.fact_problems; scripts/track.py watch_prompt and flag_prompt; references/01-email.md.",
+  "why": "1. Track it: who, which thread, the date sent, now recorded with a reason and a source. 2. Tell Paul as soon as a response comes in: the watcher's instruction. 3. Flag it if nothing comes back: the silence flag.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "How to implement this in practice, since a chat session do",
+  "new": "SKILL.md Run it; steps.json; references/02-create.md and 03-readback.md.",
+  "why": "Moved into the steps and reference pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Use create_trigger (the scheduled-task tool) to set up the",
+  "new": "scripts/track.py (CRON, athens_0900, watch_prompt, flag_prompt, build_plan) and references/02-create.md: an hourly weekday watcher that drops senders who replied and stops by itself; a one-time silence flag; a standalone instruction built by the program; push alert on (fresh chat each time); no reliance on read/unread (Paul's answers 2 to 4, 03/11/2026).",
+  "why": "The recurring check, the one-shot check, several senders in one task, self-deletion and the standalone instruction are now fixed by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Scope: this applies to outbound emails where a reply is ac",
+  "new": "references/00-rules.md rule 1 (scope) and references/01-email.md.",
+  "why": "Kept in the rules page.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Delivery gate for this skill (rules 5 and 6 applied): when",
+  "new": "scripts/verify.py and scripts/track.py plan_problems: each of the five checks of the old Delivery gate is a green tick or a red cross in the short audit; what stays attested is listed on the closing line.",
+  "why": "The Delivery gate is now done by the checker.",
+  "needs_paul": false
+ }
+]

@@ -1,0 +1,29 @@
+{
+ "skill": "outlook-emails-skill",
+ "deliverables": [
+  {
+   "name": "The hourly reply watcher (a scheduled task with a self-contained instruction)",
+   "file": "out/watch.json (the exact arguments for create_trigger) and out/plan.txt (for Paul)",
+   "produced_by": "scripts/run.py build (scripts/track.py), from an email recorded with its source",
+   "handover": "the plan is shown to Paul (no question: standing rule); the task is created once through create_trigger with exactly these arguments; list_triggers is read back and compared",
+   "checked_by": "scripts/verify.py (rebuilds the plan and compares it with the receipts)",
+   "step": "create"
+  },
+  {
+   "name": "The one-time silence flag (a scheduled task)",
+   "file": "out/flag.json",
+   "produced_by": "scripts/run.py build (scripts/track.py)",
+   "handover": "created once through create_trigger; fires at 09:00 Athens time on the second business day after sending",
+   "checked_by": "scripts/verify.py",
+   "step": "readback"
+  },
+  {
+   "name": "Short audit",
+   "file": "printed by scripts/verify.py; full record in out_record/audit-full.txt",
+   "produced_by": "scripts/verify.py",
+   "handover": "pasted into the reply as it is: one line per check with a green tick or a red cross, one closing line for what is only attested",
+   "checked_by": "scripts/run.py done final",
+   "step": "final"
+  }
+ ]
+}
