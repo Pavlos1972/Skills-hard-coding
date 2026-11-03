@@ -124,6 +124,7 @@ Others on Paul's list (not yet sized): `advicetech-website-knowledge`, `alpha-ba
 ## Running log
 - 03/11/2026: `wr-sroa-builder` Phase B plan approved by Paul ("I approve"). Building.
 - 03/11/2026: `om-tax-free-skill` Phase B plan approved by Paul ("I approve - make sure the Skill works as intended"). Building.
+- 03/11/2026: `om-tax-free-skill` brief made (folder `om-tax-free-skill`, confirmed by Paul) and sent with the zip, the change list and the backup; the brief was also shown as text for Paul to paste. Waiting for the upload report from the Chrome chat.
 - 03/11/2026: `om-tax-free-skill` Phases C to E done in one pass (no helpers, ONE test, passed on the source and on the unpacked zip). Zip made (19 files); backup of the old skill made. Waiting: Paul's real folder name, then brief + send.
 - 03/11/2026: `om-tax-free-skill` Phase A answers recorded (agree to all eight; Q5 signature and Q7 tax facts stay open). Phase B plan given; waiting for approval.
 - 03/11/2026: `om-tax-free-skill` Phase A done (no helpers, no tests). Main finding: a real client's name in the live date script; contradictions with `paul-email-signature` and `client-pipeline-board`; Teams message to Sitamah sent without Paul's yes; figures typed with no proof. Yes/no list (8 questions) given to Paul. Suggested by me after Paul said "next skill" and "suggest something else" (first suggestion `client-review-notes` was declined).
