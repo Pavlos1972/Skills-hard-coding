@@ -1,0 +1,7 @@
+# The final reply to Paul
+
+A run is finished only when ALL of these are done and the program's final audit has no red cross: (1) the setup checklist was completed (the documents found and read, the questions only Paul can answer asked, not inferred) and the RGAR figures extracted precisely; (2) the proposal email was built and the program's checks passed; (3) the HTML was sent to Paul in the chat with its exact file name; (4) the no-logo copy and a copy of the RGAR PDF were saved in the RA transaction folder's Comparative Quotes, the Outlook draft was made and read back, and Sitamah was messaged on Teams via Zapier and the posted message read back. After ANY correction repeat (2) to (4) for everything that changed.
+
+Your reply holds, as it is and nothing longer: which source files were read (names and dates), where the copy was saved, the draft's status, that Sitamah was messaged (and will attach the report and send), the flags for Paul (the RGAR's recurring investment of R 0 or a mismatch with the proposed RA, any figure not traceable to the Fact Find Summary, the saved copy has no logo, anything assumed such as which client), then the SHORT AUDIT the program printed (one line per check with a green tick or a red cross, one closing line for what is only attested). Any red cross means the job is not finished: say so.
+
+Say "done" only with the program's PASS. Never say the skill is "live" before Paul confirms he uploaded it.

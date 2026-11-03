@@ -1,0 +1,4 @@
+{
+ "labels": ["Net amount needed at retirement", "Net Amount Needed (today's terms)"],
+ "note": "The Fact Find Summary line that holds the client's net monthly income target. The new Fact Find calls it the first; the old skill text the second (Paul, 03/11/2026: both accepted). The typed figure must be the FIRST figure after the label, so the Reduced Quote's monthly contribution target is never taken by mistake."
+}

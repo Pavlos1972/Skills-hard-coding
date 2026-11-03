@@ -1,0 +1,37 @@
+{
+ "skill": "rgar-skill",
+ "deliverables": [
+  {
+   "name": "The RGAR proposal email (.html), built from the fixed template",
+   "file": "out/[FirstName]_[Surname]_RGAR_Proposal_Email - DD.MM.YY.html (with logo, sent to Paul in the chat) and out/saved/<same name> (no logo, saved in the RA transaction folder's Comparative Quotes, with a copy of the RGAR PDF)",
+   "produced_by": "scripts/run.py build (scripts/rgi.py fills assets/RGAR_Proposal_Email_TEMPLATE.html)",
+   "handover": "the full copy in the chat; the no-logo copy saved through the three routes in order, never overwriting without Paul's yes",
+   "checked_by": "scripts/verify.py + scripts/rgi.py html_problems",
+   "step": "save"
+  },
+  {
+   "name": "The Outlook draft (never sent by Claude)",
+   "file": "made in Outlook with Claude in Chrome from out/draft_body.html; read-back saved as out/draft_readback.txt",
+   "produced_by": "scripts/run.py build (the body) and the chat (the draft)",
+   "handover": "left in Drafts for Sitamah to review, attach the three documents and send",
+   "checked_by": "scripts/run.py draft + scripts/verify.py (the saved read-back)",
+   "step": "draft"
+  },
+  {
+   "name": "The Teams message to Sitamah",
+   "file": "printed by scripts/run.py message; read-back saved as out/message_readback.txt",
+   "produced_by": "scripts/rgi.py teams_text",
+   "handover": "sent through Zapier to the 1:1 chat after Paul's yes and a checked draft",
+   "checked_by": "scripts/run.py messagecheck + scripts/verify.py",
+   "step": "message"
+  },
+  {
+   "name": "Short audit",
+   "file": "printed by scripts/verify.py; full record in out_record/audit-full.txt",
+   "produced_by": "scripts/verify.py",
+   "handover": "pasted into the reply as it is: one line per check with a green tick or a red cross, one closing line for what is only attested",
+   "checked_by": "scripts/run.py done final",
+   "step": "final"
+  }
+ ]
+}

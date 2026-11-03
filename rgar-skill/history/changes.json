@@ -1,0 +1,450 @@
+[
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## What this skill is not",
+  "new": "references/00-rules.md (What this is not): the RGAR always comes from Alwyn as a PDF; the Fact Find Summary is its own skill and a required input; the signature belongs to paul-email-signature.",
+  "why": "Kept in the rules page.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "- It does not calculate or generate the RGAR itself — that a",
+  "new": "references/00-rules.md (What this is not): the RGAR always comes from Alwyn as a PDF; the Fact Find Summary is its own skill and a required input; the signature belongs to paul-email-signature.",
+  "why": "Kept in the rules page.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 1 — Setup checklist (always ask/collect before build",
+  "new": "references/01-locate.md (documents by role, where to look, the email address routes, the what-I-found list), references/02-answers.md (what is read, what Paul is still asked, what is no longer asked), steps.json (locate, read) and scripts/run.py doc, access and read: three routes in order, every try logged, documents served page by page.",
+  "why": "The upload-or-locate and raw-Fact-Find routes are replaced by the standard route order and the Fact Find Summary first (Paul's answer 2); the questions are the table-and-one-question pattern (Paul's answer 4).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every new RGAR proposal chat should open with these requests",
+  "new": "references/01-locate.md (documents by role, where to look, the email address routes, the what-I-found list), references/02-answers.md (what is read, what Paul is still asked, what is no longer asked), steps.json (locate, read) and scripts/run.py doc, access and read: three routes in order, every try logged, documents served page by page.",
+  "why": "The upload-or-locate and raw-Fact-Find routes are replaced by the standard route order and the Fact Find Summary first (Paul's answer 2); the questions are the table-and-one-question pattern (Paul's answer 4).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Interaction format: use the button-selection tool for an",
+  "new": "references/01-locate.md (documents by role, where to look, the email address routes, the what-I-found list), references/02-answers.md (what is read, what Paul is still asked, what is no longer asked), steps.json (locate, read) and scripts/run.py doc, access and read: three routes in order, every try logged, documents served page by page.",
+  "why": "The upload-or-locate and raw-Fact-Find routes are replaced by the standard route order and the Fact Find Summary first (Paul's answer 2); the questions are the table-and-one-question pattern (Paul's answer 4).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "1. Meeting date(s) already held with the client (one or ",
+  "new": "references/01-locate.md (documents by role, where to look, the email address routes, the what-I-found list), references/02-answers.md (what is read, what Paul is still asked, what is no longer asked), steps.json (locate, read) and scripts/run.py doc, access and read: three routes in order, every try logged, documents served page by page.",
+  "why": "The upload-or-locate and raw-Fact-Find routes are replaced by the standard route order and the Fact Find Summary first (Paul's answer 2); the questions are the table-and-one-question pattern (Paul's answer 4).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "No longer asked — derived automatically, do not ask these:",
+  "new": "references/01-locate.md (documents by role, where to look, the email address routes, the what-I-found list), references/02-answers.md (what is read, what Paul is still asked, what is no longer asked), steps.json (locate, read) and scripts/run.py doc, access and read: three routes in order, every try logged, documents served page by page.",
+  "why": "The upload-or-locate and raw-Fact-Find routes are replaced by the standard route order and the Fact Find Summary first (Paul's answer 2); the questions are the table-and-one-question pattern (Paul's answer 4).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 2 — Extract the RGAR figures precisely",
+  "new": "references/02-answers.md (the RGAR fields, the Fact Find Summary fields, the net target by its label, the age check against the date of birth, the R 0 flag and stop) and scripts/rgi.py answers_problems: every figure, name and date is checked against the right document's text.",
+  "why": "Figures are proven to appear in the documents (Paul's answers 3, 6, 7).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Read the RGAR PDF (use the `pdf-reading` skill if the conten",
+  "new": "references/02-answers.md (the RGAR fields, the Fact Find Summary fields, the net target by its label, the age check against the date of birth, the R 0 flag and stop) and scripts/rgi.py answers_problems: every figure, name and date is checked against the right document's text.",
+  "why": "Figures are proven to appear in the documents (Paul's answers 3, 6, 7).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "- DOB and Retirement Age (page 1, \"YOUR GOAL\") — used to",
+  "new": "references/02-answers.md (the RGAR fields, the Fact Find Summary fields, the net target by its label, the age check against the date of birth, the R 0 flag and stop) and scripts/rgi.py answers_problems: every figure, name and date is checked against the right document's text.",
+  "why": "Figures are proven to appear in the documents (Paul's answers 3, 6, 7).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never take these figures from the covering email of a previo",
+  "new": "references/02-answers.md (the RGAR fields, the Fact Find Summary fields, the net target by its label, the age check against the date of birth, the R 0 flag and stop) and scripts/rgi.py answers_problems: every figure, name and date is checked against the right document's text.",
+  "why": "Figures are proven to appear in the documents (Paul's answers 3, 6, 7).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Also read the Fact Find Summary for: employer, job title",
+  "new": "references/02-answers.md (the RGAR fields, the Fact Find Summary fields, the net target by its label, the age check against the date of birth, the R 0 flag and stop) and scripts/rgi.py answers_problems: every figure, name and date is checked against the right document's text.",
+  "why": "Figures are proven to appear in the documents (Paul's answers 3, 6, 7).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Reading the raw Fact Find — go straight to OneDrive",
+  "new": "references/02-answers.md (the RGAR fields, the Fact Find Summary fields, the net target by its label, the age check against the date of birth, the R 0 flag and stop) and scripts/rgi.py answers_problems: every figure, name and date is checked against the right document's text.",
+  "why": "Figures are proven to appear in the documents (Paul's answers 3, 6, 7).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "No Fact Find Summary uploaded? Don't dead-end on SharePoint ",
+  "new": "references/02-answers.md (the RGAR fields, the Fact Find Summary fields, the net target by its label, the age check against the date of birth, the R 0 flag and stop) and scripts/rgi.py answers_problems: every figure, name and date is checked against the right document's text.",
+  "why": "Figures are proven to appear in the documents (Paul's answers 3, 6, 7).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Why SharePoint text extraction doesn't work for this docum",
+  "new": "references/02-answers.md (the RGAR fields, the Fact Find Summary fields, the net target by its label, the age check against the date of birth, the R 0 flag and stop) and scripts/rgi.py answers_problems: every figure, name and date is checked against the right document's text.",
+  "why": "Figures are proven to appear in the documents (Paul's answers 3, 6, 7).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Don't spend more than one confirming check on either of thes",
+  "new": "references/02-answers.md (the RGAR fields, the Fact Find Summary fields, the net target by its label, the age check against the date of birth, the R 0 flag and stop) and scripts/rgi.py answers_problems: every figure, name and date is checked against the right document's text.",
+  "why": "Figures are proven to appear in the documents (Paul's answers 3, 6, 7).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "What does work: read the PDF visually through the device b",
+  "new": "references/02-answers.md (the RGAR fields, the Fact Find Summary fields, the net target by its label, the age check against the date of birth, the R 0 flag and stop) and scripts/rgi.py answers_problems: every figure, name and date is checked against the right document's text.",
+  "why": "Figures are proven to appear in the documents (Paul's answers 3, 6, 7).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "> Reachability window: Paul's laptop (the device this br",
+  "new": "references/02-answers.md (the RGAR fields, the Fact Find Summary fields, the net target by its label, the age check against the date of birth, the R 0 flag and stop) and scripts/rgi.py answers_problems: every figure, name and date is checked against the right document's text.",
+  "why": "Figures are proven to appear in the documents (Paul's answers 3, 6, 7).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "1. Confirm the device is reachable: `mcp__remote-devices__ge",
+  "new": "references/02-answers.md (the RGAR fields, the Fact Find Summary fields, the net target by its label, the age check against the date of birth, the R 0 flag and stop) and scripts/rgi.py answers_problems: every figure, name and date is checked against the right document's text.",
+  "why": "Figures are proven to appear in the documents (Paul's answers 3, 6, 7).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Extract every field you need directly off the rendered pages",
+  "new": "references/02-answers.md (the RGAR fields, the Fact Find Summary fields, the net target by its label, the age check against the date of birth, the R 0 flag and stop) and scripts/rgi.py answers_problems: every figure, name and date is checked against the right document's text.",
+  "why": "Figures are proven to appear in the documents (Paul's answers 3, 6, 7).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 3 — Date calculations (always run the script, never ",
+  "new": "references/02-answers.md (the shortfall period rule and the weekdays) and scripts/rgar_dates.py applied by scripts/rgi.py (meetings_line, next_line, shortfall).",
+  "why": "The script is applied by the program, never by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Use `scripts/rgar_dates.py` for every date in the email. Do ",
+  "new": "references/02-answers.md (the shortfall period rule and the weekdays) and scripts/rgar_dates.py applied by scripts/rgi.py (meetings_line, next_line, shortfall).",
+  "why": "The script is applied by the program, never by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "```python",
+  "new": "references/02-answers.md (the shortfall period rule and the weekdays) and scripts/rgar_dates.py applied by scripts/rgi.py (meetings_line, next_line, shortfall).",
+  "why": "The script is applied by the program, never by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# Opening line's meeting date(s):",
+  "new": "references/02-answers.md (the shortfall period rule and the weekdays) and scripts/rgar_dates.py applied by scripts/rgi.py (meetings_line, next_line, shortfall).",
+  "why": "The script is applied by the program, never by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# Next meeting line:",
+  "new": "references/02-answers.md (the shortfall period rule and the weekdays) and scripts/rgar_dates.py applied by scripts/rgi.py (meetings_line, next_line, shortfall).",
+  "why": "The script is applied by the program, never by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# Shortfall coverage period — pass the NEXT meeting date and",
+  "new": "references/02-answers.md (the shortfall period rule and the weekdays) and scripts/rgar_dates.py applied by scripts/rgi.py (meetings_line, next_line, shortfall).",
+  "why": "The script is applied by the program, never by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The shortfall period rule, stated plainly: start = the 1st",
+  "new": "references/02-answers.md (the shortfall period rule and the weekdays) and scripts/rgar_dates.py applied by scripts/rgi.py (meetings_line, next_line, shortfall).",
+  "why": "The script is applied by the program, never by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 4 — Build the email HTML",
+  "new": "references/03-build-rules.md (the fixed template rules: Cc, header, money format, the real RGAR file name, the file name, the no-logo copy) and scripts/rgi.py build_all and html_problems.",
+  "why": "The template is filled by the program, so no placeholder can remain; the table-count-only sanity check is replaced by program checks (Paul's answer 5).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "1. Copy `assets/RGAR_Proposal_Email_TEMPLATE.html` to the wo",
+  "new": "references/03-build-rules.md (the fixed template rules: Cc, header, money format, the real RGAR file name, the file name, the no-logo copy) and scripts/rgi.py build_all and html_problems.",
+  "why": "The template is filled by the program, so no placeholder can remain; the table-count-only sanity check is replaced by program checks (Paul's answer 5).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 5 — COMPULSORY: save to the client's RA transaction ",
+  "new": "references/03-build-rules.md (Saving: the RA transaction folder, the RGAR copy, how, the listing) and steps.json (save) and scripts/run.py name and receipt.",
+  "why": "The save and the RGAR copy are proven by the folder listing.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every RGAR proposal HTML is saved to SharePoint — never skip",
+  "new": "references/03-build-rules.md (Saving: the RA transaction folder, the RGAR copy, how, the listing) and steps.json (save) and scripts/run.py name and receipt.",
+  "why": "The save and the RGAR copy are proven by the folder listing.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "- Location: the client's folder under `Paul/New Business",
+  "new": "references/03-build-rules.md (Saving: the RA transaction folder, the RGAR copy, how, the listing) and steps.json (save) and scripts/run.py name and receipt.",
+  "why": "The save and the RGAR copy are proven by the folder listing.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 6 — Outlook draft via Claude in Chrome (never sent b",
+  "new": "references/04-draft.md (the Chrome method, the signature setting, the read-back, the clean-up) and scripts/run.py draft, scripts/rgi.py draft_problems.",
+  "why": "The read-back is checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Paul's rule: the proposal email is saved to Drafts, To =",
+  "new": "references/04-draft.md (the Chrome method, the signature setting, the read-back, the clean-up) and scripts/run.py draft, scripts/rgi.py draft_problems.",
+  "why": "The read-back is checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "1. Create the draft shell with `outlook_create_draft`: T",
+  "new": "references/04-draft.md (the Chrome method, the signature setting, the read-back, the clean-up) and scripts/run.py draft, scripts/rgi.py draft_problems.",
+  "why": "The read-back is checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 7 — Teams message to Sitamah (always; standard wordi",
+  "new": "references/05-message.md (Zapier only, markdown, the greeting rule, the standard wording, the 1:1 chat, the read-back) and scripts/rgi.py teams_text, message_problems and scripts/run.py message and messagecheck.",
+  "why": "The wording and greeting are the program's; the message is sent only after Paul's yes and a checked draft (Paul's answer 1).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "After the draft is verified, send Sitamah the Teams message ",
+  "new": "references/05-message.md (Zapier only, markdown, the greeting rule, the standard wording, the 1:1 chat, the read-back) and scripts/rgi.py teams_text, message_problems and scripts/run.py message and messagecheck.",
+  "why": "The wording and greeting are the program's; the message is sent only after Paul's yes and a checked draft (Paul's answer 1).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "1. Greeting — check first, never repeat. Read today's ea",
+  "new": "references/05-message.md (Zapier only, markdown, the greeting rule, the standard wording, the 1:1 chat, the read-back) and scripts/rgi.py teams_text, message_problems and scripts/run.py message and messagecheck.",
+  "why": "The wording and greeting are the program's; the message is sent only after Paul's yes and a checked draft (Paul's answer 1).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "2. Standard wording and format — fixed layout, only the cl",
+  "new": "references/05-message.md (Zapier only, markdown, the greeting rule, the standard wording, the 1:1 chat, the read-back) and scripts/rgi.py teams_text, message_problems and scripts/run.py message and messagecheck.",
+  "why": "The wording and greeting are the program's; the message is sent only after Paul's yes and a checked draft (Paul's answer 1).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "> {Greeting} Sitamah,",
+  "new": "references/05-message.md (Zapier only, markdown, the greeting rule, the standard wording, the 1:1 chat, the read-back) and scripts/rgi.py teams_text, message_problems and scripts/run.py message and messagecheck.",
+  "why": "The wording and greeting are the program's; the message is sent only after Paul's yes and a checked draft (Paul's answer 1).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Do not add \"please do not send it\", \"leave it in Drafts\"",
+  "new": "references/05-message.md (Zapier only, markdown, the greeting rule, the standard wording, the 1:1 chat, the read-back) and scripts/rgi.py teams_text, message_problems and scripts/run.py message and messagecheck.",
+  "why": "The wording and greeting are the program's; the message is sent only after Paul's yes and a checked draft (Paul's answer 1).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "3. How to send — formatting method (Claude in Chrome on Te",
+  "new": "references/05-message.md (Zapier only, markdown, the greeting rule, the standard wording, the 1:1 chat, the read-back) and scripts/rgi.py teams_text, message_problems and scripts/run.py message and messagecheck.",
+  "why": "The wording and greeting are the program's; the message is sent only after Paul's yes and a checked draft (Paul's answer 1).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 8 — Pre-delivery audit",
+  "new": "scripts/rgi.py (html_problems, draft_problems, message_problems), scripts/verify.py (each provable item of the 12 is a green tick or red cross in the short audit) and references/06-handover.md for the final report.",
+  "why": "The audit is done by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before calling the work finished, check every item:",
+  "new": "scripts/rgi.py (html_problems, draft_problems, message_problems), scripts/verify.py (each provable item of the 12 is a green tick or red cross in the short audit) and references/06-handover.md for the final report.",
+  "why": "The audit is done by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "1. No `[BRACKETED PLACEHOLDER]` text remains anywhere in the",
+  "new": "scripts/rgi.py (html_problems, draft_problems, message_problems), scripts/verify.py (each provable item of the 12 is a green tick or red cross in the short audit) and references/06-handover.md for the final report.",
+  "why": "The audit is done by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Reference material",
+  "new": "references/03-build-rules.md (the template and its signature block, the ground-truth source and the re-pull rule; scripts/rgar_dates.py) and SKILL.md (Where the detail lives).",
+  "why": "Kept; the file list is the new index.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "- `assets/RGAR_Proposal_Email_TEMPLATE.html` — the fixed ema",
+  "new": "references/03-build-rules.md (the template and its signature block, the ground-truth source and the re-pull rule; scripts/rgar_dates.py) and SKILL.md (Where the detail lives).",
+  "why": "Kept; the file list is the new index.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## A note on scope",
+  "new": "references/00-rules.md rules 2, 3 and 11 and SKILL.md standing rule 1: nothing is reused from another client; the skill holds no client data.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This skill is about the *procedure*, not any specific client",
+  "new": "references/00-rules.md rules 2, 3 and 11 and SKILL.md standing rule 1: nothing is reused from another client; the skill holds no client data.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This skill builds the client-facing proposal email Paul send",
+  "new": "references/00-rules.md (What this is) and SKILL.md description: the proposal email, saved, drafted and flagged to Sitamah; Claude never sends the client email.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "2. Source first - never invent. Write only what is in th",
+  "new": "references/00-rules.md rules 2 and 3: every fact comes from the client's file or Paul's words with its source; conflicts stop the run.",
+  "why": "Enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "4. Check before you claim. Never tell the user something",
+  "new": "references/00-rules.md rule 4: never say saved, drafted or sent until the program's proof says so.",
+  "why": "Enforced by read-backs and receipts.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "6. Every correction re-opens the whole task, not just the ",
+  "new": "references/00-rules.md rule 8: a correction re-opens the task; the driver re-opens the later steps.",
+  "why": "Enforced by the driver.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "7. Never lower the standard. A correction, a frustrated ",
+  "new": "references/00-rules.md rule 7.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "8. If a rule cannot be met, stop and say so. State exact",
+  "new": "references/00-rules.md rule 9.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Delivery gate for this skill (rules 5 and 6 applied): a ",
+  "new": "references/06-handover.md (the four things a finished run needs) and scripts/verify.py: each is a green tick or red cross in the short audit.",
+  "why": "Done by the checker.",
+  "needs_paul": false
+ }
+]

@@ -1,0 +1,80 @@
+[
+ {
+  "from_prefix": "# RGAR Proposal Email Builder",
+  "reason": "Replaced by the new short title.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "## Index",
+  "reason": "Replaced by the new short Index (five sections).",
+  "needs_paul": false,
+  "to_prefix": "Reference material and scope | The template, the date script, and the "
+ },
+ {
+  "from_prefix": "Universal operating rules | Nine rules that apply to every step, and t",
+  "reason": "The preamble is replaced by the short intro of references/00-rules.md; the program shows the rules at the start and the right page at each step.",
+  "needs_paul": false,
+  "to_prefix": "These rules come before everything else in this skill. They apply from"
+ },
+ {
+  "from_prefix": "Re-load this skill before you start, and again after any compression. ",
+  "reason": "Rule 1 (re-load this skill) is replaced by the program: it shows the standing rules at the start and the right page at each step, and `run.py status` tells a chat where the job is up to after a compression.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Read before you write. Read the source material completely and careful",
+  "reason": "Rule 3 (read before you write) is replaced by the reading lock: the program serves the documents page by page and each page is acknowledged.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Deliver everything this skill lists, every time. A run is not finished",
+  "reason": "Rule 5 (deliver everything) is replaced by deliverables.json and the checker: a run is finished only with a PASS audit.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Changes to a skill: edit the existing skill, never create a new one. U",
+  "reason": "Rule 9 (changes through the propose_skills card) is replaced by standard S7: skills are changed only in Claude Code and uploaded as a zip by Paul; the 'never say it is live' part is standing rule 11 in references/00-rules.md.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Last updated, standing rule, changelog | Athens stamp, the edit rule, ",
+  "reason": "The hand-typed stamp, the maintenance rule and the changelog are replaced by the stamp program (S2); the full history is in the repo's history folder.",
+  "needs_paul": false,
+  "to_prefix": "2026-09-25 — Signature block replaced with Paul's ground-truth signatu"
+ },
+ {
+  "from_prefix": "\"Reading the raw Fact Find — go straight to OneDrive\" below for how to",
+  "reason": "The whole 'Reading the raw Fact Find: go straight to OneDrive' section is REPLACED (Paul, 03/11/2026, answer 2): the 8:45am laptop window was already dropped on 02/11/2026; the device-bridge visual read of the raw fillable Fact Find is no longer used because the Fact Find Summary (made by program, with a readable text layer) is the source; with no Fact Find Summary the skill stops and asks Paul. Three routes, every try logged, replace the single bridge route.",
+  "needs_paul": true,
+  "to_prefix": "this problem."
+ },
+ {
+  "from_prefix": "Run the structural sanity check before presenting:",
+  "reason": "The structural sanity check (a one-line python test that only counted tables) is REPLACED by the program's checks of the built email: no [PLACEHOLDER] in the full copy, the saved copy and the pasted body, tables open = close, the header, the weekdays, every figure.",
+  "needs_paul": true,
+  "to_prefix": ""
+ },
+ {
+  "from_prefix": "After the draft is verified, send Sitamah the Teams message below thro",
+  "reason": "The paragraph that sends the Sitamah message through Teams in Chrome and warns that Zapier posts plain text is REPLACED (Paul, 03/11/2026, answer 1): the Tax-Free skill found on 13/10/2026 that Zapier with format markdown renders real bold and a real numbered list, and Paul's standing rule is Teams through Zapier only. What stays: Sitamah sends the proposal email herself, never tell her to leave it in Drafts for Paul unless Paul says so, Claude never sends the client email, the native tool lacks the scope (references/05-message.md).",
+  "needs_paul": true
+ },
+ {
+  "from_prefix": "3. How to send — formatting method (Claude in Chrome on Teams web):",
+  "reason": "The Chrome-on-Teams-web typing method (ctrl+b, shift+Return, the stray numbered item, the zoom check) is REPLACED by the Zapier markdown send and the program's read-back check (references/05-message.md); the rules to read the posted message back before saying it is sent, only delete a message Claude itself posted and only when Paul asked for a redo are kept there.",
+  "needs_paul": true,
+  "to_prefix": "Close the Chrome tab afterwards. Only delete a message Claude itself p"
+ },
+ {
+  "from_prefix": "contribution target in the same table — that's a different figure). Se",
+  "reason": "The pointer to the raw Fact Find section, the flag 'whether you used a Fact Find Summary or read the raw Fact Find directly' and the caveat about a net amount that comes only from Paul's request to Alwyn are REPLACED (Paul, 03/11/2026, answer 2): the Fact Find Summary is the only source and the net target must follow its label. The warning that the Reduced Quote's contribution target is a different figure is kept (references/02-answers.md).",
+  "needs_paul": true,
+  "to_prefix": "Paul's request to Alwyn and not from the raw Fact Find, say so."
+ },
+ {
+  "from_prefix": "Interaction format: use the button-selection tool for any question wit",
+  "reason": "The 'use the button-selection tool for fixed-option questions' line is kept in references/02-answers.md (reworded: none is expected now).",
+  "needs_paul": false,
+  "to_prefix": "fixed/short set of options; use typed input for dates, names, and figu"
+ }
+]
