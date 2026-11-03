@@ -53,5 +53,10 @@ Full 0. Partial 6 (1 short entry page, 2 inputs, 5 evidence, 6 built by program,
 7. **The fixed tax facts** (R46,000 a year, R500,000 lifetime, 40% on excess): are they right for the current tax year? The rebuild prints them from one place so next March is one edit. (Please confirm the figures)
 8. **Child's plan and lump sum:** the rebuild STOPS and asks you when the quote is for a child or a lump sum (no wording invented), until you give the fixed wording or a template. (Yes)
 
+## Paul's answers (03/11/2026)
+"Agree to all": yes to 1 to 8 as recommended. Two of them were not a plain yes/no, so they are handled like this (and told to Paul in the Phase B plan):
+- Q5 (signature once or twice): not answered with a fact. The rebuild keeps this skill's way (Claude inserts "Paul K New" in the draft), the audit says so on its attested line, and one setting in the skill switches it to the signature skill's way when Paul tells me what he sees. STILL OPEN.
+- Q7 (the tax facts R46,000 / R500,000 / 40%): kept exactly as in Paul's current template, printed from one place, NOT verified by me. Paul agreed; the audit lists them as attested.
+
 ## Status
-Phase A report given to Paul 03/11/2026. Waiting for his answers. Nothing built.
+Phase A report given to Paul 03/11/2026, answers recorded. Phase B plan given 03/11/2026, waiting for his approval. Nothing built.
