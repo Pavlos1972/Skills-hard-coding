@@ -108,6 +108,7 @@ class Chat(unittest.TestCase):
 
     form_json = None          # override to change the form
     pdf_drop = ()
+    TRANSCRIPT_EDIT = None    # a function text -> text, to play the journey on a changed call
 
     def setUp(self):
         self.tmp = tempfile.mkdtemp(prefix="wrff-")
@@ -119,6 +120,9 @@ class Chat(unittest.TestCase):
         jdump(self.form_path, self.form)
         make_form_pdf(self.pdf_path, self.form, drop=self.pdf_drop)
         self.transcript = FIXTURE
+        if self.TRANSCRIPT_EDIT:                    # a changed copy of the invented call (for tests that add lines to it)
+            self.transcript = os.path.join(self.tmp, "transcript_edited.txt")
+            spit(self.transcript, self.TRANSCRIPT_EDIT(slurp(FIXTURE)))
 
     # ---- plumbing
     def p(self, *a):
@@ -204,7 +208,8 @@ class Chat(unittest.TestCase):
         ("Thursday the twelfth at four works", "next_step", "Thursday the twelfth at four works"),
         ("send us your latest payslip", "next_step", "send us your latest payslip"),
         ("letter of authority", "request", "we also need a letter of authority from you"),
-        ("Retirement Goal Analysis", "request", "I will also ask for the Retirement Goal Analysis"),
+        ("Retirement Goal Analysis", "quote_request", "I will also ask for the Retirement Goal Analysis"),
+        ("email it tomorrow", "next_step", "I will email it tomorrow"),
     ]
 
     def read_pass(self, p_):
@@ -238,9 +243,11 @@ class Chat(unittest.TestCase):
         st = self.load("state.json")
         lines = slurp(self.p("transcript.txt")).split("\n")
         led = self.load("ledger.json")
-        must = [e["line"] for e in led["entries"] if e["kind"] in verify.KINDS_MUST_COVER]
+        must = [e for e in led["entries"] if e["kind"] in verify.KINDS_MUST_COVER]
+        hard = verify.hard_lines(lines)
         for n in verify.required_lines(lines, st):
-            if not any(abs(n - x) <= 3 for x in must):
+            if verify.line_resolution(n, lines, must) is None:
+                self.assertNotIn(n, hard, "a hard request line (%d) has no entry: it cannot be dismissed" % n)
                 self.ok("ledger", self.run_dir, "review", "--line", n, "--reason", self.line_reason(n))
         self.ok("done", self.run_dir, "scan")
 
@@ -357,7 +364,7 @@ class Chat(unittest.TestCase):
         led = self.load("ledger.json")
         by_text = {"cell number is 082": ["cell"], "one-year diploma": ["edu"], "we move freight": ["o3"], "credit life with Absa": ["o1"],
                    "new business FNA": ["fna_req"], "Thursday the twelfth": ["next_day"], "send us your latest payslip": ["o4"], "letter of authority": ["loa"],
-                   "Retirement Goal Analysis": ["rgar_req"]}
+                   "Retirement Goal Analysis": ["rgar_req"], "email it tomorrow": ["o5"]}
         for e in led["entries"]:
             for frag, items in by_text.items():
                 if frag.lower() in e["quote"].lower():
@@ -456,7 +463,7 @@ class Staged(Chat):
         self.form_path = os.path.join(self.tmp, "Fact Find (Audio to Text) - 05.11.2026 - Pat Samplecase.json")
         self.pdf_path = os.path.join(self.tmp, "Fact Find (Audio to Text) - 05.11.2026 - Pat Samplecase.pdf")
         self.form = self.form_json() if callable(self.form_json) else H.pat_form()
-        self.transcript = FIXTURE
+        self.transcript = os.path.join(self.tmp, "transcript_edited.txt") if self.TRANSCRIPT_EDIT else FIXTURE
 
     def fresh_overlay(self, ov=None):
         """Rebuild content from an overlay (the claims already made stay)."""

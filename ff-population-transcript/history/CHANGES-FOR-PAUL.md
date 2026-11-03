@@ -6,13 +6,13 @@ For Paul. **Not uploaded, not live.** This is the program-driven version of `ff-
 A second reader tried to get a wrong or empty Fact Find through the checker, and found real holes. Those were closed in round 1, each with a test that must refuse; a second reader then found more (see Fix round 2 below). The big three: (1) a request or next step on the call could be "covered" by pointing at the lead search, so it never reached the PDF; (2) "Not discussed" was written after a search nobody could pass (only the field's label), so a call that said "ask BrightRock for an FNA quote" printed "FNA quote: Not discussed"; (3) an overlay entry with a wrong section or list name vanished without a word. The rest: the Teams hand-over is now proven against the Teams program's own records, a made-up Overview or Paul's words can no longer be typed in, the form's saved PDF is matched by exact amounts and whole words, the save folder must be the client's own, a run folder, form, PDF or transcript of another client or date is refused, and a change to the programs during a run is detected (unless someone also changes the checker). Details are in the lists below.
 
 ## Fix round 2 (a second reader attacked the program again)
-The second reader said most of round 1 held. One big hole and several smaller ones were left. All of them are now closed, each with a test that must refuse. In plain words:
+The second reader said most of round 1 held. One big hole and several smaller ones were left. I closed the ones it named, each with a test that must refuse; a third reader then found more routes to the same hole (see Fix round 3 below). In plain words:
 
 **The big hole**
 - Claude could file the call's "ask BrightRock for an FNA quote" as a plain "fact", set it aside, and give every flagged field a nonsense reason such as "xxxxxxxxxxxxxxxxxxxx". The run still passed, and the PDF said "FNA quote: Not discussed".
 - Now a line with a request, decision, change or quote word cannot be filed as a plain fact, and cannot be set aside as plain talk.
 - Such a line must be next to a real entry, or dismissed with a reason that quotes some of the line's own words.
-- Every dismissed line is named on your glance list, with its line number and the reason.
+- Every line dismissed by a review is named on your glance list, with its line number and the reason (round 3 adds how every request line was handled).
 - A "Not discussed" that goes against what the search found needs a reason that names a found line by number and quotes a word from it.
 - The program refuses a reason that is one repeated character, or has fewer than three different words.
 - The printout counts how many "Not discussed" went against the search and how many rest on a weak search.
@@ -32,6 +32,26 @@ The second reader said most of round 1 held. One big hole and several smaller on
 **Two contacts I looked at (reader's question)**
 - `references/04-contact-and-lead.md` names the sender of the D&R Marketing lead emails (Di Heath, with a mweb.co.za address). It is a business contact your old skill used to recognise the lead emails. It is not client data. I left it. **Is it right to keep a named person's own address in the skill? Keep / Remove.**
 - `history/SKILL.2026-10-28.redacted.md` line 295 holds the Teams chat id of your chat with Sitamah (used for the Zapier send). It is the skill's own operating detail, not client data, and the live Teams skill carries it too. I left it. It is in `history/`, which is not in the zip.
+
+## Fix round 3 (a third reader went after the same hole)
+The third reader said the FNA request could still be dropped, in two cheap ways. Both are closed now, with the smaller ones. In plain words:
+
+**The two cheap ways**
+- Claude could file the FNA line under the wrong kind (a "gap"), then "cover" it with an unrelated fill that shared one word with a field's label.
+- Now a line with FNA, quote, shortfall, RGAR, EGAR, goal analysis or reduced must be filed as a quote request. The program refuses any other kind.
+- A fill covers an entry only if the field's own search words are found in the entry's line, or the fill's own value or text shares a word with the entry. The field's label no longer counts.
+- Claude could also "cover" a gap or a contact with a "Not discussed" claim. A claim that the call did NOT discuss something cannot cover something the call DID say. Claims no longer cover gaps or contacts at all. (A client who says "I don't have a work number" is recorded as a plain fact.)
+
+**Request lines**
+- A request line used to count as handled if ANY entry was within 3 lines. Now that entry must also share a word with the line (a line like "OK, please do that" with no real word is handled by any entry next to it).
+- Lines with FNA, quote, shortfall, RGAR, EGAR, goal analysis, reduced, authority, payslip, appointment, next meeting, set up or follow up cannot be dismissed by a review at all. They must be an entry.
+- If such a line really is not a request (for example "as the quote said last year"), Claude must ask you. Your recorded answer names the line. The line is then shown on your glance list as dismissed on your answer.
+- Softer words can still be dismissed with a reason that quotes the line: ask, request, sign, send, email, and the new ones (can you, could you, would you, please, I'd like, I will need, organise, arrange, book, prepare, run the numbers, come back to me, get back to me, send me, email me, let me know).
+- A fact is refused when a request word is on the line or one or two lines next to it, not only on the line itself.
+- The glance list now shows how EVERY request line was handled, for example "line 66 -> entry L5 (quote_request, covered by fna_req)" or "line 81 dismissed: <reason>". It shows 15, then the count.
+
+**Your answers**
+- A question could name all 223 fields, and then your one answer could fill a tax number and change an ABI. Now a question names at most 10 ids, and each one must be written in the question text (as its id or its label).
 
 ## What the skill does now
 After a Fact Find meeting it builds the **Fact Find Transcript PDF** from, in this order: the form's data file (and the form's own saved PDF), the Teams transcript, the latest Overview, and the client's other documents. A program does the work step by step; Claude cannot skip a step, and at the end the checker prints PASS or FAIL for every item. The PDF has your fixed 11 sections in your order, then "Next Steps & Next Meeting". The Fact Find Summary, the Planner note and the message to Sitamah are still made by the other two skills (once, not twice).
@@ -84,7 +104,7 @@ Every rule of the old skill is still there. A program (`tools/inventory.py`) wen
 12. **The "Not discussed" tick-box rows.** About 30 empty tick-box and detail rows in sections 10 and 11 print "Not discussed" (for example the provider pick-lists and the detail rows under a "No"). I left them as they are. The sample PDF shows them. **Keep them printing, or hide them? Keep / Hide.**
 13. **Two small header sizes.** The title block at the top of page 1 has a brand line at 11 pt and a tag line at 8 pt, smaller than the 12 pt body, because that is how the old script drew it. **Make them 12 pt like everything else? Yes / No.**
 
-14. **Request words.** The checker now treats these words as marking a request line, besides the scan's own list: ask, request, quote, FNA, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up, sign. Each such line must be next to an entry or be dismissed with a reason. That means a few more lines to record on a real call. **OK? Yes / No.**
+14. **Request words.** The checker now treats these words as marking a request line, besides the scan's own list. HARD (cannot be dismissed; must be an entry, or you must say it is not a request): FNA, quote, shortfall, RGAR, EGAR, goal analysis, reduced, authority, payslip, appointment, next meeting, set up, follow up. SOFT (can be dismissed with a reason that quotes the line): ask, request, sign, can you, could you, would you, please, I'd like, I will need, organise, arrange, book, prepare, run the numbers, come back to me, get back to me, send me, email me, let me know. Each such line must be next to an entry that shares a word with it or be dismissed with a reason. That means a few more lines to record on a real call. **OK? Yes / No.**
 15. **The 25% / 60% limits.** If more than 25% of the call's lines, or more than 60% of its request lines, are dismissed, the step stops unless you say to go on. **Are those the right limits? Yes / No.**
 
 ## What I could not do or check
@@ -93,6 +113,7 @@ Every rule of the old skill is still there. A program (`tools/inventory.py`) wen
 - **I could not run it inside your chat.** The access routes (computer, Microsoft 365, Zapier), the folder save, the page tool, the Agent tool and the other two skills are only attested in the checker, not proven.
 - **Several transcripts for one meeting** are joined and each part checked, but I have only seen the layouts the Teams skill already reads.
 - **Claude still chooses the kind of each ledger entry** (a request, a gap, a next step ...). The program cannot tell if a request was filed under the right kind. It makes every request line be next to an entry or dismissed with a reason that quotes it, and a cover must share a word with the entry. That is strict, but it is not understanding.
+- **Inherent limits (a program cannot close them; the printout says so):** (1) Claude types your words itself with `run.py answer`, so "Paul said yes" is attested. (2) A doctored copy of the Teams skill, or someone who also patches the program's own fingerprint, needs an outside anchor, for example the released fingerprint printed in the upload brief. That is a change to the packaging tool, not to this skill; I have not made it. (3) The text copies of an Overview or schedule are made by Claude. (4) A written reason is checked for form, never for truth. (5) A request worded with none of the listed words is not required by the program.
 - **A "Not discussed" reason is checked only for form**: length, three different words, a named found line and a word from it. The program cannot tell whether the reason is true. Every override is counted and named on your glance list for that reason.
 - **The Teams skill folder and the text copies of documents are made or named by Claude.** The program checks they look real (and prints fingerprints), not that they are the real ones.
 - **The Teams skill has no program fingerprint of its own.** Its programs can be edited during one of its runs without its checker noticing (this skill now guards its own programs). I did not touch the Teams skill: this is **to fix in the next Teams change**.

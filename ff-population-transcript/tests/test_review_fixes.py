@@ -431,12 +431,12 @@ class PaulsWords(Staged):
         self.assertIn("asked_paul is no longer accepted", r.stdout + r.stderr)
 
     def test_a7_a_question_that_was_asked_but_not_answered_is_not_paul_saying_yes(self):
-        self.ok("ask", self.run_dir, "--need", "abi_dd", "--kind", "knowledge", "--question", "Which ABI for the dread disease cover of this client?", "--searched", "the form, the call and the standing rules", "--about", "dd_abiv")
+        self.ok("ask", self.run_dir, "--need", "abi_dd", "--kind", "knowledge", "--question", "Which ABI value for the dread disease cover of this client?", "--searched", "the form, the call and the standing rules", "--about", "dd_abiv")
         self.write("overlay.json", self.abi())
         self.refused("compose", self.run_dir)
 
     def test_a7_an_answer_recorded_through_the_program_is_used_and_always_on_the_glance_list(self):
-        self.ok("ask", self.run_dir, "--need", "abi_dd", "--kind", "knowledge", "--question", "Which ABI for the dread disease cover of this client?", "--searched", "the form, the call and the standing rules", "--about", "dd_abiv")
+        self.ok("ask", self.run_dir, "--need", "abi_dd", "--kind", "knowledge", "--question", "Which ABI value for the dread disease cover of this client?", "--searched", "the form, the call and the standing rules", "--about", "dd_abiv")
         self.ok("answer", self.run_dir, "--need", "abi_dd", "--said", "Make it 8% for this client")
         self.write("overlay.json", self.abi())
         self.ok("compose", self.run_dir)

@@ -15,12 +15,13 @@ description: "Builds the WR Fact Find from the Fact Find form's data file (named
 | 4 | When something goes wrong | What to do instead of improvising |
 | 5 | Where the detail lives | The pages the program shows at each step |
 
-**Last updated: 2026-11-03 03:02 (Athens time)**
+**Last updated: 2026-11-03 04:22 (Athens time)**
 
 **Recent changes** (last 5, one line each; full history in the repo `history/` folder)
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-11-03 04:22 | Fix round 3 after a third outside review: FNA and other quote lines must be quote requests and cannot be dismissed, covers must be about the entry, and a question can name at most 10 ids |
 | 2026-11-03 03:02 | Fix round 2 after a second outside review: requests cannot be filed as plain facts, every override and dismissal needs a real reason and is shown to Paul, and the Teams hand-over, Paul's answers and the save folder are checked harder |
 | 2026-11-03 01:02 | Fix round 1 after an outside review: the ledger, Not discussed, overlay and Teams hand-over checks can no longer be faked, and the programs cannot change during a run |
 | 2026-11-02 23:24 | The Not discussed lists in the source report and the glance list now name each field with its key, so two fields with the same label cannot be confused |
@@ -63,7 +64,7 @@ Never rewrite, shorten or "improve" the programs during a run, and never replace
 14. After any correction from Paul, re-open the whole task: fix it in the overlay, compose, build, redo the hand-overs that changed, run the final check again.
 15. If a rule cannot be met, stop and say exactly which one and why. Never hand over partial work as complete.
 16. Changes to this skill are made only in Claude Code and uploaded by Paul. Never say a change is live until he confirms it.
-17. Paul's own words are recorded only with `run.py ask` (say what it is about) and `run.py answer`. The overlay points at them; it never contains them, and a number you use must be in his words.
+17. Paul's own words are recorded only with `run.py ask` (say what it is about: at most 10 ids, each named in the question) and `run.py answer`. The overlay points at them; it never contains them, and a number you use must be in his words.
 18. An Overview or a Policy schedule counts only with a text copy that names the client, and a number of six or more digits is printed only when a recorded document shows it.
 19. The programs run as they are. A fingerprint of the programs, the layout, the steps and the rule pages is checked at every step and printed in the final line; if they change during a run, start again (a change is detected unless someone also changes the checker, so Paul compares the printed fingerprint).
 

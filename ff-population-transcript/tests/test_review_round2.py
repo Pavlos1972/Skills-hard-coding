@@ -26,7 +26,7 @@ def words_of(line, n=8):
 class Laundry(Staged):
     """The call asks for an FNA quote. Filing that line as a plain 'fact' and excluding it, and giving flagged fields nonsense reasons, used to reach RESULT: PASS."""
     STAGE = "pass2"
-    LEDGER = [x for x in Chat.LEDGER if "new business FNA" not in x[0]]           # the chat never records the FNA request at all
+    LEDGER = [x for x in Chat.LEDGER if "new business FNA" not in x[0] and "email it tomorrow" not in x[0]]      # the chat never records the FNA request (or the email line) at all
 
     def form_json(self):
         f = HH.pat_form()
@@ -50,7 +50,7 @@ class Laundry(Staged):
         self.write("ledger.json", led)
         sh("tx.py", "scan", self.run_dir, ok=True)
         out = self.verify("--stage", "pre")
-        self.assertTrue(any("is recorded as 'fact' but line %d holds the word" % n in ln for ln in fails(out)), fails(out))
+        self.assertTrue(any("is recorded as 'fact' but line %d (or a line next to it) holds the word" % n in ln for ln in fails(out)), fails(out))
 
     def test_k1_an_entry_on_a_request_line_cannot_be_set_aside_as_plain_talk(self):
         n = self.line("new business FNA quote")
@@ -64,21 +64,27 @@ class Laundry(Staged):
         n = self.line("new business FNA quote")
         sh("tx.py", "scan", self.run_dir, ok=True)
         r = self.refused("done", self.run_dir, "scan")
-        self.assertIn("are not covered by a ledger entry that must be covered", r.stdout)
+        self.assertIn("cannot be dismissed", r.stdout)                  # an FNA line is a hard request line: it must be an entry
         self.assertIn(str(n), r.stdout)
 
     def test_k1_a_dismissal_needs_a_reason_that_quotes_the_line(self):
-        n = self.line("new business FNA quote")
+        n = self.line("email it tomorrow")                               # a soft line (the scan's own word 'email'): it may be dismissed, with a reason that quotes it
         sh("tx.py", "scan", self.run_dir, ok=True)
         for bad in ("xxxxxxxxxxxxxxxxxxxx", "just a plain fact", "plain talk", "nothing here at all really", "ok ok ok ok ok ok ok ok"):
             r = drv("ledger", self.run_dir, "review", "--line", str(n), "--reason", bad)
             self.assertNotEqual(r.returncode, 0, "accepted the reason %r" % bad)
-        self.ok("ledger", self.run_dir, "review", "--line", str(n), "--reason", "line %d only says: %s so no quote is wanted from the client" % (n, "I will ask BrightRock for a new business FNA quote"))
+        self.ok("ledger", self.run_dir, "review", "--line", str(n), "--reason", "line %d only says: I will email it tomorrow so nothing else is wanted from the client" % n)
 
-    def test_k1_every_dismissed_line_is_named_on_the_glance_list(self):
+    def test_k1_the_fna_line_itself_cannot_be_dismissed_whatever_the_reason(self):
         n = self.line("new business FNA quote")
         sh("tx.py", "scan", self.run_dir, ok=True)
-        self.ok("ledger", self.run_dir, "review", "--line", str(n), "--reason", "line %d only says: I will ask BrightRock for a new business FNA quote so nothing is wanted" % n)
+        r = self.refused("ledger", self.run_dir, "review", "--line", str(n), "--reason", "line %d only says: I will ask BrightRock for a new business FNA quote so no quote is wanted from the client" % n)
+        self.assertIn("cannot be dismissed", r.stdout + r.stderr)
+
+    def test_k1_every_dismissed_line_is_named_on_the_glance_list(self):
+        n = self.line("email it tomorrow")
+        sh("tx.py", "scan", self.run_dir, ok=True)
+        self.ok("ledger", self.run_dir, "review", "--line", str(n), "--reason", "line %d only says: I will email it tomorrow so nothing is wanted" % n)
         st, led = self.load("state.json"), self.load("ledger.json")
         out = verify.summary_lines(self.run_dir, st, led, {})
         text = "\n".join(out)
@@ -209,7 +215,7 @@ class PaulsAnswers(Staged):
     STAGE = "joint"
 
     def ask(self, need="dd_abi", about="dd_abiv", said="make it 8 percent"):
-        self.ok("ask", self.run_dir, "--need", need, "--kind", "knowledge", "--question", "Which ABI for dread disease for this client?", "--searched", "form, call and Overview", "--about", about)
+        self.ok("ask", self.run_dir, "--need", need, "--kind", "knowledge", "--question", "Which ABI value for the dread disease cover of this client?", "--searched", "form, call and Overview", "--about", about)
         self.ok("answer", self.run_dir, "--need", need, "--said", said)
 
     def test_p1_a_question_must_say_what_it_is_about(self):
@@ -251,7 +257,7 @@ class JointAnswer(Chat):
     """N3b: 'no' is refused when the form's spouse, or someone else, speaks on the call."""
 
     def spouse_transcript(self):
-        t = slurp(self.transcript).replace("0:12:45 Pat Samplecase\nThursday the twelfth", "0:12:40 Robin Testcase\nI am Robin, his wife, and I work at Fakeschool as a teacher.\n\n0:12:45 Pat Samplecase\nThursday the twelfth")
+        t = slurp(self.transcript).replace("0:14:00 Paul Kafentzis\nPlease also send", "0:13:40 Robin Testcase\nI am Robin, his wife, and I work at Fakeschool as a teacher.\n\n0:14:00 Paul Kafentzis\nPlease also send")
         p = os.path.join(self.tmp, "t_joint.txt")
         spit(p, t)
         self.transcript = p
@@ -447,20 +453,44 @@ class Dismissals(Staged):
             ws.append(cw[0] if cw else "line")
         return "reviewed %d to %d and read %s so nothing needs recording" % (a, b, " ".join(dict.fromkeys(ws)))
 
+    def synthetic(self, n_lines=100):
+        """A call of n 'we agree about item N here' lines (agree is a scan word, not a hard request word) in a throw-away run folder."""
+        import tempfile
+        d = tempfile.mkdtemp(prefix="wrdis-")
+        self.addCleanup(shutil.rmtree, d, True)
+        lines = ["we agree about item %d here" % i for i in range(1, n_lines + 1)]
+        spit(os.path.join(d, "transcript.txt"), "\n".join(lines))
+        st = {"scan": {"hits": list(range(1, n_lines + 1))}, "total_lines": n_lines, "chunks": [[1, n_lines]]}
+        return d, lines, st
+
     def test_m2_three_reviews_of_forty_lines_cannot_dismiss_the_whole_call(self):
-        sh("tx.py", "scan", self.run_dir, ok=True)
-        n = len(slurp(self.p("transcript.txt")).split("\n"))
-        for a, b in ((1, 40), (41, 80), (81, n)):
-            self.ok("ledger", self.run_dir, "review", "--from", str(a), "--to", str(b), "--reason", self.reason_for(a, b))
-        r = self.refused("done", self.run_dir, "scan")
-        self.assertIn("too much of the call was dismissed", r.stdout)
+        d, lines, st = self.synthetic()
+        reviews = [{"from": a, "to": b, "reason": "lines %d to %d only say we agree about their item" % (a, b)} for a, b in ((1, 40), (41, 80), (81, 100))]
+        for rv in reviews:
+            self.assertIsNone(verify.review_problem(rv, lines, verify.required_lines(lines, st)))            # each review is a real one on its own
+        R = verify.Results()
+        verify.check_scan_resolution(d, st, lines, {"entries": [], "scan_reviewed": reviews}, R)
+        self.assertTrue(any("too much of the call was dismissed" in m for lvl, _, m in R.rows if lvl == "FAIL"), R.rows)
 
     def test_m2_the_blank_reasons_of_the_first_review_are_refused_at_once(self):
         sh("tx.py", "scan", self.run_dir, ok=True)
         r = self.refused("ledger", self.run_dir, "review", "--from", "1", "--to", "40", "--reason", "plain talk batch A")
         self.assertIn("holds no word", r.stdout + r.stderr)
 
-    def test_p2_a_one_entry_ledger_with_every_other_hit_dismissed_line_by_line_is_refused(self):
+    def test_p2_one_entry_with_every_other_line_dismissed_one_by_one_is_refused_unless_paul_says_go_on(self):
+        d, lines, st = self.synthetic()
+        ents = [{"id": "L1", "line": 1, "kind": "request", "quote": "we agree about item 1", "covered_by": []}]
+        reviews = [{"line": i, "reason": "line %d says we agree about item %d only" % (i, i)} for i in range(10, 90)]
+        R = verify.Results()
+        verify.check_scan_resolution(d, st, lines, {"entries": ents, "scan_reviewed": reviews}, R)
+        self.assertTrue(any("too much of the call was dismissed" in m for lvl, _, m in R.rows if lvl == "FAIL"), R.rows)
+        spit(os.path.join(d, "questions.json"), json.dumps([{"need": "dismissals", "paul_said": "Yes go on, the rest is chatter", "kind": "knowledge", "about": []}]))
+        R = verify.Results()
+        verify.check_scan_resolution(d, st, lines, {"entries": ents, "scan_reviewed": reviews}, R)
+        self.assertFalse([m for lvl, _, m in R.rows if lvl == "FAIL" and "too much" in m])
+        self.assertTrue(any("Paul's recorded answer says to go on" in m for lvl, _, m in R.rows if lvl == "WARN"), R.rows)
+
+    def test_p2_the_hard_lines_of_a_real_call_stop_the_scan_step_whatever_else_is_dismissed(self):
         led = self.load("ledger.json")
         keep = next(e for e in led["entries"] if "cell number" in e["quote"])
         led["entries"] = [dict(keep, id="L1")]
@@ -469,15 +499,12 @@ class Dismissals(Staged):
         self.write("ledger.json", led)
         sh("tx.py", "scan", self.run_dir, ok=True)
         lines = slurp(self.p("transcript.txt")).split("\n")
+        hard = verify.hard_lines(lines)
         for n in verify.required_lines(lines, self.load("state.json")):
-            if abs(n - keep["line"]) > 3:
+            if abs(n - keep["line"]) > 3 and n not in hard:
                 self.ok("ledger", self.run_dir, "review", "--line", str(n), "--reason", "line %d says: %s so nothing to record" % (n, words_of(lines[n - 1])))
         r = self.refused("done", self.run_dir, "scan")
-        self.assertIn("too much of the call was dismissed", r.stdout)
-        # Paul's recorded answer lets it go on, and the checker still warns
-        self.ok("ask", self.run_dir, "--need", "dismissals", "--kind", "knowledge", "--question", "Most of this call was dismissed as plain talk. Go on?", "--searched", "the whole call, twice")
-        self.ok("answer", self.run_dir, "--need", "dismissals", "--said", "Yes go on, the rest is chatter")
-        self.ok("done", self.run_dir, "scan")
+        self.assertIn("cannot be dismissed", r.stdout)
 
     def test_p2_every_dismissed_hit_line_is_listed_up_to_fifteen_then_counted(self):
         import tempfile

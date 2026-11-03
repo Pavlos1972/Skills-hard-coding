@@ -1,5 +1,5 @@
 {
- "stamp": "2026-11-03 03:02",
- "fingerprint": "cb29e3fb7b7bbea927706ad0742e6030bf72e639dbf338ecd8a45c69c1340d8d",
- "change": "Fix round 2 after a second outside review: requests cannot be filed as plain facts, every override and dismissal needs a real reason and is shown to Paul, and the Teams hand-over, Paul's answers and the save folder are checked harder"
+ "stamp": "2026-11-03 04:22",
+ "fingerprint": "d234c51b75ff0339f5a974f99c03b0c14d146b330fa8e688d23a243e3077c7c6",
+ "change": "Fix round 3 after a third outside review: FNA and other quote lines must be quote requests and cannot be dismissed, covers must be about the entry, and a question can name at most 10 ids"
 }

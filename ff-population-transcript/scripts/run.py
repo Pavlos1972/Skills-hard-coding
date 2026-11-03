@@ -572,6 +572,39 @@ def cmd_source(a):
 
 
 NO_ABOUT_NEEDS = ("lead", "dismissals", "formpdf", "date", "form", "joint")
+ABOUT_MAX = 10
+
+
+def about_problem(about, question, need):
+    """None when `--about` is a short list of real ids that the question itself names: at most 10 field keys, list names, quote groups or section ids, each written in the question as the id or its label
+    (so a chat cannot list every field and then use the answer for any of them). For the dismissals question the ids are line numbers."""
+    if len(about) > ABOUT_MAX:
+        return "--about names %d ids: at most %d (a question about everything is a question about nothing)" % (len(about), ABOUT_MAX)
+    if need == "dismissals":
+        bad = [x for x in about if not re.fullmatch(r"(?:lines?\s*)?\d+(?:\s*-\s*\d+)?", x.strip(), re.I)]
+        return ("--about for the dismissals question is the line numbers (for example 66 or 66-67), not %r" % bad[0]) if bad else None
+    lay = w.layout()
+    ok = compose.valid_ids(lay)
+    specs = verify._specs(lay)
+    qn = " %s " % w.norm(question or "")
+    for x in about:
+        label = ""
+        if x in ok["keys"]:
+            label = (specs.get(x) or {}).get("label", "")
+        elif x in ok["groups"]:
+            label = next((g["title"] for g in lay["quote_groups"] if g["id"] == x), "")
+        elif x in ok["sections"]:
+            label = next((s_["title"] for s_ in lay["sections"] if s_["id"] == x), "")
+        elif x in ok["lists"]:
+            g_ = specs.get("list:" + x) or {}
+            label = g_.get("sub") or g_.get("item") or x
+        elif x not in ("next_steps", "docs_to_request"):
+            return "%r is not a field key, list name, quote group or section id (see the valid names in the content step)" % x
+        words = [t for t in re.findall(r"[a-z0-9]+", w.norm(label)) if len(t) >= 3]
+        if " %s " % w.norm(x) in qn or (label and " %s " % w.norm(label) in qn) or (words and all((" %s " % t) in qn for t in words)):
+            continue
+        return "%r is not named in the question: write its id or its label (%s) in the question text, so the question really asks about it" % (x, label or x)
+    return None
 
 
 def cmd_ask(a):
@@ -596,6 +629,9 @@ def cmd_ask(a):
         w.die("REFUSED: say what you already searched (at least 8 characters).")
     qs = load_list(a.run, w.QUESTIONS)
     about = [x.strip() for x in (a.about or "").split(",") if x.strip()]
+    ap_ = about_problem(about, q, a.need) if about else None
+    if ap_:
+        w.die("REFUSED: %s." % ap_)
     if a.kind == "knowledge" and a.need not in NO_ABOUT_NEEDS and not about:
         w.die("REFUSED: say what this question is about, so his answer can only be used for that: --about <field keys, list names, quote groups or section ids, separated by commas> (for example --about dd_abiv or --about fna).")
     qs.append({"t": w.now(), "need": a.need, "question": q, "searched": a.searched, "kind": a.kind, "about": about})
@@ -736,10 +772,14 @@ def cmd_ledger(a):
             w.die("REFUSED: that quote is not found at transcript line %d. Copy the exact words from the chunk you read." % a.line)
         st = _state(a.run)
         in_pass2 = any(r_["pass"] == 2 for r_ in st["reads"])
-        rw = verify.request_word(lines[a.line - 1])
-        if a.kind in verify.KINDS_OPTIONAL and rw:
-            w.die("REFUSED: line %d holds the word '%s' (a request, decision, change or quote word), so it cannot be recorded as a plain '%s'. Record it as a gap, difference, contact, quote_request, next_step, change or request. "
-                  "If it truly needs nothing, dismiss it with: run.py ledger review --line %d --reason \"<a reason that quotes the words of that line>\"." % (a.line, rw, a.kind, a.line))
+        allowed_ = verify.paul_allowed_lines(a.run)
+        rw = verify.request_word(verify.window_text(lines, a.line))
+        if a.kind in verify.KINDS_OPTIONAL and rw and a.line not in allowed_:
+            w.die("REFUSED: line %d (or a line next to it) holds the word '%s' (a request, decision, change or quote word), so it cannot be recorded as a plain '%s'. Record it as a gap, difference, contact, quote_request, next_step, change or request. "
+                  "If it truly needs nothing, dismiss it with: run.py ledger review --line %d --reason \"<a reason that quotes the words of that line>\" (a line with FNA, quote, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up or reduced can only be dismissed on Paul's recorded answer)." % (a.line, rw, a.kind, a.line))
+        qw = verify.quote_word(lines[a.line - 1])
+        if qw and a.kind != "quote_request" and a.line not in allowed_:
+            w.die("REFUSED: line %d holds the word '%s' (an FNA, quote, shortfall, RGAR, EGAR or reduced quote line), so the entry must be kind quote_request, not '%s'. If the line is not a request at all, ask Paul: run.py ask %s --need dismissals --about \"%d\" --kind knowledge --question ... --searched ..., then run.py answer." % (a.line, qw, a.kind, a.run, a.line))
         e = {"id": "L%d" % (len(led["entries"]) + 1), "line": a.line, "kind": a.kind, "quote": a.quote, "pass": 2 if in_pass2 else 1, "covered_by": []}
         if a.speaker:
             e["speaker"] = a.speaker
@@ -763,7 +803,7 @@ def cmd_ledger(a):
         if bad:
             w.die("REFUSED: these items do not exist (overlay ids, answered cross-check keys, 'lead', 'claim:<key>', quote rows such as quote.fna): %s" % bad)
         e_ = ent[a.id]
-        probs = [verify.cover_problem(e_["kind"], e_["line"], i, targets[i], e_["quote"]) for i in a.items]
+        probs = [verify.cover_problem(e_["kind"], e_["line"], i, targets[i], e_["quote"], verify.window_text(w.read_lines(a.run), e_["line"])) for i in a.items]
         if all(probs) and e_["kind"] in verify.KINDS_MUST_COVER:
             w.die("REFUSED: %s" % "; ".join(probs))
         ent[a.id]["covered_by"] = sorted(set(ent[a.id].get("covered_by") or []) | set(a.items))
@@ -796,6 +836,11 @@ def cmd_ledger(a):
         prob = verify.review_problem(rec, lines_, verify.required_lines(lines_, _state(a.run)))
         if prob:
             w.die("REFUSED: %s." % prob)
+        lo, hi = (a.line, a.line) if a.line is not None else (a.frm, a.to)
+        hard_in = [i for i in sorted(verify.hard_lines(lines_)) if lo <= i <= hi and i not in verify.paul_allowed_lines(a.run)]
+        if hard_in:
+            w.die("REFUSED: line(s) %s hold a request word that cannot be dismissed (FNA, quote, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up, reduced). Record each as a ledger entry (a quote line as quote_request). "
+                  "If a line really is not a request (for example 'as the quote said last year'), ask Paul: run.py ask %s --need dismissals --about \"%s\" --kind knowledge --question ... --searched ..., then run.py answer ... --said \"<his words>\"." % (hard_in[:8], a.run, ",".join(str(i) for i in hard_in[:8])))
         led["scan_reviewed"].append(rec)
         save()
         print("scan hit(s) %s reviewed: %s" % (a.line if a.line is not None else "%d-%d" % (a.frm, a.to), a.reason))

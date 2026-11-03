@@ -28,7 +28,7 @@ REWORDED (each is covered by a recorded change):
     now: The Fact Find Summary, the Planner note and the message to Sitamah are made by the other two skills, once.
     why: Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.
 - old line 45: 2026-10-28 10:45 (Athens/Greece time)
-    now: 2026-11-03 03:02 (Athens time)
+    now: 2026-11-03 04:22 (Athens time)
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 51: 2026-10-28 10:45 | New source order (rule 11):
     now: Gather inputs (source order — rule 11)
@@ -58,7 +58,7 @@ REWORDED (each is covered by a recorded change):
     now: a save is proven only when the listed size equals the local file's (a new time with the old size means the copy lagged:
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 53: 2026-10-15 11:15 | ABI rule corrected:
-    now: How the sources combine (rule 11):
+    now: 2026-11-03 04:22 (Athens time)
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 53: Life Cover (Fractured) WOL ABI 3%, Childcare ABI 5%;
     now: Life Cover (WOL) ABI 3% and Childcare ABI 5%;
@@ -73,7 +73,7 @@ REWORDED (each is covered by a recorded change):
     now: the insurer and New Business or Servicing, from the form or from what was said/Paul decided (never a default)."""
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 55: 2026-10-14 15:03 | Index added;
-    now: 2026-11-03 03:02 (Athens time)
+    now: 2026-11-03 04:22 (Athens time)
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 55: client names, policy numbers and beneficiary details in examples replaced with placeholders.
     now: Never assume Servicing because the client already holds a policy with that insurer, and never assume the insurer.
@@ -169,7 +169,7 @@ REWORDED (each is covered by a recorded change):
     now: Dread Disease ABI is 3% (unless Paul stated otherwise);
     why: Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.
 - old line 224: Only keepNext on headings and cantSplit:
-    now: say what shows it (for example 'only Pat spoke, no spouse on the call' or 'Pat and Robin were both on the call'):
+    now: A request line counts as handled only when an entry of a kind that must be covered (not a plain fact or figure) sits on it, or sits within 3 lines and shares a word of 4 letters or more with it.
     why: The same rule, in the words of the program that now draws the PDF (reportlab, not Word); the checker proves it from the finished PDF.
 - old line 224: true on every table row.
     now: table, no row split across pages.
@@ -181,13 +181,13 @@ REWORDED (each is covered by a recorded change):
     now: Attribute every statement from its content (who owns the policy, whose job, "my husband / my wife") and from the Audio to Text file(s), never from the label.
     why: S6/S11/S16: the old script held a real client's data and was copied and edited by hand each run. It is replaced by a program that Claude never edits; the styling it carried (Aptos 12pt, navy headings, EAF1F8 label column, bullets, no page numbers) is built into scripts/build.py and scripts/layout.json.
 - old line 230: don't rewrite the styling helpers or numbering config.
-    now: Never rewrite, shorten or "improve" the programs during a run, and never replace the PDF with a text draft or a Word file.
+    now: The program's own numbering (STEP 3 of 16) is separate.
     why: S6/S11/S16: the old script held a real client's data and was copied and edited by hand each run. It is replaced by a program that Claude never edits; the styling it carried (Aptos 12pt, navy headings, EAF1F8 label column, bullets, no page numbers) is built into scripts/build.py and scripts/layout.json.
 - old line 230: When populating any field that is itself a total, compute it from the same named component values used elsewhere in the document.
     now: When populating any field that is itself a total, compute it from the same named component values used elsewhere in the document (the program does this and the checker recomputes it).
     why: S6/S11/S16: the old script held a real client's data and was copied and edited by hand each run. It is replaced by a program that Claude never edits; the styling it carried (Aptos 12pt, navy headings, EAF1F8 label column, bullets, no page numbers) is built into scripts/build.py and scripts/layout.json.
 - old line 232: *The .docx built here is the internal working format only — it is never the delivered Fact Find Transcript.
-    now: the form's data file first (and its saved PDF), the Teams transcript second, the latest Overview as a reference, the Manual Fact Find only if Paul says so after the program asked him;
+    now: it prints the exact question for Paul (use the filled-in Manual Fact Find PDF, or the transcript alone?).
     why: No Word step any more: the PDF is drawn directly, and the checker fails a Word file next to it.
 - old line 232: The file saved to the client's folder is a PDF.
     now: one file, a PDF only (never a Word file), saved into the client's 2.
