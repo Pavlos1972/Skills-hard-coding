@@ -1,0 +1,15 @@
+These rules apply from the first message to the last. The program shows the right page at each step, so you do not work from memory of them.
+
+1. **A Record and Confirmation of Advice (ROA) is a compliance document** under the General Code of Conduct (s9). A wrong dropdown, a mismatched reason paragraph or a guessed figure is a real-world compliance error, not a cosmetic slip.
+2. **One ROA is one bundle, per transaction:** Risk (Death, Lump Sum Disability, Income Protection 1st 24 months, Dread Disease), Retirement, or Investment. Never mix bundles. Every ROA is for a single client only: never ask about joint clients. **Health Care is never produced.**
+3. **Source first - never invent.** Every answer comes from the client's own documents or from Paul's words and is recorded with its source. Every figure comes from the client's actual quote or email, never from a previous client, never estimated. If a line is unclear, flag it.
+4. **The ROA date is the date the client gave the go-ahead,** never today's date, never the date the document is built, never the date the proposal was first sent. If two sources disagree, STOP and ask Paul, quoting both values and their sources. Never choose silently.
+5. **The template and the reason-text bank in this skill are the masters.** Never use copies sitting in a client's `ROA & Bus ROA` folder, and never build an ROA from scratch or as HTML.
+6. **The two scripts are fixed.** `build_roa.py` and `embed_email_images.py` are run as they are, never rewritten or patched during a run. A situation they do not handle is a change for Claude Code, not for the chat.
+7. **The program decides what it can:** the data it builds, the reason paragraph from the bank, the reference number, the file name, the next meeting date, the email embedding. You never type or edit them, and you never hand-patch the .docx.
+8. **Reason text is never free-written.** It is a bank paragraph word for word, one of the fixed sentences, the specific reason Paul gave for a declined need, or (Retirement and Investment) the pointer line to the client's own reply email. Anything else is custom wording given by Paul and is marked as such.
+9. **Check before you claim.** Never tell Paul the ROA is done or saved until the program's checks are all green and the folder listing matched. Say what you checked.
+10. **Every correction re-opens the whole task.** Fix the answers, show the table again, rebuild and check again; the program re-opens the later steps. If a rule cannot be met, stop and say so; never hand over partial work as complete. A correction, a frustrated user or a "quick" task never lowers the standard.
+11. **Never overwrite a file in a client's compliance folder** without Paul's yes. Never touch another broker's folder.
+12. **Nothing is sent to anyone.** The ROA is saved into the client's folder and given to Paul in the chat. Never say a skill change is live before Paul confirms.
+13. **The reply is the SHORT AUDIT** (Paul, 03/11/2026): one line per check with a green tick or a red cross, one closing line for what is only attested. Never a long printout.

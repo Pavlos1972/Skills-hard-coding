@@ -1,0 +1,21 @@
+{
+ "skill": "wr-roa-builder",
+ "deliverables": [
+  {
+   "name": "The Record and Confirmation of Advice (.docx), built from the ROA template",
+   "file": "out/ROA - ... - DD.MM.YY - (Client Full Name).docx",
+   "produced_by": "scripts/run.py build (scripts/roa.py assembles the data, scripts/build_roa.py builds, scripts/embedpipe.py + embed_email_images.py embed the email pages for Retirement and Investment)",
+   "handover": "saved into the client's ROA & Bus ROA folder through the three routes in order, never overwriting without Paul's yes, and sent in the chat",
+   "checked_by": "scripts/verify.py + scripts/docxcheck.py (reopen the .docx and prove the pre-delivery checks)",
+   "step": "save"
+  },
+  {
+   "name": "Short audit",
+   "file": "printed by scripts/verify.py; full record in out_record/audit-full.txt",
+   "produced_by": "scripts/verify.py",
+   "handover": "pasted into the reply as it is: one line per check with a green tick or a red cross, one closing line for what is only attested",
+   "checked_by": "scripts/run.py done final",
+   "step": "final"
+  }
+ ]
+}

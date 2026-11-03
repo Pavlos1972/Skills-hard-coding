@@ -10,7 +10,7 @@ import os
 import re
 
 INCLUDE_FILES = ("SKILL.md", "steps.json", "deliverables.json")
-INCLUDE_DIRS = ("scripts", "references")
+INCLUDE_DIRS = ("scripts", "references", "assets")
 RECORD = os.path.join("history", "stamp.json")
 STAMP_RE = re.compile(r"\*\*Last updated:[^*]*\*\*")
 

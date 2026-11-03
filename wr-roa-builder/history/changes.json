@@ -1,0 +1,826 @@
+[
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Core principle: one ROA = one bundle, per transaction",
+  "new": "references/00-rules.md rule 2 and scripts/roa.py (BUNDLES, covers); Health Care is never produced (scripts/build_roa.py deletes it; scripts/docxcheck.py proves it).",
+  "why": "Moved; the program enforces one bundle.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every ROA covers exactly one of three bundles. Never mix",
+  "new": "references/00-rules.md rule 2 and scripts/roa.py (BUNDLES, covers); Health Care is never produced (scripts/build_roa.py deletes it; scripts/docxcheck.py proves it).",
+  "why": "Moved; the program enforces one bundle.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "| Bundle | Sections actively completed | All other sections ",
+  "new": "references/00-rules.md rule 2 and scripts/roa.py (BUNDLES, covers); Health Care is never produced (scripts/build_roa.py deletes it; scripts/docxcheck.py proves it).",
+  "why": "Moved; the program enforces one bundle.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Health Care is never produced as an ROA. Its Status drop",
+  "new": "references/00-rules.md rule 2 and scripts/roa.py (BUNDLES, covers); Health Care is never produced (scripts/build_roa.py deletes it; scripts/docxcheck.py proves it).",
+  "why": "Moved; the program enforces one bundle.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "For sections marked \"Do not Review\" because they're outside ",
+  "new": "references/00-rules.md rule 2 and scripts/roa.py (BUNDLES, covers); Health Care is never produced (scripts/build_roa.py deletes it; scripts/docxcheck.py proves it).",
+  "why": "Moved; the program enforces one bundle.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 0 — Locate the client's source documents (local mach",
+  "new": "references/01-locate.md, steps.json (locate) and scripts/run.py doc and access: three routes in order, every try logged, documents registered by role.",
+  "why": "Local-first rule replaced by the standard route order (Paul's answer 5).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Local machine first via the device bridge: `liferisk.co.",
+  "new": "references/01-locate.md, steps.json (locate) and scripts/run.py doc and access: three routes in order, every try logged, documents registered by role.",
+  "why": "Local-first rule replaced by the standard route order (Paul's answer 5).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Client documents almost never arrive as chat uploads — they ",
+  "new": "references/01-locate.md, steps.json (locate) and scripts/run.py doc and access: three routes in order, every try logged, documents registered by role.",
+  "why": "Local-first rule replaced by the standard route order (Paul's answer 5).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "1. Find the client folder with `Microsoft 365:sharepoint",
+  "new": "references/01-locate.md, steps.json (locate) and scripts/run.py doc and access: three routes in order, every try logged, documents registered by role.",
+  "why": "Local-first rule replaced by the standard route order (Paul's answer 5).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## ROA date — always the date the client gave the go-ahead, ",
+  "new": "references/02-answers.md (ROA date) and references/00-rules.md rule 4; scripts/roa.py answers_problems (roa_date, roa_date_source).",
+  "why": "The date and its source are entered and checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Standing rule, applies to every bundle (Risk, Retirement, ",
+  "new": "references/02-answers.md (ROA date) and references/00-rules.md rule 4; scripts/roa.py answers_problems (roa_date, roa_date_source).",
+  "why": "The date and its source are entered and checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "- If the client replied in writing (email, WhatsApp, etc",
+  "new": "references/02-answers.md (ROA date) and references/00-rules.md rule 4; scripts/roa.py answers_problems (roa_date, roa_date_source).",
+  "why": "The date and its source are entered and checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Worked example: `wr-roa-builder-changelog.md` (2026-08-25 en",
+  "new": "references/02-answers.md (ROA date) and references/00-rules.md rule 4; scripts/roa.py answers_problems (roa_date, roa_date_source).",
+  "why": "The date and its source are entered and checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 0b — Auto-derive the Step 1 answers (do this BEFORE ",
+  "new": "references/02-answers.md (derive first, source rules per answer, conflicts); scripts/run.py show and approve (the confirmation table and the one question).",
+  "why": "Step 0b is run by the program (Paul's answer 6).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Do not ask the Step 1 questions one by one when the client's",
+  "new": "references/02-answers.md (derive first, source rules per answer, conflicts); scripts/run.py show and approve (the confirmation table and the one question).",
+  "why": "Step 0b is run by the program (Paul's answer 6).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "1. Latest \"WR Overview\" PDF in `1. Overview\\2026` (newes",
+  "new": "references/02-answers.md (derive first, source rules per answer, conflicts); scripts/run.py show and approve (the confirmation table and the one question).",
+  "why": "Step 0b is run by the program (Paul's answer 6).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Source rules per answer",
+  "new": "references/02-answers.md (derive first, source rules per answer, conflicts); scripts/run.py show and approve (the confirmation table and the one question).",
+  "why": "Step 0b is run by the program (Paul's answer 6).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Conflict rule: if two sources disagree (other than the q",
+  "new": "references/02-answers.md (derive first, source rules per answer, conflicts); scripts/run.py show and approve (the confirmation table and the one question).",
+  "why": "Step 0b is run by the program (Paul's answer 6).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Masters: the ROA template and responses bank bundled in ",
+  "new": "references/02-answers.md (derive first, source rules per answer, conflicts); scripts/run.py show and approve (the confirmation table and the one question).",
+  "why": "Step 0b is run by the program (Paul's answer 6).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "After Paul confirms the table, continue with Step 1's \"Docum",
+  "new": "references/02-answers.md (derive first, source rules per answer, conflicts); scripts/run.py show and approve (the confirmation table and the one question).",
+  "why": "Step 0b is run by the program (Paul's answer 6).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 1 — Run the setup checklist first",
+  "new": "references/02-answers.md (the answers file) and scripts/roa.py answers_problems; scripts/run.py answers.",
+  "why": "The setup checklist is the answers file, validated by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before building anything, confirm all of these are available",
+  "new": "references/02-answers.md (the answers file) and scripts/roa.py answers_problems; scripts/run.py answers.",
+  "why": "The setup checklist is the answers file, validated by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Interaction format: use the button-selection tool for an",
+  "new": "references/02-answers.md (the answers file) and scripts/roa.py answers_problems; scripts/run.py answers.",
+  "why": "The setup checklist is the answers file, validated by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Always ask first (unless Step 0b already answered it):",
+  "new": "references/02-answers.md (the answers file) and scripts/roa.py answers_problems; scripts/run.py answers.",
+  "why": "The setup checklist is the answers file, validated by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If Risk:",
+  "new": "references/02-answers.md (the answers file) and scripts/roa.py answers_problems; scripts/run.py answers.",
+  "why": "The setup checklist is the answers file, validated by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If Retirement or Investment:",
+  "new": "references/02-answers.md (the answers file) and scripts/roa.py answers_problems; scripts/run.py answers.",
+  "why": "The setup checklist is the answers file, validated by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Non-negotiable: finding the original Email Proposal is n",
+  "new": "references/02-answers.md (the answers file) and scripts/roa.py answers_problems; scripts/run.py answers.",
+  "why": "The setup checklist is the answers file, validated by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "No longer asked — derived automatically, do not ask these:",
+  "new": "references/02-answers.md (the answers file) and scripts/roa.py answers_problems; scripts/run.py answers.",
+  "why": "The setup checklist is the answers file, validated by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Status dropdown defaults, driven by point 6 above:",
+  "new": "references/02-answers.md (the answers file) and scripts/roa.py answers_problems; scripts/run.py answers.",
+  "why": "The setup checklist is the answers file, validated by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Declined vs. FNA-analyzed-but-not-accepted — these are two",
+  "new": "references/02-answers.md (the answers file) and scripts/roa.py answers_problems; scripts/run.py answers.",
+  "why": "The setup checklist is the answers file, validated by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "A note on insurer coverage: the quote-reading method bel",
+  "new": "references/02-answers.md (the answers file) and scripts/roa.py answers_problems; scripts/run.py answers.",
+  "why": "The setup checklist is the answers file, validated by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "A note on the insurer dropdown's fixed list: the Insurer",
+  "new": "references/02-answers.md (the answers file) and scripts/roa.py answers_problems; scripts/run.py answers.",
+  "why": "The setup checklist is the answers file, validated by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 2 — Read the source documents; never assume values",
+  "new": "references/02-answers.md (source rules per answer, reading a BrightRock quote), steps.json (read) and scripts/roa.py _evidence_problems: every figure and the client's name and ID are checked against the documents' text.",
+  "why": "Figures are proven to appear in the documents (Paul's answer 4).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "- Every figure (Recommended Amount, Taken Up Amount, premium",
+  "new": "references/02-answers.md (source rules per answer, reading a BrightRock quote), steps.json (read) and scripts/roa.py _evidence_problems: every figure and the client's name and ID are checked against the documents' text.",
+  "why": "Figures are proven to appear in the documents (Paul's answer 4).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Reading a BrightRock quote specifically",
+  "new": "references/02-answers.md (Recommended vs Taken Up: the Summary block and its columns) and references/01-locate.md (BrightRock only).",
+  "why": "Kept; only BrightRock is accepted.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Column/heading mapping in that Summary block:",
+  "new": "references/02-answers.md (Recommended vs Taken Up: the Summary block and its columns) and references/01-locate.md (BrightRock only).",
+  "why": "Kept; only BrightRock is accepted.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The FNA Quote gives the Recommended Amount; the Reduced/",
+  "new": "references/02-answers.md (Recommended vs Taken Up: the Summary block and its columns) and references/01-locate.md (BrightRock only).",
+  "why": "Kept; only BrightRock is accepted.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 3 — Fill in the dropdown fields",
+  "new": "references/03-template-rules.md and scripts/roa.py (template_lists, answers_problems), scripts/build_roa.py (the overrides); scripts/docxcheck.py proves the values.",
+  "why": "Dropdown rules are enforced against the template's own lists.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The template's dropdowns are native Word content controls, n",
+  "new": "references/03-template-rules.md and scripts/roa.py (template_lists, answers_problems), scripts/build_roa.py (the overrides); scripts/docxcheck.py proves the values.",
+  "why": "Dropdown rules are enforced against the template's own lists.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "- Retirement → Need Identified: hardcoded to \"Retirement",
+  "new": "references/03-template-rules.md and scripts/roa.py (template_lists, answers_problems), scripts/build_roa.py (the overrides); scripts/docxcheck.py proves the values.",
+  "why": "Dropdown rules are enforced against the template's own lists.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Document construction — build the actual .docx, don't han",
+  "new": "references/03-template-rules.md (what the script does), scripts/build_roa.py (unchanged logic, fixed temporary work folder) and steps.json (build).",
+  "why": "The script stays the base, fixed and unchangeable during a run (Paul's answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Do not treat this as a fill-in-the-blanks text exercise.",
+  "new": "references/03-template-rules.md (what the script does), scripts/build_roa.py (unchanged logic, fixed temporary work folder) and steps.json (build).",
+  "why": "The script stays the base, fixed and unchangeable during a run (Paul's answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Use `scripts/build_roa.py`, which already encodes all of thi",
+  "new": "references/03-template-rules.md (what the script does), scripts/build_roa.py (unchanged logic, fixed temporary work folder) and steps.json (build).",
+  "why": "The script stays the base, fixed and unchangeable during a run (Paul's answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "```bash",
+  "new": "references/03-template-rules.md (what the script does), scripts/build_roa.py (unchanged logic, fixed temporary work folder) and steps.json (build).",
+  "why": "The script stays the base, fixed and unchangeable during a run (Paul's answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "What the script does automatically, so you don't have to rea",
+  "new": "references/03-template-rules.md (what the script does), scripts/build_roa.py (unchanged logic, fixed temporary work folder) and steps.json (build).",
+  "why": "The script stays the base, fixed and unchangeable during a run (Paul's answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "After building, always validate and visually check befor",
+  "new": "references/03-template-rules.md (what the script does), scripts/build_roa.py (unchanged logic, fixed temporary work folder) and steps.json (build).",
+  "why": "The script stays the base, fixed and unchangeable during a run (Paul's answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If a client's situation needs something the script doesn't y",
+  "new": "references/03-template-rules.md (what the script does), scripts/build_roa.py (unchanged logic, fixed temporary work folder) and steps.json (build).",
+  "why": "The script stays the base, fixed and unchangeable during a run (Paul's answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 4 — Reason text for the \"Reason this product suits y",
+  "new": "references/02-answers.md (the cover states and scenarios), scripts/roa.py (bank, cover_reason, reasons_for) and references/04-email.md.",
+  "why": "The reason text is picked by the program from the bank word for word (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This box's content differs by bundle.",
+  "new": "references/02-answers.md (the cover states and scenarios), scripts/roa.py (bank, cover_reason, reasons_for) and references/04-email.md.",
+  "why": "The reason text is picked by the program from the bank word for word (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Risk bundle",
+  "new": "scripts/roa.py (bank, cover_reason, cut_to_other_cover): the exact bank paragraph by cover type, FNA status and replacement; the fixed sentences; custom wording marked.",
+  "why": "The program picks the paragraph (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If a client's actual scenario doesn't cleanly match one cann",
+  "new": "scripts/roa.py (bank, cover_reason, cut_to_other_cover): the exact bank paragraph by cover type, FNA status and replacement; the fixed sentences; custom wording marked.",
+  "why": "The program picks the paragraph (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "A cover type that is NEW (not replacing anything) while th",
+  "new": "scripts/roa.py (bank, cover_reason, cut_to_other_cover): the exact bank paragraph by cover type, FNA status and replacement; the fixed sentences; custom wording marked.",
+  "why": "The program picks the paragraph (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Additional fixed rules layered on top of the response bank:",
+  "new": "scripts/roa.py (bank, cover_reason, cut_to_other_cover): the exact bank paragraph by cover type, FNA status and replacement; the fixed sentences; custom wording marked.",
+  "why": "The program picks the paragraph (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Retirement / Investment bundles",
+  "new": "references/04-email.md and scripts/run.py email, scripts/embedpipe.py: the client's own reply email, with the proposal quoted beneath, embedded as page images; the pointer line (scripts/roa.py PROVIDER_POINTER).",
+  "why": "Kept as before; now forced and checked.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Non-negotiable (see Step 1 point 9 above): the document yo",
+  "new": "references/04-email.md and scripts/run.py email, scripts/embedpipe.py: the client's own reply email, with the proposal quoted beneath, embedded as page images; the pointer line (scripts/roa.py PROVIDER_POINTER).",
+  "why": "Kept as before; now forced and checked.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Do not paste the email's text into the reason textbox as a",
+  "new": "references/04-email.md and scripts/run.py email, scripts/embedpipe.py: the client's own reply email, with the proposal quoted beneath, embedded as page images; the pointer line (scripts/roa.py PROVIDER_POINTER).",
+  "why": "Kept as before; now forced and checked.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Retirement and Investment are never both active in the same ",
+  "new": "references/04-email.md and scripts/run.py email, scripts/embedpipe.py: the client's own reply email, with the proposal quoted beneath, embedded as page images; the pointer line (scripts/roa.py PROVIDER_POINTER).",
+  "why": "Kept as before; now forced and checked.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Embedding the proposal email images — working procedure",
+  "new": "references/04-email.md, scripts/embedpipe.py (font rewrite to 15 pt, wkhtmltopdf at the fixed geometry, pdftoppm 150 dpi, insertion heading by bundle) and scripts/embed_email_images.py (the embed itself, unchanged logic); scripts/docxcheck.py checks count, place, captions, keepNext, spacers, width.",
+  "why": "The recurring bugs (heading by bundle, fixed work folder, fonts) are now the program's job, as before in effect.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Step 0 of this procedure — build the composite reply+quote",
+  "new": "references/04-email.md, scripts/embedpipe.py (font rewrite to 15 pt, wkhtmltopdf at the fixed geometry, pdftoppm 150 dpi, insertion heading by bundle) and scripts/embed_email_images.py (the embed itself, unchanged logic); scripts/docxcheck.py checks count, place, captions, keepNext, spacers, width.",
+  "why": "The recurring bugs (heading by bundle, fixed work folder, fonts) are now the program's job, as before in effect.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Recurring bug to check first, every time: `scripts/embed",
+  "new": "references/04-email.md, scripts/embedpipe.py (font rewrite to 15 pt, wkhtmltopdf at the fixed geometry, pdftoppm 150 dpi, insertion heading by bundle) and scripts/embed_email_images.py (the embed itself, unchanged logic); scripts/docxcheck.py checks count, place, captions, keepNext, spacers, width.",
+  "why": "The recurring bugs (heading by bundle, fixed work folder, fonts) are now the program's job, as before in effect.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "1. Render the source HTML to PDF with `wkhtmltopdf`, never",
+  "new": "references/04-email.md, scripts/embedpipe.py (font rewrite to 15 pt, wkhtmltopdf at the fixed geometry, pdftoppm 150 dpi, insertion heading by bundle) and scripts/embed_email_images.py (the embed itself, unchanged logic); scripts/docxcheck.py checks count, place, captions, keepNext, spacers, width.",
+  "why": "The recurring bugs (heading by bundle, fixed work folder, fonts) are now the program's job, as before in effect.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Do not substitute `wkhtmltopdf --zoom` for this. Applyin",
+  "new": "references/04-email.md, scripts/embedpipe.py (font rewrite to 15 pt, wkhtmltopdf at the fixed geometry, pdftoppm 150 dpi, insertion heading by bundle) and scripts/embed_email_images.py (the embed itself, unchanged logic); scripts/docxcheck.py checks count, place, captions, keepNext, spacers, width.",
+  "why": "The recurring bugs (heading by bundle, fixed work folder, fonts) are now the program's job, as before in effect.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Recurring bug — insertion heading for Retirement bundles:*",
+  "new": "references/04-email.md, scripts/embedpipe.py (font rewrite to 15 pt, wkhtmltopdf at the fixed geometry, pdftoppm 150 dpi, insertion heading by bundle) and scripts/embed_email_images.py (the embed itself, unchanged logic); scripts/docxcheck.py checks count, place, captions, keepNext, spacers, width.",
+  "why": "The recurring bugs (heading by bundle, fixed work folder, fonts) are now the program's job, as before in effect.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 5 — ROA Reference No.",
+  "new": "references/03-template-rules.md and scripts/roa.py reference_no.",
+  "why": "Built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Risk bundle",
+  "new": "scripts/roa.py (bank, cover_reason, cut_to_other_cover): the exact bank paragraph by cover type, FNA status and replacement; the fixed sentences; custom wording marked.",
+  "why": "The program picks the paragraph (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Example: `Old Mutual Personal Cover - R1,555.10 p.m.`",
+  "new": "scripts/roa.py (bank, cover_reason, cut_to_other_cover): the exact bank paragraph by cover type, FNA status and replacement; the fixed sentences; custom wording marked.",
+  "why": "The program picks the paragraph (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The premium is the \"Total premium\" printed inside the accept",
+  "new": "scripts/roa.py (bank, cover_reason, cut_to_other_cover): the exact bank paragraph by cover type, FNA status and replacement; the fixed sentences; custom wording marked.",
+  "why": "The program picks the paragraph (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Retirement / Investment bundles",
+  "new": "references/04-email.md and scripts/run.py email, scripts/embedpipe.py: the client's own reply email, with the proposal quoted beneath, embedded as page images; the pointer line (scripts/roa.py PROVIDER_POINTER).",
+  "why": "Kept as before; now forced and checked.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Standing shortcut — Old Mutual Tax-Free Investment product",
+  "new": "references/04-email.md and scripts/run.py email, scripts/embedpipe.py: the client's own reply email, with the proposal quoted beneath, embedded as page images; the pointer line (scripts/roa.py PROVIDER_POINTER).",
+  "why": "Kept as before; now forced and checked.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Delivery filename — every finished ROA must be named this",
+  "new": "references/03-template-rules.md and scripts/roa.py delivery_filename (the Risk name uses build_roa.build_filename).",
+  "why": "Derived, never typed.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Risk bundle",
+  "new": "scripts/roa.py (bank, cover_reason, cut_to_other_cover): the exact bank paragraph by cover type, FNA status and replacement; the fixed sentences; custom wording marked.",
+  "why": "The program picks the paragraph (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Example: `ROA - BR Personal Cover - R 4097.96 p.m. - 26.05.2",
+  "new": "scripts/roa.py (bank, cover_reason, cut_to_other_cover): the exact bank paragraph by cover type, FNA status and replacement; the fixed sentences; custom wording marked.",
+  "why": "The program picks the paragraph (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Rules (distinct from the in-document ROA Reference No. forma",
+  "new": "scripts/roa.py (bank, cover_reason, cut_to_other_cover): the exact bank paragraph by cover type, FNA status and replacement; the fixed sentences; custom wording marked.",
+  "why": "The program picks the paragraph (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Use `build_filename()` in `scripts/build_roa.py` to generate",
+  "new": "scripts/roa.py (bank, cover_reason, cut_to_other_cover): the exact bank paragraph by cover type, FNA status and replacement; the fixed sentences; custom wording marked.",
+  "why": "The program picks the paragraph (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Retirement / Investment bundles",
+  "new": "references/04-email.md and scripts/run.py email, scripts/embedpipe.py: the client's own reply email, with the proposal quoted beneath, embedded as page images; the pointer line (scripts/roa.py PROVIDER_POINTER).",
+  "why": "Kept as before; now forced and checked.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Example (lump sum): `ROA - Old Mutual Retirement Annuity Xtr",
+  "new": "references/04-email.md and scripts/run.py email, scripts/embedpipe.py: the client's own reply email, with the proposal quoted beneath, embedded as page images; the pointer line (scripts/roa.py PROVIDER_POINTER).",
+  "why": "Kept as before; now forced and checked.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Same numeric formatting rules as the Risk filename (no thous",
+  "new": "references/04-email.md and scripts/run.py email, scripts/embedpipe.py: the client's own reply email, with the proposal quoted beneath, embedded as page images; the pointer line (scripts/roa.py PROVIDER_POINTER).",
+  "why": "Kept as before; now forced and checked.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 6 — Fixed constants (never vary by client)",
+  "new": "references/03-template-rules.md (constants) and scripts/build_roa.py.",
+  "why": "Constants live in the script and the template page.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "- Financial Planner: Paul Kafentzis",
+  "new": "references/03-template-rules.md (constants) and scripts/build_roa.py.",
+  "why": "Constants live in the script and the template page.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 7 — Mandatory pre-delivery audit",
+  "new": "scripts/docxcheck.py and scripts/verify.py (each provable item of the 21 checks is a program check on the finished .docx); references/05-check-save.md for what stays with the eye.",
+  "why": "The audit is done by the program (Paul's answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before calling an ROA finished, check every item below. Do t",
+  "new": "scripts/docxcheck.py and scripts/verify.py (each provable item of the 21 checks is a program check on the finished .docx); references/05-check-save.md for what stays with the eye.",
+  "why": "The audit is done by the program (Paul's answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "1. Only one bundle (Risk / Retirement / Investment) is activ",
+  "new": "scripts/docxcheck.py and scripts/verify.py (each provable item of the 21 checks is a program check on the finished .docx); references/05-check-save.md for what stays with the eye.",
+  "why": "The audit is done by the program (Paul's answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "20. Any FNA-analyzed-but-not-accepted cover type (as opposed",
+  "new": "scripts/docxcheck.py and scripts/verify.py (each provable item of the 21 checks is a program check on the finished .docx); references/05-check-save.md for what stays with the eye.",
+  "why": "The audit is done by the program (Paul's answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If any check fails, fix it in the data dict and rebuild — do",
+  "new": "scripts/docxcheck.py and scripts/verify.py (each provable item of the 21 checks is a program check on the finished .docx); references/05-check-save.md for what stays with the eye.",
+  "why": "The audit is done by the program (Paul's answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Delivery — pushing the finished file into the client's Sh",
+  "new": "references/05-check-save.md (the save) and scripts/run.py name, access and receipt; the routes are computer, Microsoft 365, Zapier in order, every try logged, never overwriting without Paul's yes (Paul's answer 5).",
+  "why": "Reworded to the standard routes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Critical: tool availability is per-session, not guaranteed",
+  "new": "references/05-check-save.md (the save) and scripts/run.py name, access and receipt; the routes are computer, Microsoft 365, Zapier in order, every try logged, never overwriting without Paul's yes (Paul's answer 5).",
+  "why": "Reworded to the standard routes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Step A — Check what's actually available, every time, in",
+  "new": "references/05-check-save.md (save) and scripts/run.py access: the three routes in order.",
+  "why": "Replaced by the standard route order.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Path 0 — Local device bridge connected: write directly i",
+  "new": "references/05-check-save.md (the local device save: tenant root, library folder, SendUserFile then device_commit_files, what to say).",
+  "why": "Kept as the computer route.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "When this session can reach Paul's own computer, the finishe",
+  "new": "references/05-check-save.md (the local device save: tenant root, library folder, SendUserFile then device_commit_files, what to say).",
+  "why": "Kept as the computer route.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "1. Find the OneDrive-for-Business sync root — discover it ",
+  "new": "references/05-check-save.md (the local device save: tenant root, library folder, SendUserFile then device_commit_files, what to say).",
+  "why": "Kept as the computer route.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Once the tenant root is granted, steps 1–3 don't repeat for ",
+  "new": "references/05-check-save.md (the local device save: tenant root, library folder, SendUserFile then device_commit_files, what to say).",
+  "why": "Kept as the computer route.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Path 2 — Only `contentBase64` is available: fall back to",
+  "new": "references/05-check-save.md (if no route can carry a .docx, give it to Paul in the chat and name the folder).",
+  "why": "Kept as the manual fallback.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Reference material",
+  "new": "SKILL.md (Where the detail lives) and the references/ pages.",
+  "why": "Replaced by the index of pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "- `references/dropdown_field_map.md` — full verified dropdow",
+  "new": "SKILL.md (Where the detail lives) and the references/ pages.",
+  "why": "Replaced by the index of pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## A note on scope",
+  "new": "references/00-rules.md rule 3 and SKILL.md standing rule 2: nothing is reused from another client; the skill holds no client data.",
+  "why": "Kept; the rebuilt skill's files hold no client data.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This skill is about the *procedure*. It doesn't carry any sp",
+  "new": "references/00-rules.md rule 3 and SKILL.md standing rule 2: nothing is reused from another client; the skill holds no client data.",
+  "why": "Kept; the rebuilt skill's files hold no client data.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "2. Source first - never invent. Write only what is in th",
+  "new": "references/00-rules.md rule 3: every answer and figure comes from the client's documents or Paul's words, recorded with its source; the program refuses what it cannot find.",
+  "why": "Shortened; enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "4. Check before you claim. Never tell the user something",
+  "new": "references/00-rules.md rule 9: never say done or saved until the checks are green and the listing matched.",
+  "why": "Enforced by receipts.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "6. Every correction re-opens the whole task, not just the ",
+  "new": "references/00-rules.md rule 10: a correction re-opens the whole task; the driver re-opens the later steps.",
+  "why": "Enforced by the driver.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "7. Never lower the standard. A correction, a frustrated ",
+  "new": "references/00-rules.md rule 10.",
+  "why": "Merged with rule 6 of the new list.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "8. If a rule cannot be met, stop and say so. State exact",
+  "new": "references/00-rules.md rule 10.",
+  "why": "Merged.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This skill packages Paul Kafentzis's process for completing ",
+  "new": "SKILL.md description and references/00-rules.md rule 1 (the ROA is a compliance document; the template is assets/ROA_Template_2026.docx).",
+  "why": "Shortened.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Delivery gate for this skill (rules 5 and 6 applied): a ",
+  "new": "scripts/verify.py: the four checks of the old Delivery gate are green ticks or red crosses in the short audit (documents, answers, built ROA, saved file).",
+  "why": "Done by the checker.",
+  "needs_paul": false
+ }
+]

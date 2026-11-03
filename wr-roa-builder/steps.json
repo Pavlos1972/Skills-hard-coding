@@ -1,0 +1,129 @@
+{
+ "skill": "wr-roa-builder",
+ "steps": [
+  {
+   "id": "locate",
+   "title": "Find the client's documents (three routes, every try logged) and register each one",
+   "ref": [
+    "01-locate.md"
+   ],
+   "do": [
+    "Find the documents the page below lists for this bundle in the client's own folder. Try the routes IN THIS ORDER and record EVERY try, failures too:",
+    "  1  device: the computer (local drive / OneDrive)    2  m365: the Microsoft 365 connector    3  zapier: the Zapier Office 365 tools",
+    "Record each try: python3 {scripts}/run.py access {run} --purpose locate --route device|m365|zapier --result failed|found --note \"what you did\"",
+    "Register each document you bring: python3 {scripts}/run.py doc {run} --role ROLE --file <local copy> --route <the route>   (ROLE is on the page below)",
+    "If the client accepted the FNA in full: python3 {scripts}/run.py doc {run} --role accepted_quote --same-as fna_quote",
+    "A required document that really does not exist: ask Paul, then python3 {scripts}/run.py doc {run} --missing ROLE --said \"Paul's words\"",
+    "The program checks every file is readable and keeps its text so every figure you enter can be checked against it."
+   ],
+   "check": "locate_ok",
+   "proof": "the tries are logged in order and every required document is registered (or Paul said it does not exist)"
+  },
+  {
+   "id": "read",
+   "title": "Read the quotes, application, follow-up notes and emails, one page at a time",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py read {run}",
+    "The program shows the documents' text page by page. Read each page fully, then acknowledge it with a one-line note (`run.py read {run} --ack ROLE:PAGE --note \"...\"`). Pages are acknowledged in order; a page with no readable text must be viewed as an image by you."
+   ],
+   "check": "read_ok",
+   "proof": "every page was served in order and acknowledged"
+  },
+  {
+   "id": "answers",
+   "title": "Enter the setup answers (Step 0b) with their sources; the program checks every figure against the documents",
+   "ref": [
+    "02-answers.md"
+   ],
+   "do": [
+    "Write ONE answers file in the layout the page below describes, every answer with its source, then run: python3 {scripts}/run.py answers {run} --file <your answers file>",
+    "The program refuses anything that is not a real option of the template, a reason scenario that is not in the bank, a name, ID or figure it cannot find in the documents' text, and any unresolved conflict between sources (then STOP and ask Paul, quoting both values and their sources).",
+    "Never type a figure from memory and never copy one from another client."
+   ],
+   "check": "answers_ok",
+   "proof": "the answers are valid, sourced, free of conflicts, and every name, ID and figure was found in the documents' text"
+  },
+  {
+   "id": "confirm",
+   "title": "Show Paul the confirmation table, ask ONE question, record his yes",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py show {run}",
+    "Put the whole table it prints in your reply and ask exactly the one question it gives. Nothing is built before his clear yes.",
+    "When he says yes, record his own words: python3 {scripts}/run.py approve {run} --said \"his exact words\"",
+    "If an answer changes, run answers and show again: the earlier yes then no longer counts."
+   ],
+   "check": "confirm_ok",
+   "proof": "Paul was shown exactly these answers and said yes"
+  },
+  {
+   "id": "email",
+   "title": "Retirement or Investment only: the client's own reply email with the proposal quoted beneath (one HTML page)",
+   "ref": [
+    "04-email.md"
+   ],
+   "do": [
+    "A Risk ROA embeds no email: run done email.",
+    "Retirement or Investment: write the ONE html page exactly as before (the page below says how) and register it: python3 {scripts}/run.py email {run} --file <the html page> [--base-pt N]",
+    "The program refuses a page that does not OPEN with the client's own reply (their address, their acceptance wording) before the quoted proposal."
+   ],
+   "check": "email_ok",
+   "proof": "the page opens on the client's own reply with their acceptance wording, then the quoted proposal (or this is a Risk ROA)"
+  },
+  {
+   "id": "build",
+   "title": "The program assembles the data and builds the ROA with the fixed scripts (and embeds the email pages)",
+   "ref": [
+    "03-template-rules.md"
+   ],
+   "do": [
+    "Run: python3 {scripts}/run.py build {run}",
+    "It assembles the data from your confirmed answers (never typed), builds the ROA from the template with the fixed script, and for a Retirement or Investment ROA rewrites the font sizes, renders the email page with wkhtmltopdf, makes the page images and embeds them in the right place. You never edit a script, the data or the .docx."
+   ],
+   "check": "build_ok",
+   "proof": "the ROA is exactly what the program builds from the confirmed answers, and the email pages were rendered and embedded as required"
+  },
+  {
+   "id": "check",
+   "title": "The program opens the finished ROA and proves the pre-delivery checks; you look at the pages",
+   "ref": [
+    "05-check-save.md"
+   ],
+   "do": [
+    "Run: python3 {scripts}/run.py check {run}",
+    "Every line must be a green tick. Then look at EVERY page image it saves (filled fields black not grey; the embedded email pages the same size as the ROA's own text; no image border touching a footer). If something is wrong, tell Paul; never hand-patch the .docx: fix the answers and rebuild."
+   ],
+   "check": "check_ok",
+   "proof": "every program check on the finished .docx is a green tick"
+  },
+  {
+   "id": "save",
+   "title": "Save the ROA in the client's ROA & Bus ROA folder, never overwriting without Paul's yes",
+   "ref": [],
+   "do": [
+    "List the client's `ROA & Bus ROA` folder (computer first, then Microsoft 365, then Zapier; record every try with --purpose save) and note the file names already there. Then: python3 {scripts}/run.py name {run} --existing \"name one.docx;name two.docx\"",
+    "If a file with the same name exists the program stops: ask Paul; only with his yes run it again with --overwrite-yes \"his words\".",
+    "Save exactly the file it names, then list the folder again and record what it shows:",
+    "  python3 {scripts}/run.py receipt {run} save.folder <the folder path>      python3 {scripts}/run.py receipt {run} save.listed_bytes <the size the listing shows>",
+    "If no route can carry a .docx, give the file to Paul in the chat and tell him exactly which folder to drop it in; say plainly it was not saved."
+   ],
+   "check": "save_ok",
+   "proof": "the derived name was used, nothing was overwritten without Paul's yes, the folder is ROA & Bus ROA and the listed size equals the local file"
+  },
+  {
+   "id": "final",
+   "title": "The final check and the SHORT AUDIT for Paul",
+   "ref": [
+    "06-handover.md"
+   ],
+   "do": [
+    "Run: python3 {scripts}/run.py done {run} final",
+    "Put in your reply, as it is: the saved file's name and folder, the .docx in the chat, then the short audit. Nothing longer.",
+    "Any red cross means the job is not finished: say so."
+   ],
+   "check": "verify_final",
+   "proof": "the final checker prints no red cross"
+  }
+ ]
+}

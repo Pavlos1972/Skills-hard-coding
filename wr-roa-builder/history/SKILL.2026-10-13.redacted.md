@@ -471,7 +471,7 @@ What the script does automatically, so you don't have to reason about XML each t
   reorder code is present in `build_section()` before every Retirement build; full
   history: `wr-roa-builder-changelog.md` (2026-08-10 entry).
 - Sets the next-meeting date to ROA date + 12 months.
-- Formats the client ID confirmation line as "I, [Name], (ID: 1234567890123),
+- Formats the client ID confirmation line as "I, [Name], (ID: <13-digit ID>),
   hereby confirm" with clean single commas, and strips the literal "(Name)" label.
 - Strips the unreliable `<w:dataBinding>` on the Client Name and ROA Reference
   Number controls before setting their text directly.
@@ -855,7 +855,7 @@ not just by re-reading the data dict you built.
    Accepted Quote → Taken Up), and dual lump/monthly fields show one clean value, not
    both placeholders.
 11. Client name appears correctly in both places, the ID confirmation line reads
-   "I, [Name], (ID: 1234567890123), hereby confirm" with clean single commas, and the
+   "I, [Name], (ID: <13-digit ID>), hereby confirm" with clean single commas, and the
    ID is 13 digits with no spaces or dashes.
 12. Next meeting date = ROA date + 12 months exactly.
 13. Author is Paul Kafentzis.

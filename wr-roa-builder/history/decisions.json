@@ -1,0 +1,51 @@
+[
+ {
+  "from_prefix": "# WR ROA Builder",
+  "reason": "Replaced by the new short title.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "## Index",
+  "reason": "Replaced by the new short Index (five sections).",
+  "needs_paul": false,
+  "to_prefix": "18 | A note on scope | The skill carries no client data |"
+ },
+ {
+  "from_prefix": "## UNIVERSAL OPERATING RULES - READ FIRST, APPLY TO EVERY STEP OF THE ",
+  "reason": "The preamble is replaced by the short intro of references/00-rules.md; the program shows the rules at the start and the right page at each step.",
+  "needs_paul": false,
+  "to_prefix": "These rules come before everything else in this skill. They apply from"
+ },
+ {
+  "from_prefix": "Re-load this skill before you start, and again after any compression. ",
+  "reason": "Rule 1 (re-load this skill) is replaced by the program: it shows the standing rules at the start and the right page at each step, and `run.py status` tells a chat where the job is up to after a compression.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Read before you write. Read the source material completely and careful",
+  "reason": "Rule 3 (read before you write) is replaced by the reading lock: the program serves the documents page by page and each page is acknowledged.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Deliver everything this skill lists, every time. A run is not finished",
+  "reason": "Rule 5 (deliver everything) is replaced by deliverables.json and the checker: a run is finished only with a PASS audit.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Changes to a skill: edit the existing skill, never create a new one. U",
+  "reason": "Rule 9 (changes through the propose_skills card) is replaced by standard S7: skills are changed only in Claude Code and uploaded as a zip by Paul; the 'never say it is live' part is standing rule 7 in SKILL.md.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Last updated: 2026-10-13 14:50 (Athens time)",
+  "reason": "The hand-typed stamp, the five-row changelog, the maintenance rule and the skill-saving note are replaced by the stamp program (S2); the full history is in the repo's history folder.",
+  "needs_paul": false,
+  "to_prefix": "> Skill saving: skill edits are saved by Paul from a propose_skills re"
+ },
+ {
+  "from_prefix": "Path 1's direct SharePoint API upload, even though the destination is ",
+  "reason": "Delivery Path 1 (building the ROA as HTML and pushing it as text) is REMOVED (Paul's answer 5, 03/11/2026): the ROA is always the .docx built from the template. If no route can carry a .docx, it is given to Paul in the chat (Path 2).",
+  "needs_paul": false,
+  "to_prefix": "already live in SharePoint."
+ }
+]
