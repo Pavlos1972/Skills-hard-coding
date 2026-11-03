@@ -3,7 +3,7 @@
 Read this together with CLAUDE.md, SKILL-STANDARDS.md and SKILL-TEMPLATE.md. If this file and SKILL-STANDARDS.md disagree, SKILL-STANDARDS.md wins.
 
 ## 0. The procedure: Operation Skill Restructure (Paul, 03/11/2026)
-The fixed list of what is done for every skill is in  (approved by Paul: "Yes, save it"). Follow it strictly; keep its Progress table current. Next skill: Paul names it; `fact-find-summary` is the candidate (decision 20) but nothing is started on it under the Operation yet.
+The fixed list of what is done for every skill is in `OPERATION-SKILL-RESTRUCTURE.md` (approved by Paul: "Yes, save it"). Follow it strictly; keep its Progress table current. Next skill: Paul names it; `fact-find-summary` is the candidate (decision 20) but nothing is started on it under the Operation yet.
 
 ## 1. The goal (Paul's words, in plain form)
 Every one of Paul's claude.ai skills must be restructured so that **a program governs it**: the skill runs every step, every time, nothing skipped or swapped, and a checker proves the result. Measured against the 13-ingredient template (approved 02/11/2026). One skill at a time. Paul uploads the finished zip into his Skills; Claude Code cannot save into his Skills.
