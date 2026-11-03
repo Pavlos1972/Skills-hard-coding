@@ -49,4 +49,9 @@ Full 0. Partial 6 (1 short entry page, 2 inputs, 5 evidence, 6 built by program,
 6. **Saving:** the PDF goes into the client's Servicing folder through the computer, then Microsoft 365, then Zapier, every try logged, never overwriting without your yes, never touching another broker's folder, and it is sent in the chat. (Yes)
 
 ## Status
-Phase A report given to Paul 03/11/2026. Waiting for his answers.
+Phase A report given to Paul 03/11/2026.
+
+## Paul's answers (03/11/2026)
+"Agree to all - as long as the skill works as it was intended to execute": yes to 1 to 6 as recommended, with one condition: the rebuilt skill must produce the same SROA as it was meant to. (1) No real-looking client data in the rebuilt skill. (2) Derive from the documents, ONE confirmation table, one question. (3) Figures proven against the documents, "No change" computed, the R20 rule enforced (Paul did not say R20 had changed). (4) `build_sroa.py` stays the fixed base; the checker reads the PDF back. (5) The file name derived by the program, one run per policy. (6) Saving through computer, Microsoft 365, Zapier in order, never overwriting without his yes.
+
+Next: Phase B (plan) given to Paul 03/11/2026, waiting for his approval.
