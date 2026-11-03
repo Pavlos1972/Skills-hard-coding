@@ -41,4 +41,9 @@ Full 0. Partial 4 (1 short entry page, 5 evidence, 10 one reply one question, 12
 5. After saving, the reply tells Paul which skill comes next: a first (Fact Find) meeting goes to `ff-population-transcript`, a follow-up to `client-teams-transcript-skill`. (Yes)
 
 ## Status
-Phase A report given to Paul 03/11/2026. Waiting for his answers; then Phase B (plan).
+Phase A report given to Paul 03/11/2026.
+
+## Paul's answers (03/11/2026)
+"Agree to all": yes to questions 1 to 5 as recommended (connector first with Chrome as fallback, every try logged; drop the generic rules and rule 9; keep the file name; complete = last time stamp within 2 minutes of the meeting length; the reply names the next skill).
+
+Next: Phase B (plan) given to Paul 03/11/2026, waiting for his approval.
