@@ -93,10 +93,8 @@ It sits on top of SKILL-STANDARDS.md (the standards S1 to S16) and SKILL-TEMPLAT
 
 | Skill (full name) | SKILL.md | Files | All files |
 |---|---|---|---|
-| `client-transcript-download` | 72 lines | 1 | 9 KB |
 | `outlook-emails-skill` | 72 lines | 1 | 9 KB |
 | `cameron-short-term-skill` | 100 lines | 1 | 17 KB |
-| `teams-meeting-setup-skill` | 155 lines | 1 | 15 KB |
 | `complete-applications-skill` | 206 lines | 5 | 174 KB |
 | `client-pipeline-board` | 245 lines | 11 | 105 KB |
 | `om-optimal-ra-proposal` | 253 lines | 6 | 251 KB |
@@ -119,8 +117,10 @@ Others on Paul's list (not yet sized): `advicetech-website-knowledge`, `alpha-ba
 6. **Check old example scripts for a real person's details in Phase A** (13-digit numbers, emails, phone numbers). Never archive such a file in the repo; the claude.ai version history still holds it.
 7. **The rule-by-rule check** uses `tools/inventory.py` with `history/changes.json` (reworded) and `history/decisions.json` (dropped, by line range). Build the prefixes with the tool's own `plain()` function, or they will not match.
 8. **A `fact-find-summary` run ends with a SHORT audit** (ticks and crosses): that is the pattern for every skill built under this Operation.
+9. **Paste the upload brief into the Chrome chat.** On 03/11/2026 the Chrome chat for `teams-meeting-setup-skill` found no brief in the folder (only the zip, the backup and the change list) and worked from Paul's request instead. It still did the right thing (one replace box naming only that skill, nothing deleted), but the brief is what pre-approves the replace box and sets the before/after test, so Paul pastes it.
 
 ## Running log
+- 03/11/2026: Progress table, sizes table and notes brought up to date (the two finished skills removed from "Skills still to do"). Next skill proposed to Paul: `outlook-emails-skill` (smallest not started); waiting for his yes.
 - 03/11/2026: `teams-meeting-setup-skill` uploaded as v8 (reported by a Chrome chat; the chat had no brief and used Paul's request); not confirmed live. Operation Skill Restructure Phases A to F done for this skill. Asked Paul whether he is ready for the next skill.
 - 03/11/2026: `teams-meeting-setup-skill` brief made (folder `teams-meeting-setup-skill`) and sent with the zip and the backup. Waiting for the upload report.
 - 03/11/2026: `teams-meeting-setup-skill` Phases C to E done in one pass (no helpers, ONE test, passed on the source and on the unpacked zip). Zip made (13 files); backup of the old file made. Asking Paul for the real folder name before the brief.
