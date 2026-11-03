@@ -27,7 +27,8 @@ The Teams transcript skill has all 13 and is the working model: `client-teams-tr
 | Skill | Full | Partial | Missing | Notes |
 |---|---|---|---|---|
 | client-teams-transcript-skill | 13 | 0 | 0 | live since 30/10/2026 |
-| ff-population-transcript (studied 30/10/2026) | 0 | 4 (1, 2, 5, 12) | 9 (3, 4, 6, 7, 8, 9, 10, 11, 13) | see SKILL-STANDARDS.md section 8b |
+| ff-population-transcript (studied 30/10/2026) | 0 | 4 (1, 2, 5, 12) | 9 (3, 4, 6, 7, 8, 9, 10, 11, 13) | before the rebuild; see SKILL-STANDARDS.md section 8b |
+| ff-population-transcript (program-driven build, 03/11/2026) | 11 (1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12) | 1 (13, until packaged and uploaded) | 0 | ingredient 8 (sorted actions) does not apply: this PDF has no action list; the follow-up appointment is carried and checked in the Teams run. 5 and 10 are full for what a program can check; what only Claude can attest is printed on every run. NOT live |
 
 ## Settled once, applies to every skill (do not ask Paul again)
 
