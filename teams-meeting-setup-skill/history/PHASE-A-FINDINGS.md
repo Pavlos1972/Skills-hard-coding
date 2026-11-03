@@ -45,4 +45,9 @@ Full 0. Partial 6 (1 short entry page, 2 inputs, 5 evidence, 7 short means short
 The subject labels stay as they are now ("Investments", "STI"): they are client-facing and already in use. (No question)
 
 ## Status
-Phase A report given to Paul 03/11/2026. Waiting for his answers; then Phase B (plan).
+Phase A report given to Paul 03/11/2026.
+
+## Paul's answers (03/11/2026)
+"Agree to all, except 6: keep it as today": yes to 1 to 5 as recommended (A: this skill sends a Teams follow-up invite from Paul's calendar after his yes, and the Teams skill's action for Sitamah changes later; drop the generic rules and rule 9; a program builds the invite and the chat sends exactly it, the program checks what the tool returned; name and personal email from the Fact Find Transcript PDF, the rest typed with its source; the Sitamah message shown in the same reply, one yes covers both). 6: the confirmed meeting is logged on the board's Fact Find card as today.
+
+Next: Phase B (plan) given to Paul 03/11/2026, waiting for his approval.
