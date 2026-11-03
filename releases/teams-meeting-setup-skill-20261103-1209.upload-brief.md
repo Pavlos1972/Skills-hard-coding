@@ -6,9 +6,9 @@ THE FACTS
 - Skill name: teams-meeting-setup-skill
 - File: teams-meeting-setup-skill-20261103-1209.zip (31,221 bytes, 13 files)
 - Where it is on Paul's Windows computer, in this folder:
-  C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New
+  C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New\teams-meeting-setup-skill
   Full path of the file:
-  C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New\teams-meeting-setup-skill-20261103-1209.zip
+  C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New\teams-meeting-setup-skill\teams-meeting-setup-skill-20261103-1209.zip
 - What the NEW version says inside: the line "Last updated: 2026-11-03 12:09 (Athens time)", and its first section after the main title is called "Index".
 - Paul's account already has this skill (an older version). A zip with the same name REPLACES it: the account cannot hold two skills with one name. The older version is kept in the skill's version history (a dropdown on the skill's page, listing versions such as v32, v31 and so on). That history is the backup. Expect ONE entry before the upload and ONE entry after it.
 
