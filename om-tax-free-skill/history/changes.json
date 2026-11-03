@@ -1,0 +1,402 @@
+[
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## What this skill is not",
+  "new": "references/00-rules.md (What this is not): the quote always comes from Alwyn as a PDF; the Fact Find Summary is its own skill and a source here; the signature belongs to paul-email-signature.",
+  "why": "Kept in the rules page.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "- It does not generate the OM Tax-Free Quote itself — that a",
+  "new": "references/00-rules.md (What this is not): the quote always comes from Alwyn as a PDF; the Fact Find Summary is its own skill and a source here; the signature belongs to paul-email-signature.",
+  "why": "Kept in the rules page.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 1 — Gather everything from the client's file (always",
+  "new": "references/01-locate.md (where to look, documents by role, the 'what I found' list, the email address routes), references/02-answers.md (what Paul is still asked, what is no longer asked), steps.json (locate, read) and scripts/run.py doc, access and read: three routes in order, every try logged, documents registered by role and served page by page.",
+  "why": "The SharePoint-and-Zapier-only search is replaced by the three standard routes (Paul's answer 3); the questions are the table-and-one-question pattern (Paul's answers 3 and 8).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every new OM Tax-Free proposal chat starts here. Claude fi",
+  "new": "references/01-locate.md (where to look, documents by role, the 'what I found' list, the email address routes), references/02-answers.md (what Paul is still asked, what is no longer asked), steps.json (locate, read) and scripts/run.py doc, access and read: three routes in order, every try logged, documents registered by role and served page by page.",
+  "why": "The SharePoint-and-Zapier-only search is replaced by the three standard routes (Paul's answer 3); the questions are the table-and-one-question pattern (Paul's answers 3 and 8).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Where to look (Microsoft 365 SharePoint tools; Zapier wher",
+  "new": "references/01-locate.md (where to look, documents by role, the 'what I found' list, the email address routes), references/02-answers.md (what Paul is still asked, what is no longer asked), steps.json (locate, read) and scripts/run.py doc, access and read: three routes in order, every try logged, documents registered by role and served page by page.",
+  "why": "The SharePoint-and-Zapier-only search is replaced by the three standard routes (Paul's answer 3); the questions are the table-and-one-question pattern (Paul's answers 3 and 8).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Collect, in this order:",
+  "new": "references/01-locate.md (where to look, documents by role, the 'what I found' list, the email address routes), references/02-answers.md (what Paul is still asked, what is no longer asked), steps.json (locate, read) and scripts/run.py doc, access and read: three routes in order, every try logged, documents registered by role and served page by page.",
+  "why": "The SharePoint-and-Zapier-only search is replaced by the three standard routes (Paul's answer 3); the questions are the table-and-one-question pattern (Paul's answers 3 and 8).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "1. Fact Find Summary — in `2. Fact Find`. File names loo",
+  "new": "references/01-locate.md (where to look, documents by role, the 'what I found' list, the email address routes), references/02-answers.md (what Paul is still asked, what is no longer asked), steps.json (locate, read) and scripts/run.py doc, access and read: three routes in order, every try logged, documents registered by role and served page by page.",
+  "why": "The SharePoint-and-Zapier-only search is replaced by the three standard routes (Paul's answer 3); the questions are the table-and-one-question pattern (Paul's answers 3 and 8).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Show Paul a \"what I found\" list before building — one li",
+  "new": "references/01-locate.md (where to look, documents by role, the 'what I found' list, the email address routes), references/02-answers.md (what Paul is still asked, what is no longer asked), steps.json (locate, read) and scripts/run.py doc, access and read: three routes in order, every try logged, documents registered by role and served page by page.",
+  "why": "The SharePoint-and-Zapier-only search is replaced by the three standard routes (Paul's answer 3); the questions are the table-and-one-question pattern (Paul's answers 3 and 8).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Still asked in the chat (typed, or with buttons where stat",
+  "new": "references/01-locate.md (where to look, documents by role, the 'what I found' list, the email address routes), references/02-answers.md (what Paul is still asked, what is no longer asked), steps.json (locate, read) and scripts/run.py doc, access and read: three routes in order, every try logged, documents registered by role and served page by page.",
+  "why": "The SharePoint-and-Zapier-only search is replaced by the three standard routes (Paul's answer 3); the questions are the table-and-one-question pattern (Paul's answers 3 and 8).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "1. Teams meeting date(s) already held with the client — ",
+  "new": "references/01-locate.md (where to look, documents by role, the 'what I found' list, the email address routes), references/02-answers.md (what Paul is still asked, what is no longer asked), steps.json (locate, read) and scripts/run.py doc, access and read: three routes in order, every try logged, documents registered by role and served page by page.",
+  "why": "The SharePoint-and-Zapier-only search is replaced by the three standard routes (Paul's answer 3); the questions are the table-and-one-question pattern (Paul's answers 3 and 8).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Interaction format: use the button-selection tool for th",
+  "new": "references/01-locate.md (where to look, documents by role, the 'what I found' list, the email address routes), references/02-answers.md (what Paul is still asked, what is no longer asked), steps.json (locate, read) and scripts/run.py doc, access and read: three routes in order, every try logged, documents registered by role and served page by page.",
+  "why": "The SharePoint-and-Zapier-only search is replaced by the three standard routes (Paul's answer 3); the questions are the table-and-one-question pattern (Paul's answers 3 and 8).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "No longer asked — derived automatically, do not ask these:",
+  "new": "references/01-locate.md (where to look, documents by role, the 'what I found' list, the email address routes), references/02-answers.md (what Paul is still asked, what is no longer asked), steps.json (locate, read) and scripts/run.py doc, access and read: three routes in order, every try logged, documents registered by role and served page by page.",
+  "why": "The SharePoint-and-Zapier-only search is replaced by the three standard routes (Paul's answer 3); the questions are the table-and-one-question pattern (Paul's answers 3 and 8).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 2 — Read the sources and extract the Quote figures p",
+  "new": "references/02-answers.md (what comes from the quote and the Fact Find Summary, the fee sections, the as-and-when advice line flag, the Risk Profile, the child's plan stop) and scripts/tfi.py answers_problems: every figure, name, fund, allocation and fee is checked against the right document's text, the fee total is added up by the program.",
+  "why": "Figures are proven to appear in the documents (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Source-reading rules (apply to every document gathered in ",
+  "new": "references/02-answers.md (what comes from the quote and the Fact Find Summary, the fee sections, the as-and-when advice line flag, the Risk Profile, the child's plan stop) and scripts/tfi.py answers_problems: every figure, name, fund, allocation and fee is checked against the right document's text, the fee total is added up by the program.",
+  "why": "Figures are proven to appear in the documents (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Then pull these exact fields from the OM Tax-Free Quote PDF ",
+  "new": "references/02-answers.md (what comes from the quote and the Fact Find Summary, the fee sections, the as-and-when advice line flag, the Risk Profile, the child's plan stop) and scripts/tfi.py answers_problems: every figure, name, fund, allocation and fee is checked against the right document's text, the fee total is added up by the program.",
+  "why": "Figures are proven to appear in the documents (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "- Owner name and age (\"DETAILS OF YOUR COMPREHENSIVE TAX",
+  "new": "references/02-answers.md (what comes from the quote and the Fact Find Summary, the fee sections, the as-and-when advice line flag, the Risk Profile, the child's plan stop) and scripts/tfi.py answers_problems: every figure, name, fund, allocation and fee is checked against the right document's text, the fee total is added up by the program.",
+  "why": "Figures are proven to appear in the documents (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never take these figures from a previous client's proposal e",
+  "new": "references/02-answers.md (what comes from the quote and the Fact Find Summary, the fee sections, the as-and-when advice line flag, the Risk Profile, the child's plan stop) and scripts/tfi.py answers_problems: every figure, name, fund, allocation and fee is checked against the right document's text, the fee total is added up by the program.",
+  "why": "Figures are proven to appear in the documents (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Also read the Fact Find Summary (Step 1, item 1) for: em",
+  "new": "references/02-answers.md (what comes from the quote and the Fact Find Summary, the fee sections, the as-and-when advice line flag, the Risk Profile, the child's plan stop) and scripts/tfi.py answers_problems: every figure, name, fund, allocation and fee is checked against the right document's text, the fee total is added up by the program.",
+  "why": "Figures are proven to appear in the documents (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 3 — Date calculations (always run the script, never ",
+  "new": "references/03-build-rules.md (the weekdays are computed by scripts/tax_free_dates.py) and scripts/tfi.py (meetings_line, next_line).",
+  "why": "The script is applied by the program, never by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Use `scripts/tax_free_dates.py` for every date in the email.",
+  "new": "references/03-build-rules.md (the weekdays are computed by scripts/tax_free_dates.py) and scripts/tfi.py (meetings_line, next_line).",
+  "why": "The script is applied by the program, never by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "```python",
+  "new": "references/03-build-rules.md (the weekdays are computed by scripts/tax_free_dates.py) and scripts/tfi.py (meetings_line, next_line).",
+  "why": "The script is applied by the program, never by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# Opening line's meeting date(s):",
+  "new": "references/03-build-rules.md (the weekdays are computed by scripts/tax_free_dates.py) and scripts/tfi.py (meetings_line, next_line).",
+  "why": "The script is applied by the program, never by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# Next meeting line:",
+  "new": "references/03-build-rules.md (the weekdays are computed by scripts/tax_free_dates.py) and scripts/tfi.py (meetings_line, next_line).",
+  "why": "The script is applied by the program, never by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 4 — Build the email (HTML)",
+  "new": "references/03-build-rules.md (the fixed template rules: Cc, money and percentage formats, one row per fund, the fixed investment target, the attachments list, width 624, the subject, the file name, the no-logo copy) and scripts/tfi.py build_all and html_problems.",
+  "why": "The template is filled by the program, so no placeholder can remain; the broken sanity check is replaced by program checks (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "1. Copy `assets/OM_TaxFree_Proposal_TEMPLATE.html` to the wo",
+  "new": "references/03-build-rules.md (the fixed template rules: Cc, money and percentage formats, one row per fund, the fixed investment target, the attachments list, width 624, the subject, the file name, the no-logo copy) and scripts/tfi.py build_all and html_problems.",
+  "why": "The template is filled by the program, so no placeholder can remain; the broken sanity check is replaced by program checks (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 5 — COMPULSORY: save the HTML into the client's fold",
+  "new": "references/03-build-rules.md (Saving: location, how, the no-logo copy, re-saving, telling Paul) and steps.json (save) and scripts/run.py name and receipt.",
+  "why": "The save is proven by the folder listing and the derived name.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every proposal HTML must be saved into the client's tran",
+  "new": "references/03-build-rules.md (Saving: location, how, the no-logo copy, re-saving, telling Paul) and steps.json (save) and scripts/run.py name and receipt.",
+  "why": "The save is proven by the folder listing and the derived name.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "- Location: `Paul` SharePoint site > `New Business` > `{",
+  "new": "references/03-build-rules.md (Saving: location, how, the no-logo copy, re-saving, telling Paul) and steps.json (save) and scripts/run.py name and receipt.",
+  "why": "The save is proven by the folder listing and the derived name.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 6 — COMPULSORY: create the Outlook draft with Claude",
+  "new": "references/04-draft.md (the Chrome method, the signature setting, no coordinates, no Ctrl+S, the read-back, the clean-up) and scripts/run.py draft, scripts/tfi.py draft_problems.",
+  "why": "The read-back is checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "After saving, Claude puts the proposal into an Outlook dra",
+  "new": "references/04-draft.md (the Chrome method, the signature setting, no coordinates, no Ctrl+S, the read-back, the clean-up) and scripts/run.py draft, scripts/tfi.py draft_problems.",
+  "why": "The read-back is checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "- To: the client's email address. Cc: Sitamah Nathoo",
+  "new": "references/04-draft.md (the Chrome method, the signature setting, no coordinates, no Ctrl+S, the read-back, the clean-up) and scripts/run.py draft, scripts/tfi.py draft_problems.",
+  "why": "The read-back is checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 7 — COMPULSORY: message Sitamah on Teams via Zapier ",
+  "new": "references/05-message.md (Zapier only, markdown, the greeting rule, the standard wording, the 1:1 chat, the read-back) and scripts/tfi.py teams_text, message_problems and scripts/run.py message and messagecheck.",
+  "why": "The wording and greeting are the program's; the message is sent only after Paul's yes and a checked draft (his answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "As soon as the draft is saved and verified, send Sitamah the",
+  "new": "references/05-message.md (Zapier only, markdown, the greeting rule, the standard wording, the 1:1 chat, the read-back) and scripts/tfi.py teams_text, message_problems and scripts/run.py message and messagecheck.",
+  "why": "The wording and greeting are the program's; the message is sent only after Paul's yes and a checked draft (his answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "1. Greeting — ALWAYS include one. Check real SAST time (",
+  "new": "references/05-message.md (Zapier only, markdown, the greeting rule, the standard wording, the 1:1 chat, the read-back) and scripts/tfi.py teams_text, message_problems and scripts/run.py message and messagecheck.",
+  "why": "The wording and greeting are the program's; the message is sent only after Paul's yes and a checked draft (his answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "2. Standard wording and format — fixed layout, only the cl",
+  "new": "references/05-message.md (Zapier only, markdown, the greeting rule, the standard wording, the 1:1 chat, the read-back) and scripts/tfi.py teams_text, message_problems and scripts/run.py message and messagecheck.",
+  "why": "The wording and greeting are the program's; the message is sent only after Paul's yes and a checked draft (his answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "> {Greeting} Sitamah,",
+  "new": "references/05-message.md (Zapier only, markdown, the greeting rule, the standard wording, the 1:1 chat, the read-back) and scripts/tfi.py teams_text, message_problems and scripts/run.py message and messagecheck.",
+  "why": "The wording and greeting are the program's; the message is sent only after Paul's yes and a checked draft (his answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Example: \"All three are in [Client first name]'s folder: [Pl",
+  "new": "references/05-message.md (Zapier only, markdown, the greeting rule, the standard wording, the 1:1 chat, the read-back) and scripts/tfi.py teams_text, message_problems and scripts/run.py message and messagecheck.",
+  "why": "The wording and greeting are the program's; the message is sent only after Paul's yes and a checked draft (his answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "3. How to send (Zapier):",
+  "new": "references/05-message.md (Zapier only, markdown, the greeting rule, the standard wording, the 1:1 chat, the read-back) and scripts/tfi.py teams_text, message_problems and scripts/run.py message and messagecheck.",
+  "why": "The wording and greeting are the program's; the message is sent only after Paul's yes and a checked draft (his answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 8 — Pre-delivery audit",
+  "new": "scripts/tfi.py (html_problems, draft_problems, message_problems), scripts/verify.py (each provable item of the 12 is a green tick or red cross in the short audit) and references/06-handover.md for the final report.",
+  "why": "The audit is done by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before calling the work finished, check every item:",
+  "new": "scripts/tfi.py (html_problems, draft_problems, message_problems), scripts/verify.py (each provable item of the 12 is a green tick or red cross in the short audit) and references/06-handover.md for the final report.",
+  "why": "The audit is done by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "1. No `[BRACKETED PLACEHOLDER]` text remains anywhere in the",
+  "new": "scripts/tfi.py (html_problems, draft_problems, message_problems), scripts/verify.py (each provable item of the 12 is a green tick or red cross in the short audit) and references/06-handover.md for the final report.",
+  "why": "The audit is done by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## A note on scope",
+  "new": "references/00-rules.md rules 2 and 11 and SKILL.md standing rule 1: nothing is reused from another client; the skill holds no client data.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This skill is about the *procedure*, not any specific client",
+  "new": "references/00-rules.md rules 2 and 11 and SKILL.md standing rule 1: nothing is reused from another client; the skill holds no client data.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This skill builds the client-facing proposal email Paul send",
+  "new": "references/00-rules.md (What this is) and SKILL.md description: the proposal email, saved, drafted and flagged to Sitamah; Claude never sends the client email.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "2. Source first - never invent. Write only what is in th",
+  "new": "references/00-rules.md rule 2 and 3: every fact comes from the client's file or Paul's words with its source; conflicts stop the run.",
+  "why": "Enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "4. Check before you claim. Never tell the user something",
+  "new": "references/00-rules.md rule 4: never say saved, drafted or sent until the program's proof says so.",
+  "why": "Enforced by read-backs and receipts.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "6. Every correction re-opens the whole task, not just the ",
+  "new": "references/00-rules.md rule 8: a correction re-opens the task; the driver re-opens the later steps.",
+  "why": "Enforced by the driver.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "7. Never lower the standard. A correction, a frustrated ",
+  "new": "references/00-rules.md rule 7.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "8. If a rule cannot be met, stop and say so. State exact",
+  "new": "references/00-rules.md rule 9.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Delivery gate for this skill (rules 5 and 6 applied): a ",
+  "new": "references/06-handover.md (the four things a finished run needs) and scripts/verify.py: each is a green tick or red cross in the short audit.",
+  "why": "Done by the checker.",
+  "needs_paul": false
+ }
+]

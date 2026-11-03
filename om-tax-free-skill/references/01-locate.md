@@ -1,0 +1,24 @@
+# Find and register the client's documents
+
+Claude finds and reads the source documents itself from the client's file on Paul's OneDrive/SharePoint: Paul does not upload them. Do not build a partial email: if a source below cannot be found or read, ask Paul and wait. Confirming that something does not exist ("there is none") is an answer; silently skipping it is not. Try the three routes in order (computer, Microsoft 365, Zapier), every try logged.
+
+**Where to look (Microsoft 365 SharePoint tools; Zapier where a Microsoft tool cannot do the job)**
+- Primary: library **"WR Clients" > "Paul Kafentzis (Client Files)" > "{Initial} - Files" > "{Surname}, {FirstName(s)}"**. Also check **"Company - Paul"** and the **Paul** site's `New Business > {Surname}, {FirstName}` folder when something is not in the client's Client Files folder.
+- Find the client folder with `sharepoint_folder_search` (parameter `name`). The search is a noisy partial match (it also returns sub-folders and other people's folders): pick the folder whose name matches the client exactly and confirm by listing it with `read_resource` (`file:///{driveId}/{path or itemId}`). Read PDFs with `read_resource`.
+- The client folder holds numbered sub-folders (seen 13/10/2026): `1. Overview`, `2. Fact Find`, `3. LOA & Disclosure`, `4. FICA & POI`, `5. Astute`, `6. Policy Schedules`, plus the transaction/product folders (for example `{Surname}, {FirstName} - (OM RA - R[amount])`).
+
+**Documents by role** (ROLE for `run.py doc`), in the order to collect them
+| ROLE | What | Needed |
+|---|---|---|
+| `fact_find_summary` | The Fact Find Summary, in `2. Fact Find`: `Fact Find Summary - {DD.MM.YY} - ({Name}).pdf`. There may be more than one: read EVERY file, register the most recent by its date as `fact_find_summary` and an older one as `fact_find_summary_older`, and flag any difference between versions to Paul. Source of employer, job title, gross monthly income, the client's full and first name, the email address. The manual Fact Find, transcripts and older fact finds are NOT used unless an item the proposal needs is missing from the summary; then say which document you used and why. | always |
+| `risk_questionnaire` | The client's own completed result, in `2. Fact Find`: `WR - New Risk Tolerance - {date} - ({name}).pdf`. The filled-in answers are often not in the text layer: view the pages as images. **A file whose name still shows the literal placeholders `[date]` / `(name, surname)` is the blank template, not a source:** never read a Risk Profile from it; flag it. | when it exists |
+| `overview` | The client's Overview, in `1. Overview`: `WR Overview - {DD.MM.YY} - ({Surname}, {FirstName}).pdf` (an .xlsx of the same name may also be there). Read the most recent for the client's current investments, in particular any existing Tax-Free Investment. It is a cross-check: it never replaces the Fact Find Summary for personal circumstances. Report anything in it that conflicts with the Fact Find Summary or the Quote. | when it exists |
+| `quote` | The **OM Tax-Free Quote PDF** from Alwyn, in the Tax-Free transaction folder > `Comparative Quotes` (the folder whose name contains "Tax-Free": `{Surname}, {FirstName} - (OM Tax-Free - R{amount})`, or for a child's plan `{Child's name} - (OM Tax-Free - R{amount})`; look first in the client's Client Files folder, then in `New Business` on the Paul site). File names look like "[Client name] - Old Mutual Savings and Income - Tax Free Plan - R[amount].pdf". If several quote versions are in the folder, use the most recent, list the others and ask Paul which is current if there is any doubt. If no Tax-Free transaction folder or no quote can be found anywhere, stop and ask Paul where it is or to upload it: never build without the quote. | always |
+| `fund_fact_sheet_1`, `fund_fact_sheet_2` ... | The fund fact sheet for each fund named in the quote, in the same Comparative Quotes folder (one per fund). | one per fund |
+| `strategy_summary` | The "OM Wealth Investment Strategy Summary" document, in the same folder. | always |
+
+All three of the quote, the fact sheets and the strategy summary are attached to the email by Sitamah, so confirm they are present and tell Paul if any is missing. A scanned page is viewed as an image by you; the program tells you which pages have no text.
+
+**The client's email address** comes from the Fact Find Summary; if absent, from the manual Fact Find or the Overview; if still absent, `microsoft_office_365_find_a_contact` via Zapier, then an Outlook email search for the client's own emails; ask Paul only if all of these fail. Never invent one. State where it came from (it goes in the answers).
+
+**Show Paul a "what I found" list before building:** one line per source: the file name, its date and the folder it came from, plus anything missing, conflicting, blank-template or unreadable. Do not build until nothing essential is missing.
