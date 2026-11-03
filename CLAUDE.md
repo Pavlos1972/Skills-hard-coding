@@ -1,5 +1,7 @@
 # Read first (Claude Code, this repo)
 
+**Also read `CHAT-NOTES.md` (Paul, 03/11/2026): where things stand, what Paul wants, what went wrong, what comes next. Above all: NO helpers (subagents) and NO endless test rounds, because Paul's tokens are a budget.**
+
 This repo holds the hard-coded versions of Paul Kafentzis's skills (Wealth Revolution). Before touching
 any skill, read **SKILL-STANDARDS.md** in full. It is the memory of what Paul has asked for. Then read **SKILL-TEMPLATE.md** (APPROVED by Paul, 02/11/2026): the 13 ingredients every converted skill must have, and what is settled once for all skills (do not re-ask Paul). If anything
 here or in a skill disagrees with it, SKILL-STANDARDS.md wins.
@@ -51,6 +53,7 @@ S15 one skill at a time | S16 a program drives the job step by step (approved; p
 - Athens time for any stamp: `TZ=Europe/Athens date '+%Y-%m-%d %H:%M'`
 
 ## Never
+- Start a helper, subagent, independent reviewer or build agent, or run review-and-fix rounds, unless Paul asks for it in his own words (Paul, 03/11/2026: "No more helpers", "we've done enough tests"). Work in one pass in this chat; say roughly how big a job is before starting it.
 - Put client names, ID numbers, account numbers or real client documents in the repo.
 - Send email or Teams messages for Paul without his yes in that conversation.
 - Say a skill is live until Paul confirms he uploaded it.

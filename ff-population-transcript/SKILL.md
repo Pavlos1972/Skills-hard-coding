@@ -15,17 +15,17 @@ description: "Builds the WR Fact Find from the Fact Find form's data file (named
 | 4 | When something goes wrong | What to do instead of improvising |
 | 5 | Where the detail lives | The pages the program shows at each step |
 
-**Last updated: 2026-11-03 06:50 (Athens time)**
+**Last updated: 2026-11-03 06:12 (Athens time)**
 
 **Recent changes** (last 5, one line each; full history in the repo `history/` folder)
 
 | When (Athens time) | What changed |
 |---|---|
-| 2026-11-03 06:50 | Fix round 6 after a confirmation review: the glance list shows the value every covering fill wrote, a bare No cannot cover a line that asks for something, and No for credit life is refused when the cited line says it exists |
 | 2026-11-03 06:12 | Fix round 5 after a confirmation review: a quote line naming two products needs a cover for each, N/A and not-on-the-call are refused like Not discussed, credit life is a hard word, and Requested is refused when the call mentions the field |
 | 2026-11-03 05:31 | Fix round 4 after a confirmation review: a quote request is covered only by its own product's row, a freed request line needs a question that quotes it, and a shared verb no longer counts |
 | 2026-11-03 05:17 | Fix round 4 after a confirmation review: a quote request is covered only by its own product's row, a freed request line needs a question that quotes it, and a shared verb no longer counts |
 | 2026-11-03 04:22 | Fix round 3 after a third outside review: FNA and other quote lines must be quote requests and cannot be dismissed, covers must be about the entry, and a question can name at most 10 ids |
+| 2026-11-03 03:02 | Fix round 2 after a second outside review: requests cannot be filed as plain facts, every override and dismissal needs a real reason and is shown to Paul, and the Teams hand-over, Paul's answers and the save folder are checked harder |
 
 ## Run it
 

@@ -1,7 +1,7 @@
 # Skill Standards: the rules every one of Paul's skills must follow
 
-**Version 4.2 (draft for Paul to review)**
-**Last updated: 2026-11-03 05:47 (Athens time)**
+**Version 4.3 (draft for Paul to review)**
+**Last updated: 2026-11-03 07:17 (Athens time)**
 
 This file is the memory. If a chat, a session or a skill disagrees with it, this file wins.
 Every future Claude Code session in this repo must read it before touching any skill
@@ -351,6 +351,8 @@ Every run (one client, one meeting) keeps in its own run folder:
 
 20. **Build the program for `ff-population-transcript` now (Paul, 02/11/2026, after he asked whether the two Fact Find skills had been verified).** This SUPERSEDES decision 18. Order: `ff-population-transcript` first, then `fact-find-summary` (one at a time, S15). Paul's words: "Make sure it executes as intended", so the build ends with a full end-to-end run of the program on made-up data, the checker, the tests, lint and the rule-by-rule check, and an independent review, and the real test is still a run on a real client. Decisions 15 and 16 stand (fixed 11-section report built by program, look unchanged, stop and ask when the form file is missing, no 8:45am rule). The helper's unfinished work was restored from commit 62cb4e1 and was continued. **STATUS 03/11/2026: the program-driven `ff-population-transcript` is BUILT** (step driver, checker, PDF drawn by program, tests on invented data, lint, inventory 0 unaccounted) and was attacked by an independent reader in four rounds (fixes after each, every attack now a test). It is NOT uploaded and NOT live. The real test is still a run on a real client. What no program can prove is listed in `ff-population-transcript/history/CHANGES-FOR-PAUL.md` (the chat typing Paul's words, chat-made text copies, a doctored Teams copy, the truth of a written reason, request lines with none of the listed words). The next skill is `fact-find-summary`, when Paul says go.
 
+21. **No helpers and no more test rounds (Paul, 03/11/2026).** After six fix-and-review rounds with helpers on `ff-population-transcript` Paul said: "we've done enough tests", "you have eaten all my tokens. No more helpers." Claude Code does NOT start helpers, subagents or independent reviewers unless Paul asks in his own words, and does not run review loops. One build, one lint, one full test run, one package per skill; say roughly how big a job is first. The finished `ff-population-transcript` (round 5, commit d434670) goes to packaging as it is; the unproven round 6 is set aside (commit d3cbb19). The real test is a run on a real client. See `CHAT-NOTES.md`.
+
 **Still open**
 1. Which skill comes after the Teams transcript skill (Paul names it and says go; one skill at a time, S15)?
 2. (Closed 30/10/2026) The Teams transcript skill is LIVE: Paul uploaded the 17:53 build (v34), ran it on real meetings and confirmed.
@@ -404,6 +406,7 @@ Where: `Company - Paul > Claude > Fact Find Documents > WR Fact Find - ZIP > WR 
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-11-03 07:17 | Version 4.3: decision 21 (no helpers, no more test rounds); round 6 set aside; `CHAT-NOTES.md` written; round-5 `ff-population-transcript` goes to packaging |
 | 2026-11-03 05:47 | Version 4.2: `ff-population-transcript` program-driven build recorded (decision 20 status, tracker row): four independent review rounds, 319 tests, lint PASS, inventory 0 unaccounted; packaged-not-uploaded, not live |
 | 2026-10-30 09:02 | Version 2.5: the 17:53 build uploaded as v34 by the Chrome chat (reported); second proven use of the upload method |
 | 2026-10-30 14:49 | Version 2.6: Paul's second real-case trial recorded ("It seems to be working now"); not yet confirmed live |

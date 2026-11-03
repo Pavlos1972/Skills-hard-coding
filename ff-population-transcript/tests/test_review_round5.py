@@ -358,8 +358,8 @@ class SummaryGroups(Staged):
     def test_the_summary_of_a_real_run_names_the_group_of_each_cover(self):
         self.s_content_done()
         text = "\n".join(verify.summary_lines(self.run_dir, self.load("state.json"), self.load("ledger.json"), self.load("content.json")))
-        self.assertIn("fna_req = Yes [the FNA quote]", text)
-        self.assertIn("o1 (debts.0.cl = Yes) [a credit-life field]", text)
+        self.assertIn("fna_req [the FNA quote]", text)
+        self.assertIn("o1 [a credit-life field]", text)
         self.assertIn("[products: FNA]", text)
 
 
