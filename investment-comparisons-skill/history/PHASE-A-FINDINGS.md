@@ -58,5 +58,11 @@ Full 0. Partial 6 (1 short entry page, 2 inputs, 5 evidence, 7 short outputs, 10
 9. **Endowment and living annuity:** the old text has no tax or product rules for them. Keep the four tables and add no tax note unless you ask; the program flags "no rule for this product" so nothing is invented. (Yes)
 10. **Layout:** Table 1 shows only once-off items (initial fees and commission) and Table 2 all ongoing costs, so the ongoing commission is never shown twice; and a short "Things to know" box above Table 1 appears ONLY when something must be flagged (mismatched amounts, a TFSA limit breach, a supplementary document that disagrees with the quote, a stale fact sheet). (Yes)
 
+## Paul's answers (04/11/2026)
+"Agree to all": yes to 1 to 7, 9 and 10 as recommended. Question 8 (the TFSA limits: R36,000 here, R46,000 in `om-tax-free-skill`) needed a figure, not a yes, so it is **still open**: until Paul confirms the 2026/27 annual and lifetime limits, a Tax-Free comparison STOPS and asks him (`assets/tax_facts.json` holds them with "confirmed": false); once he answers I set the confirmed values there (and in the Tax-Free skill's file).
+
+## Phase B plan (given to Paul 04/11/2026)
+ONE route: the same kit as the three OM proposal skills (step driver, reading lock, evidence checks against the documents' text, a fixed template, the Outlook draft and the Teams message to Sitamah, one short audit), plus four new parts: several providers in one data file, fund fact sheets saved as text and checked, the apples-to-apples checks, and the TFSA arithmetic. Steps (10): locate, read, answers, check, confirm, build, save, draft, message, final. Details are in the reply that gave the plan; the one test runs on invented providers (no real quote has ever been seen).
+
 ## Status
-Phase A done 04/11/2026 (read-only; no helpers). Findings and yes/no list given to Paul; waiting for his answers. Nothing built.
+Phase A done 04/11/2026 (read-only; no helpers). Paul agreed to all (Q8 open). Phase B plan given 04/11/2026, waiting for his approval. Nothing built.
