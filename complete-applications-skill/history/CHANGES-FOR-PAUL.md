@@ -29,3 +29,7 @@ A program holds each application as ONE plan file: every field with its value an
 - That the text in a box is the right text in your own viewer (the render proves something is drawn, not what).
 - Which transaction folder is current, whether a form you completed live is the real record, and whether the insurer accepts the form.
 - I have never seen a real filled application of a client, so the first real run may need one fix.
+
+## Paul's answers (04/11/2026)
+"Agree to all." So the recommended answers stand: 1 amounts always `R 2,800.00 p.m.` (two decimals, thousands commas); 2 the file name uses the five cover-line names and the folder name `Keyman` for Keyman Cover, Personal Covers counts as Personal and the other four as Business on the form; 3 Old Mutual = OM and Brightrock = BR, the short names Optimal RA, Tax-Free and Flexi, anything else needs his words; 4 a Single, Divorced, Widowed or Separated client's marriage contract type is N/A; 5 the hand-back's "still blank" lists as built (he may still ask to add or remove fields); 6 the dropdowns are marked selected so they draw, the viewer check stays attested; 7 the later one-line changes in the proposal skills and the Teams skill are a later job. No change to the skill: the zip and the upload brief stay valid.
+
