@@ -34,6 +34,8 @@ Vague or missing:
 Standards and clutter:
 19. About 30% of the 253 lines are the copied universal rules, the Delivery gate, the propose_skills rule (replaced by S7), the standing-rule block and the changelog; the stamp and changelog are typed by hand (S2). The Chrome draft method is a long paragraph. No run state, no tests, no checker.
 
+20. **Table 1's tax-tool input is described two ways:** Step 3 says "Table 1: RA=0 / current situation"; the MCD (V5.0 and Section 8.2) says Table 1 shows the client's current position with every existing RA as a named row and the tax saved on them (never R–). With an existing RA, "RA=0" would be wrong. The rebuild reads it the MCD way: Table 1's RA input = the total of the existing RAs' monthly contributions (0 only when the client has none); Table 3 in the keep case = existing + proposed.
+
 ## Duplications between skills
 - **The same draft, Sitamah-message and save steps** are copied here, in `om-tax-free-skill` and in `rgar-skill` (both rebuilt today). Reuse the same code unchanged.
 - **The RGAR facts** (shortfall, years, current and future value, retirement age) are read from the same RGAR PDF that `rgar-skill` reads. `rgar-skill` owns the RGAR proposal; this skill's RGAR paragraph only refers to it (the RGAR is never an attachment here: a permanent rule that stays).
@@ -57,5 +59,11 @@ Full 0. Partial 6 (1 short entry page, 2 inputs, 5 evidence, 6 built by program,
 8. **A voluntary-funds lump sum has no approved tax-treatment wording:** the program stops and asks you for the note (the Section 14 and voluntary main sentences stay verbatim). (Yes)
 9. **The signature (still open from the Tax-Free skill):** does the client's email show your signature once or twice? One answer settles all three proposal skills; until then the skill keeps "inserted by Claude" as a one-word setting. (Yes)
 
+## Paul's answers (04/11/2026)
+"Agree to all": yes to 1 to 9 as recommended. Notes on how two of them are handled:
+- Q4 (the template fixed once): the template changes are made in the build and listed for Paul in `CHANGES-FOR-PAUL.md` (as for the Tax-Free and RGAR templates).
+- Q9 (the signature): still open. The skill keeps "inserted by Claude" as a one-word setting (`assets/settings.json`), the same open question as in `om-tax-free-skill` and `rgar-skill`.
+- Flaw 20 (Table 1's input) is read the MCD way (existing RAs' total), told to Paul in the Phase B plan.
+
 ## Status
-Phase A report given to Paul 04/11/2026. Waiting for his answers. Nothing built.
+Phase A report given to Paul 04/11/2026, answers recorded. Phase B plan given 04/11/2026, waiting for his approval. Nothing built.
