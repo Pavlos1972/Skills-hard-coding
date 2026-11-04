@@ -1,0 +1,5 @@
+{
+ "note": "TFSA limits for the Tax-Free comparisons. UNCONFIRMED: the old skill said R36,000 a year, the Tax-Free skill's template says R46,000. A Tax-Free comparison STOPS and asks Paul until he confirms both figures; then they are set here, in Claude Code, and 'confirmed' becomes true. Never typed by the chat.",
+ "tax_year": "2026/2027",
+ "tfsa": {"annual_limit": "R 46,000.00", "lifetime_limit": "R 500,000.00", "confirmed": false}
+}

@@ -65,4 +65,4 @@ Full 0. Partial 6 (1 short entry page, 2 inputs, 5 evidence, 7 short outputs, 10
 ONE route: the same kit as the three OM proposal skills (step driver, reading lock, evidence checks against the documents' text, a fixed template, the Outlook draft and the Teams message to Sitamah, one short audit), plus four new parts: several providers in one data file, fund fact sheets saved as text and checked, the apples-to-apples checks, and the TFSA arithmetic. Steps (10): locate, read, answers, check, confirm, build, save, draft, message, final. Details are in the reply that gave the plan; the one test runs on invented providers (no real quote has ever been seen).
 
 ## Status
-Phase A done 04/11/2026 (read-only; no helpers). Paul agreed to all (Q8 open). Phase B plan given 04/11/2026, waiting for his approval. Nothing built.
+Phase A done 04/11/2026 (read-only; no helpers). Paul agreed to all (Q8 open) and APPROVED the Phase B plan 04/11/2026 ("I approve - make sure the skill executes as intended"). Phase C built, Phase D done (inventory 387 rules, 0 unaccounted; ONE test). See CHANGES-FOR-PAUL.md.

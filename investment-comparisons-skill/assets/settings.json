@@ -1,0 +1,4 @@
+{
+ "signature_mode": "insert",
+ "note": "insert = Claude inserts Paul's signature 'Paul K New' in the Outlook draft (this skill's way until 03/11/2026). server = the Exchange rule adds it and Claude inserts nothing (paul-email-signature's way). Paul has not yet said which is right: change this one word when he does."
+}

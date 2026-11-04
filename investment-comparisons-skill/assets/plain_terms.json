@@ -1,0 +1,22 @@
+{
+ "note": "Plain-English labels and explanations (Paul's rule: no industry term stands alone). A fee label that is not here needs a plain explanation in the answers. The program puts the explanation next to the label every time and refuses a built email in which a jargon word is used without its explanation.",
+ "fee_labels": {
+  "asset management fee": "What the fund manager charges each year for investing your money.",
+  "net administration fee": "What the provider charges each year for running your plan day to day.",
+  "administration fee": "What the provider charges each year for running your plan day to day.",
+  "ongoing advice fee": "What you pay each year for your adviser's ongoing advice and service.",
+  "adviser remuneration account charge": "A yearly charge that pays your adviser's agreed fee out of the plan.",
+  "initial advice fee": "A once-off fee for your adviser's advice when the plan starts.",
+  "initial commission": "A once-off payment to the adviser when the plan starts.",
+  "ongoing commission": "A payment to the adviser each year while the plan runs."
+ },
+ "jargon": {
+  "EAC": "Effective Annual Cost: one blended percentage that mixes several different fees together, so it hides which fee is driving the cost",
+  "TER": "Total Expense Ratio: the fund's yearly running costs as a percentage of its value",
+  "TIC": "Total Investment Charge: the fund's total yearly costs, including trading costs",
+  "as-and-when": "an adviser fee that is only charged when the client agrees to it, as and when advice is given",
+  "payment layer": "one of the separate places in a plan where a fee is deducted",
+  "fund-based fee": "a fee charged as a percentage of the fund's value",
+  "commission": "a payment to the adviser or provider that comes out of your money"
+ }
+}

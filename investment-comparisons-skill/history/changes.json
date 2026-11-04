@@ -1,0 +1,506 @@
+[
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 0 — Always run the setup questions first",
+  "new": "references/01-locate.md (the documents by role) and references/02-answers.md (what is read and what Paul is asked) and steps.json (locate, answers).",
+  "why": "Derived, not asked (S3): the client's name, product type, contribution structure and risk profile are read from the quotes and the Fact Find; Paul is asked only what the documents cannot tell.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before building anything, confirm the items below are availa",
+  "new": "references/01-locate.md (the documents by role) and references/02-answers.md (what is read and what Paul is asked) and steps.json (locate, answers).",
+  "why": "Derived, not asked (S3): the client's name, product type, contribution structure and risk profile are read from the quotes and the Fact Find; Paul is asked only what the documents cannot tell.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "About the client and product — derive, don't ask",
+  "new": "references/01-locate.md (the documents by role) and references/02-answers.md (what is read and what Paul is asked) and steps.json (locate, answers).",
+  "why": "Derived, not asked (S3): the client's name, product type, contribution structure and risk profile are read from the quotes and the Fact Find; Paul is asked only what the documents cannot tell.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Client full name — read directly off the uploaded quote/illu",
+  "new": "references/01-locate.md (the documents by role) and references/02-answers.md (what is read and what Paul is asked) and steps.json (locate, answers).",
+  "why": "Derived, not asked (S3): the client's name, product type, contribution structure and risk profile are read from the quotes and the Fact Find; Paul is asked only what the documents cannot tell.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "About the client — ask",
+  "new": "references/01-locate.md (the documents by role) and references/02-answers.md (what is read and what Paul is asked) and steps.json (locate, answers).",
+  "why": "Derived, not asked (S3): the client's name, product type, contribution structure and risk profile are read from the quotes and the Fact Find; Paul is asked only what the documents cannot tell.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Client's risk profile, from the Fact Find (needed to check f",
+  "new": "references/01-locate.md (the documents by role) and references/02-answers.md (what is read and what Paul is asked) and steps.json (locate, answers).",
+  "why": "Derived, not asked (S3): the client's name, product type, contribution structure and risk profile are read from the quotes and the Fact Find; Paul is asked only what the documents cannot tell.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "About the quotes being compared",
+  "new": "references/01-locate.md (the documents by role) and references/02-answers.md (what is read and what Paul is asked) and steps.json (locate, answers).",
+  "why": "Derived, not asked (S3): the client's name, product type, contribution structure and risk profile are read from the quotes and the Fact Find; Paul is asked only what the documents cannot tell.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The actual quote/illustration document for every provider be",
+  "new": "references/01-locate.md (the documents by role) and references/02-answers.md (what is read and what Paul is asked) and steps.json (locate, answers).",
+  "why": "Derived, not asked (S3): the client's name, product type, contribution structure and risk profile are read from the quotes and the Fact Find; Paul is asked only what the documents cannot tell.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "About the output",
+  "new": "references/01-locate.md (the documents by role) and references/02-answers.md (what is read and what Paul is asked) and steps.json (locate, answers).",
+  "why": "Derived, not asked (S3): the client's name, product type, contribution structure and risk profile are read from the quotes and the Fact Find; Paul is asked only what the documents cannot tell.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Whether the adviser wants the standard four-table document o",
+  "new": "references/01-locate.md (the documents by role) and references/02-answers.md (what is read and what Paul is asked) and steps.json (locate, answers).",
+  "why": "Derived, not asked (S3): the client's name, product type, contribution structure and risk profile are read from the quotes and the Fact Find; Paul is asked only what the documents cannot tell.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Items 1 and 2 are derived from the quotes automatically. Ite",
+  "new": "references/01-locate.md (the documents by role) and references/02-answers.md (what is read and what Paul is asked) and steps.json (locate, answers).",
+  "why": "Derived, not asked (S3): the client's name, product type, contribution structure and risk profile are read from the quotes and the Fact Find; Paul is asked only what the documents cannot tell.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 1 — Confirm apples-to-apples before comparing anythi",
+  "new": "references/03-comparison.md (apples-to-apples) and scripts/icmp.py mismatches, run.py check.",
+  "why": "Compared by the program; a mismatch stops the run unless Paul says to go on.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Do not build a comparison table until all of the following m",
+  "new": "references/03-comparison.md (apples-to-apples) and scripts/icmp.py mismatches, run.py check.",
+  "why": "Compared by the program; a mismatch stops the run unless Paul says to go on.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Same product type. RA vs RA, TFSA vs TFSA, endowment vs endo",
+  "new": "references/03-comparison.md (apples-to-apples) and scripts/icmp.py mismatches, run.py check.",
+  "why": "Compared by the program; a mismatch stops the run unless Paul says to go on.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If any of these don't match and can't be resolved by asking ",
+  "new": "references/03-comparison.md (apples-to-apples) and scripts/icmp.py mismatches, run.py check.",
+  "why": "Compared by the program; a mismatch stops the run unless Paul says to go on.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 2 — Extract every fee as a separate line item",
+  "new": "references/02-answers.md (the fees as separate lines) and references/04-build-rules.md (Table 2) and scripts/icmp.py fee_total, fee_rows.",
+  "why": "Every figure is checked against the quote's text; the totals are added up by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Read each provider's actual quote/fee schedule (not a market",
+  "new": "references/02-answers.md (the fees as separate lines) and references/04-build-rules.md (Table 2) and scripts/icmp.py fee_total, fee_rows.",
+  "why": "Every figure is checked against the quote's text; the totals are added up by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Standard output format — \"Total Ongoing Fees – Per Annum (Ex",
+  "new": "references/02-answers.md (the fees as separate lines) and references/04-build-rules.md (Table 2) and scripts/icmp.py fee_total, fee_rows.",
+  "why": "Every figure is checked against the quote's text; the totals are added up by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Fee Component | Provider A | Provider B | ... |",
+  "new": "references/02-answers.md (the fees as separate lines) and references/04-build-rules.md (Table 2) and scripts/icmp.py fee_total, fee_rows.",
+  "why": "Every figure is checked against the quote's text; the totals are added up by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Notes on populating this table:",
+  "new": "references/02-answers.md (the fees as separate lines) and references/04-build-rules.md (Table 2) and scripts/icmp.py fee_total, fee_rows.",
+  "why": "Every figure is checked against the quote's text; the totals are added up by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "\"Net administration fee\" is the line most likely to be doing",
+  "new": "references/02-answers.md (the fees as separate lines) and references/04-build-rules.md (Table 2) and scripts/icmp.py fee_total, fee_rows.",
+  "why": "Every figure is checked against the quote's text; the totals are added up by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 3 — Boosters / loyalty bonuses (keep this compact, n",
+  "new": "references/02-answers.md (loyalty benefits) and references/04-build-rules.md (Table 4) and scripts/icmp.py answers_problems.",
+  "why": "Kept; the explanation block is required by the program when a mechanism has more than one percentage.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Following the same discipline as life-insurer-comparison's t",
+  "new": "references/02-answers.md (loyalty benefits) and references/04-build-rules.md (Table 4) and scripts/icmp.py answers_problems.",
+  "why": "Kept; the explanation block is required by the program when a mechanism has more than one percentage.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "What triggers it (term completed, no missed premiums, minimu",
+  "new": "references/02-answers.md (loyalty benefits) and references/04-build-rules.md (Table 4) and scripts/icmp.py answers_problems.",
+  "why": "Kept; the explanation block is required by the program when a mechanism has more than one percentage.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Do not let the comparison's banner, verdict, or opening para",
+  "new": "references/02-answers.md (loyalty benefits) and references/04-build-rules.md (Table 4) and scripts/icmp.py answers_problems.",
+  "why": "Kept; the explanation block is required by the program when a mechanism has more than one percentage.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If a mechanism can't be understood from one line, give it it",
+  "new": "references/02-answers.md (loyalty benefits) and references/04-build-rules.md (Table 4) and scripts/icmp.py answers_problems.",
+  "why": "Kept; the explanation block is required by the program when a mechanism has more than one percentage.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "How the mechanism actually works mechanically (e.g. \"nothing",
+  "new": "references/02-answers.md (loyalty benefits) and references/04-build-rules.md (Table 4) and scripts/icmp.py answers_problems.",
+  "why": "Kept; the explanation block is required by the program when a mechanism has more than one percentage.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 4 — Fund choice & risk alignment, with live fund fac",
+  "new": "references/01-locate.md (the fund fact sheets, sourcing) and references/02-answers.md (fund sheets, risk fit) and scripts/icmp.py _sheet_problems, risk_flags, stale_sheets.",
+  "why": "The chat fetches and SAVES each fact sheet's text; the program checks every figure and date against it.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Confirm the proposed fund(s) on each quote match the client'",
+  "new": "references/01-locate.md (the fund fact sheets, sourcing) and references/02-answers.md (fund sheets, risk fit) and scripts/icmp.py _sheet_problems, risk_flags, stale_sheets.",
+  "why": "The chat fetches and SAVES each fact sheet's text; the program checks every figure and date against it.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Mandatory: for every fund actually named on an uploaded inve",
+  "new": "references/01-locate.md (the fund fact sheets, sourcing) and references/02-answers.md (fund sheets, risk fit) and scripts/icmp.py _sheet_problems, risk_flags, stale_sheets.",
+  "why": "The chat fetches and SAVES each fact sheet's text; the program checks every figure and date against it.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "For each fund, source and record:",
+  "new": "references/01-locate.md (the fund fact sheets, sourcing) and references/02-answers.md (fund sheets, risk fit) and scripts/icmp.py _sheet_problems, risk_flags, stale_sheets.",
+  "why": "The chat fetches and SAVES each fact sheet's text; the program checks every figure and date against it.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Benchmark — the fund's stated benchmark (e.g. STeFI Composit",
+  "new": "references/01-locate.md (the fund fact sheets, sourcing) and references/02-answers.md (fund sheets, risk fit) and scripts/icmp.py _sheet_problems, risk_flags, stale_sheets.",
+  "why": "The chat fetches and SAVES each fact sheet's text; the program checks every figure and date against it.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Sourcing discipline:",
+  "new": "references/01-locate.md (the fund fact sheets, sourcing) and references/02-answers.md (fund sheets, risk fit) and scripts/icmp.py _sheet_problems, risk_flags, stale_sheets.",
+  "why": "The chat fetches and SAVES each fact sheet's text; the program checks every figure and date against it.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Search for the fund's name plus \"fact sheet\" (e.g. \"Old Mutu",
+  "new": "references/01-locate.md (the fund fact sheets, sourcing) and references/02-answers.md (fund sheets, risk fit) and scripts/icmp.py _sheet_problems, risk_flags, stale_sheets.",
+  "why": "The chat fetches and SAVES each fact sheet's text; the program checks every figure and date against it.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Do not use past fund performance as the primary differentiat",
+  "new": "references/01-locate.md (the fund fact sheets, sourcing) and references/02-answers.md (fund sheets, risk fit) and scripts/icmp.py _sheet_problems, risk_flags, stale_sheets.",
+  "why": "The chat fetches and SAVES each fact sheet's text; the program checks every figure and date against it.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 5 — Flexibility & contract terms",
+  "new": "references/03-comparison.md (flexibility and contract terms) and scripts/icbuild.py extras.",
+  "why": "Only when Paul asks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Can contributions be increased, decreased, or paused without",
+  "new": "references/03-comparison.md (flexibility and contract terms) and scripts/icbuild.py extras.",
+  "why": "Only when Paul asks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 6 — Tax treatment (state explicitly, don't let it im",
+  "new": "references/03-comparison.md (tax treatment) and assets/wording.json and assets/tax_facts.json and scripts/icmp.py tfsa_rows.",
+  "why": "The TFSA arithmetic is done by the program from limits Paul confirms.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "RA comparisons: tax deductibility (27.5% of remuneration, ca",
+  "new": "references/03-comparison.md (tax treatment) and assets/wording.json and assets/tax_facts.json and scripts/icmp.py tfsa_rows.",
+  "why": "The TFSA arithmetic is done by the program from limits Paul confirms.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 6a — When a supplementary document disagrees with th",
+  "new": "references/02-answers.md (supplementary documents), references/04-build-rules.md (the 'Things to know' box) and scripts/icmp.py answers_problems (supplement_checks) and icbuild.py things_box.",
+  "why": "A supplementary document's disagreement is entered with both values, checked against both texts, and shown in the email by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "A provider sometimes supplies a second document after the fo",
+  "new": "references/02-answers.md (supplementary documents), references/04-build-rules.md (the 'Things to know' box) and scripts/icmp.py answers_problems (supplement_checks) and icbuild.py things_box.",
+  "why": "A supplementary document's disagreement is entered with both values, checked against both texts, and shown in the email by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never silently merge the two. Don't quietly swap the formal ",
+  "new": "references/02-answers.md (supplementary documents), references/04-build-rules.md (the 'Things to know' box) and scripts/icmp.py answers_problems (supplement_checks) and icbuild.py things_box.",
+  "why": "A supplementary document's disagreement is entered with both values, checked against both texts, and shown in the email by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 7 — Structure the output",
+  "new": "references/04-build-rules.md (the four tables) and assets/Investment_Comparison_Email_TEMPLATE.html and scripts/icbuild.py.",
+  "why": "Built by the program from one data file.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Unless told otherwise, the client-facing document is always ",
+  "new": "references/04-build-rules.md (the four tables) and assets/Investment_Comparison_Email_TEMPLATE.html and scripts/icbuild.py.",
+  "why": "Built by the program from one data file.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Retirement Annuity Comparison (or TFSA/Endowment/Living Annu",
+  "new": "references/04-build-rules.md (the four tables) and assets/Investment_Comparison_Email_TEMPLATE.html and scripts/icbuild.py.",
+  "why": "Built by the program from one data file.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Apples-to-apples flags (Step 1), tax treatment notes (Step 6",
+  "new": "references/04-build-rules.md (the four tables) and assets/Investment_Comparison_Email_TEMPLATE.html and scripts/icbuild.py.",
+  "why": "Built by the program from one data file.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Match the client-facing visual system (colour conventions, s",
+  "new": "references/04-build-rules.md (the four tables) and assets/Investment_Comparison_Email_TEMPLATE.html and scripts/icbuild.py.",
+  "why": "Built by the program from one data file.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 8 — Pre-delivery check",
+  "new": "references/04-build-rules.md (what the program checks) and scripts/icbuild.py html_problems, jargon_problems and scripts/verify.py: each provable item is a green tick or red cross in the short audit.",
+  "why": "Proved by the checker; plain-language quality stays attested.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before sending anything to the adviser:",
+  "new": "references/04-build-rules.md (what the program checks) and scripts/icbuild.py html_problems, jargon_problems and scripts/verify.py: each provable item is a green tick or red cross in the short audit.",
+  "why": "Proved by the checker; plain-language quality stays attested.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "All applicable Step 0 setup questions were actually answered",
+  "new": "references/04-build-rules.md (what the program checks) and scripts/icbuild.py html_problems, jargon_problems and scripts/verify.py: each provable item is a green tick or red cross in the short audit.",
+  "why": "Proved by the checker; plain-language quality stays attested.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Source first - never invent. Write only what is in the sourc",
+  "new": "references/00-rules.md rules 2 and 3: every fact comes from the client's documents, the saved fact sheets or Paul's words with its source; conflicts stop the run.",
+  "why": "Enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Read before you write. Read the source material completely a",
+  "new": "references/00-rules.md rule 3 and steps.json (read).",
+  "why": "Enforced by the reading lock.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Check before you claim. Never tell the user something is don",
+  "new": "references/00-rules.md rule 4.",
+  "why": "Enforced by read-backs and receipts.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Deliver everything this skill lists, every time. A run is no",
+  "new": "references/07-handover.md and scripts/verify.py.",
+  "why": "Done by the checker.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every correction re-opens the whole task, not just the item.",
+  "new": "references/00-rules.md rule 8: a correction re-opens the task; the driver re-opens the later steps.",
+  "why": "Enforced by the driver.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never lower the standard. A correction, a frustrated user, a",
+  "new": "references/00-rules.md rule 7.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If a rule cannot be met, stop and say so. State exactly whic",
+  "new": "references/00-rules.md rule 9.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Delivery gate for this skill (rules 5 and 6 applied): a run ",
+  "new": "references/07-handover.md (what a finished run needs) and scripts/verify.py.",
+  "why": "Done by the checker.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This skill builds client-facing comparisons between two or m",
+  "new": "references/00-rules.md (What this is) and SKILL.md description.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Not for: life/risk cover (use life-insurer-comparison), or a",
+  "new": "references/00-rules.md (What this is not).",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Core principle: actual cost, not EAC. Every comparison in th",
+  "new": "references/00-rules.md (Core principle: actual cost, not EAC) and scripts/icmp.py answers_problems (a quote with only a blended cost is refused).",
+  "why": "Enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Core principle: plain English throughout, not adviser jargon",
+  "new": "references/00-rules.md (Core principle: plain English) and references/04-build-rules.md and scripts/icbuild.py jargon_problems.",
+  "why": "Checked by the program; plain quality stays attested.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Industry shorthand (TER, TIC, EAC, \"as-and-when commission,\"",
+  "new": "references/00-rules.md and assets/plain_terms.json and scripts/icbuild.py jargon_problems: every term is explained where it is used.",
+  "why": "Enforced by the program.",
+  "needs_paul": false
+ }
+]

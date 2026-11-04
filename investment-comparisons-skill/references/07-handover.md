@@ -1,0 +1,7 @@
+# The final reply to Paul
+
+A run is finished only when ALL of these are done and the program's final audit has no red cross: (1) the documents were found and read, the fund fact sheets fetched and saved, the questions only Paul can answer asked (not inferred), and the comparison worked out by the program; (2) the comparison email was built and the program's checks passed; (3) the HTML was sent to Paul in the chat with its exact file name; (4) the no-logo copy was saved in the client's Comparative Quotes, the Outlook draft was made and read back, and Sitamah was messaged on Teams via Zapier and the posted message read back. After ANY correction repeat (2) to (4) for everything that changed.
+
+Your reply holds, as it is and nothing longer: which source files and fact sheets were used (names, dates and web addresses), where the copy was saved, the draft's status, that Sitamah was messaged (and will attach the documents and send), the flags for Paul (mismatched quotes, a stale or missing fact sheet, a fund whose risk label differs from the client's profile, a supplementary document that disagrees with its quote, the saved copy has no logo, anything assumed such as the meeting time or the email address), then the SHORT AUDIT the program printed (one line per check with a green tick or a red cross, one closing line for what is only attested). Any red cross means the job is not finished: say so.
+
+Say "done" only with the program's PASS. Never say the skill is "live" before Paul confirms he uploaded it.
