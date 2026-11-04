@@ -1,0 +1,733 @@
+{
+ "_note": "Frozen from the two real blank forms (sha256, every field, type and dropdown option). The program refuses any form that differs. The General form's meaning table (keys) was derived by hand once from positions and labels (never proved by an insurer).",
+ "om": {
+  "sha256": "d7d35c1fc6c15eac2039eaa8f125c01410cbe506b545995e1f4932942930da4a",
+  "pages": 2,
+  "fields": {
+   "Product": {
+    "type": "choice",
+    "options_raw": [
+     "OM Flexi Investment Plan",
+     "OM RA – Xtra Max 8.5% - section 14 transfer",
+     "OM RA – Xtra Max 8.5%",
+     "OM RA – Xtra Max 5%",
+     "OM Optimal RA – Recurring ",
+     "OM Tax Free recurring ",
+     "OM Tax Free Lumpsum",
+     "OM RA – Wealth recurring",
+     ""
+    ]
+   },
+   "DateOfEntry": {
+    "type": "text"
+   },
+   "DeferredPremiumFacility": {
+    "type": "choice",
+    "options_raw": [
+     "",
+     "Yes",
+     "No",
+     "N/A"
+    ]
+   },
+   "IsReplacement": {
+    "type": "choice",
+    "options_raw": [
+     "",
+     "Yes",
+     "No"
+    ]
+   },
+   "ReplacedPolicyNumbers": {
+    "type": "text"
+   },
+   "Title": {
+    "type": "choice",
+    "options_raw": [
+     "",
+     "Mr",
+     "Mrs",
+     "Ms",
+     "Miss",
+     "Dr"
+    ]
+   },
+   "FullName": {
+    "type": "text"
+   },
+   "IDNumber": {
+    "type": "text"
+   },
+   "CountryOfBirth": {
+    "type": "text"
+   },
+   "Nationality": {
+    "type": "text"
+   },
+   "CorrespondenceLanguage": {
+    "type": "text"
+   },
+   "MaritalStatus": {
+    "type": "choice",
+    "options_raw": [
+     "",
+     "Single",
+     "Married",
+     "Divorced",
+     "Widowed",
+     "Separated",
+     "Civil Union",
+     "Customary Marriage",
+     "Life Partner / Cohabiting"
+    ]
+   },
+   "MaritalDate": {
+    "type": "text"
+   },
+   "MaritalContractType": {
+    "type": "choice",
+    "options_raw": [
+     "",
+     "In Community of Property",
+     "Out of Community of Property - with Accrual",
+     "Out of Community of Property - without Accrual",
+     "Customary Marriage",
+     "Civil Union",
+     "Religious Marriage",
+     "Foreign Marriage",
+     "N/A"
+    ]
+   },
+   "TaxNumber": {
+    "type": "text"
+   },
+   "ForeignTaxObligation": {
+    "type": "choice",
+    "options_raw": [
+     "",
+     "Yes",
+     "No"
+    ]
+   },
+   "ForeignTaxNumber": {
+    "type": "text"
+   },
+   "TelH": {
+    "type": "text"
+   },
+   "TelW": {
+    "type": "text"
+   },
+   "TelCell": {
+    "type": "text"
+   },
+   "Email": {
+    "type": "text"
+   },
+   "PostalAddress": {
+    "type": "text"
+   },
+   "PostalCode": {
+    "type": "text"
+   },
+   "ResidentialAddress": {
+    "type": "text"
+   },
+   "ResidentialCode": {
+    "type": "text"
+   },
+   "Occupation": {
+    "type": "text"
+   },
+   "EmploymentPosition": {
+    "type": "text"
+   },
+   "EmploymentIndustry": {
+    "type": "text"
+   },
+   "HighestQualification": {
+    "type": "choice",
+    "options_raw": [
+     "",
+     "Matric",
+     "Matric & Diploma",
+     "4-Year Diploma",
+     "3-Year Degree",
+     "Postgraduate"
+    ]
+   },
+   "EducationOther": {
+    "type": "text"
+   },
+   "BenName": {
+    "type": "text"
+   },
+   "BenSurname": {
+    "type": "text"
+   },
+   "BenCellNumber": {
+    "type": "text"
+   },
+   "BenIDNumber": {
+    "type": "text"
+   },
+   "BenRelationship": {
+    "type": "text"
+   },
+   "BenShare": {
+    "type": "text"
+   },
+   "BenName_2": {
+    "type": "text"
+   },
+   "BenSurname_2": {
+    "type": "text"
+   },
+   "BenCellNumber_2": {
+    "type": "text"
+   },
+   "BenIDNumber_2": {
+    "type": "text"
+   },
+   "BenRelationship_2": {
+    "type": "text"
+   },
+   "BenShare_2": {
+    "type": "text"
+   },
+   "BenName_3": {
+    "type": "text"
+   },
+   "BenSurname_3": {
+    "type": "text"
+   },
+   "BenCellNumber_3": {
+    "type": "text"
+   },
+   "BenIDNumber_3": {
+    "type": "text"
+   },
+   "BenRelationship_3": {
+    "type": "text"
+   },
+   "BenShare_3": {
+    "type": "text"
+   },
+   "NameOfBank": {
+    "type": "choice",
+    "options_raw": [
+     "",
+     "Absa Bank",
+     "Access Bank",
+     "African Bank",
+     "Albaraka Bank",
+     "Bank Zero",
+     "Bidvest Bank",
+     "Capitec Bank",
+     "Discovery Bank",
+     "FNB",
+     "FNB Namibia",
+     "GoTyme Bank (TymeBank)",
+     "Investec",
+     "Nedbank",
+     "OM Bank (Old Mutual)",
+     "Postbank",
+     "Sasfin Bank",
+     "Standard Bank",
+     "Other"
+    ]
+   },
+   "BranchCode": {
+    "type": "text"
+   },
+   "AccountHolder": {
+    "type": "text"
+   },
+   "AccountNumber": {
+    "type": "text"
+   },
+   "AccountType": {
+    "type": "choice",
+    "options_raw": [
+     "",
+     "Current",
+     "Savings",
+     "Cheque",
+     "Other"
+    ]
+   },
+   "SourceOfFunds": {
+    "type": "text"
+   },
+   "SourceOfIncome": {
+    "type": "text"
+   },
+   "KnownDays": {
+    "type": "text"
+   },
+   "KnownMonths": {
+    "type": "text"
+   },
+   "KnownYears": {
+    "type": "text"
+   },
+   "FundsRaisedFrom": {
+    "type": "text"
+   },
+   "OwnKnowledge": {
+    "type": "choice",
+    "options_raw": [
+     "",
+     "Yes",
+     "No"
+    ]
+   },
+   "OriginateFrom": {
+    "type": "text"
+   },
+   "Signature": {
+    "type": "text"
+   },
+   "SignatureDate": {
+    "type": "text"
+   }
+  },
+  "template": "OM_Application_Template.pdf",
+  "keys": null,
+  "derived": [
+   "Product",
+   "SignatureDate",
+   "ReplacedPolicyNumbers",
+   "ForeignTaxNumber",
+   "OriginateFrom",
+   "DeferredPremiumFacility",
+   "MaritalContractType",
+   "IsReplacement"
+  ],
+  "never": [
+   "Signature"
+  ],
+  "not_expected": [
+   "TelH",
+   "TelW",
+   "PostalAddress",
+   "PostalCode",
+   "EducationOther",
+   "KnownDays",
+   "KnownMonths",
+   "KnownYears",
+   "MaritalDate",
+   "BenCellNumber",
+   "BenName_2",
+   "BenSurname_2",
+   "BenCellNumber_2",
+   "BenIDNumber_2",
+   "BenRelationship_2",
+   "BenShare_2",
+   "BenName_3",
+   "BenSurname_3",
+   "BenCellNumber_3",
+   "BenIDNumber_3",
+   "BenRelationship_3",
+   "BenShare_3",
+   "Signature"
+  ]
+ },
+ "general": {
+  "sha256": "ce13a5ccb7d81a6fc696b12fa56539921fd80307191614939f5b3513086389a6",
+  "pages": 1,
+  "fields": {
+   "List Box 1": {
+    "type": "choice",
+    "options_raw": [
+     "Momentum",
+     "Brightrock",
+     "Discovery ",
+     "Old Mutual ",
+     "Liberty",
+     "Sanlam",
+     "Stanlib"
+    ]
+   },
+   "Text Box 1": {
+    "type": "text"
+   },
+   "List Box 2": {
+    "type": "choice",
+    "options_raw": [
+     "Business ",
+     "Personal"
+    ]
+   },
+   "Text Box 2": {
+    "type": "text"
+   },
+   "List Box 3": {
+    "type": "choice",
+    "options_raw": [
+     "Yes ",
+     "",
+     "No"
+    ]
+   },
+   "Text Box 3": {
+    "type": "text"
+   },
+   "Text Box 4": {
+    "type": "text"
+   },
+   "Text Box 4_2": {
+    "type": "text"
+   },
+   "Text Box 4_3": {
+    "type": "text"
+   },
+   "Text Box 4_4": {
+    "type": "text"
+   },
+   "Text Box 4_5": {
+    "type": "text"
+   },
+   "Text Box 5": {
+    "type": "text"
+   },
+   "Text Box 4_6": {
+    "type": "text"
+   },
+   "Text Box 4_7": {
+    "type": "text"
+   },
+   "Text Box 4_8": {
+    "type": "text"
+   },
+   "Text Box 4_9": {
+    "type": "text"
+   },
+   "Text Box 5_2": {
+    "type": "text"
+   },
+   "Text Box 5_3": {
+    "type": "text"
+   },
+   "Text Box 4_10": {
+    "type": "text"
+   },
+   "Text Box 4_11": {
+    "type": "text"
+   },
+   "Text Box 4_12": {
+    "type": "text"
+   },
+   "Text Box 4_13": {
+    "type": "text"
+   },
+   "Text Box 4_14": {
+    "type": "text"
+   },
+   "Text Box 4_15": {
+    "type": "text"
+   },
+   "Text Box 4_16": {
+    "type": "text"
+   },
+   "Text Box 5_4": {
+    "type": "text"
+   },
+   "Text Box 5_9": {
+    "type": "text"
+   },
+   "Text Box 4_17": {
+    "type": "text"
+   },
+   "Text Box 4_18": {
+    "type": "text"
+   },
+   "Text Box 4_19": {
+    "type": "text"
+   },
+   "Text Box 4_20": {
+    "type": "text"
+   },
+   "Text Box 5_10": {
+    "type": "text"
+   },
+   "Text Box 4_21": {
+    "type": "text"
+   },
+   "Text Box 4_22": {
+    "type": "text"
+   },
+   "Text Box 5_11": {
+    "type": "text"
+   },
+   "Text Box 5_12": {
+    "type": "text"
+   },
+   "Text Box 5_13": {
+    "type": "text"
+   },
+   "Text Box 5_14": {
+    "type": "text"
+   },
+   "Text Box 5_15": {
+    "type": "text"
+   },
+   "Text Box 5_16": {
+    "type": "text"
+   },
+   "Text Box 4_23": {
+    "type": "text"
+   },
+   "Text Box 4_24": {
+    "type": "text"
+   },
+   "Text Box 5_17": {
+    "type": "text"
+   },
+   "Text Box 5_18": {
+    "type": "text"
+   },
+   "Text Box 4_25": {
+    "type": "text"
+   },
+   "Text Box 4_26": {
+    "type": "text"
+   },
+   "List Box 3_2": {
+    "type": "choice",
+    "options_raw": [
+     "Yes ",
+     "",
+     "No"
+    ]
+   },
+   "List Box 3_3": {
+    "type": "choice",
+    "options_raw": [
+     "Yes ",
+     "",
+     "No"
+    ]
+   },
+   "List Box 3_4": {
+    "type": "choice",
+    "options_raw": [
+     "Yes ",
+     "",
+     "No"
+    ]
+   },
+   "List Box 3_5": {
+    "type": "choice",
+    "options_raw": [
+     "Yes ",
+     "",
+     "No"
+    ]
+   },
+   "Text Box 5_5": {
+    "type": "text"
+   },
+   "Text Box 5_6": {
+    "type": "text"
+   },
+   "Text Box 5_7": {
+    "type": "text"
+   },
+   "Text Box 5_8": {
+    "type": "text"
+   }
+  },
+  "template": "General_Short_Risk_Application_Template.pdf",
+  "keys": {
+   "insurer": "List Box 1",
+   "cover_lines": "List Box 2",
+   "quote_no": "Text Box 1",
+   "owner": "Text Box 2",
+   "owner_pays": "List Box 3",
+   "title": "Text Box 3",
+   "first_names": "Text Box 4",
+   "surname": "Text Box 4_2",
+   "id_number": "Text Box 4_3",
+   "cell": "Text Box 4_4",
+   "work": "Text Box 4_5",
+   "email": "Text Box 5",
+   "unit": "Text Box 4_6",
+   "complex": "Text Box 4_7",
+   "street_no": "Text Box 4_8",
+   "street_name": "Text Box 4_9",
+   "suburb": "Text Box 5_2",
+   "city": "Text Box 5_3",
+   "region": "Text Box 4_10",
+   "postal_code": "Text Box 4_11",
+   "best_time": "Text Box 4_12",
+   "best_day": "Text Box 4_13",
+   "doctor": "Text Box 4_14",
+   "doctor_tel": "Text Box 4_15",
+   "doctor_years": "Text Box 4_16",
+   "account_holder": "Text Box 5_4",
+   "bank": "Text Box 5_9",
+   "branch_name": "Text Box 4_17",
+   "branch_code": "Text Box 4_18",
+   "account_type": "Text Box 4_19",
+   "debit_date": "Text Box 4_20",
+   "account_number": "Text Box 5_10",
+   "payer_contact": "Text Box 4_21",
+   "payer_email": "Text Box 4_22",
+   "child1_name": "Text Box 5_11",
+   "child1_id": "Text Box 5_12",
+   "child2_name": "Text Box 5_13",
+   "child2_id": "Text Box 5_14",
+   "ben1_name": "Text Box 5_15",
+   "ben1_id": "Text Box 5_16",
+   "ben1_relation": "Text Box 4_23",
+   "ben1_share": "Text Box 4_24",
+   "ben2_name": "Text Box 5_17",
+   "ben2_id": "Text Box 5_18",
+   "ben2_relation": "Text Box 4_25",
+   "ben2_share": "Text Box 4_26",
+   "insolvent": "List Box 3_2",
+   "debt_review": "List Box 3_3",
+   "debt_assistance": "List Box 3_4",
+   "replaces": "List Box 3_5",
+   "existing_company": "Text Box 5_5",
+   "existing_policy_no": "Text Box 5_6",
+   "client_signature": "Text Box 5_7",
+   "date": "Text Box 5_8"
+  },
+  "derived": [
+   "insurer",
+   "cover_lines",
+   "replaces",
+   "existing_company",
+   "existing_policy_no",
+   "date"
+  ],
+  "never": [
+   "client_signature"
+  ],
+  "not_expected": [
+   "child1_name",
+   "child1_id",
+   "child2_name",
+   "child2_id",
+   "ben2_name",
+   "ben2_id",
+   "ben2_relation",
+   "ben2_share",
+   "existing_company",
+   "existing_policy_no",
+   "payer_contact",
+   "payer_email",
+   "work",
+   "unit",
+   "complex",
+   "client_signature"
+  ]
+ },
+ "crosswalk": [
+  [
+   "Title",
+   "title"
+  ],
+  [
+   "IDNumber",
+   "id_number"
+  ],
+  [
+   "TelCell",
+   "cell"
+  ],
+  [
+   "TelW",
+   "work"
+  ],
+  [
+   "Email",
+   "email"
+  ],
+  [
+   "ResidentialCode",
+   "postal_code"
+  ],
+  [
+   "AccountHolder",
+   "account_holder"
+  ],
+  [
+   "NameOfBank",
+   "bank"
+  ],
+  [
+   "BranchCode",
+   "branch_code"
+  ],
+  [
+   "AccountType",
+   "account_type"
+  ],
+  [
+   "AccountNumber",
+   "account_number"
+  ],
+  [
+   "BenIDNumber",
+   "ben1_id"
+  ],
+  [
+   "BenRelationship",
+   "ben1_relation"
+  ],
+  [
+   "BenShare",
+   "ben1_share"
+  ],
+  [
+   "BenIDNumber_2",
+   "ben2_id"
+  ],
+  [
+   "BenRelationship_2",
+   "ben2_relation"
+  ],
+  [
+   "BenShare_2",
+   "ben2_share"
+  ]
+ ],
+ "never_carry": {
+  "om": [
+   "IsReplacement",
+   "ReplacedPolicyNumbers",
+   "DeferredPremiumFacility",
+   "SourceOfFunds",
+   "SourceOfIncome",
+   "FundsRaisedFrom",
+   "OwnKnowledge",
+   "OriginateFrom",
+   "KnownDays",
+   "KnownMonths",
+   "KnownYears",
+   "DateOfEntry",
+   "Product"
+  ],
+  "general": [
+   "owner",
+   "owner_pays",
+   "best_time",
+   "best_day",
+   "doctor",
+   "doctor_tel",
+   "doctor_years",
+   "debit_date",
+   "child1_name",
+   "child1_id",
+   "child2_name",
+   "child2_id",
+   "insolvent",
+   "debt_review",
+   "debt_assistance",
+   "quote_no"
+  ]
+ }
+}

@@ -1,0 +1,5 @@
+{
+ "stamp": "2026-11-04 14:56",
+ "fingerprint": "28ac8262a1ecc6d343eb71bedca97a83497c6165e5a77646928ff1cc5a56e729",
+ "change": "First program-driven version: the real forms are filled by program from one plan file with a source for every value, every field is read back, each filled box is proved to draw, and a checker rebuilds everything and compares"
+}

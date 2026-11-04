@@ -1,0 +1,16 @@
+{
+ "roots": ["New Business", "WR Clients"],
+ "root_path": "C:\\Users\\Paul\\liferisk.co.za\\Company - Paul\\",
+ "insurer_options": ["Momentum", "Brightrock", "Discovery", "Old Mutual", "Liberty", "Sanlam", "Stanlib"],
+ "insurer_abbr": {"Old Mutual": "OM", "Brightrock": "BR"},
+ "cover_lines": {"Personal Covers": "Personal", "Business Covers": "Business", "Buy & Sell": "Business", "Contingent Liability": "Business", "Keyman Cover": "Business"},
+ "folder_type_risk": {"Personal Covers": "Personal Covers", "Business Covers": "Business Covers", "Buy & Sell": "Buy & Sell", "Contingent Liability": "Contingent Liability", "Keyman Cover": "Keyman"},
+ "om_short": {"OM Optimal RA \u2013 Recurring": "Optimal RA", "OM Tax Free recurring": "Tax-Free", "OM Tax Free Lumpsum": "Tax-Free", "OM Flexi Investment Plan": "Flexi"},
+ "om_types": ["Recurring", "Lump Sum", "Section 14 transfer"],
+ "doc_roles": ["fact_find", "fact_find_summary", "fica_id", "fica_bank", "fica_address", "quote", "proposal", "policy_schedule", "application_current", "application_old", "other"],
+ "no_evidence_roles": ["application_old"],
+ "marital_na": ["Single", "Divorced", "Widowed", "Separated"],
+ "debit_days_refused": [10, 11, 12, 13, 14],
+ "render": {"dpi": 100, "min_changed_pixels": 12},
+ "mask_keep": 4
+}

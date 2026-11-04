@@ -1,0 +1,12 @@
+{
+ "skill": "complete-applications-skill",
+ "deliverables": [
+  {"name": "One filled real application PDF per application (Old Mutual form or General Short Risk form)", "file": "out/<file name>.pdf",
+   "produced_by": "scripts/run.py fill (scripts/apps.py), from the plan the chat entered and the real blank forms in assets/", "handover": "sent in the chat and saved in the client's Applications folder after Paul's yes; the saved listing is checked",
+   "checked_by": "scripts/verify.py (re-reads every field and redraws the form)", "step": "fill"},
+  {"name": "The transaction folder rename (only when planned and approved)", "file": "the client's folder", "produced_by": "the chat, with the name built by scripts/apps.py folder_name", "handover": "mv -n after Paul's yes; the listing is checked",
+   "checked_by": "scripts/verify.py (listing shows the new name and no copy)", "step": "save"},
+  {"name": "Hand-back: one short block per application (ID and account numbers masked) and the short audit", "file": "printed by scripts/run.py done final; full record in out_record/audit-full.txt",
+   "produced_by": "scripts/engine.py handback and scripts/verify.py", "handover": "pasted into the reply as they are", "checked_by": "scripts/run.py done final", "step": "final"}
+ ]
+}

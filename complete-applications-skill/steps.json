@@ -1,0 +1,81 @@
+{
+ "skill": "complete-applications-skill",
+ "steps": [
+  {
+   "id": "locate",
+   "title": "Find the client's folder and documents, log every try; for a correction, read the current applications",
+   "ref": ["01-locate.md"],
+   "do": [
+    "Take the client's name from Paul. Look for the client's folder in the two places, through the routes IN THIS ORDER, logging EVERY try (failures too): 1 device (the computer / OneDrive)  2 m365 (the Microsoft 365 connector)  3 zapier.",
+    "Record each try: python3 {scripts}/run.py access {run} --purpose folder|docs --route device|m365|zapier --result found|failed --note \"what you did\"",
+    "List the transaction folders and each Applications folder. Register every source document a value will quote (Fact Find first, then the FICA documents, quote, proposal, policy schedule): python3 {scripts}/run.py doc {run} --role fact_find --file <local copy> --route <the route>",
+    "A CORRECTION: stage a fresh copy of every CURRENT application (never an older year's) and register each: python3 {scripts}/run.py current {run} --id a1 --file <staged copy> --route <the route>   (note each file's modified time: receipt stage.<id>.mtime)",
+    "Paul is asked last, with proof of what was searched."
+   ],
+   "check": "locate_ok",
+   "proof": "every try is logged in route order, every registered document is unchanged, both blank forms are the known ones, and (a correction) the current applications are registered"
+  },
+  {
+   "id": "plan",
+   "title": "Enter the applications in ONE file; the program applies and checks every rule",
+   "ref": ["02-plan.md"],
+   "do": [
+    "Write plan.json as the reference page shows. Never write the PDF or its field values yourself: the program fills the real form from your plan.",
+    "Run: python3 {scripts}/run.py plan {run} --file <plan.json>",
+    "If it refuses, put every listed problem right in the file and run it again. Never argue with a refusal. When a value is not in the file, leave it OUT (it is listed as blank); never invent it."
+   ],
+   "check": "plan_ok",
+   "proof": "every value is proved by a document line or Paul's words and passes the form's rules; names are built by the program"
+  },
+  {
+   "id": "confirm",
+   "title": "Show Paul the table, ask ONE question, record his yes",
+   "ref": ["03-confirm.md"],
+   "do": [
+    "Run: python3 {scripts}/run.py show {run}",
+    "Put everything it prints in your reply (the table with every field, source, name, overwrite and rename) and ask exactly the one question it gives. Never fill, save or rename before his clear yes.",
+    "When he says yes, record his own words: python3 {scripts}/run.py approve {run} --said \"his exact words\"",
+    "If anything changes, run plan again: the earlier yes then no longer counts."
+   ],
+   "check": "confirm_ok",
+   "proof": "Paul's yes is recorded for exactly this version, after he was shown it"
+  },
+  {
+   "id": "fill",
+   "title": "The program fills the real forms, reads back every field and proves each box shows something",
+   "ref": ["04-fill.md"],
+   "do": [
+    "Run: python3 {scripts}/run.py fill {run}",
+    "It writes out/<file name>.pdf for each application. You never type or edit a PDF.",
+    "If a line is red, tell Paul exactly which one. A dropdown that does not draw is reported, never hidden; do not claim the render passed."
+   ],
+   "check": "fill_ok",
+   "proof": "every field of every saved PDF reads back as intended, and every filled box shows something in the render"
+  },
+  {
+   "id": "save",
+   "title": "Send each file in the chat, save it into the client's folder, rename the folder if planned, read each back",
+   "ref": ["05-save.md"],
+   "do": [
+    "Send each out/*.pdf in the chat, then record: python3 {scripts}/run.py receipt {run} chat.<id>.sent yes",
+    "Save each file into the client's Applications folder through the routes in order (a correction: commit with the expectedMtimeMs you staged, receipts stage.<id>.mtime and commit.<id>.expected_mtime). Record the folder path: python3 {scripts}/run.py receipt {run} save.<id>.folder <the path>",
+    "List the folder, save the listing to a file and run: python3 {scripts}/run.py save {run} --id <id> --file <the saved listing>",
+    "A planned rename (only with Paul's yes, mv -n, never over an existing folder): record rename.<id>.done <the output>, list the client's folder and run: python3 {scripts}/run.py rename {run} --id <id> --file <the saved listing>"
+   ],
+   "check": "save_ok",
+   "proof": "each file is in the client's folder (listing shows it), each rename shows in the listing, receipts recorded"
+  },
+  {
+   "id": "final",
+   "title": "The final check, the SHORT AUDIT and the hand-back for Paul",
+   "ref": ["06-handover.md"],
+   "do": [
+    "Run: python3 {scripts}/run.py done {run} final",
+    "Put the short audit and the hand-back it prints in your reply exactly as they are: one line per check with a green tick or a red cross, one closing line for what is only attested, one short block per application. Nothing longer.",
+    "Any red cross means the job is not finished: say so."
+   ],
+   "check": "verify_final",
+   "proof": "the final checker prints no red cross"
+  }
+ ]
+}

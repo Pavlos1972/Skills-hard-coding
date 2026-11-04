@@ -1,0 +1,626 @@
+[
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Why this skill exists",
+  "new": "references/00-rules.md (rule 1: the real form, never a lookalike).",
+  "why": "Kept; the program fills the real blank form and refuses one that changed.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Insurers and the FSCA don't accept a lookalike PDF — they ac",
+  "new": "references/00-rules.md (rule 1: the real form, never a lookalike).",
+  "why": "Kept; the program fills the real blank form and refuses one that changed.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## How this skill is used (the application life-cycle)",
+  "new": "SKILL.md (What a finished run contains) and references/01-locate.md (A correction).",
+  "why": "The life-cycle is now two run modes, prefill and correct.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before a follow-up meeting where the client may accept a quo",
+  "new": "SKILL.md (What a finished run contains) and references/01-locate.md (A correction).",
+  "why": "The life-cycle is now two run modes, prefill and correct.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 1 — Work out which application(s) are needed",
+  "new": "references/02-plan.md (one entry per product and per contribution type) and scripts/apps.py file_name, folder_name.",
+  "why": "Kept; the plan file holds one entry per application.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "From the proposal, RGAR, fact find, or the client's own inst",
+  "new": "references/02-plan.md (one entry per product and per contribution type) and scripts/apps.py file_name, folder_name.",
+  "why": "Kept; the plan file holds one entry per application.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "one OM Application Template fill per product *and* per contr",
+  "new": "references/02-plan.md (one entry per product and per contribution type) and scripts/apps.py file_name, folder_name.",
+  "why": "Kept; the plan file holds one entry per application.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 2 — Gather the client's bio data once",
+  "new": "references/01-locate.md (the documents, the order of preference) and references/02-plan.md (fields).",
+  "why": "The bio data are entered once as fields with sources; 'CRM record' is dropped (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every OM application for the same client shares one set of p",
+  "new": "references/01-locate.md (the documents, the order of preference) and references/02-plan.md (fields).",
+  "why": "The bio data are entered once as fields with sources; 'CRM record' is dropped (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "(This is the initial pre-fill before a meeting. The stricter",
+  "new": "references/01-locate.md (the documents, the order of preference) and references/02-plan.md (fields).",
+  "why": "The bio data are entered once as fields with sources; 'CRM record' is dropped (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 3 — Get the transaction-specific fields right",
+  "new": "references/02-plan.md (the rules the program enforces) and scripts/apps.py build_values, consistency_problems.",
+  "why": "Every rule is a program check: Product value, replacement, N/A discipline, signature date, never invent.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Product name always carries the amount. Build the Product va",
+  "new": "references/02-plan.md (the rules the program enforces) and scripts/apps.py build_values, consistency_problems.",
+  "why": "Every rule is a program check: Product value, replacement, N/A discipline, signature date, never invent.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every application needs a real answer on replacement, not a ",
+  "new": "references/02-plan.md (the rules the program enforces) and scripts/apps.py build_values, consistency_problems.",
+  "why": "Every rule is a program check: Product value, replacement, N/A discipline, signature date, never invent.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Foreign tax number follows foreign tax obligation. When Fore",
+  "new": "references/02-plan.md (the rules the program enforces) and scripts/apps.py build_values, consistency_problems.",
+  "why": "Every rule is a program check: Product value, replacement, N/A discipline, signature date, never invent.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Any field with an N/A option that doesn't apply gets N/A, no",
+  "new": "references/02-plan.md (the rules the program enforces) and scripts/apps.py build_values, consistency_problems.",
+  "why": "Every rule is a program check: Product value, replacement, N/A discipline, signature date, never invent.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Source-of-funds knowledge. OriginateFrom is only filled when",
+  "new": "references/02-plan.md (the rules the program enforces) and scripts/apps.py build_values, consistency_problems.",
+  "why": "Every rule is a program check: Product value, replacement, N/A discipline, signature date, never invent.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Signature date is the meeting date, filled in by the advisor",
+  "new": "references/02-plan.md (the rules the program enforces) and scripts/apps.py build_values, consistency_problems.",
+  "why": "Every rule is a program check: Product value, replacement, N/A discipline, signature date, never invent.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never invent client data. If a field (banking details, ID nu",
+  "new": "references/02-plan.md (the rules the program enforces) and scripts/apps.py build_values, consistency_problems.",
+  "why": "Every rule is a program check: Product value, replacement, N/A discipline, signature date, never invent.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 4 — Fill the template",
+  "new": "references/04-fill.md and scripts/apps.py fill.",
+  "why": "One way for both forms; the program fills the real form and sets the chosen option so dropdowns draw.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Use scripts/fill_om_form.py for OM (fill_om_application()). ",
+  "new": "references/04-fill.md and scripts/apps.py fill.",
+  "why": "One way for both forms; the program fills the real form and sets the chosen option so dropdowns draw.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 5 — Verify before delivering",
+  "new": "references/04-fill.md and scripts/apps.py readback_problems, render_proof and scripts/verify.py.",
+  "why": "Every field is read back and every filled box is compared with the blank form (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Field dump. Read back the field values from the saved PDF an",
+  "new": "references/04-fill.md and scripts/apps.py readback_problems, render_proof and scripts/verify.py.",
+  "why": "Every field is read back and every filled box is compared with the blank form (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Only proceed to delivery once both checks pass (or the rende",
+  "new": "references/04-fill.md and scripts/apps.py readback_problems, render_proof and scripts/verify.py.",
+  "why": "Every field is read back and every filled box is compared with the blank form (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 6 — Where the finished file goes",
+  "new": "references/05-save.md and references/01-locate.md and scripts/run.py save, rename and scripts/apps.py file_name, folder_name.",
+  "why": "Routes in order with a log; names built by the program; nothing overwritten or deleted without Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Two deliveries, both required:",
+  "new": "references/05-save.md and references/01-locate.md and scripts/run.py save, rename and scripts/apps.py file_name, folder_name.",
+  "why": "Routes in order with a log; names built by the program; nothing overwritten or deleted without Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Send it in chat with the file-delivery tool so Paul has it i",
+  "new": "references/05-save.md and references/01-locate.md and scripts/run.py save, rename and scripts/apps.py file_name, folder_name.",
+  "why": "Routes in order with a log; names built by the program; nothing overwritten or deleted without Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "To find the right local folder for a client:",
+  "new": "references/05-save.md and references/01-locate.md and scripts/run.py save, rename and scripts/apps.py file_name, folder_name.",
+  "why": "Routes in order with a log; names built by the program; nothing overwritten or deleted without Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "sharepoint_folder_search for the client's surname. The webUr",
+  "new": "references/05-save.md and references/01-locate.md and scripts/run.py save, rename and scripts/apps.py file_name, folder_name.",
+  "why": "Routes in order with a log; names built by the program; nothing overwritten or deleted without Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "TRANSACTION FOLDER NAMING RULE (mandatory, corrected 08/10/2",
+  "new": "references/05-save.md and references/01-locate.md and scripts/run.py save, rename and scripts/apps.py file_name, folder_name.",
+  "why": "Routes in order with a log; names built by the program; nothing overwritten or deleted without Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Monthly premium: \"<Surname, Firstname> - (<Insurer> - <Inves",
+  "new": "references/05-save.md and references/01-locate.md and scripts/run.py save, rename and scripts/apps.py file_name, folder_name.",
+  "why": "Routes in order with a log; names built by the program; nothing overwritten or deleted without Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Insurer — the abbreviation used on the application (e.g. BR ",
+  "new": "references/05-save.md and references/01-locate.md and scripts/run.py save, rename and scripts/apps.py file_name, folder_name.",
+  "why": "Routes in order with a log; names built by the program; nothing overwritten or deleted without Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Examples:",
+  "new": "references/05-save.md and references/01-locate.md and scripts/run.py save, rename and scripts/apps.py file_name, folder_name.",
+  "why": "Routes in order with a log; names built by the program; nothing overwritten or deleted without Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Rename with mv -n inside the connected folder (device_bash),",
+  "new": "references/05-save.md and references/01-locate.md and scripts/run.py save, rename and scripts/apps.py file_name, folder_name.",
+  "why": "Routes in order with a log; names built by the program; nothing overwritten or deleted without Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "APPLICATION FILENAME RULE (mandatory): one unified pattern a",
+  "new": "references/05-save.md and references/01-locate.md and scripts/run.py save, rename and scripts/apps.py file_name, folder_name.",
+  "why": "Routes in order with a log; names built by the program; nothing overwritten or deleted without Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "\"<Insurer abbreviation> - <Product type> Application - <DD.M",
+  "new": "references/05-save.md and references/01-locate.md and scripts/run.py save, rename and scripts/apps.py file_name, folder_name.",
+  "why": "Routes in order with a log; names built by the program; nothing overwritten or deleted without Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Insurer — the abbreviation (e.g. OM for Old Mutual, BR for B",
+  "new": "references/05-save.md and references/01-locate.md and scripts/run.py save, rename and scripts/apps.py file_name, folder_name.",
+  "why": "Routes in order with a log; names built by the program; nothing overwritten or deleted without Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Examples:",
+  "new": "references/05-save.md and references/01-locate.md and scripts/run.py save, rename and scripts/apps.py file_name, folder_name.",
+  "why": "Routes in order with a log; names built by the program; nothing overwritten or deleted without Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Superseded drafts. When a new application replaces an older ",
+  "new": "references/05-save.md and references/01-locate.md and scripts/run.py save, rename and scripts/apps.py file_name, folder_name.",
+  "why": "Routes in order with a log; names built by the program; nothing overwritten or deleted without Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Once saved into the OneDrive folder, it syncs up to SharePoi",
+  "new": "references/05-save.md and references/01-locate.md and scripts/run.py save, rename and scripts/apps.py file_name, folder_name.",
+  "why": "Routes in order with a log; names built by the program; nothing overwritten or deleted without Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 7 — Correction / Sync mode (after a client meeting)",
+  "new": "references/01-locate.md (A correction), references/02-plan.md (A correction), references/03-confirm.md, references/05-save.md and scripts/apps.py correction_values.",
+  "why": "A correction changes only the planned fields; the carry-across rules and the conflict stop are program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Use this mode when client-teams-transcript-skill calls this ",
+  "new": "references/01-locate.md (A correction), references/02-plan.md (A correction), references/03-confirm.md, references/05-save.md and scripts/apps.py correction_values.",
+  "why": "A correction changes only the planned fields; the carry-across rules and the conflict stop are program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "7.1 Inputs. Client; meeting date; the list of corrections (f",
+  "new": "references/01-locate.md (A correction), references/02-plan.md (A correction), references/03-confirm.md, references/05-save.md and scripts/apps.py correction_values.",
+  "why": "A correction changes only the planned fields; the carry-across rules and the conflict stop are program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "7.2 Find every application for the client. In each current t",
+  "new": "references/01-locate.md (A correction), references/02-plan.md (A correction), references/03-confirm.md, references/05-save.md and scripts/apps.py correction_values.",
+  "why": "A correction changes only the planned fields; the carry-across rules and the conflict stop are program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "7.3 Source of truth. Paul's live-completed application is th",
+  "new": "references/01-locate.md (A correction), references/02-plan.md (A correction), references/03-confirm.md, references/05-save.md and scripts/apps.py correction_values.",
+  "why": "A correction changes only the planned fields; the carry-across rules and the conflict stop are program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "7.4 Build the change plan and ask. For each application, lis",
+  "new": "references/01-locate.md (A correction), references/02-plan.md (A correction), references/03-confirm.md, references/05-save.md and scripts/apps.py correction_values.",
+  "why": "A correction changes only the planned fields; the carry-across rules and the conflict stop are program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Different person / payer. Details only carry across where th",
+  "new": "references/01-locate.md (A correction), references/02-plan.md (A correction), references/03-confirm.md, references/05-save.md and scripts/apps.py correction_values.",
+  "why": "A correction changes only the planned fields; the carry-across rules and the conflict stop are program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "7.5 Apply in place — one copy, overwrite. Stage the existing",
+  "new": "references/01-locate.md (A correction), references/02-plan.md (A correction), references/03-confirm.md, references/05-save.md and scripts/apps.py correction_values.",
+  "why": "A correction changes only the planned fields; the carry-across rules and the conflict stop are program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "7.6 Verify. (a) Field dump before vs after: only the planned",
+  "new": "references/01-locate.md (A correction), references/02-plan.md (A correction), references/03-confirm.md, references/05-save.md and scripts/apps.py correction_values.",
+  "why": "A correction changes only the planned fields; the carry-across rules and the conflict stop are program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "7.7 Report back to Paul. One short block per application: fi",
+  "new": "references/01-locate.md (A correction), references/02-plan.md (A correction), references/03-confirm.md, references/05-save.md and scripts/apps.py correction_values.",
+  "why": "A correction changes only the planned fields; the carry-across rules and the conflict stop are program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Field crosswalk (OM form <-> General Short Risk form)",
+  "new": "assets/forms.json (crosswalk) and references/02-plan.md (A correction).",
+  "why": "Only the one-to-one pairs are carried between the two forms.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Detail | OM field | General Short Risk field |",
+  "new": "assets/forms.json (crosswalk) and references/02-plan.md (A correction).",
+  "why": "Only the one-to-one pairs are carried between the two forms.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "OM-only (carry OM -> OM only): TaxNumber, foreign tax fields",
+  "new": "assets/forms.json (crosswalk) and references/02-plan.md (A correction).",
+  "why": "Only the one-to-one pairs are carried between the two forms.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Reference",
+  "new": "SKILL.md (Where the detail lives) and references/field-mappings.md.",
+  "why": "Replaced by the new pointer list.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "references/field-mappings.md — full field name/type/dropdown",
+  "new": "SKILL.md (Where the detail lives) and references/field-mappings.md.",
+  "why": "Replaced by the new pointer list.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "<!-- FILE: references/field-mappings.md -->",
+  "new": "SKILL.md (Where the detail lives) and references/field-mappings.md.",
+  "why": "Replaced by the new pointer list.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# Field mappings for the bundled application templates",
+  "new": "references/field-mappings.md and assets/forms.json.",
+  "why": "Kept; the program checks the blank forms against the frozen field lists.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Both templates in assets/ are real, fillable PDF AcroForms —",
+  "new": "references/field-mappings.md and assets/forms.json.",
+  "why": "Kept; the program checks the blank forms against the frozen field lists.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Dump a template's fields yourself at any time to confirm nam",
+  "new": "references/field-mappings.md and assets/forms.json.",
+  "why": "Kept; the program checks the blank forms against the frozen field lists.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "from pypdf import PdfReader",
+  "new": "references/field-mappings.md and assets/forms.json.",
+  "why": "Kept; the program checks the blank forms against the frozen field lists.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "--",
+  "new": "references/field-mappings.md and assets/forms.json.",
+  "why": "Kept; the program checks the blank forms against the frozen field lists.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 1. OM Application Template (OM_Application_Template.pdf)",
+  "new": "references/field-mappings.md (section 1) and assets/forms.json.",
+  "why": "Kept word for word where possible; the product dropdown rule is now one rule in scripts/apps.py add_option.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Old Mutual's application/capture-sheet AcroForm — used for R",
+  "new": "references/field-mappings.md (section 1) and assets/forms.json.",
+  "why": "Kept word for word where possible; the product dropdown rule is now one rule in scripts/apps.py add_option.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Field name | Type | Options (if a dropdown) |",
+  "new": "references/field-mappings.md (section 1) and assets/forms.json.",
+  "why": "Kept word for word where possible; the product dropdown rule is now one rule in scripts/apps.py add_option.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Adding a new Product dropdown value",
+  "new": "references/02-plan.md (Product) and scripts/apps.py add_option.",
+  "why": "One insertion rule, checked after the fill.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Product is a closed dropdown (/Opt array), not free text, an",
+  "new": "references/02-plan.md (Product) and scripts/apps.py add_option.",
+  "why": "One insertion rule, checked after the fill.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "--",
+  "new": "references/02-plan.md (Product) and scripts/apps.py add_option.",
+  "why": "One insertion rule, checked after the fill.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 2. General Short Risk Application (General_Short_Risk_App",
+  "new": "references/field-mappings.md (section 2) and assets/forms.json.",
+  "why": "Kept; the meaning table is frozen and change-detected.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Wealth Revolution's own generic short-term/risk application,",
+  "new": "references/field-mappings.md (section 2) and assets/forms.json.",
+  "why": "Kept; the meaning table is frozen and change-detected.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Field name | Label on form |",
+  "new": "references/field-mappings.md (section 2) and assets/forms.json.",
+  "why": "Kept; the meaning table is frozen and change-detected.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This template hasn't been run through the fill workflow in p",
+  "new": "references/field-mappings.md (section 2) and assets/forms.json.",
+  "why": "Kept; the meaning table is frozen and change-detected.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Source first - never invent. Write only what is in the sourc",
+  "new": "references/00-rules.md rule 2: every value is a document line or Paul's words.",
+  "why": "Enforced by the program (evidence lines).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Read before you write. Read the source material completely a",
+  "new": "references/00-rules.md rule 2 and references/01-locate.md.",
+  "why": "The program proves each value is in its line.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Check before you claim. Never tell the user something is don",
+  "new": "references/00-rules.md rule 3.",
+  "why": "Enforced by the read-back and the listing.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Deliver everything this skill lists, every time. A run is no",
+  "new": "references/06-handover.md and scripts/verify.py.",
+  "why": "Done by the checker.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every correction re-opens the whole task, not just the item.",
+  "new": "references/00-rules.md rule 6.",
+  "why": "The driver re-opens the later steps.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never lower the standard. A correction, a frustrated user, a",
+  "new": "references/00-rules.md rule 7.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If a rule cannot be met, stop and say so. State exactly whic",
+  "new": "references/00-rules.md rule 7.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "1 | Universal operating rules + Delivery gate | The nine rul",
+  "new": "references/06-handover.md and scripts/verify.py.",
+  "why": "Done by the checker.",
+  "needs_paul": false
+ }
+]
