@@ -29,3 +29,7 @@ A program holds each client's board as ONE data file. The chat writes down what 
 - The wording of the Medical Aid, Will and LOA emails stays in your Drafts templates (I cannot read them); the program checks the finished email, not that it matches the template.
 - I have never seen a real board page, a real Drafts template or a real Fact Find Summary of a client, so the first real run may need one fix.
 - The folder-drop check (a quote PDF or signed LOA dropped into the client's folder) and pulling an attachment out of a reply email are still unproven text rules.
+
+## Paul's answers (04/11/2026)
+"Agree to all." So the recommended answers stand: 1 one FYI message per run plus one message per Action-needed event; 2 the program-written Change Log; 3 the look of the page as in the sample (he may still ask for changes after looking); 5 the catch-all route for emails not on the send table; 6 the live Teams transcript skill's follow-up line changes later, once `teams-meeting-setup-skill` is live; 7 Identified points quote a document line or rest on his words (listed as attested). **Question 4 is still unanswered:** where `board-index.md` is. The program does not update it and the audit says so when a board is closed. No change to the skill: the zip and the upload brief stay valid.
+
