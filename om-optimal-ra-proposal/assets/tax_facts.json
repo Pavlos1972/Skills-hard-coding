@@ -1,0 +1,14 @@
+{
+ "tax_year": "2026/2027",
+ "valid_from": "01/03/2026",
+ "valid_until": "28/02/2027",
+ "note": "The 2026/27 SARS tables the Tax Reform Tool holds (Paul's skill, 14/10/2026). The program recomputes every figure of the tool from these facts and refuses a workbook that disagrees. From 01/03/2027 the program stops: update the workbook AND this file, then change valid_until.",
+ "cap_rand": 430000,
+ "cap_percent": 0.275,
+ "brackets": [[0, 0.18], [237100, 0.26], [370500, 0.31], [512800, 0.36], [673000, 0.39], [857900, 0.41], [1817000, 0.45]],
+ "rebate_by_age": [[0, 17820], [65, 27585], [75, 30834]],
+ "threshold_by_age": [[0, 99000], [65, 153250], [75, 171300]],
+ "employment_switch": {"self_employed": "Tax Monthly", "pension": "DEDUCTION LIMITS", "provident": "Max %"},
+ "cells": {"remuneration": "C15", "age": "C17", "employer_pension": "C20", "member_pension": "C21", "employer_provident": "C22", "member_provident": "C23", "ra_monthly": "C24",
+           "tax_saved_ra": "C28", "tax_saved_pension": "C29", "tax_saved_provident": "C30", "tax_payable": "C31", "pct_left": "C34", "additional_monthly": "C36", "lump_sum": "C37"}
+}

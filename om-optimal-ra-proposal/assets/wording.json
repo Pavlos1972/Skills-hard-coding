@@ -1,0 +1,30 @@
+{
+ "note": "Paul's approved sentences, verbatim from the old skill (SKILL.md and the Master Context Document V6.3, sections 6.1 to 6.5 and 8.5). {name} fields are filled by the program; <strong> and &amp; are HTML. The program fills them, the chat never types them.",
+ "save_sentence": {
+  "pension": "Based on your current earnings, you can save a total of <strong>R {total}</strong> per month across all retirement vehicles (Pension Fund and Retirement Annuity combined) to take full advantage of the tax-deductible benefit offered to you by SARS.",
+  "provident": "Based on your current earnings, you can save a total of <strong>R {total}</strong> per month across all retirement vehicles (Provident Fund and Retirement Annuity combined) to take full advantage of the tax-deductible benefit offered to you by SARS.",
+  "none": "Based on your current earnings, you can save a total of <strong>R {total}</strong> per month towards a Retirement Annuity to take full advantage of the tax-deductible benefit offered to you by SARS."
+ },
+ "no_ra": "You have no active or Paid-Up Retirement Annuities.",
+ "no_fund": "You have no Pension or Provident Fund with your employer.",
+ "no_rgar": "You did not request for a Retirement Goal Analysis Report.",
+ "rgar": "According to the Retirement Goal Analysis Report that was sent to you on a previous email, over and above your current savings, you would be required to personally save <u>an additional</u> amount of: <strong>R {shortfall}</strong> per month, increasing at 10% per annum, over the next {years} years, to reach your desired gross income goal of R {current} p.m. (Future Value: R {future} p.m. at age {age}).",
+ "fund_block": "You have a {type} Fund with your employer {employer}.<br>Employer contribution: R {employer_amount} per month ({employer_pct}%)<br>Employee contribution: R {member_amount} per month ({member_pct}%)<br>Current fund value: R {value} (as at {date})",
+ "recommendation": {"replace": "Replace with OM Optimal RA", "keep": "Keep in force"},
+ "penalty_note": "No penalties apply &#8211; policy is too new",
+ "ra_label_none": "Monthly Retirement Annuity Contribution",
+ "ra_label_existing": "Monthly Retirement Annuity Contribution ({insurer}, policy {policy})",
+ "ra_label_new": "Monthly Retirement Annuity Contribution (New OM Optimal RA)",
+ "fund_labels": {"pension": ["Employer Pension Fund Contribution", "Member Pension Fund Contribution"], "provident": ["Employer Provident Fund Contribution", "Member Provident Fund Contribution"]},
+ "fund_tax_label": {"pension": "Tax Saved from Pension Fund Deduction", "provident": "Tax Saved from Provident Fund Deduction"},
+ "still_use": "You can still use {pct}% of your allowable deductions. If you increase your contributions to your retirement annuity you will be able to increase your tax savings.",
+ "maximised": "You have maximised your deductions and cannot make any more tax savings.",
+ "funds_one": "The fund that is recommended is the <strong>{names}</strong> (See attached).",
+ "funds_many": "The funds that are recommended are the <strong>{names}</strong> (See attached).",
+ "next_meeting": "<strong>We will discuss this in further detail in our Teams Meeting on {day}, {date} @ {time}.</strong>",
+ "lump_section14": "A lump sum amount of R {amount} will be transferred into your new OM Optimal RA via a Section 14 transfer from your existing {sources} policy/policies. This is a tax-neutral transfer between approved retirement funds and does not attract any tax at the point of transfer.",
+ "lump_voluntary": "A lump sum amount of R {amount} will be invested into your new OM Optimal RA from your own savings ({source}).",
+ "lump_tax_section14": "This is a transfer between approved retirement funds. It is tax-neutral and does not use up your annual tax deduction limit.",
+ "subject_main": "{name} / Old Mutual Retirement Annuity Proposal &#8211; R {premium} p.m.",
+ "subject_lump": "{name} / Old Mutual Retirement Annuity &#8211; Lump Sum Investment (R {amount})"
+}

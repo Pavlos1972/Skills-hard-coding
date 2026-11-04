@@ -1,0 +1,91 @@
+[
+ {
+  "from_prefix": "## UNIVERSAL OPERATING RULES - READ FIRST, APPLY TO EVERY STEP OF THE ",
+  "reason": "Heading replaced by 'Rules that apply to every step' in references/00-rules.md.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "# OM Optimal RA Proposal Builder",
+  "reason": "Replaced by the new short title.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "## Index",
+  "reason": "Replaced by the new short Index (five sections).",
+  "needs_paul": false,
+  "to_prefix": "13 | Reference material + notes | The MCD, templates, tool; MCD versio"
+ },
+ {
+  "from_prefix": "These rules come before everything else in this skill. They apply from",
+  "reason": "Replaced: the new skill is a program that shows its rules again at every step (the 'long chats get compressed' worry no longer applies).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Re-load this skill before you start, and again after any compression. ",
+  "reason": "Replaced by the program: the version line is said first and the steps are shown again at the right moment, so nothing is worked from memory.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Changes to a skill: edit the existing skill, never create a new one. U",
+  "reason": "Replaced by S7: skills are changed only in Claude Code and uploaded as a zip (the propose_skills card is not used).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Last updated: 2026-10-14 15:50 Athens time (EEST)",
+  "reason": "The stamp is set by tools/stamp_skill.py, never typed (S2).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "> Standing rule — not optional: any edit to this skill (SKILL.md, the ",
+  "reason": "Replaced by the stamp program (S2): the date moves on every real change.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "## Changelog",
+  "reason": "The changelog is archived in this history folder (SKILL.2026-10-14.redacted.md); the new skill keeps the last 5 changes.",
+  "needs_paul": false,
+  "to_prefix": "Older entries (the \"earlier\" row) and the full text of every row above"
+ },
+ {
+  "from_prefix": "## Reference material",
+  "reason": "Replaced by SKILL.md 'Where the detail lives' and the new assets list (the .xlsm, the two templates, wording.json, tax_facts.json, settings.json). wr_logo.png is removed (unused: both templates carry their own embedded logo).",
+  "needs_paul": true,
+  "to_prefix": "assets/wr_logo.png — Wealth Revolution logo, already embedded in both "
+ },
+ {
+  "from_prefix": "## A note on the MCD's own internal version lag",
+  "reason": "Stale (the old file names and 'Version 5.0' cited in the old reference file): the reference file is replaced by short pages, nothing is left to be out of step.",
+  "needs_paul": false,
+  "to_prefix": "The MCD document's footer (last line) and a couple of early references"
+ },
+ {
+  "from_prefix": "# VERSION HISTORY",
+  "reason": "The reference file's version history is archived here (SKILL.2026-10-14.redacted.md); every rule in it that is still true is kept in the new pages.",
+  "needs_paul": false,
+  "to_prefix": "V6.3 — July 2026 | Major restructure: the combined single-email Lump S"
+ },
+ {
+  "from_prefix": "# 2. PROJECT FILES REFERENCE",
+  "reason": "Replaced: the old template file names are stale and the example quote and RGAR were two real clients' files (S11). What is kept: only TEMPLATE_4 of the Tax Reform Tool is correct (references/03-tax.md).",
+  "needs_paul": true,
+  "to_prefix": "⚠ Tax Reform Tool file integrity: Always use TEMPLATE_4. Earlier versi"
+ },
+ {
+  "from_prefix": "## 5.1 Template File",
+  "reason": "Replaced: the template file names are stale and the templates now live in assets/ with the program.",
+  "needs_paul": false,
+  "to_prefix": "Template Filename: OM_Optimal_RA_Proposal_CLAUDE_TEMPLATE_02_07_26.htm"
+ },
+ {
+  "from_prefix": "## 5.2 How Claude Uses the Template",
+  "reason": "Replaced by the program: it fills the templates; the 'Ctrl+A, Ctrl+C, paste into Outlook' workflow is not used any more (Claude in Chrome makes the draft).",
+  "needs_paul": false,
+  "to_prefix": "Deliver the completed HTML file — ready for adviser to Ctrl+A, Ctrl+C,"
+ },
+ {
+  "from_prefix": "## 5.3 Complete List of Placeholders",
+  "reason": "Replaced by the program: every placeholder is filled by scripts/oriemail.py from the confirmed answers and the tool results; the old list was out of step with the template (nine placeholders missing, twelve not listed, two of them described as 'left for the adviser to fill in').",
+  "needs_paul": true,
+  "to_prefix": "[LS_FUND_FEE_BLOCK] | Lump Sum Investment proposal document only. Star"
+ }
+]

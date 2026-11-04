@@ -1,0 +1,143 @@
+{
+ "skill": "om-optimal-ra-proposal",
+ "steps": [
+  {
+   "id": "locate",
+   "title": "Find the client's documents (three routes, every try logged) and register each one",
+   "ref": [
+    "01-locate.md"
+   ],
+   "do": [
+    "Find the documents the page below lists in the client's own folders. Try the routes IN THIS ORDER and record EVERY try, failures too:",
+    "  1  device: the computer (local drive / OneDrive)    2  m365: the Microsoft 365 connector    3  zapier: the Zapier Office 365 tools",
+    "Record each try: python3 {scripts}/run.py access {run} --purpose locate --route device|m365|zapier --result failed|found --note \"what you did\"",
+    "Register each document you bring: python3 {scripts}/run.py doc {run} --role ROLE --file <local copy> --route <the route>   (ROLE is on the page below)",
+    "Every OPTIONAL document is either registered or confirmed not to exist: python3 {scripts}/run.py doc {run} --missing ROLE --said \"Paul's words\" (for example 'the client has no pension fund'). The required ones can never be missing: STOP and ask Paul.",
+    "Show Paul the 'what I found' list (one line per document: file name, date, folder, and anything missing, conflicting or unreadable) in your reply. The program checks every file is readable and keeps its text so every figure you enter can be checked against it."
+   ],
+   "check": "locate_ok",
+   "proof": "the tries are logged in order, the required documents are registered and every optional document is registered or accounted for"
+  },
+  {
+   "id": "read",
+   "title": "Read the registered documents, one page at a time",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py read {run}",
+    "The program shows the text page by page. Read each page fully, then acknowledge it with a one-line note (`run.py read {run} --ack ROLE:PAGE --note \"...\"`). Pages are acknowledged in order; a page with no readable text must be viewed as an image by you."
+   ],
+   "check": "read_ok",
+   "proof": "every page was served in order and acknowledged"
+  },
+  {
+   "id": "answers",
+   "title": "Enter the answers with their sources; the program checks every figure against the documents",
+   "ref": [
+    "02-answers.md"
+   ],
+   "do": [
+    "Write ONE answers file in the layout the page below describes, every answer with its source, then run: python3 {scripts}/run.py answers {run} --file <your answers file>",
+    "The program refuses a figure, name, date, fee, fund or email it cannot find in the right document's text, allocations that do not add up to 100%, a client with both a pension and a provident fund, a voluntary lump sum with no tax note from Paul, and a conflict between sources (then STOP and ask Paul).",
+    "Ask Paul for what only he can give: replace or keep the existing RA, the lump sum (yes or no, Section 14 or voluntary, the source), the meetings already held and the next meeting. Never type a figure from memory and never copy one from another client."
+   ],
+   "check": "answers_ok",
+   "proof": "the answers are valid, sourced, free of conflicts, and every figure was found in the right document's text"
+  },
+  {
+   "id": "tax",
+   "title": "The program runs the Tax Reform Tool (main proposal only) and proves audit checks 1 to 9",
+   "ref": [
+    "03-tax.md"
+   ],
+   "do": [
+    "Run: python3 {scripts}/run.py tax {run}   (about half a minute: LibreOffice recalculates the workbook for the 4 scenarios)",
+    "You never type, copy or adjust a tax figure. Every figure the program prints comes from the recalculated workbook (sheet and cell named) and equals the program's own recomputation from the 2026/27 tax facts.",
+    "For the separate Lump Sum Investment email there are no tax tables: this step only needs `run.py done {run} tax`."
+   ],
+   "check": "tax_ok",
+   "proof": "the four scenarios were recalculated, every figure equals the independent recomputation and audit checks 1 to 3 and 6 to 8 hold (checks 4 and 5 are computed and flagged)"
+  },
+  {
+   "id": "confirm",
+   "title": "Show Paul the confirmation table, ask ONE question, record his yes",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py show {run}",
+    "Put the whole table it prints in your reply (it includes the tool figures, the flags, the email subject and the exact Teams message to Sitamah) and ask exactly the one question it gives. Nothing is built before his clear yes.",
+    "When he says yes, record his own words: python3 {scripts}/run.py approve {run} --said \"his exact words\"",
+    "If an answer changes, run answers (and tax) and show again: the earlier yes then no longer counts."
+   ],
+   "check": "confirm_ok",
+   "proof": "Paul was shown exactly these answers and results and said yes"
+  },
+  {
+   "id": "build",
+   "title": "The program fills the fixed template and builds the email, the saved copy and the text for the draft",
+   "ref": [
+    "04-build-rules.md"
+   ],
+   "do": [
+    "Run: python3 {scripts}/run.py build {run}",
+    "It fills the template from your confirmed answers and the tool results (never typed), computes every weekday, blends the asset management fee and adds up the total, makes the full copy, the no-logo copy and the text for the Outlook draft, and checks them. You never edit a script, the template or the HTML.",
+    "Send the full copy (with the logo) to Paul in the chat with the exact file name the program gives."
+   ],
+   "check": "build_ok",
+   "proof": "the three files are exactly what the program builds from the confirmed answers and pass the program's checks"
+  },
+  {
+   "id": "save",
+   "title": "Save the no-logo copy in the RA transaction folder's Comparative Quotes, never overwriting without Paul's yes",
+   "ref": [],
+   "do": [
+    "List the client's RA transaction folder > `Comparative Quotes` (computer first, then Microsoft 365, then Zapier; record every try with --purpose save) and note the file names already there. Then: python3 {scripts}/run.py name {run} --existing \"name one.html;name two.html\"",
+    "If a file with the same name exists the program stops: ask Paul; only with his yes run it again with --overwrite-yes \"his words\".",
+    "Save exactly the file it names (the no-logo copy; never retype or truncate the logo). If the folder does not exist, create it under the client's W-Files client folder and tell Paul. List the folder again and record what it shows:",
+    "  python3 {scripts}/run.py receipt {run} save.folder <the folder path>   save.listed_bytes <the html's size in the listing>",
+    "Tell Paul in plain words that the saved copy has no logo (the Outlook draft gets Paul's signature and logo separately)."
+   ],
+   "check": "save_ok",
+   "proof": "the derived name was used, nothing was overwritten without Paul's yes, the folder is the RA transaction folder's Comparative Quotes and the listed size equals the local file"
+  },
+  {
+   "id": "draft",
+   "title": "Make the Outlook draft with Claude in Chrome (never sent by Claude) and read it back for the program",
+   "ref": [
+    "05-draft.md"
+   ],
+   "do": [
+    "Follow the page below. The text to paste is the draft_body.html the program built. Read the saved draft back, save the read-back to a file and run: python3 {scripts}/run.py draft {run} --file <the saved read-back>",
+    "Every line must be a green tick. Then record the cleanup: run.py receipt {run} draft.tab_closed yes   run.py receipt {run} draft.stray_deleted <number or none>"
+   ],
+   "check": "draft_ok",
+   "proof": "the saved read-back of the draft passes every program check and the cleanup is recorded"
+  },
+  {
+   "id": "message",
+   "title": "Message Sitamah on Teams through Zapier (the wording is the program's) and read the posted message back",
+   "ref": [
+    "06-message.md"
+   ],
+   "do": [
+    "Look in the 1:1 chat for whether the same time-of-day greeting was already used today by Paul or Claude, then run: python3 {scripts}/run.py message {run} --used-today yes|no",
+    "Send exactly the message it prints, as it says. Read the posted message back, save it to a file, record the receipts it names and run: python3 {scripts}/run.py messagecheck {run} --file <the saved read-back>"
+   ],
+   "check": "message_ok",
+   "proof": "the message went to the 1:1 chat as markdown and its read-back passes every program check"
+  },
+  {
+   "id": "final",
+   "title": "The final check and the SHORT AUDIT for Paul",
+   "ref": [
+    "07-handover.md"
+   ],
+   "do": [
+    "Run: python3 {scripts}/run.py done {run} final",
+    "Put in your reply, as it is: where the copy was saved, the draft's status, that Sitamah was messaged, then the short audit. Nothing longer.",
+    "If the lump sum applies (the answers say so), start a SECOND run for the separate Lump Sum Investment email: run.py start <new run folder> --client \"...\" --document lump_sum.",
+    "Any red cross means the job is not finished: say so."
+   ],
+   "check": "verify_final",
+   "proof": "the final checker prints no red cross"
+  }
+ ]
+}

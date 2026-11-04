@@ -66,4 +66,4 @@ Full 0. Partial 6 (1 short entry page, 2 inputs, 5 evidence, 6 built by program,
 - Flaw 20 (Table 1's input) is read the MCD way (existing RAs' total), told to Paul in the Phase B plan.
 
 ## Status
-Phase A report given to Paul 04/11/2026, answers recorded. Phase B plan given 04/11/2026, waiting for his approval. Nothing built.
+Phase A report given to Paul 04/11/2026, answers recorded. Phase B plan given and APPROVED by Paul 04/11/2026 ("I approve - make sure the skill executes as intended"). Phase C built, Phase D done (inventory 834 rules, 0 unaccounted; ONE test). See CHANGES-FOR-PAUL.md.

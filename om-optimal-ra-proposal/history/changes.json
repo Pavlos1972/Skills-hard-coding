@@ -1,0 +1,1930 @@
+[
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Why this exists",
+  "new": "references/00-rules.md (What this is, Who does what) and SKILL.md: the discipline travels with the program; nothing carries over from a previous client.",
+  "why": "Kept; enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every proposal follows the same three-table tax logic, the s",
+  "new": "references/00-rules.md (What this is, Who does what) and SKILL.md: the discipline travels with the program; nothing carries over from a previous client.",
+  "why": "Kept; enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 1 — Always run the startup checklist first",
+  "new": "references/01-locate.md (the documents by role, where to look, the email address routes, the what-I-found list), references/02-answers.md (the answers file, what Paul is still asked) and steps.json (locate, answers).",
+  "why": "The 12 startup items are documents the program registers or answers it checks; Paul is asked only the real questions.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before building anything, confirm all 12 items below are ava",
+  "new": "references/01-locate.md (the documents by role, where to look, the email address routes, the what-I-found list), references/02-answers.md (the answers file, what Paul is still asked) and steps.json (locate, answers).",
+  "why": "The 12 startup items are documents the program registers or answers it checks; Paul is asked only the real questions.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Client Fact Find (personal details, age, employer, position,",
+  "new": "references/01-locate.md (the documents by role, where to look, the email address routes, the what-I-found list), references/02-answers.md (the answers file, what Paul is still asked) and steps.json (locate, answers).",
+  "why": "The 12 startup items are documents the program registers or answers it checks; Paul is asked only the real questions.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Questions 9, 10, 11 and 12 are mandatory and must be answere",
+  "new": "references/01-locate.md (the documents by role, where to look, the email address routes, the what-I-found list), references/02-answers.md (the answers file, what Paul is still asked) and steps.json (locate, answers).",
+  "why": "The 12 startup items are documents the program registers or answers it checks; Paul is asked only the real questions.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 2 — Read the source documents carefully",
+  "new": "references/00-rules.md rule 3 and steps.json (read: the pages are served one at a time and acknowledged); references/02-answers.md (every figure is checked against the document's text).",
+  "why": "Reading is locked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Read the Fact Find, CCP report, fund statement, POI, RGAR, a",
+  "new": "references/00-rules.md rule 3 and steps.json (read: the pages are served one at a time and acknowledged); references/02-answers.md (every figure is checked against the document's text).",
+  "why": "Reading is locked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 3 — Run the Tax Reform Tool (three scenarios)",
+  "new": "references/03-tax.md and scripts/taxtool.py: the program runs the Tax Reform Tool for four scenarios in LibreOffice, names the sheet and cell, and recomputes every figure from assets/tax_facts.json.",
+  "why": "The tool is run by the program, never by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Use assets/Tax_Reform_Tool_TEMPLATE_4.xlsm — this is the onl",
+  "new": "references/03-tax.md and scripts/taxtool.py: the program runs the Tax Reform Tool for four scenarios in LibreOffice, names the sheet and cell, and recomputes every figure from assets/tax_facts.json.",
+  "why": "The tool is run by the program, never by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "B35 = annual remuneration + (employer fund contributions × 1",
+  "new": "references/03-tax.md and scripts/taxtool.py: the program runs the Tax Reform Tool for four scenarios in LibreOffice, names the sheet and cell, and recomputes every figure from assets/tax_facts.json.",
+  "why": "The tool is run by the program, never by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If the client has no Pension/Provident Fund, or fund contrib",
+  "new": "references/03-tax.md and scripts/taxtool.py: the program runs the Tax Reform Tool for four scenarios in LibreOffice, names the sheet and cell, and recomputes every figure from assets/tax_facts.json.",
+  "why": "The tool is run by the program, never by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "To force full recalculation and read results reliably: conve",
+  "new": "references/03-tax.md and scripts/taxtool.py: the program runs the Tax Reform Tool for four scenarios in LibreOffice, names the sheet and cell, and recomputes every figure from assets/tax_facts.json.",
+  "why": "The tool is run by the program, never by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "A client with no Pension/Provident Fund and no existing RA i",
+  "new": "references/03-tax.md and scripts/taxtool.py: the program runs the Tax Reform Tool for four scenarios in LibreOffice, names the sheet and cell, and recomputes every figure from assets/tax_facts.json.",
+  "why": "The tool is run by the program, never by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Run this three times per client — once per table scenario (T",
+  "new": "references/03-tax.md and scripts/taxtool.py: the program runs the Tax Reform Tool for four scenarios in LibreOffice, names the sheet and cell, and recomputes every figure from assets/tax_facts.json.",
+  "why": "The tool is run by the program, never by hand.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 4 — The three-table logic (read this carefully — it ",
+  "new": "references/03-tax.md (the four scenarios and the three tables) and scripts/oriemail.py (fund rows, existing RA rows, the new RA row, replace or keep): the rows are built by the program.",
+  "why": "The table logic is enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Table | Shows | RA row(s) |",
+  "new": "references/03-tax.md (the four scenarios and the three tables) and scripts/oriemail.py (fund rows, existing RA rows, the new RA row, replace or keep): the rows are built by the program.",
+  "why": "The table logic is enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Pension/Provident rows are identical in amount across all th",
+  "new": "references/03-tax.md (the four scenarios and the three tables) and scripts/oriemail.py (fund rows, existing RA rows, the new RA row, replace or keep): the rows are built by the program.",
+  "why": "The table logic is enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 5 — The \"what you can save\" sentence",
+  "new": "references/04-build-rules.md and assets/wording.json (the scenario sentences, chosen by the program with [TOTAL CAP MONTHLY]) and assets/OM_Optimal_RA_Proposal_TEMPLATE.html (the stale text is fixed).",
+  "why": "The template defects found 01/10/2026 are fixed in the template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Always uses [TOTAL CAP MONTHLY] (C15 ÷ 12) — never the remai",
+  "new": "references/04-build-rules.md and assets/wording.json (the scenario sentences, chosen by the program with [TOTAL CAP MONTHLY]) and assets/OM_Optimal_RA_Proposal_TEMPLATE.html (the stale text is fixed).",
+  "why": "The template defects found 01/10/2026 are fixed in the template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Template defects to override (found 01/10/2026): the templat",
+  "new": "references/04-build-rules.md and assets/wording.json (the scenario sentences, chosen by the program with [TOTAL CAP MONTHLY]) and assets/OM_Optimal_RA_Proposal_TEMPLATE.html (the stale text is fixed).",
+  "why": "The template defects found 01/10/2026 are fixed in the template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 6a — Populate the main proposal (always built)",
+  "new": "references/04-build-rules.md (the fixed rules, the conditional sentences, the RGAR never attached) and scripts/oriemail.py main_values and html_problems.",
+  "why": "Filled by the program, checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Use assets/OM_Optimal_RA_Proposal_TEMPLATE.html as the base ",
+  "new": "references/04-build-rules.md (the fixed rules, the conditional sentences, the RGAR never attached) and scripts/oriemail.py main_values and html_problems.",
+  "why": "Filled by the program, checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This template covers the recurring monthly premium (Plan 1) ",
+  "new": "references/04-build-rules.md (the fixed rules, the conditional sentences, the RGAR never attached) and scripts/oriemail.py main_values and html_problems.",
+  "why": "Filled by the program, checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Fixed rules that never change between clients:",
+  "new": "references/04-build-rules.md (the fixed rules, the conditional sentences, the RGAR never attached) and scripts/oriemail.py main_values and html_problems.",
+  "why": "Filled by the program, checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Conditional wording (use exactly, when the underlying fact a",
+  "new": "references/04-build-rules.md (the fixed rules, the conditional sentences, the RGAR never attached) and scripts/oriemail.py main_values and html_problems.",
+  "why": "Filled by the program, checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The RGAR is never listed as an attachment on the OM Optimal ",
+  "new": "references/04-build-rules.md (the fixed rules, the conditional sentences, the RGAR never attached) and scripts/oriemail.py main_values and html_problems.",
+  "why": "Filled by the program, checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Placeholder notes worth double-checking:",
+  "new": "references/04-build-rules.md (the fixed rules, the conditional sentences, the RGAR never attached) and scripts/oriemail.py main_values and html_problems.",
+  "why": "Filled by the program, checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The full placeholder-to-source mapping is in references/mcd_",
+  "new": "references/04-build-rules.md (the fixed rules, the conditional sentences, the RGAR never attached) and scripts/oriemail.py main_values and html_problems.",
+  "why": "Filled by the program, checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 6b — Build the Lump Sum Investment proposal (only if",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum answers) and assets/wording.json (the two verbatim sentences) and scripts/oriemail.py lump_values; the lump sum email is a second run (run.py start --document lump_sum).",
+  "why": "Built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Governance decision (V6.3, superseding the single-email appr",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum answers) and assets/wording.json (the two verbatim sentences) and scripts/oriemail.py lump_values; the lump sum email is a second run (run.py start --document lump_sum).",
+  "why": "Built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Use assets/OM_Optimal_RA_LumpSum_Proposal_TEMPLATE.html as t",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum answers) and assets/wording.json (the two verbatim sentences) and scripts/oriemail.py lump_values; the lump sum email is a second run (run.py start --document lump_sum).",
+  "why": "Built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Use exactly one of these two verbatim wordings — never parap",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum answers) and assets/wording.json (the two verbatim sentences) and scripts/oriemail.py lump_values; the lump sum email is a second run (run.py start --document lump_sum).",
+  "why": "Built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "For Section 14: [LUMP SUM AMOUNT] is always the Net Fund Val",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum answers) and assets/wording.json (the two verbatim sentences) and scripts/oriemail.py lump_values; the lump sum email is a second run (run.py start --document lump_sum).",
+  "why": "Built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Other placeholders in this template: [LS_TAX_TREATMENT_NOTE]",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum answers) and assets/wording.json (the two verbatim sentences) and scripts/oriemail.py lump_values; the lump sum email is a second run (run.py start --document lump_sum).",
+  "why": "Built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Full detail: references/mcd_v6_3.md Sections 6.5, 6.5.1–6.5.",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum answers) and assets/wording.json (the two verbatim sentences) and scripts/oriemail.py lump_values; the lump sum email is a second run (run.py start --document lump_sum).",
+  "why": "Built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 7 — Mandatory pre-delivery audit",
+  "new": "references/03-tax.md (the audit checks) and scripts/oritax.py audit, scripts/oriemail.py html_problems and scripts/verify.py: each provable check is a green tick or a red cross in the short audit; checks 4 and 5 are computed and flagged with both figures.",
+  "why": "Proved by the checker.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before calling anything finished, verify all of the followin",
+  "new": "references/03-tax.md (the audit checks) and scripts/oritax.py audit, scripts/oriemail.py html_problems and scripts/verify.py: each provable check is a green tick or a red cross in the short audit; checks 4 and 5 are computed and flagged with both figures.",
+  "why": "Proved by the checker.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "[TOTAL CAP MONTHLY] = C15 ÷ 12, traceable to the Tax Reform ",
+  "new": "references/03-tax.md (the audit checks) and scripts/oritax.py audit, scripts/oriemail.py html_problems and scripts/verify.py: each provable check is a green tick or a red cross in the short audit; checks 4 and 5 are computed and flagged with both figures.",
+  "why": "Proved by the checker.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If any check fails, fix it before delivering — don't flag it",
+  "new": "references/03-tax.md (the audit checks) and scripts/oritax.py audit, scripts/oriemail.py html_problems and scripts/verify.py: each provable check is a green tick or a red cross in the short audit; checks 4 and 5 are computed and flagged with both figures.",
+  "why": "Proved by the checker.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Known edge case (checks 4 & 5): these can legitimately fail ",
+  "new": "references/03-tax.md (the audit checks) and scripts/oritax.py audit, scripts/oriemail.py html_problems and scripts/verify.py: each provable check is a green tick or a red cross in the short audit; checks 4 and 5 are computed and flagged with both figures.",
+  "why": "Proved by the checker.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 8 — Deliver",
+  "new": "references/04-build-rules.md (the files and names), references/07-handover.md (the reply) and steps.json.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Deliver the finished HTML to Paul in the chat (SendUserFile)",
+  "new": "references/04-build-rules.md (the files and names), references/07-handover.md (the reply) and steps.json.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If a lump sum applies (Question 11a = Yes): build the second",
+  "new": "references/04-build-rules.md (the files and names), references/07-handover.md (the reply) and steps.json.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never deliver the .xlsm working file to the client-facing ou",
+  "new": "references/04-build-rules.md (the files and names), references/07-handover.md (the reply) and steps.json.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Step 8a — COMPULSORY: save the HTML into the client's fo",
+  "new": "references/04-build-rules.md (the save), steps.json (save) and scripts/run.py name and receipt.",
+  "why": "Proved by the folder listing and the receipts.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Location: Paul SharePoint site > New Business > {Surname}, {",
+  "new": "references/04-build-rules.md (the save), steps.json (save) and scripts/run.py name and receipt.",
+  "why": "Proved by the folder listing and the receipts.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Step 8b — COMPULSORY: Outlook draft with Claude in Chrom",
+  "new": "references/05-draft.md and scripts/run.py draft, scripts/oriemail.py draft_problems.",
+  "why": "The read-back is checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "To client, Cc Sitamah Nathoo, Subject exactly as in the HTML",
+  "new": "references/05-draft.md and scripts/run.py draft, scripts/oriemail.py draft_problems.",
+  "why": "The read-back is checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Step 8c — COMPULSORY: Teams message to Sitamah (sent via",
+  "new": "references/06-message.md and scripts/oriemail.py teams_text, message_problems and scripts/run.py message and messagecheck: sent only after Paul's one yes and a checked draft.",
+  "why": "Closes the old gap: the message used to be sent with no yes from Paul.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Send it through Zapier: microsoft_teams_send_chat_message — ",
+  "new": "references/06-message.md and scripts/oriemail.py teams_text, message_problems and scripts/run.py message and messagecheck: sent only after Paul's one yes and a checked draft.",
+  "why": "Closes the old gap: the message used to be sent with no yes from Paul.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Greeting — ALWAYS include one. Check real SAST time (TZ=Afri",
+  "new": "references/06-message.md and scripts/oriemail.py teams_text, message_problems and scripts/run.py message and messagecheck: sent only after Paul's one yes and a checked draft.",
+  "why": "Closes the old gap: the message used to be sent with no yes from Paul.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Standard wording (only client/product details change; bold \"",
+  "new": "references/06-message.md and scripts/oriemail.py teams_text, message_problems and scripts/run.py message and messagecheck: sent only after Paul's one yes and a checked draft.",
+  "why": "Closes the old gap: the message used to be sent with no yes from Paul.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "> {Greeting} Sitamah,",
+  "new": "references/06-message.md and scripts/oriemail.py teams_text, message_problems and scripts/run.py message and messagecheck: sent only after Paul's one yes and a checked draft.",
+  "why": "Closes the old gap: the message used to be sent with no yes from Paul.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The RGAR is never listed or mentioned (permanent rule). Lump",
+  "new": "references/06-message.md and scripts/oriemail.py teams_text, message_problems and scripts/run.py message and messagecheck: sent only after Paul's one yes and a checked draft.",
+  "why": "Closes the old gap: the message used to be sent with no yes from Paul.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "How to send (Zapier): (1) Resolve the chat with list_dynamic",
+  "new": "references/06-message.md and scripts/oriemail.py teams_text, message_problems and scripts/run.py message and messagecheck: sent only after Paul's one yes and a checked draft.",
+  "why": "Closes the old gap: the message used to be sent with no yes from Paul.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Final report to Paul states: where the HTML was saved, the d",
+  "new": "references/06-message.md and scripts/oriemail.py teams_text, message_problems and scripts/run.py message and messagecheck: sent only after Paul's one yes and a checked draft.",
+  "why": "Closes the old gap: the message used to be sent with no yes from Paul.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## A note on scope",
+  "new": "references/00-rules.md rules 2, 3 and 10 and SKILL.md standing rule 1: nothing is reused from another client; the skill holds no client data.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This skill is about the *procedure*. It doesn't carry any sp",
+  "new": "references/00-rules.md rules 2, 3 and 10 and SKILL.md standing rule 1: nothing is reused from another client; the skill holds no client data.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "<!-- ===== references/mcd_v6_3.md (Master Context Document V",
+  "new": "references/00-rules.md rules 2, 3 and 10 and SKILL.md standing rule 1: nothing is reused from another client; the skill holds no client data.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "MASTER CONTEXT DOCUMENT",
+  "new": "references/00-rules.md rules 2, 3 and 10 and SKILL.md standing rule 1: nothing is reused from another client; the skill holds no client data.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "OM Optimal Retirement Annuity Proposal",
+  "new": "references/00-rules.md rules 2, 3 and 10 and SKILL.md standing rule 1: nothing is reused from another client; the skill holds no client data.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Wealth Revolution — Paul Kafentzis",
+  "new": "references/00-rules.md rules 2, 3 and 10 and SKILL.md standing rule 1: nothing is reused from another client; the skill holds no client data.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Version 6.3 | July 2026",
+  "new": "references/00-rules.md rules 2, 3 and 10 and SKILL.md standing rule 1: nothing is reused from another client; the skill holds no client data.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Supersedes Version 6.2*",
+  "new": "references/00-rules.md rules 2, 3 and 10 and SKILL.md standing rule 1: nothing is reused from another client; the skill holds no client data.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# 1. PURPOSE OF THIS DOCUMENT",
+  "new": "references/00-rules.md (What this is) and scripts/oritax.py: the full figure audit is done by the program.",
+  "why": "Kept; enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This document is the definitive reference for producing an O",
+  "new": "references/00-rules.md (What this is) and scripts/oritax.py: the full figure audit is done by the program.",
+  "why": "Kept; enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "⚠ Before producing any proposal, Claude must perform a full ",
+  "new": "references/00-rules.md (What this is) and scripts/oritax.py: the full figure audit is done by the program.",
+  "why": "Kept; enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# 3. PRODUCT OVERVIEW — OM OPTIMAL RA",
+  "new": "references/04-build-rules.md (the fixed rules) and assets/OM_Optimal_RA_Proposal_TEMPLATE.html (the fixed product text).",
+  "why": "Fixed text lives in the template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 3.1 What It Is",
+  "new": "references/04-build-rules.md and the template's fixed product text (the Optimal Investment Plan is the client's certificate of membership of SARAF).",
+  "why": "Fixed text lives in the template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The Old Mutual Optimal Investment Plan is the client’s certi",
+  "new": "references/04-build-rules.md and the template's fixed product text (the Optimal Investment Plan is the client's certificate of membership of SARAF).",
+  "why": "Fixed text lives in the template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 3.2 Key Product Features",
+  "new": "references/04-build-rules.md (the fixed rules) and the template's fixed text (27.5% / R430,000, tax-free growth, the Two-Pot bullets, no penalties and the R300 admin charge, the 10% ACI).",
+  "why": "Fixed text lives in the template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Tax-deductible contributions: up to 27.5% of the greater of ",
+  "new": "references/04-build-rules.md (the fixed rules) and the template's fixed text (27.5% / R430,000, tax-free growth, the Two-Pot bullets, no penalties and the R300 admin charge, the 10% ACI).",
+  "why": "Fixed text lives in the template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Tax-free growth: zero income tax, capital gains tax, or divi",
+  "new": "references/04-build-rules.md (the fixed rules) and the template's fixed text (27.5% / R430,000, tax-free growth, the Two-Pot bullets, no penalties and the R300 admin charge, the 10% ACI).",
+  "why": "Fixed text lives in the template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Two-Pot System (effective 1 September 2024): 1/3 to Savings ",
+  "new": "references/04-build-rules.md (the fixed rules) and the template's fixed text (27.5% / R430,000, tax-free growth, the Two-Pot bullets, no penalties and the R300 admin charge, the 10% ACI).",
+  "why": "Fixed text lives in the template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "No penalties for stopping, reducing or pausing premiums. Adm",
+  "new": "references/04-build-rules.md (the fixed rules) and the template's fixed text (27.5% / R430,000, tax-free growth, the Two-Pot bullets, no penalties and the R300 admin charge, the 10% ACI).",
+  "why": "Fixed text lives in the template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Annual Contribution Increase (ACI): always set at 10% p.a. o",
+  "new": "references/04-build-rules.md (the fixed rules) and the template's fixed text (27.5% / R430,000, tax-free growth, the Two-Pot bullets, no penalties and the R300 admin charge, the 10% ACI).",
+  "why": "Fixed text lives in the template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 3.3 Investment Boosters",
+  "new": "the template's fixed booster text and table (the Optimal Booster 2.5% at year 5; monthly boosters from year 6).",
+  "why": "Fixed text lives in the template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Optimal Booster: 2.5% of fund value paid on the day before t",
+  "new": "the template's fixed booster text and table (the Optimal Booster 2.5% at year 5; monthly boosters from year 6).",
+  "why": "Fixed text lives in the template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Monthly Boosters from year 6: Years 6–10: 1.000% p.a. | Year",
+  "new": "the template's fixed booster text and table (the Optimal Booster 2.5% at year 5; monthly boosters from year 6).",
+  "why": "Fixed text lives in the template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 3.4 Risk Profile",
+  "new": "references/04-build-rules.md (the risk profile is always Moderate) and the template.",
+  "why": "Fixed text lives in the template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "⚠ The Risk Profile is ALWAYS ‘Moderate’ for ALL clients on t",
+  "new": "references/04-build-rules.md (the risk profile is always Moderate) and the template.",
+  "why": "Fixed text lives in the template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 3.5 Fund Selection",
+  "new": "references/02-answers.md (fund names and allocations come from this client's quote, never always 50/50) and scripts/oriemail.py (any number of funds).",
+  "why": "Enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Fund selection is determined entirely by Alwyn (OM Broker Co",
+  "new": "references/02-answers.md (fund names and allocations come from this client's quote, never always 50/50) and scripts/oriemail.py (any number of funds).",
+  "why": "Enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 3.6 Fees — Always Read from Quote",
+  "new": "references/02-answers.md (the fees come from this quote every time) and scripts/oriemail.py fees_of (the blend and the total).",
+  "why": "Computed by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Fee | Source & Notes |",
+  "new": "references/02-answers.md (the fees come from this quote every time) and scripts/oriemail.py fees_of (the blend and the total).",
+  "why": "Computed by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# 4. STARTUP CHECKLIST — DOCUMENTS REQUIRED",
+  "new": "references/01-locate.md (the documents by role) and references/02-answers.md (what Paul is asked) and steps.json.",
+  "why": "Documents are found by the chat, Paul is asked only the real questions.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# | Document / Information Required |",
+  "new": "references/01-locate.md (the documents by role) and references/02-answers.md (what Paul is asked) and steps.json.",
+  "why": "Documents are found by the chat, Paul is asked only the real questions.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Note: The proposed monthly RA premium is read directly from ",
+  "new": "references/01-locate.md (the documents by role) and references/02-answers.md (what Paul is asked) and steps.json.",
+  "why": "Documents are found by the chat, Paul is asked only the real questions.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# 5. THE HTML TEMPLATE — HOW TO USE IT",
+  "new": "references/04-build-rules.md and the two templates in assets/.",
+  "why": "Heading replaced.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 6.1 Personal Retirement Savings Section",
+  "new": "assets/wording.json (no_ra, recommendation, penalty_note) and references/04-build-rules.md.",
+  "why": "Built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Scenario | What Goes in Email |",
+  "new": "assets/wording.json (no_ra, recommendation, penalty_note) and references/04-build-rules.md.",
+  "why": "Built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 6.2 Pension/Provident Retirement Savings Section",
+  "new": "assets/wording.json (fund_block, no_fund) and references/04-build-rules.md.",
+  "why": "Built by the program; the block wording is now fixed.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Scenario | What Goes in Email |",
+  "new": "assets/wording.json (fund_block, no_fund) and references/04-build-rules.md.",
+  "why": "Built by the program; the block wording is now fixed.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "⚠ Never include an end date in the pension/provident line. T",
+  "new": "assets/wording.json (fund_block, no_fund) and references/04-build-rules.md.",
+  "why": "Built by the program; the block wording is now fixed.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 6.3 Retirement Goal Analysis Section",
+  "new": "assets/wording.json (rgar, no_rgar) and references/02-answers.md.",
+  "why": "Built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Scenario | What Goes in Email |",
+  "new": "assets/wording.json (rgar, no_rgar) and references/02-answers.md.",
+  "why": "Built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 6.4 Tax Reform Tool — Employment Type Scenarios",
+  "new": "references/03-tax.md (the employment switch in Calcs!B2) and scripts/taxtool.py.",
+  "why": "The program sets the employment type.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Employment Type | Effect on Tax Reform Tables |",
+  "new": "references/03-tax.md (the employment switch in Calcs!B2) and scripts/taxtool.py.",
+  "why": "The program sets the employment type.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 6.5 Lump Sum Investment — Two-Document Structure",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Governance decision (22/07/26, superseding the earlier singl",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The main proposal (unchanged template, OM_Optimal_RA_Proposa",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "A separate Lump Sum Investment proposal (new template, OM_Op",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Rationale: the recurring premium and lump sum are answers to",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Both documents share: the same signature block, adviser cont",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### 6.5.1 Background — How OM Structures a Lump Sum Alongsid",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "When a client starts an OM Optimal RA with both a recurring ",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Plan 1 — the recurring monthly premium (covered in the main ",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Plan 2 — the once-off lump sum amount (covered in the separa",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Alwyn will issue two separate OM quotes when a lump sum appl",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### 6.5.2 The Lump Sum Investment Proposal Document — Struct",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The OM_Optimal_RA_LumpSum_Proposal_TEMPLATE.html document fo",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Opening — same “Following our Teams Meeting…” opening line a",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Your Lump Sum Investment — the approved verbatim wording (Se",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The product & start date — Plan 2 start date, read from the ",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Risk profile — always “Moderate” (same fixed rule as the mai",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Investment Fund Details (Plan 2) — fund selection and fee mi",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Tax treatment of the transfer — for Section 14: confirm the ",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Attachments line — lists the Lump Sum Quote and its fund fac",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Closing / next meeting line — same as main proposal.",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Signature block — identical to the main proposal.",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "No tax tables, no bar chart, and no “what you can save” sent",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### 6.5.3 Scenario Table — Approved Verbatim Wording (use ex",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The heading above the lump sum paragraph is always: “Your Lu",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Scenario | What Goes in Email (verbatim) |",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "These wordings were reviewed and approved by Paul (22/07/26,",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### 6.5.4 Rules",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The Section 14 vs voluntary funds distinction is never infer",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "[LUMP SUM AMOUNT] for a Section 14 transfer is always the Ne",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If multiple policies are being transferred via Section 14, s",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "A lump sum being transferred via Section 14 does NOT count t",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Voluntary funds invested as a lump sum also do not affect th",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### 6.5.5 Plan 2 Fund & Fee Detail — [LS_FUND_FEE_BLOCK]",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The Lump Sum Investment proposal document must show Plan 2’s",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Required content of [LS_FUND_FEE_BLOCK]:",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "A fund allocation table — one row per fund in the Lump Sum Q",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "A fee table for Plan 2 — asset management fee (blended if mo",
+  "new": "references/04-build-rules.md and references/02-answers.md (the lump sum email) and assets/wording.json.",
+  "why": "Built by the program as a separate run.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 7.1 FIXED Lines — Same for Every Client",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "FROM: Paul Kafentzis",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "IMPORTANCE: High",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "‘You intend to save for retirement.’",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "‘You are working at [employer] in the position of [position]",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "‘Penalties: To be determined if there are’ (always in orange",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "‘…increasing at 10% per annum…’ (ACI always 10%)",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "‘You can elect to start a Retirement Annuity with Old Mutual",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Risk Profile: always ‘Moderate’",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "‘The Optimal Investment Plan is your certificate of membersh",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "‘…tax deductible up to 27.5% of remuneration capped at R430,",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "All Two-Pot System bullet points",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "All Tax Reform table headings and structure",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Bar chart title: ‘RE-INVESTING YOUR RECLAIMED DEDUCTION: HOW",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "All Booster text and Booster table values",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "‘You have access to a wide range of funds.’",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "All Tax Implication section text",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "‘There are no reduction fees… only an admin charge of R300.0",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "All Savings Component withdrawal text",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Personal Investment Target description paragraphs (inflation",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "‘Although the Personal Investment Target targets specific in",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Fees table structure and headings",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "‘Please see attached:’ heading and items 1, 3 and 4",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "‘Hoping that above is in order.’ | ‘Kind regards,’ | Full si",
+  "new": "references/04-build-rules.md (fixed for every client) and the two templates.",
+  "why": "Fixed text lives in the templates.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 7.2 VARIABLE Lines — Client-Specific, Must Change Every P",
+  "new": "references/02-answers.md (the answers file: what varies per client and its source).",
+  "why": "Every variable has a source in the answers file.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Variable Element | Source |",
+  "new": "references/02-answers.md (the answers file: what varies per client and its source).",
+  "why": "Every variable has a source in the answers file.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# 8. TAX REFORM TOOL — HOW TO USE IT",
+  "new": "references/03-tax.md.",
+  "why": "Heading replaced.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 8.1 Tool Details",
+  "new": "references/03-tax.md and assets/tax_facts.json.",
+  "why": "The facts are held in one file and checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "File: Tax_Reform_ToolV3__2026__2027__TEMPLATE_4.xlsm (projec",
+  "new": "references/03-tax.md and assets/tax_facts.json.",
+  "why": "The facts are held in one file and checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Tax year: 2026/2027 — SARS tables effective 1 March 2026",
+  "new": "references/03-tax.md and assets/tax_facts.json.",
+  "why": "The facts are held in one file and checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "2026/2027 brackets: R0–R237,100 (18%) | R237,101–R370,500 (2",
+  "new": "references/03-tax.md and assets/tax_facts.json.",
+  "why": "The facts are held in one file and checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Primary rebate: R17,820 | Rand cap: R430,000 | 27.5% limit",
+  "new": "references/03-tax.md and assets/tax_facts.json.",
+  "why": "The facts are held in one file and checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "B35 = annual remuneration + employer fund contributions (fri",
+  "new": "references/03-tax.md and assets/tax_facts.json.",
+  "why": "The facts are held in one file and checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "C15 = MIN(R430,000, 27.5% × B35) — this is the binding SARS ",
+  "new": "references/03-tax.md and assets/tax_facts.json.",
+  "why": "The facts are held in one file and checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Employment type: radio buttons on Maximise Allowance Tool sh",
+  "new": "references/03-tax.md and assets/tax_facts.json.",
+  "why": "The facts are held in one file and checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 8.2 Three Scenarios — Purpose and Input Rules",
+  "new": "references/03-tax.md (the four scenarios and the three tables) and scripts/taxtool.py scenarios.",
+  "why": "The inputs of each table are set by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Table | Purpose | PAY YOURSELF FIRST Rows |",
+  "new": "references/03-tax.md (the four scenarios and the three tables) and scripts/taxtool.py scenarios.",
+  "why": "The inputs of each table are set by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "⚠ CRITICAL: Pension/Provident rows appear in ALL THREE table",
+  "new": "references/03-tax.md (the four scenarios and the three tables) and scripts/taxtool.py scenarios.",
+  "why": "The inputs of each table are set by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "⚠ CRITICAL: Table 2 RA contribution = (C15 − total annual fu",
+  "new": "references/03-tax.md (the four scenarios and the three tables) and scripts/taxtool.py scenarios.",
+  "why": "The inputs of each table are set by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "⚠ CRITICAL: Table 1 must always show the tax saved on the cl",
+  "new": "references/03-tax.md (the four scenarios and the three tables) and scripts/taxtool.py scenarios.",
+  "why": "The inputs of each table are set by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 8.3 Label Rule — Pension vs Provident",
+  "new": "references/04-build-rules.md and assets/wording.json (fund_tax_label, fund_labels) and scripts/oriemail.py html_problems (never mixed).",
+  "why": "Enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Client’s Fund Type | Correct Label |",
+  "new": "references/04-build-rules.md and assets/wording.json (fund_tax_label, fund_labels) and scripts/oriemail.py html_problems (never mixed).",
+  "why": "Enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never use ‘Pension Fund’ label when the client has a Provide",
+  "new": "references/04-build-rules.md and assets/wording.json (fund_tax_label, fund_labels) and scripts/oriemail.py html_problems (never mixed).",
+  "why": "Enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 8.4 How Tables Appear in Email",
+  "new": "references/03-tax.md and the template.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "All three tables recreated in HTML — dark green headers, lig",
+  "new": "references/03-tax.md and the template.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Pension/Provident rows use the same light green styling as a",
+  "new": "references/03-tax.md and the template.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 8.5 ‘What You Can Save’ Sentence — Construction Rules",
+  "new": "assets/wording.json (save_sentence) and references/03-tax.md and scripts/oriemail.py save_sentence.",
+  "why": "Chosen by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The figure is always C15 ÷ 12 — the total monthly SARS allow",
+  "new": "assets/wording.json (save_sentence) and references/03-tax.md and scripts/oriemail.py save_sentence.",
+  "why": "Chosen by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The sentence is constructed dynamically based on the client’",
+  "new": "assets/wording.json (save_sentence) and references/03-tax.md and scripts/oriemail.py save_sentence.",
+  "why": "Chosen by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Client Scenario | Sentence to Use |",
+  "new": "assets/wording.json (save_sentence) and references/03-tax.md and scripts/oriemail.py save_sentence.",
+  "why": "Chosen by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "[TOTAL CAP MONTHLY] calculation steps:",
+  "new": "assets/wording.json (save_sentence) and references/03-tax.md and scripts/oriemail.py save_sentence.",
+  "why": "Chosen by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Step 1: B35 = annual remuneration + (employer fund contribut",
+  "new": "assets/wording.json (save_sentence) and references/03-tax.md and scripts/oriemail.py save_sentence.",
+  "why": "Chosen by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Step 2: C15 = MIN(R430,000, 27.5% × B35)",
+  "new": "assets/wording.json (save_sentence) and references/03-tax.md and scripts/oriemail.py save_sentence.",
+  "why": "Chosen by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Step 3: [TOTAL CAP MONTHLY] = C15 ÷ 12 — use this in the ‘Wh",
+  "new": "assets/wording.json (save_sentence) and references/03-tax.md and scripts/oriemail.py save_sentence.",
+  "why": "Chosen by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "[MAXIMUM RA CONTRIBUTION] = (C15 − total annual fund contrib",
+  "new": "assets/wording.json (save_sentence) and references/03-tax.md and scripts/oriemail.py save_sentence.",
+  "why": "Chosen by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 8.6 Pre-Delivery Figure Audit — Mandatory",
+  "new": "references/03-tax.md and scripts/oritax.py audit.",
+  "why": "Proved by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before delivering any proposal, Claude must verify ALL of th",
+  "new": "references/03-tax.md and scripts/oritax.py audit.",
+  "why": "Proved by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Check # | Verification Required |",
+  "new": "references/03-tax.md and scripts/oritax.py audit.",
+  "why": "Proved by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Note on Checks 4 & 5: these two checks can legitimately fail",
+  "new": "references/03-tax.md and scripts/oritax.py audit.",
+  "why": "Proved by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# 9. THE RGAR — HOW TO USE IT",
+  "new": "references/02-answers.md (the RGAR answers, the SECOND shortfall) and references/01-locate.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Always use the SECOND shortfall figure — from ‘WHAT YOU HAVE",
+  "new": "references/02-answers.md (the RGAR answers, the SECOND shortfall) and references/01-locate.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Alwyn MUST always set ACI at 10% p.a. when generating the RG",
+  "new": "references/02-answers.md (the RGAR answers, the SECOND shortfall) and references/01-locate.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Extract: monthly shortfall amount, years to retirement, curr",
+  "new": "references/02-answers.md (the RGAR answers, the SECOND shortfall) and references/01-locate.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The RGAR is sent to the client in a separate email before th",
+  "new": "references/02-answers.md (the RGAR answers, the SECOND shortfall) and references/01-locate.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# 10. THE OM OPTIMAL RA QUOTE — HOW TO USE IT",
+  "new": "references/02-answers.md.",
+  "why": "Heading replaced.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 10.1 New Quote Format",
+  "new": "references/01-locate.md (the quote) and references/02-answers.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "All new quotes from Alwyn use the format: ‘Old Mutual Saving",
+  "new": "references/01-locate.md (the quote) and references/02-answers.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 10.2 What to Extract",
+  "new": "references/02-answers.md (the quote's figures, every fee read from this quote, what else the quote shows).",
+  "why": "Every figure is checked against the quote's text.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Monthly premium and start date",
+  "new": "references/02-answers.md (the quote's figures, every fee read from this quote, what else the quote shows).",
+  "why": "Every figure is checked against the quote's text.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "ACI rate (always 10%) and first increase date",
+  "new": "references/02-answers.md (the quote's figures, every fee read from this quote, what else the quote shows).",
+  "why": "Every figure is checked against the quote's text.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Commitment term (years)",
+  "new": "references/02-answers.md (the quote's figures, every fee read from this quote, what else the quote shows).",
+  "why": "Every figure is checked against the quote's text.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Fund names and allocation percentages — for Investment Fund ",
+  "new": "references/02-answers.md (the quote's figures, every fee read from this quote, what else the quote shows).",
+  "why": "Every figure is checked against the quote's text.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Admin fee % (initial: 3.05% — verify each time)",
+  "new": "references/02-answers.md (the quote's figures, every fee read from this quote, what else the quote shows).",
+  "why": "Every figure is checked against the quote's text.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Monthly fixed admin fee rand amount (varies — verify each ti",
+  "new": "references/02-answers.md (the quote's figures, every fee read from this quote, what else the quote shows).",
+  "why": "Every figure is checked against the quote's text.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Asset management fees per fund — calculate blended average b",
+  "new": "references/02-answers.md (the quote's figures, every fee read from this quote, what else the quote shows).",
+  "why": "Every figure is checked against the quote's text.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Ongoing advice fee % (under ‘PAYABLE FROM THE PLAN’S FUND VA",
+  "new": "references/02-answers.md (the quote's figures, every fee read from this quote, what else the quote shows).",
+  "why": "Every figure is checked against the quote's text.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Adviser remuneration account charge %",
+  "new": "references/02-answers.md (the quote's figures, every fee read from this quote, what else the quote shows).",
+  "why": "Every figure is checked against the quote's text.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Booster schedule",
+  "new": "references/02-answers.md (the quote's figures, every fee read from this quote, what else the quote shows).",
+  "why": "Every figure is checked against the quote's text.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## 10.3 The Lump Sum Quote (Plan 2) — When Startup Question ",
+  "new": "references/02-answers.md (the lump sum answers) and references/04-build-rules.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "When a lump sum (Section 14 transfer or voluntary funds) is ",
+  "new": "references/02-answers.md (the lump sum answers) and references/04-build-rules.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Do not assume the Lump Sum Quote uses the same fund selectio",
+  "new": "references/02-answers.md (the lump sum answers) and references/04-build-rules.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Extract from the Lump Sum Quote: the lump sum amount, fund s",
+  "new": "references/02-answers.md (the lump sum answers) and references/04-build-rules.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This information populates the separate Lump Sum Investment ",
+  "new": "references/02-answers.md (the lump sum answers) and references/04-build-rules.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The Lump Sum Quote must be uploaded to the project files and",
+  "new": "references/02-answers.md (the lump sum answers) and references/04-build-rules.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The lump sum amount itself is never added to the Tax Reform ",
+  "new": "references/02-answers.md (the lump sum answers) and references/04-build-rules.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# 11. DELIVERABLES FOR EACH PROPOSAL",
+  "new": "references/04-build-rules.md (the files and names), references/07-handover.md and deliverables.json.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# | Deliverable |",
+  "new": "references/04-build-rules.md (the files and names), references/07-handover.md and deliverables.json.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Adviser workflow (no lump sum): open the main proposal HTML ",
+  "new": "references/04-build-rules.md (the files and names), references/07-handover.md and deliverables.json.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Adviser workflow (lump sum applies): repeat the above for th",
+  "new": "references/04-build-rules.md (the files and names), references/07-handover.md and deliverables.json.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Permanent rule (added post-V6.3, correction logged 04/08/26)",
+  "new": "references/04-build-rules.md (the files and names), references/07-handover.md and deliverables.json.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# 12. ACCURACY RULES & KNOWN CORRECTIONS",
+  "new": "references/04-build-rules.md and references/03-tax.md and scripts/oriemail.py html_problems: each accuracy rule is a fixed line, a computed value or a check.",
+  "why": "Enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Item | Rule |",
+  "new": "references/04-build-rules.md and references/03-tax.md and scripts/oriemail.py html_problems: each accuracy rule is a fixed line, a computed value or a check.",
+  "why": "Enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# 13. KEY CONTACTS & TOOLS",
+  "new": "references/00-rules.md (Contacts and tools).",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Contact / Tool | Role |",
+  "new": "references/00-rules.md (Contacts and tools).",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Version 5.0 — July 2026 | This document must be updated when",
+  "new": "references/00-rules.md (Contacts and tools).",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Source first - never invent. Write only what is in the sourc",
+  "new": "references/00-rules.md rules 2 and 3: every fact comes from the client's documents or Paul's words with its source; conflicts stop the run.",
+  "why": "Enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Read before you write. Read the source material completely a",
+  "new": "references/00-rules.md rule 3 and steps.json (read).",
+  "why": "Enforced by the reading lock.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Check before you claim. Never tell the user something is don",
+  "new": "references/00-rules.md rule 4: never say saved, drafted or sent until the program's proof says so.",
+  "why": "Enforced by read-backs and receipts.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Deliver everything this skill lists, every time. A run is no",
+  "new": "references/07-handover.md (the five things a finished run needs) and scripts/verify.py.",
+  "why": "Done by the checker.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every correction re-opens the whole task, not just the item.",
+  "new": "references/00-rules.md rule 8: a correction re-opens the task; the driver re-opens the later steps.",
+  "why": "Enforced by the driver.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never lower the standard. A correction, a frustrated user, a",
+  "new": "references/00-rules.md rule 7.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If a rule cannot be met, stop and say so. State exactly whic",
+  "new": "references/00-rules.md rule 9.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Delivery gate for this skill (rules 5 and 6 applied): a run ",
+  "new": "references/07-handover.md (the five things a finished run needs) and scripts/verify.py: each is a green tick or red cross in the short audit.",
+  "why": "Done by the checker.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This skill packages Paul Kafentzis's proposal-building proce",
+  "new": "references/00-rules.md (What this is) and SKILL.md description: the proposal HTML, saved, drafted and flagged to Sitamah; Claude never sends the client email.",
+  "why": "Kept.",
+  "needs_paul": false
+ }
+]
