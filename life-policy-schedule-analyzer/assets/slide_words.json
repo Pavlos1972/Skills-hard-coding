@@ -1,0 +1,5 @@
+{
+ "note": "Words that must never appear on a client-facing slide (Step 7: no Honest Opinion, no internal filing notes, no INTERNAL wording, no internal jargon or benchmark language). Edit the list here if a word is missing.",
+ "banned": ["internal", "honest opinion", "broker's", "benchmark", "action required", "for your awareness", "red flag", "red flags", "clawback", "single source", "inference", "fact find contradiction", "filing"],
+ "estimate_word": "estimate"
+}

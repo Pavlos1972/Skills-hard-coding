@@ -1,0 +1,37 @@
+# life-policy-schedule-analyzer: what changed, and your Yes/No list (04/11/2026)
+
+No client data is kept in the new skill. Everything in it is invented (Pat Samplecase, the invented insurers Samplelife and Testco, invented schedules, a proposed quote, its payback document, a Fact Find Summary, notes and product sources). The old text is archived word for word in `SKILL.2026-10-14.md` (it held no client data). The rule-by-rule check of the old skill against the new one: 802 rules, 0 unaccounted (24 kept word for word, 732 reworded with their new place recorded, 46 dropped with a reason; see `INVENTORY-REPORT.md`). Your answers of 04/11/2026 (agree to all ten) are built in.
+
+## What the skill does now, in plain words
+- A program walks the chat through 9 steps and refuses to skip one: find the documents (computer, then Microsoft 365, then Zapier, every try logged; if no proposed quote is found, you are asked, and "no proposed covers for now" is a valid answer), read them page by page, fetch and save the product sources, enter the analysis, let the program work out the premium tables and number the findings, show you ONE confirmation table and ask ONE question, draw the two documents, save them, final audit.
+- **Every client figure is proved:** the chat enters each figure with the exact line of the schedule it came from. The program proves the line is in the document's text and the figure is in the line. Every product statement cites a verbatim line of a saved source: two sources (the insurer's own guide and an independent one) give "Verified: 2 sources"; one source is labelled SINGLE SOURCE; no source is "Inference - to be confirmed".
+- **The sections that were optional in practice are now required:** the cession (every time), the second life (every time), the nine dread disease topics (whenever that benefit is held), the Vitality and payback sections (or a stated "not applicable"), a benchmark row for every major benefit held, and a finding behind every "better option exists", every cession and every rider-dependent second life.
+- **The 10-year premium table is never invented:** the insurer's own printed table; otherwise computed from a stated fixed yearly increase (labelled illustrative); otherwise, only if you give an assumption in your own words, from that assumption (labelled "Paul's assumption"); otherwise it reads "not provided".
+- **One analysis file draws both documents:** the internal report (A4, one per policy, the 17 fixed sections, INTERNAL on every page, the numbered findings the same at the top and in section 11) and the client slides (1280x720 PDF pages: Report 1 of six slides per current insurer, same-insurer policies combined, the four categories always with "Not held", "Not held (your choice)" where the client's own notes say it was left out on purpose; Report 2 of seven slides only when a proposed quote exists, with the payback row, a "Paybacks compared" slide, estimates labelled and the quote's validity date). The program reads the finished PDFs back and checks them; a slide whose text does not fit stops the build.
+- **Saved only in the client's `Analysis & Comparison Reports` folder** with derived names, never overwriting without your yes, the listing recorded and checked. The reply to you is the tabulated chat summary (Verdict, Benefit Summary Table, numbered Action Required list, folder) and the short audit. Nothing is emailed or messaged.
+
+## Fixed while building (nothing for you to decide)
+- The Honest Opinion is Claude's own read addressed to you (Step 3a), settling the old contradiction with Step 5.
+- A policy with no life cover (for example a disability-only schedule) has no "life cover type" row; the old text required one for every policy.
+- The first year of the premium table has no percentage (nothing earlier to compare it with).
+- The Fact Find Summary is looked for under the rebuilt skill's name and folder (`Fact Find Summary - DD.MM.YY - (First Surname).pdf` in `2. Fact Find`); if there is none the report says adequacy cannot be fully assessed.
+- A proposed quote that has passed its validity date, or is within 14 days of it, is flagged on your table.
+- A "(est.)" or "estimate" label is added by the program to every computed or projected figure on a slide.
+
+## Your new Yes/No list (my recommended answer in brackets)
+1. **Wording I wrote from your rules, not copied** (the old text gave the content but not the words): the section titles, the small tags on each statement, the slide titles, the estimate note, the "Not held (your choice)" wording, the chat summary lines. Please read the sample PDFs; any of it can be changed in `assets/wording.json`. (Yes)
+2. **The limits I set** (the old text gave few numbers): verdict 45 words, the Honest Opinion's assessment 50, a bullet 30 (two to four per benefit), a finding's headline 15 and detail 70, a slide bullet 25 (at most six), at most five next steps, ten years in the table, a quote flagged within 14 days of its expiry. Change any in `assets/settings.json`. (Yes)
+3. **The look of the client slides.** The old text gave the sections but no design, so I drew a fixed one: a navy title band with a gold line, green tiles for what is held and an amber tile for "Not held", plain tables, large type. Please open the sample slides and tell me if you want a different feel. (Yes)
+4. **Report 2 compares the proposal against ONE current insurer** (`versus`). If a client holds policies with two insurers and one proposal, you tell the chat which insurer the proposal replaces. (Yes)
+5. **Sums on the slides:** the "combined monthly premium" adds each policy's own total premium (a sum of figures from the schedules); the second life's amount is shown beside the main life's amount, never added to it. (Yes)
+6. **The words a client slide must never carry** (the old text lists the idea, not the words): internal, honest opinion, broker's, benchmark, action required, for your awareness, red flag, clawback, single source, inference, filing. Edit `assets/slide_words.json` if one is missing. (Yes)
+
+## What a program cannot prove (still your eye or your judgement)
+- The critique itself: whether the product is good, whether a "better current option" really exists and is materially better, the Verdict, the Honest Opinion and which tier a finding belongs in. The program shows all of these on your table before anything is drawn and checks only that each rests on a sourced row.
+- That each saved product source is the real, current page it says it is (the chat fetched and saved it; the program checks every statement's line is in the saved text and records the address and date).
+- That each evidence line is the right line of its document for its figure; figures read from a page image (listed with the page number).
+- How the PDFs look, and whether the plain English is plain. The live Artifact design, if you ask for one, is made by the chat from the same data and is not checked.
+- **Not yet proven on a real client.** I have never seen a real schedule, quote or payback document from Discovery, BrightRock, Old Mutual, Momentum or Liberty, or a real product guide. The checks work on lines the chat copies from the text the program shows, so a layout I did not guess should be accepted; the fetching of the product sources from the web (the search and fetch tools, then Claude in Chrome) is unproven until one real try. The first real run may need one fix.
+
+## The old versions
+The old versions of this skill stay in claude.ai's version history. They hold no client name.

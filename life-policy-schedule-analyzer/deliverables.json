@@ -1,0 +1,37 @@
+{
+ "skill": "life-policy-schedule-analyzer",
+ "deliverables": [
+  {
+   "name": "The internal analysis PDF, one per policy",
+   "file": "out/<First>_<Surname>_<Insurer>[_<Product>]_Policy_Analysis - DD.MM.YY.pdf (A4, INTERNAL - NOT FOR CLIENT DISTRIBUTION)",
+   "produced_by": "scripts/run.py build (scripts/lpapdf.py build_internal from out of analysis.json)",
+   "handover": "presented to Paul in the chat as a file and saved in the client's Analysis & Comparison Reports, never overwriting without his yes",
+   "checked_by": "scripts/lpapdf.py internal_problems + scripts/verify.py",
+   "step": "save"
+  },
+  {
+   "name": "The client slide decks (PDF), one per current insurer, plus Report 2 only when a proposed quote exists",
+   "file": "out/<First>_<Surname>_<Insurer>_Policy_Analysis_Slide - DD.MM.YY.pdf and out/<First>_<Surname>_<Abbrev>_VS_<Insurer>_Policy_Analysis_Slide - DD.MM.YY.pdf (1280x720 pages)",
+   "produced_by": "scripts/run.py build (scripts/lpapdf.py build_slides)",
+   "handover": "presented to Paul in the chat and saved in the same folder; a live Artifact design is an optional extra the chat may make from the same data",
+   "checked_by": "scripts/lpapdf.py slides_problems + scripts/verify.py",
+   "step": "save"
+  },
+  {
+   "name": "The tabulated chat summary",
+   "file": "out/chat_summary.txt",
+   "produced_by": "scripts/lpapdf.py chat_summary",
+   "handover": "put in the reply as it is: the Verdict line, the Benefit Summary Table, the numbered Action Required list, a pointer to the Honest Opinion, the folder",
+   "checked_by": "scripts/verify.py",
+   "step": "final"
+  },
+  {
+   "name": "Short audit",
+   "file": "printed by scripts/verify.py; full record in out_record/audit-full.txt",
+   "produced_by": "scripts/verify.py",
+   "handover": "pasted into the reply as it is: one line per check with a green tick or a red cross, one closing line for what is only attested",
+   "checked_by": "scripts/run.py done final",
+   "step": "final"
+  }
+ ]
+}

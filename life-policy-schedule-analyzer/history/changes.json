@@ -1,0 +1,810 @@
+[
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Goal — this is a critique, not a transcription",
+  "new": "references/00-rules.md (What this is; the critique, not a transcription) and references/02-research.md (the benchmark).",
+  "why": "Kept: the point of the skill is the critique; the benchmark is the core.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The point of this skill is to be critical of the Policy Sche",
+  "new": "references/00-rules.md (What this is; the critique, not a transcription) and references/02-research.md (the benchmark).",
+  "why": "Kept: the point of the skill is the critique; the benchmark is the core.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This applies equally to an existing in-force Policy Schedule",
+  "new": "references/00-rules.md (What this is; the critique, not a transcription) and references/02-research.md (the benchmark).",
+  "why": "Kept: the point of the skill is the critique; the benchmark is the core.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Scope",
+  "new": "references/00-rules.md (What it produces; What this is not) and steps.json.",
+  "why": "Kept; the two outputs are now drawn by the program from one analysis file (Paul's answer 1).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This skill applies to any Life Policy Schedule or Quote, fro",
+  "new": "references/00-rules.md (What it produces; What this is not) and steps.json.",
+  "why": "Kept; the two outputs are now drawn by the program from one analysis file (Paul's answer 1).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The skill produces two kinds of output: (1) the detailed int",
+  "new": "references/00-rules.md (What it produces; What this is not) and steps.json.",
+  "why": "Kept; the two outputs are now drawn by the program from one analysis file (Paul's answer 1).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This is not the life-insurer-comparison skill. If Paul is co",
+  "new": "references/00-rules.md (What it produces; What this is not) and steps.json.",
+  "why": "Kept; the two outputs are now drawn by the program from one analysis file (Paul's answer 1).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 0 — Intake: ask about the proposed quote (mandatory,",
+  "new": "references/01-locate.md (the proposed quote and its payback document; no proposed covers for now) and scripts/run.py doc, insurers and steps.json (locate).",
+  "why": "The program searches first and asks Paul only when no proposed quote is found (S3, Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before doing any work on a new client analysis request, ask ",
+  "new": "references/01-locate.md (the proposed quote and its payback document; no proposed covers for now) and scripts/run.py doc, insurers and steps.json (locate).",
+  "why": "The program searches first and asks Paul only when no proposed quote is found (S3, Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "> \"Provide details of the Proposed Life Cover Quote\"",
+  "new": "references/01-locate.md (the proposed quote and its payback document; no proposed covers for now) and scripts/run.py doc, insurers and steps.json (locate).",
+  "why": "The program searches first and asks Paul only when no proposed quote is found (S3, Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "with these options:",
+  "new": "references/01-locate.md (the proposed quote and its payback document; no proposed covers for now) and scripts/run.py doc, insurers and steps.json (locate).",
+  "why": "The program searches first and asks Paul only when no proposed quote is found (S3, Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The quote is in the client's folder — Paul names the quote (",
+  "new": "references/01-locate.md (the proposed quote and its payback document; no proposed covers for now) and scripts/run.py doc, insurers and steps.json (locate).",
+  "why": "The program searches first and asks Paul only when no proposed quote is found (S3, Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If the request already names the proposed quote, treat the q",
+  "new": "references/01-locate.md (the proposed quote and its payback document; no proposed covers for now) and scripts/run.py doc, insurers and steps.json (locate).",
+  "why": "The program searches first and asks Paul only when no proposed quote is found (S3, Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Always look for the proposed insurer's payback document too.",
+  "new": "references/01-locate.md (the proposed quote and its payback document; no proposed covers for now) and scripts/run.py doc, insurers and steps.json (locate).",
+  "why": "The program searches first and asks Paul only when no proposed quote is found (S3, Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 1 — Locate the source document(s)",
+  "new": "references/01-locate.md and scripts/run.py doc, access and scripts/docread.py.",
+  "why": "Three routes in order, every try logged (S4); the page-image bundle and image-page rules are kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Documents are retrieved automatically from the client's own ",
+  "new": "references/01-locate.md and scripts/run.py doc, access and scripts/docread.py.",
+  "why": "Three routes in order, every try logged (S4); the page-image bundle and image-page rules are kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Local machine — always attempted first. Connect via the devi",
+  "new": "references/01-locate.md and scripts/run.py doc, access and scripts/docread.py.",
+  "why": "Three routes in order, every try logged (S4); the page-image bundle and image-page rules are kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before treating a retrieved document as complete, verify eve",
+  "new": "references/01-locate.md and scripts/run.py doc, access and scripts/docread.py.",
+  "why": "Three routes in order, every try logged (S4); the page-image bundle and image-page rules are kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "file /path/to/schedule.pdf",
+  "new": "references/01-locate.md and scripts/run.py doc, access and scripts/docread.py.",
+  "why": "Three routes in order, every try logged (S4); the page-image bundle and image-page rules are kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "A file reporting as Zip archive data despite a .pdf extensio",
+  "new": "references/01-locate.md and scripts/run.py doc, access and scripts/docread.py.",
+  "why": "Three routes in order, every try logged (S4); the page-image bundle and image-page rules are kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 1b — Pull client context from the Fact Find Summary",
+  "new": "references/01-locate.md (the Fact Find Summary under its rebuilt name and folder) and scripts/lpa.py slides_problems, program_flags.",
+  "why": "The Fact Find Summary is looked for as the rebuilt skill saves it; its absence is stated, not fatal.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before extracting the schedule, look in the client's folder ",
+  "new": "references/01-locate.md (the Fact Find Summary under its rebuilt name and folder) and scripts/lpa.py slides_problems, program_flags.",
+  "why": "The Fact Find Summary is looked for as the rebuilt skill saves it; its absence is stated, not fatal.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If none is found, say so plainly in the Sources section and ",
+  "new": "references/01-locate.md (the Fact Find Summary under its rebuilt name and folder) and scripts/lpa.py slides_problems, program_flags.",
+  "why": "The Fact Find Summary is looked for as the rebuilt skill saves it; its absence is stated, not fatal.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 2 — Read and extract everything on the schedule/quot",
+  "new": "references/03-analysis.md (what to extract, benefit by benefit) and scripts/lpa.py policy_problems.",
+  "why": "Every client figure is proved by a verbatim evidence line.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Go through the document page by page and extract, for every ",
+  "new": "references/03-analysis.md (what to extract, benefit by benefit) and scripts/lpa.py policy_problems.",
+  "why": "Every client figure is proved by a verbatim evidence line.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Policy identity: insurer, product name and tier/range, polic",
+  "new": "references/03-analysis.md (what to extract, benefit by benefit) and scripts/lpa.py policy_problems.",
+  "why": "Every client figure is proved by a verbatim evidence line.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Only extract what's actually on the document. If a benefit t",
+  "new": "references/03-analysis.md (what to extract, benefit by benefit) and scripts/lpa.py policy_problems.",
+  "why": "Every client figure is proved by a verbatim evidence line.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 2a — Verify against real product information (mandat",
+  "new": "references/02-research.md and scripts/lpa.py stmt_problems, sources_problems and scripts/run.py doc --role guide|source.",
+  "why": "Product research is saved with address and date and every statement cites a line (Paul's answer 4).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This is what makes the analysis trustworthy rather than a tr",
+  "new": "references/02-research.md and scripts/lpa.py stmt_problems, sources_problems and scripts/run.py doc --role guide|source.",
+  "why": "Product research is saved with address and date and every statement cites a line (Paul's answer 4).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Search the web for the insurer's own current product/technic",
+  "new": "references/02-research.md and scripts/lpa.py stmt_problems, sources_problems and scripts/run.py doc --role guide|source.",
+  "why": "Product research is saved with address and date and every statement cites a line (Paul's answer 4).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 2b — Explain product lines in plain language, as bul",
+  "new": "references/03-analysis.md (bullets per benefit) and scripts/lpa.py policy_problems (2 to 4 bullets, word limit).",
+  "why": "Bullets only, limits enforced.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Wherever a benefit or product line needs explaining to actua",
+  "new": "references/03-analysis.md (bullets per benefit) and scripts/lpa.py policy_problems (2 to 4 bullets, word limit).",
+  "why": "Bullets only, limits enforced.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 2c — Benchmark against the insurer's own better curr",
+  "new": "references/02-research.md (the benchmark) and references/03-analysis.md and scripts/lpa.py policy_problems (a benchmark row for every major benefit held, sources, a finding behind each).",
+  "why": "Enforced by the program: no benchmark finding without a sourced row.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This is the heart of the critique and must be done for every",
+  "new": "references/02-research.md (the benchmark) and references/03-analysis.md and scripts/lpa.py policy_problems (a benchmark row for every major benefit held, sources, a finding behind each).",
+  "why": "Enforced by the program: no benchmark finding without a sourced row.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Compare like-for-like where possible (similar premium/afford",
+  "new": "references/02-research.md (the benchmark) and references/03-analysis.md and scripts/lpa.py policy_problems (a benchmark row for every major benefit held, sources, a finding behind each).",
+  "why": "Enforced by the program: no benchmark finding without a sourced row.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 2d — Dread Disease / Severe Illness deep-dive (manda",
+  "new": "references/03-analysis.md (the dread disease deep-dive topics) and scripts/lpa.py DD_TOPICS, policy_problems.",
+  "why": "All nine topics are required whenever the benefit is held.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Dread disease/critical illness/severe illness benefits vary ",
+  "new": "references/03-analysis.md (the dread disease deep-dive topics) and scripts/lpa.py DD_TOPICS, policy_problems.",
+  "why": "All nine topics are required whenever the benefit is held.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Multiple claims: can the client claim more than once (for un",
+  "new": "references/03-analysis.md (the dread disease deep-dive topics) and scripts/lpa.py DD_TOPICS, policy_problems.",
+  "why": "All nine topics are required whenever the benefit is held.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every item above that represents a materially weaker structu",
+  "new": "references/03-analysis.md (the dread disease deep-dive topics) and scripts/lpa.py DD_TOPICS, policy_problems.",
+  "why": "All nine topics are required whenever the benefit is held.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 2e — Premium pattern and escalation analysis (mandat",
+  "new": "references/03-analysis.md (premium pattern and escalation), references/04-check.md and scripts/lpa.py projection_table and scripts/lpapdf.py build_internal.",
+  "why": "The 10-year table is built by the program and never invented (Paul's answer 7).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Identify the pattern precisely: is the premium age-rated/age",
+  "new": "references/03-analysis.md (premium pattern and escalation), references/04-check.md and scripts/lpa.py projection_table and scripts/lpapdf.py build_internal.",
+  "why": "The 10-year table is built by the program and never invented (Paul's answer 7).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 2f — Vitality / wellness-linked premium mechanics (D",
+  "new": "references/03-analysis.md (Vitality) and scripts/lpa.py policy_problems (vitality rows or a stated not-applicable note).",
+  "why": "Never silently omitted.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Applies whenever the insurer is Discovery, or another insure",
+  "new": "references/03-analysis.md (Vitality) and scripts/lpa.py policy_problems (vitality rows or a stated not-applicable note).",
+  "why": "Never silently omitted.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Vitality status and its effect on premium increases: explain",
+  "new": "references/03-analysis.md (Vitality) and scripts/lpa.py policy_problems (vitality rows or a stated not-applicable note).",
+  "why": "Never silently omitted.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 2g — Payback / loyalty benefit research (policy held",
+  "new": "references/03-analysis.md (payback) and scripts/lpa.py policy_problems, proposed_problems (the figures proved against the payback document).",
+  "why": "The proposed insurer's payback is always included, from its own document.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Research and state the specific payback/loyalty mechanism th",
+  "new": "references/03-analysis.md (payback) and scripts/lpa.py policy_problems, proposed_problems (the figures proved against the payback document).",
+  "why": "The proposed insurer's payback is always included, from its own document.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "For a proposed quote, take the figures from the insurer's ow",
+  "new": "references/03-analysis.md (payback) and scripts/lpa.py policy_problems, proposed_problems (the figures proved against the payback document).",
+  "why": "The proposed insurer's payback is always included, from its own document.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 2h — Cession (mandatory check, every time)",
+  "new": "references/03-analysis.md (cession) and scripts/lpa.py policy_problems (cession required; a ceded policy needs a finding).",
+  "why": "Checked every time.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Cession is very easy for a client to forget about and change",
+  "new": "references/03-analysis.md (cession) and scripts/lpa.py policy_problems (cession required; a ceded policy needs a finding).",
+  "why": "Checked every time.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Is the policy ceded, and to whom? Most commonly a policy is ",
+  "new": "references/03-analysis.md (cession) and scripts/lpa.py policy_problems (cession required; a ceded policy needs a finding).",
+  "why": "Checked every time.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 2i — Second life / joint life structure (mandatory c",
+  "new": "references/03-analysis.md (second life) and scripts/lpa.py policy_problems (second life required; a rider needs a finding and its own benefits).",
+  "why": "Checked every time.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Mirrors the equivalent check in life-insurer-comparison — al",
+  "new": "references/03-analysis.md (second life) and scripts/lpa.py policy_problems (second life required; a rider needs a finding and its own benefits).",
+  "why": "Checked every time.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Is there a second life assured (typically a spouse/partner) ",
+  "new": "references/03-analysis.md (second life) and scripts/lpa.py policy_problems (second life required; a rider needs a finding and its own benefits).",
+  "why": "Checked every time.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 3 — Red flags, mistakes, and things Paul should noti",
+  "new": "references/03-analysis.md (findings and tiers) and references/04-check.md and scripts/lpa.py finding_numbers, policy_problems.",
+  "why": "Numbered by the program, same numbers in both places; Action Required when unsure.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "After extracting and verifying the full picture (2–2i), iden",
+  "new": "references/03-analysis.md (findings and tiers) and references/04-check.md and scripts/lpa.py finding_numbers, policy_problems.",
+  "why": "Numbered by the program, same numbers in both places; Action Required when unsure.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Mistakes on the document itself — inconsistent figures, a de",
+  "new": "references/03-analysis.md (findings and tiers) and references/04-check.md and scripts/lpa.py finding_numbers, policy_problems.",
+  "why": "Numbered by the program, same numbers in both places; Action Required when unsure.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If nothing notable turns up, say so plainly (\"no obvious gap",
+  "new": "references/03-analysis.md (findings and tiers) and references/04-check.md and scripts/lpa.py finding_numbers, policy_problems.",
+  "why": "Numbered by the program, same numbers in both places; Action Required when unsure.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every finding must be sorted into one of two tiers (mandator",
+  "new": "references/03-analysis.md (findings and tiers) and references/04-check.md and scripts/lpa.py finding_numbers, policy_problems.",
+  "why": "Numbered by the program, same numbers in both places; Action Required when unsure.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Action Required — something Paul or the client actually need",
+  "new": "references/03-analysis.md (findings and tiers) and references/04-check.md and scripts/lpa.py finding_numbers, policy_problems.",
+  "why": "Numbered by the program, same numbers in both places; Action Required when unsure.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "When genuinely unsure which tier a finding belongs in, defau",
+  "new": "references/03-analysis.md (findings and tiers) and references/04-check.md and scripts/lpa.py finding_numbers, policy_problems.",
+  "why": "Numbered by the program, same numbers in both places; Action Required when unsure.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 3a — Broker's Honest Opinion (mandatory, closing sec",
+  "new": "references/03-analysis.md (the Broker's Honest Opinion) and scripts/lpapdf.py build_internal.",
+  "why": "Claude's own read addressed to Paul (Step 3a, Paul's answer 6): the old Step 5 'first person as Paul's own note' contradiction is settled.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "After all findings are laid out, give a genuine, reasoned, h",
+  "new": "references/03-analysis.md (the Broker's Honest Opinion) and scripts/lpapdf.py build_internal.",
+  "why": "Claude's own read addressed to Paul (Step 3a, Paul's answer 6): the old Step 5 'first person as Paul's own note' contradiction is settled.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Overall assessment in one or two sentences — is this good, a",
+  "new": "references/03-analysis.md (the Broker's Honest Opinion) and scripts/lpapdf.py build_internal.",
+  "why": "Claude's own read addressed to Paul (Step 3a, Paul's answer 6): the old Step 5 'first person as Paul's own note' contradiction is settled.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 4 — Accuracy rules — non-negotiable, no exceptions",
+  "new": "references/00-rules.md (no tolerance for errors), references/02-research.md (two sources) and references/01-locate.md (illegible figures) and scripts/lpa.py check_claim.",
+  "why": "The accuracy rules are program checks where provable.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Accuracy is the entire point of this skill. A wrong figure, ",
+  "new": "references/00-rules.md (no tolerance for errors), references/02-research.md (two sources) and references/01-locate.md (illegible figures) and scripts/lpa.py check_claim.",
+  "why": "The accuracy rules are program checks where provable.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every client-specific figure (sum assured, premium, dates, p",
+  "new": "references/00-rules.md (no tolerance for errors), references/02-research.md (two sources) and references/01-locate.md (illegible figures) and scripts/lpa.py check_claim.",
+  "why": "The accuracy rules are program checks where provable.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "python3 -c \"",
+  "new": "references/00-rules.md (no tolerance for errors), references/02-research.md (two sources) and references/01-locate.md (illegible figures) and scripts/lpa.py check_claim.",
+  "why": "The accuracy rules are program checks where provable.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never carry over a figure from a different client, policy, o",
+  "new": "references/00-rules.md (no tolerance for errors), references/02-research.md (two sources) and references/01-locate.md (illegible figures) and scripts/lpa.py check_claim.",
+  "why": "The accuracy rules are program checks where provable.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 5 — Build the PDF — clean, tiered, professional, nev",
+  "new": "references/05-build.md and scripts/lpapdf.py build_internal, internal_problems.",
+  "why": "Drawn by the program from one template (A4, the fixed palette): the old text left the script to the chat.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The whole point of this document is that Paul can glance at ",
+  "new": "references/05-build.md and scripts/lpapdf.py build_internal, internal_problems.",
+  "why": "Drawn by the program from one template (A4, the fixed palette): the old text left the script to the chat.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Colour palette (professional, warm-neutral base with a confi",
+  "new": "references/05-build.md and scripts/lpapdf.py build_internal, internal_problems.",
+  "why": "Drawn by the program from one template (A4, the fixed palette): the old text left the script to the chat.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "-navy:        #1F3A5F   /* section headings, table header ba",
+  "new": "references/05-build.md and scripts/lpapdf.py build_internal, internal_problems.",
+  "why": "Drawn by the program from one template (A4, the fixed palette): the old text left the script to the chat.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every section is a table, not a paragraph, wherever content ",
+  "new": "references/05-build.md and scripts/lpapdf.py build_internal, internal_problems.",
+  "why": "Drawn by the program from one template (A4, the fixed palette): the old text left the script to the chat.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Report structure (fixed section order)",
+  "new": "references/05-build.md (the internal report) and scripts/lpapdf.py build_internal and internal_problems.",
+  "why": "The 17 sections are drawn by the program in a fixed order and checked by reading the PDF back.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Header — \"Life Policy Schedule Analysis (Internal)\", client ",
+  "new": "references/05-build.md (the internal report) and scripts/lpapdf.py build_internal and internal_problems.",
+  "why": "The 17 sections are drawn by the program in a fixed order and checked by reading the PDF back.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 6 — Save and deliver (detailed analysis reports)",
+  "new": "references/06-save.md and scripts/run.py name, receipt and scripts/verify.py (save).",
+  "why": "Derived names, no overwrite without Paul's yes, the listing recorded and checked.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every completed analysis report MUST be saved in the \"Analys",
+  "new": "references/06-save.md and scripts/run.py name, receipt and scripts/verify.py (save).",
+  "why": "Derived names, no overwrite without Paul's yes, the listing recorded and checked.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Find the folder. Connect via the device bridge (local machin",
+  "new": "references/06-save.md and scripts/run.py name, receipt and scripts/verify.py (save).",
+  "why": "Derived names, no overwrite without Paul's yes, the listing recorded and checked.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 7 — Visual Summary Reports (client-facing, for prese",
+  "new": "references/03-analysis.md (client slides) and references/05-build.md and scripts/lpapdf.py build_slides, slides_problems and scripts/lpa.py slides_problems.",
+  "why": "Drawn by the program as PDFs (Paul's answer 2); the live Artifact design is an optional attested extra.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "After the detailed per-policy analyses (Steps 1–6) are done,",
+  "new": "references/03-analysis.md (client slides) and references/05-build.md and scripts/lpapdf.py build_slides, slides_problems and scripts/lpa.py slides_problems.",
+  "why": "Drawn by the program as PDFs (Paul's answer 2); the live Artifact design is an optional attested extra.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Combine same-insurer policies into ONE summary. Where the cl",
+  "new": "references/03-analysis.md (client slides) and references/05-build.md and scripts/lpapdf.py build_slides, slides_problems and scripts/lpa.py slides_problems.",
+  "why": "Drawn by the program as PDFs (Paul's answer 2); the live Artifact design is an optional attested extra.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Cover the four standard categories, always. A life policy is",
+  "new": "references/03-analysis.md (client slides) and references/05-build.md and scripts/lpapdf.py build_slides, slides_problems and scripts/lpa.py slides_problems.",
+  "why": "Drawn by the program as PDFs (Paul's answer 2); the live Artifact design is an optional attested extra.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Report 1 — what the client has (always built). Only a summar",
+  "new": "references/03-analysis.md (client slides) and references/05-build.md and scripts/lpapdf.py build_slides, slides_problems and scripts/lpa.py slides_problems.",
+  "why": "Drawn by the program as PDFs (Paul's answer 2); the live Artifact design is an optional attested extra.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Report 2 — current vs proposed (built ONLY when a proposed q",
+  "new": "references/03-analysis.md (client slides) and references/05-build.md and scripts/lpapdf.py build_slides, slides_problems and scripts/lpa.py slides_problems.",
+  "why": "Drawn by the program as PDFs (Paul's answer 2); the live Artifact design is an optional attested extra.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Paybacks are ALWAYS in Report 2 (mandatory). Include the pro",
+  "new": "references/03-analysis.md (client slides) and references/05-build.md and scripts/lpapdf.py build_slides, slides_problems and scripts/lpa.py slides_problems.",
+  "why": "Drawn by the program as PDFs (Paul's answer 2); the live Artifact design is an optional attested extra.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Recommendations must be brief, simple and uncomplicated. A s",
+  "new": "references/03-analysis.md (client slides) and references/05-build.md and scripts/lpapdf.py build_slides, slides_problems and scripts/lpa.py slides_problems.",
+  "why": "Drawn by the program as PDFs (Paul's answer 2); the live Artifact design is an optional attested extra.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Client-facing wording rules (the decks are shown to the clie",
+  "new": "references/03-analysis.md (client slides) and references/05-build.md and scripts/lpapdf.py build_slides, slides_problems and scripts/lpa.py slides_problems.",
+  "why": "Drawn by the program as PDFs (Paul's answer 2); the live Artifact design is an optional attested extra.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Leave out the Broker's Honest Opinion, any internal filing n",
+  "new": "references/03-analysis.md (client slides) and references/05-build.md and scripts/lpapdf.py build_slides, slides_problems and scripts/lpa.py slides_problems.",
+  "why": "Drawn by the program as PDFs (Paul's answer 2); the live Artifact design is an optional attested extra.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Format and delivery.",
+  "new": "references/03-analysis.md (client slides) and references/05-build.md and scripts/lpapdf.py build_slides, slides_problems and scripts/lpa.py slides_problems.",
+  "why": "Drawn by the program as PDFs (Paul's answer 2); the live Artifact design is an optional attested extra.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Build each report as a live design using the Artifact tool's",
+  "new": "references/03-analysis.md (client slides) and references/05-build.md and scripts/lpapdf.py build_slides, slides_problems and scripts/lpa.py slides_problems.",
+  "why": "Drawn by the program as PDFs (Paul's answer 2); the live Artifact design is an optional attested extra.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## What not to do",
+  "new": "references/00-rules.md (What you never do) and scripts/lpa.py, lpapdf.py checks.",
+  "why": "The checkable prohibitions are program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Do not fabricate, estimate, or carry over a figure from memo",
+  "new": "references/00-rules.md (What you never do) and scripts/lpa.py, lpapdf.py checks.",
+  "why": "The checkable prohibitions are program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Visual summary rules (Step 7): Do not start a new client ana",
+  "new": "references/00-rules.md (What you never do) and scripts/lpa.py, lpapdf.py checks.",
+  "why": "The checkable prohibitions are program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Source first - never invent. Write only what is in the sourc",
+  "new": "references/00-rules.md rule 2: every fact comes from the client's documents or the saved sources with its source.",
+  "why": "Enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Read before you write. Read the source material completely a",
+  "new": "references/00-rules.md rule 3 and steps.json (read).",
+  "why": "Enforced by the reading lock.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Check before you claim. Never tell the user something is don",
+  "new": "references/00-rules.md rule 4.",
+  "why": "Enforced by read-backs and receipts.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Deliver everything this skill lists, every time. A run is no",
+  "new": "references/07-handover.md and scripts/verify.py.",
+  "why": "Done by the checker.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every correction re-opens the whole task, not just the item.",
+  "new": "references/00-rules.md rule 8: a correction re-opens the task; the driver re-opens the later steps.",
+  "why": "Enforced by the driver.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never lower the standard. A correction, a frustrated user, a",
+  "new": "references/00-rules.md rule 9.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If a rule cannot be met, stop and say so. State exactly whic",
+  "new": "references/00-rules.md rule 9.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Delivery gate for this skill (rules 5 and 6 applied): a run ",
+  "new": "references/07-handover.md (what a finished run looks like) and scripts/verify.py.",
+  "why": "Done by the checker.",
+  "needs_paul": false
+ }
+]

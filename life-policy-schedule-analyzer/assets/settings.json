@@ -1,0 +1,22 @@
+{
+ "note": "Limits and fixed settings of the analysis. The word limits are mine, from the old rules 'bullet points, never prose', 'one to two sentences', 'brief and simple' (the old text gave few numbers); Paul may change any number here, in Claude Code.",
+ "limits": {
+  "verdict_words": 45,
+  "opinion_assessment_words": 50,
+  "opinion_item_words": 30,
+  "bullet_words": 30,
+  "bullets_min": 2,
+  "bullets_max": 4,
+  "row_words": 60,
+  "finding_headline_words": 15,
+  "finding_detail_words": 70,
+  "slide_bullet_words": 25,
+  "slide_bullets_max": 6,
+  "next_steps_max": 5,
+  "projection_years": 10,
+  "quote_expiry_warning_days": 14
+ },
+ "page": "A4",
+ "internal_label": "INTERNAL - NOT FOR CLIENT DISTRIBUTION",
+ "folder_name": "Analysis & Comparison Reports"
+}

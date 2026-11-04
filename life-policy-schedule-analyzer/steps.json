@@ -1,0 +1,133 @@
+{
+ "skill": "life-policy-schedule-analyzer",
+ "steps": [
+  {
+   "id": "locate",
+   "title": "Find the client's documents (three routes), register them, name the insurer behind each",
+   "ref": [
+    "01-locate.md"
+   ],
+   "do": [
+    "Find the documents the page below lists in the client's own folders. Try the routes IN THIS ORDER and record EVERY try, failures too:",
+    "  1  device: the computer (local drive / OneDrive)    2  m365: the Microsoft 365 connector    3  zapier: the Zapier Office 365 tools",
+    "Record each try: python3 {scripts}/run.py access {run} --purpose locate --route device|m365|zapier --result failed|found --note \"what you did\"",
+    "Register each schedule or quote to be analysed (one per policy; the label is its own name): python3 {scripts}/run.py doc {run} --role schedule|quote --label \"Label\" --file <local copy> --route <the route>",
+    "Register the proposed quote used for Report 2 (--role proposed), the insurer's own payback document beside it (--role payback_doc), the Fact Find Summary (--role fact_find_summary) and any meeting notes (--role intake_notes --label \"<date>\").",
+    "If no proposed quote can be found, ask Paul ONLY THEN: he points to it, attaches it, or says \"No proposed covers for now\" (his words go into the analysis as proposed_said).",
+    "Declare the insurer behind each schedule, quote and proposed quote: python3 {scripts}/run.py insurers {run} --file insurers.json",
+    "Show Paul the 'what I found' list (one line per document: file name, date, the folder it was found in, and anything missing, conflicting or unreadable) in your reply."
+   ],
+   "check": "locate_ok",
+   "proof": "the tries are logged in order, at least one schedule or quote is registered, every insurer is declared"
+  },
+  {
+   "id": "read",
+   "title": "Read the registered documents, one page at a time",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py read {run}",
+    "The program shows the text page by page. Read each page fully, then acknowledge it with a one-line note (`run.py read {run} --ack KEY:PAGE --note \"...\"`). Pages are acknowledged in order; a page with no readable text must be viewed as an image by you."
+   ],
+   "check": "read_ok",
+   "proof": "every page was served in order and acknowledged"
+  },
+  {
+   "id": "research",
+   "title": "Fetch and save the product sources: each insurer's own guide and an independent source",
+   "ref": [
+    "02-research.md",
+    "08-product-hints.md"
+   ],
+   "do": [
+    "For EACH declared insurer fetch its own technical guide or product guide (--role guide) and, where one exists, an independent source (--role source) from the web (the search and fetch tools first, then Claude in Chrome; log every try with --purpose research), SAVE the text in a file and register it.",
+    "The program printed the exact commands when you declared the insurers. A source that cannot be found: ask Paul, then `run.py doc --missing guide|source --label \"<Insurer>\" --said \"Paul's words\"`.",
+    "Read each source page by page like the other documents: python3 {scripts}/run.py read {run}"
+   ],
+   "check": "research_ok",
+   "proof": "every insurer has its guide (or Paul's words), each source has its web address and date, routes in order, read page by page"
+  },
+  {
+   "id": "analysis",
+   "title": "Enter the analysis; the program checks every figure and every statement against the documents and the saved sources",
+   "ref": [
+    "03-analysis.md"
+   ],
+   "do": [
+    "Write ONE analysis file in the layout the page below describes, every client figure with a verbatim line of its document, every product statement with its saved source lines, every finding with its tier, then run: python3 {scripts}/run.py analysis {run} --file <your analysis file>",
+    "The program refuses a figure whose evidence line is not in the document or not in the line, a product statement with no saved source, an invented premium number, a missing section (cession, second life, dread disease, Vitality, payback, a benchmark row for every major benefit held), a benchmark finding with no finding behind it, a text over its word limit, internal wording in a slide.",
+    "Never type a figure from memory and never copy one from another client. If a figure is not on the document, say \"not stated on the schedule\"; do not research a substitute."
+   ],
+   "check": "analysis_ok",
+   "proof": "the analysis is valid, sourced, and every client figure was found in the evidence line it cites"
+  },
+  {
+   "id": "check",
+   "title": "The program works out the premium tables and numbers the findings",
+   "ref": [
+    "04-check.md"
+   ],
+   "do": [
+    "Run: python3 {scripts}/run.py check {run}",
+    "Read what it prints. Nothing is typed or adjusted by you. A flag is for Paul: it goes on the confirmation table."
+   ],
+   "check": "check_ok",
+   "proof": "the premium tables and the numbered findings were worked out by the program from this analysis"
+  },
+  {
+   "id": "confirm",
+   "title": "Show Paul the confirmation table, ask ONE question, record his yes",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py show {run}",
+    "Put the whole table it prints in your reply (the policies, the findings and their tiers, the Verdict, the Honest Opinion, the flags, the slides plan and the file names) and ask exactly the one question it gives. Nothing is drawn before his clear yes.",
+    "When he says yes, record his own words: python3 {scripts}/run.py approve {run} --said \"his exact words\"",
+    "If the analysis changes, run analysis and check again and show again: the earlier yes then no longer counts."
+   ],
+   "check": "confirm_ok",
+   "proof": "Paul was shown exactly this analysis and these results and said yes"
+  },
+  {
+   "id": "build",
+   "title": "The program draws the internal report(s) and the client slides",
+   "ref": [
+    "05-build.md"
+   ],
+   "do": [
+    "Run: python3 {scripts}/run.py build {run}",
+    "It draws one internal PDF per policy and the client slide decks from your confirmed analysis (never typed), reads every PDF back and checks it. A slide that does not fit stops the build: shorten that text and run analysis again. You never edit a script or a PDF.",
+    "Present each PDF to Paul in the chat as a file, with the exact file name the program gives."
+   ],
+   "check": "build_ok",
+   "proof": "the PDFs are exactly what the program draws from the confirmed analysis and pass the program's read-back checks"
+  },
+  {
+   "id": "save",
+   "title": "Save every PDF in the client's Analysis & Comparison Reports folder, never overwriting without Paul's yes",
+   "ref": [
+    "06-save.md"
+   ],
+   "do": [
+    "List the client's folder (computer first, then Microsoft 365, then Zapier; record every try with --purpose save), find the folder named exactly `Analysis & Comparison Reports` and note the file names already there. Then: python3 {scripts}/run.py name {run} --existing \"name one.pdf;name two.pdf\"",
+    "If a file with the same name exists the program stops: ask Paul; only with his yes run it again with --overwrite-yes \"his words\".",
+    "Save exactly the files it names, straight into that folder (create the folder, and tell Paul, only if it does not exist). List the folder again and record what it shows:",
+    "  python3 {scripts}/run.py receipt {run} save.folder <the folder path>   and   python3 {scripts}/run.py receipt {run} save.listed \"name=bytes;name=bytes\""
+   ],
+   "check": "save_ok",
+   "proof": "every derived name was used, nothing was overwritten without Paul's yes, the folder is Analysis & Comparison Reports and each listed size equals the local file"
+  },
+  {
+   "id": "final",
+   "title": "The final check, the tabulated chat summary and the SHORT AUDIT for Paul",
+   "ref": [
+    "07-handover.md"
+   ],
+   "do": [
+    "Run: python3 {scripts}/run.py done {run} final",
+    "Put in your reply, as they are: the tabulated chat summary, then the short audit. Nothing longer. Any red cross means the job is not finished: say so.",
+    "If Paul asked for the live Artifact design, make it from the same confirmed data now and say it is an extra the program did not check."
+   ],
+   "check": "verify_final",
+   "proof": "the final checker prints no red cross"
+  }
+ ]
+}

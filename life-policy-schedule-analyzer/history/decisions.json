@@ -1,0 +1,50 @@
+[
+ {
+  "from_prefix": "## UNIVERSAL OPERATING RULES - READ FIRST, APPLY TO EVERY STEP OF THE ",
+  "reason": "Heading replaced by 'Rules that apply to every step' in references/00-rules.md.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "# Life Policy Schedule Analyzer",
+  "reason": "Replaced by the new short title.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "## Index",
+  "reason": "Replaced by the new short Index (five sections).",
+  "needs_paul": false,
+  "to_prefix": "17 | What not to do | The standing prohibitions |"
+ },
+ {
+  "from_prefix": "These rules come before everything else in this skill. They apply from",
+  "reason": "Replaced: the new skill is a program that shows its rules again at every step.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Re-load this skill before you start, and again after any compression. ",
+  "reason": "Replaced by the program: the version line is said first and the steps are shown again at the right moment (Paul agreed, answer 10, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Changes to a skill: edit the existing skill, never create a new one. U",
+  "reason": "Replaced by S7: skills are changed only in Claude Code and uploaded as a zip (Paul agreed, answer 10).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Last updated: 2026-10-14 15:21 Athens time (EEST)",
+  "reason": "The stamp is set by tools/stamp_skill.py, never typed (S2).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "> Standing rule — not optional: any edit to this skill is not complete",
+  "reason": "Replaced by the stamp program (S2).",
+  "needs_paul": false,
+  "to_prefix": "> in the same response as the edit, and a line is added to the Changel"
+ },
+ {
+  "from_prefix": "## Changelog",
+  "reason": "The changelog is archived in this history folder; the new skill keeps the last 5 changes. The pointer to the older changelog in the Project file life-policy-schedule-analyzer-changelog.md is dropped: that file stays in the Project (Paul agreed, answer 10).",
+  "needs_paul": false,
+  "to_prefix": "Older entries (2026-09-30 09:12 back to the initial version of 2026-09"
+ }
+]
