@@ -1,0 +1,171 @@
+{
+ "skill": "prospect-review-funnel-at-knowledge",
+ "steps": [
+  {
+   "id": "locate",
+   "title": "Locate the source documents through the routes in order and register them",
+   "kinds": [
+    "question",
+    "move",
+    "build",
+    "test",
+    "docs",
+    "review"
+   ],
+   "ref": [],
+   "do": [
+    "Find each document this kind of work needs (the list is printed below). Folder: {folder}. Try the routes in order: the computer or OneDrive first, then Microsoft 365, then Zapier. Log EVERY try: python3 {scripts}/run.py access {run} --purpose <role> --route device|m365|zapier --result found|failed --note \"what you did\"",
+    "Save each document found to a file and register it with its Date Modified from the file's properties (ISO time, or YYYY-MM-DD HH:MM in Athens time): python3 {scripts}/run.py doc {run} --role <role> --file <file> --route device|m365|zapier|pasted --modified \"...\"   Roles: streamlined, master_plan, register, logic_flow, flow_comparison, automation. The program reads .docx, .xlsx, .md, .txt and .html.",
+    "Judge which file is current by Date Modified, never by a date in the name. Never say \"I cannot access your files\" without the log of all three routes."
+   ],
+   "check": "locate_ok",
+   "proof": "every needed document is registered, found by a logged route (routes in order) and unchanged"
+  },
+  {
+   "id": "stages",
+   "title": "Name the stages this work touches",
+   "kinds": [
+    "question",
+    "move",
+    "build",
+    "test",
+    "docs",
+    "review"
+   ],
+   "ref": [],
+   "do": [
+    "Name every stage of the funnel the work touches, by its code (G1 to G8, R1 to R4, A1 to A12 and their letters, B1 to B11, C1 to C8, D1): python3 {scripts}/run.py stages {run} --codes A6d,A12",
+    "The program prints the stage card of each (owner and routes as the funnel data holds them). Only a document edit or a review that touches no stage may say so: --general \"why\"."
+   ],
+   "check": "stages_ok",
+   "proof": "every stage named exists in the funnel data"
+  },
+  {
+   "id": "read",
+   "title": "Read the pages for this work, in order",
+   "kinds": [
+    "question",
+    "move",
+    "build",
+    "test",
+    "docs",
+    "review"
+   ],
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py read {run}  and read the page it shows, completely. Then acknowledge it with one line on what is in it: python3 {scripts}/run.py read {run} --ack 1 --note \"...\"  Repeat until every page is acknowledged. Searching for a keyword is not reading."
+   ],
+   "check": "read_ok",
+   "proof": "every page for this work was served in order and acknowledged"
+  },
+  {
+   "id": "proof",
+   "title": "Prove the stages were read in the two documents",
+   "kinds": [
+    "question",
+    "move",
+    "build",
+    "test",
+    "docs",
+    "review"
+   ],
+   "ref": [],
+   "do": [
+    "For EVERY stage named, find its block in the STREAMLINED document and in the AT MASTER PLAN, read it completely, then quote ONE line from each exactly as written (at least 25 characters, a different line for each stage): python3 {scripts}/run.py evidence {run} --stage A6d --doc streamlined --line \"...\"   and the same with --doc master_plan.",
+    "The program finds the line in the document's text. A line that is not there cannot have come from the document."
+   ],
+   "check": "proof_ok",
+   "proof": "each stage has a quoted line from the STREAMLINED document and from the AT MASTER PLAN, found in their text"
+  },
+  {
+   "id": "answer",
+   "title": "Write the answer and check it against the funnel data",
+   "kinds": [
+    "question",
+    "move"
+   ],
+   "ref": [],
+   "do": [
+    "Write the answer to a file and check it: python3 {scripts}/run.py answer {run} --file <answer.txt>",
+    "It names every stage by code with its owner and the stage it leads to, as the funnel data holds them, and it says what you confirmed in the documents. Moving a client: also the items still open, the outcome options and which line to tick; never tick anything on a real client unless Paul asks."
+   ],
+   "check": "answer_ok",
+   "proof": "the answer names each stage, its owner and where it leads, and no stage code that does not exist"
+  },
+  {
+   "id": "plan",
+   "title": "Write the plan file; the program checks every rule it can",
+   "kinds": [
+    "build",
+    "test",
+    "docs",
+    "review"
+   ],
+   "ref": [
+    "13-plan-file.md"
+   ],
+   "do": [
+    "Write plan.json as the page shows, then run: python3 {scripts}/run.py plan {run} --file <plan.json>",
+    "If it refuses, put every listed problem right in the file and run it again. Never argue with a refusal. Charl's items are refused whatever the reason."
+   ],
+   "check": "plan_ok",
+   "proof": "the plan follows every rule: never-touch items, one owner per checklist, the line rules, names, line counts, documents first, the test client"
+  },
+  {
+   "id": "confirm",
+   "title": "Show Paul the plan and ask ONE question",
+   "kinds": [
+    "build",
+    "test",
+    "docs",
+    "review"
+   ],
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py confirm {run}  Show Paul the table and the question it prints, in your reply, and STOP. Nothing is changed before his yes.",
+    "When Paul says yes: python3 {scripts}/run.py approve {run} --said \"Paul's own words\""
+   ],
+   "check": "confirm_ok",
+   "proof": "Paul's own words are recorded for exactly this plan"
+  },
+  {
+   "id": "record",
+   "title": "Do the work: documents first, then AdviceTech; record each change and each read-back",
+   "kinds": [
+    "build",
+    "test",
+    "docs",
+    "review"
+   ],
+   "ref": [],
+   "do": [
+    "DOCUMENTS FIRST. Change each document in the plan, save it, and record its new Date Modified: python3 {scripts}/run.py changed {run} --role <role> --modified \"...\" --note \"what changed\"",
+    "Only when every document is changed, work in AdviceTech with the methods of `advicetech-website-knowledge` (Paul watching in Chrome). After each object read it back from AdviceTech and record it: python3 {scripts}/run.py result {run} --key checklist:233 --lines 8 --ok yes --note \"read back = register\"   (a test: --key tick:1)",
+    "A document edit or a review has no AdviceTech work: the documents are the whole job."
+   ],
+   "check": "record_ok",
+   "proof": "every planned document was changed after Paul's yes and before the first AdviceTech change, and every planned object was read back with the right line count"
+  },
+  {
+   "id": "final",
+   "title": "The final check and the SHORT AUDIT for Paul",
+   "kinds": [
+    "question",
+    "move",
+    "build",
+    "test",
+    "docs",
+    "review"
+   ],
+   "ref": [
+    "12-handover.md"
+   ],
+   "do": [
+    "Run: python3 {scripts}/run.py done {run} final",
+    "Put the short audit (and the items table for AdviceTech work) it prints in your reply exactly as they are, then \"Go ahead with <next>\" as the one question. Any red cross means the job is not finished: say so."
+   ],
+   "check": "verify_final",
+   "proof": "the final checker prints no red cross"
+  }
+ ]
+}

@@ -1,0 +1,155 @@
+{
+ "about": "Which steps and which pages each kind of work uses, and the limits the program holds to.",
+ "kinds": {
+  "question": {
+   "title": "A funnel question",
+   "steps": [
+    "locate",
+    "stages",
+    "read",
+    "proof",
+    "answer",
+    "final"
+   ],
+   "roles": [
+    "streamlined",
+    "master_plan"
+   ],
+   "pages": [
+    "00-rules.md",
+    "01-documents.md",
+    "10-procedures.md"
+   ]
+  },
+  "move": {
+   "title": "Moving a client through the stages",
+   "steps": [
+    "locate",
+    "stages",
+    "read",
+    "proof",
+    "answer",
+    "final"
+   ],
+   "roles": [
+    "streamlined",
+    "master_plan"
+   ],
+   "pages": [
+    "00-rules.md",
+    "01-documents.md",
+    "02-roles.md",
+    "10-procedures.md"
+   ]
+  },
+  "build": {
+   "title": "An AdviceTech build or correction",
+   "steps": [
+    "locate",
+    "stages",
+    "read",
+    "proof",
+    "plan",
+    "confirm",
+    "record",
+    "final"
+   ],
+   "roles": [
+    "streamlined",
+    "master_plan",
+    "register"
+   ],
+   "pages": [
+    "00-rules.md",
+    "01-documents.md",
+    "02-roles.md",
+    "07-gates.md",
+    "08-at-map.md",
+    "09-build-rules.md",
+    "10-procedures.md",
+    "11-checks.md"
+   ]
+  },
+  "test": {
+   "title": "An AdviceTech test",
+   "steps": [
+    "locate",
+    "stages",
+    "read",
+    "proof",
+    "plan",
+    "confirm",
+    "record",
+    "final"
+   ],
+   "roles": [
+    "streamlined",
+    "master_plan",
+    "register"
+   ],
+   "pages": [
+    "00-rules.md",
+    "01-documents.md",
+    "08-at-map.md",
+    "10-procedures.md",
+    "11-checks.md"
+   ]
+  },
+  "docs": {
+   "title": "A document edit",
+   "steps": [
+    "locate",
+    "stages",
+    "read",
+    "proof",
+    "plan",
+    "confirm",
+    "record",
+    "final"
+   ],
+   "roles": [
+    "streamlined",
+    "master_plan"
+   ],
+   "pages": [
+    "00-rules.md",
+    "01-documents.md",
+    "02-roles.md",
+    "07-gates.md",
+    "09-build-rules.md",
+    "10-procedures.md",
+    "11-checks.md"
+   ]
+  },
+  "review": {
+   "title": "Reviewing on the working flow page",
+   "steps": [
+    "locate",
+    "stages",
+    "read",
+    "proof",
+    "plan",
+    "confirm",
+    "record",
+    "final"
+   ],
+   "roles": [
+    "streamlined",
+    "master_plan",
+    "flow_comparison"
+   ],
+   "pages": [
+    "00-rules.md",
+    "01-documents.md",
+    "07-gates.md",
+    "10-procedures.md"
+   ]
+  }
+ },
+ "evidence_docs": [
+  "streamlined",
+  "master_plan"
+ ],
+ "evidence_min_chars": 25,
+ "answer_min_chars": 40
+}

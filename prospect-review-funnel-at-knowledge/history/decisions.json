@@ -1,0 +1,40 @@
+[
+ {
+  "from_prefix": "1 | Universal operating rules",
+  "to_prefix": "14 | Verification checklist",
+  "reason": "The old Index table is replaced by the new Index in SKILL.md (six sections of the program-driven entry page); the old sections now live in the reference pages 00 to 13",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "UNIVERSAL OPERATING RULES - READ FIRST",
+  "reason": "Heading of the old rules section; the same rules are on page 00-rules.md",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Re-load this skill before you start",
+  "reason": "Rule 1 (re-load the whole skill before every deliverable): the program shows the right pages at the right step and a short entry page; Paul agreed to remove it (04/11/2026, question 6)",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Changes to a skill: edit the existing skill",
+  "reason": "Rule 9 (edit the existing skill, update the stamp by hand, put it forward with propose_skills): replaced by S7, changes are made in Claude Code and uploaded by Paul; the new rule 8 says so. Paul agreed (04/11/2026, question 6)",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Last updated: 2026-11-04 12:25",
+  "reason": "The typed stamp is replaced by the stamp set by tools/stamp_skill.py (S2); Paul agreed (question 6)",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Recent changes (last 5",
+  "to_prefix": "Whenever this skill is edited",
+  "reason": "The typed five-row change log (and its pointer to the Project changelog document) is replaced by the five rows tools/stamp_skill.py writes into SKILL.md; the detail of the five old rows is kept in the archived text and in the pages that now hold each decision. Paul agreed (question 6)",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Built 4 Nov (D55)",
+  "to_prefix": "Built 4 Nov (D54)",
+  "reason": "Two build-log rows of finished AdviceTech work; the ids of MP35, MP36, MP5, MP11 and the starters are already in the New Prospect, Review Client and Family rows of the module map and in the register (question 4: build history goes to the log)",
+  "needs_paul": false
+ }
+]

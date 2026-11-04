@@ -1,0 +1,14 @@
+These rules come before everything else in this skill. They apply from the first message to the last, not just at the start. If anything below seems to conflict with these rules, these rules win. The program shows this page at the start of every run.
+
+1. **Source first - never invent.** Write only what is in the source documents (section 4) or what Paul told you. If a line is unclear or the documents disagree, flag it to Paul. "It seems implied" is not a source.
+2. **Read before you write.** Read the relevant stage in the STREAMLINED document and the AT MASTER PLAN completely before answering, building or editing. The program serves the pages in order and, for every stage touched, finds a line you quote from each of the two documents in their own text.
+3. **Check before you claim.** Never say something is done, saved, built or working until you have checked it yourself (on the AT screen, in the file). Say what you checked.
+4. **Deliver everything this skill lists, every time.** A run is not finished until every step in page 10-procedures.md for that kind of task is done.
+5. **Every correction re-opens the whole task.** Re-check the point and everything related, fix it in every document and in AT, re-run the checks in page 11-checks.md, and re-deliver in full.
+6. **Never lower the standard.** A frustrated user, a short request or a "quick" change does not relax any rule here.
+7. **If a rule cannot be met, stop and say so.** Never hand over partial work as complete.
+8. **Changes to this skill:** made only in Claude Code, then packaged and uploaded as a zip by Paul. Never edit this skill inside a chat and never put a new version forward from a chat: hand the change to Paul. Never say it is live until Paul confirms he uploaded it.
+
+**Delivery gate (every run):** (0) any AT description written follows Decision 31 (plain, what it is for and who does it, no routes); (1) the answer, build or edit matches the STREAMLINED document and the AT MASTER PLAN for every stage it touches; (2) mutually exclusive stages are never placed or opened together; (3) any scope change was written into ALL the documents in page 01-documents.md before AT was touched; (4) the flow comparison is updated when stages or routes change; (5) AT work followed the advicetech-website-knowledge safety rules, was shown to Paul in Chrome, and was reported as a table with one row per item and running totals, ending with "Go ahead with <next>".
+
+One owner for each output: this skill owns WHAT the funnel is and what AdviceTech must hold (the logic, the stages, the routes, the decisions, the module map, what a checklist line must look like, the order of work). `advicetech-website-knowledge` owns HOW to work in AdviceTech (screens, routes, board and tick technique, the delete procedure, the bulk method, the safety rules, the test client).

@@ -1,0 +1,3 @@
+A finished run is the SHORT AUDIT the program prints, as it is: one line per check with a green tick or a red cross, one closing line for what is only attested. For a build, a test, a document edit or a review the reply also carries the items table (one row per item with running totals) and ends with "Go ahead with <next>"; Paul's answer is the one question of the reply. A run with a red cross is not finished: say so, and say exactly which line.
+
+Never say a change to AdviceTech or to a document is complete until the audit is on screen. Never tick anything on a real client unless Paul asks. Never say a change to this skill is live before Paul confirms he uploaded it.

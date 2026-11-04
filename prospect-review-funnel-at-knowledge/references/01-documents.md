@@ -1,0 +1,24 @@
+## Purpose and when to use it
+
+- Holds the complete logic of the funnel (who does what, in what order, where the decisions are, which outcome leads where) and how that logic is built in AdviceTech (AT).
+- Use it for: any AT pipeline build, correction or test; questions about the funnel; edits to the pipeline documents; working a client through the stages.
+- **Not here:** how to drive the AT website, its safety rules and build technique → `advicetech-website-knowledge`. Product messaging, proposals and board work per client → `client-pipeline-board` and the product skills.
+
+## Source documents
+
+All in OneDrive `Company - Paul/Claude/ClickUp/WR - Template Journey - Paul K`; Paul removed the dates from the file names on 3 Nov 2026; judge which file is current by Date Modified, never by a date in the name. The program asks you to locate each document by the three routes in order (the computer or OneDrive, Microsoft 365, Zapier), logs every try and records each file's Date Modified.
+
+| Document | Role |
+|---|---|
+| WR Prospect & Review Pipeline Templates -STREAMLINED.docx | **Source of truth for wording and logic.** Updated for every decision up to the latest one in assets/status.json. |
+| WR Prospect & Review Pipeline Templates - AT MASTER PLAN.docx (version 3, with Decisions 22–55 (Appendix C rows 31–55); all Section names with owner; 1.7 plain descriptions + an "In plain words (AT description)" line under every Category, Sub Category and checklist block) | The AT build design: every checklist, module, item and trigger (Done and Skip), with the technical detail AND the plain description shown in AT. |
+| WR Prospect & Review Pipeline - AT BUILD REGISTER.xlsx | One row per AT item: exact AT title, Section, order, Create Checklist If Done / If Skipped, action, AT ids. {counts.lines} item rows in {counts.checklists} checklists, {counts.triggers} triggers ({counts.done} Done + {counts.skip} Skip), as at {as_of}. **Live AT = register.** The Checklists sheet shows the live AT id and the audit note for every object; retired rows say "GONE from AT" (MP15 #175 is an open item in assets/status.json). |
+| WR Prospect & Review Funnel - Logic & Flow.md | The logic explained stage by stage. |
+| WR_Pipeline_Flow_Comparison.html (renamed by Paul, no date) | One-page visual of both paths and the decision routes. Since 29 Oct: coloured phase edge per stage (same colours as the boards) and click-to-open checklist lines per stage, built from the register by `flowi.py`, which lives outside this skill until Paul sends it (refresh the page from the register whenever the register changes). **Keep it clean (Paul, 30 Oct):** stages, route lines and checklists only — NO change notes, decision notes, summary panels or "proposed" marks; history lives in the master plan, register and Logic & Flow MD. Review work happens on a separate working copy (the working flow page artifact with 💬 notes and ✅ / ❌ marks — see page 10-procedures.md, step 5). Backup of the documents at review completion: subfolder "Review complete 02.11.2026"; at AT build completion: subfolder "AT build complete 03.11.2026"; after Decision 55: "AT build complete - Decision 55 04.11.2026". |
+| WR Prospect & Review Pipeline - AUTOMATION.docx | **WORKING document** (rebuilt 3 Nov 2026; will change over time; Claude may open and update it). It is the AT MASTER PLAN word for word (all {counts.checklists} checklist tables, {counts.lines} lines) plus two columns on every line: "Suggested Who" (Claude / Claude drafts → SR sends / Claude drafts → PK confirms / Claude checks → SR confirms / Claude (SR fallback) / Claude (PK approves) / SR – remains with SR / PK – remains with PK) and "Claude Skill" (skill name, "no skill available - need a skill (…)" or "n/a – …"). Wording always follows the Master Plan; only the two columns are its own. Not everything can be automated — calls, meetings, advice, decisions and client sign-offs stay with PK / SR. When a line's wording changes in the Master Plan, change it here too; change an allocation only when who does the line or which skill exists changes (and note it). |
+
+Build status lives in the Logic & Flow MD status table (rows 7a–7g = build sessions 1–7, 2–3 Nov; 7h = AUTOMATION document rebuilt 3 Nov) and in assets/status.json (phases and open items).
+
+The AUTOMATION document may be opened (Paul, 3 Nov 2026) and is a working document; it never overrides wording. If the documents disagree, the STREAMLINED document wins and the difference is flagged to Paul.
+
+**Which document wins:** for wording and logic the STREAMLINED document wins; for AdviceTech technical detail (checklists, modules, items, triggers, ids) the AT MASTER PLAN wins; the AUTOMATION document's wording always follows the Master Plan. This skill is a map and a set of procedures, never the source: when it differs from a document, the document wins and the difference is flagged to Paul.

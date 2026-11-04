@@ -1,0 +1,29 @@
+{
+ "skill": "prospect-review-funnel-at-knowledge",
+ "deliverables": [
+  {
+   "name": "The answer to a funnel question or a move (stage codes, owners, routes, checked against the funnel data)",
+   "file": "answer.txt in the run folder",
+   "produced_by": "the chat, checked by scripts/run.py answer (scripts/engine.py)",
+   "handover": "in the reply, with the short audit",
+   "checked_by": "scripts/verify.py",
+   "step": "answer"
+  },
+  {
+   "name": "The plan and the items table (one row per item with running totals) for AdviceTech and document work",
+   "file": "plan.json, results.json; the table is printed by scripts/run.py done final",
+   "produced_by": "scripts/run.py plan / changed / result (scripts/funnel.py, scripts/engine.py)",
+   "handover": "in the reply, ending with Go ahead with <next>",
+   "checked_by": "scripts/verify.py",
+   "step": "record"
+  },
+  {
+   "name": "The short audit",
+   "file": "printed by scripts/run.py done final; full record in out_record/audit-full.txt",
+   "produced_by": "scripts/verify.py and scripts/run.py",
+   "handover": "pasted into the reply as it is",
+   "checked_by": "scripts/run.py done final",
+   "step": "final"
+  }
+ ]
+}

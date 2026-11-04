@@ -1,0 +1,50 @@
+[
+ {
+  "old": "**Delivery gate (every run):**",
+  "why": "Section numbers replaced by page names (section 4 is page 01-documents.md, section 13 is page 10-procedures.md); the six checks are unchanged"
+ },
+ {
+  "old": "Deliver everything this skill lists, every time.",
+  "why": "Rule 5: 'section 13' became 'page 10-procedures.md' (the pages are numbered differently)"
+ },
+ {
+  "old": "Every correction re-opens the whole task.",
+  "why": "Rule 6: 'section 14' became 'page 11-checks.md'"
+ },
+ {
+  "old": "WR Prospect & Review Pipeline Templates -STREAMLINED.docx",
+  "why": "Source documents table: the chronology of updates and statuses, the Project copy names and the counts typed by hand are replaced by 'up to the latest decision in assets/status.json' and {counts.*} placeholders; the roles and which document wins stay (page 01-documents.md). Chronology kept in the archive and in the phases of status.json"
+ },
+ {
+  "old": "Build status lives in the Logic & Flow MD status table",
+  "why": "The Project handover documents are not reachable from other chats; the build status lives in the Logic & Flow MD status table and in assets/status.json"
+ },
+ {
+  "old": "**New Prospect:** G0 Prospect Set Up",
+  "why": "Parent Tasks: the shorthand 'G5 → G6' was stale after Decisions 54 and 55; it now reads 'G5 → G5a → G5b → G6'; the rest of the bullets is unchanged"
+ },
+ {
+  "old": "**How a gate looks in AT (Decision 27, Paul 25 Oct):**",
+  "why": "Decision 55: the typed count '189 of 189' became the {counts.checklists} placeholder (counts live in assets/status.json); the rest is unchanged"
+ },
+ {
+  "old": "A6a, A6b and A6c exist twice because",
+  "why": "The stale count 'AT has 75 active Sections' was dropped (it was already wrong; Paul agreed to remove it)"
+ },
+ {
+  "old": "**Retired (renamed",
+  "why": "The history of the finished deletion request (who was asked when) is dropped; the list of retired objects and the never-touch rule for Charl's items stay"
+ },
+ {
+  "old": "Names in AT match the documents exactly.",
+  "why": "AT build rules: the dated release forecast became an open item (assets/status.json o4); the board technique, the long-loop and bulk method and the many-lines-at-once panel became pointers to advicetech-website-knowledge; the permission request became an open item (o2). `advicetech-website-knowledge` already holds this technique (checked by search; nothing is deleted there)"
+ },
+ {
+  "old": "**Agreed build plan (Paul, 25 Oct) and status at 4 Nov 2026**",
+  "why": "The build plan table moved to assets/status.json as phases (each phase's text kept), so the status is held once and drawn by the program"
+ },
+ {
+  "old": "**Funnel question:** find the stage in sections 6–10",
+  "why": "Using the skill: the tick-and-create method of an AdviceTech test became a pointer to advicetech-website-knowledge; the six ways of working are now the six kinds of run (question, build, test, docs, review, move). `advicetech-website-knowledge` already holds this technique (checked by search; nothing is deleted there)"
+ }
+]

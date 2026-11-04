@@ -1,0 +1,2060 @@
+{
+ "about": "Stage routes of the Prospect and Review funnel, at stage (Section) level, taken from the stage chains and gate catalogue of the old skill text. owner null = the old text does not state the owner; read it from the AT MASTER PLAN. The checker proves the table is consistent with itself, not that it is right.",
+ "owners": [
+  "SR",
+  "PK",
+  "CL"
+ ],
+ "exclusive": [
+  [
+   "A10a",
+   "A10b"
+  ]
+ ],
+ "parallel_ok": [],
+ "stages": [
+  {
+   "id": "G0",
+   "name": "Prospect Set Up",
+   "owner": "SR",
+   "family": "P",
+   "track": "NP",
+   "page": "03-parents.md",
+   "entry": true,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "contact is in Outlook and AdviceTech and the Task is created",
+     "to": [
+      "G1"
+     ]
+    }
+   ],
+   "note": "outside AdviceTech"
+  },
+  {
+   "id": "G1",
+   "name": "Prospect",
+   "owner": "SR",
+   "family": "P",
+   "track": "NP",
+   "page": "03-parents.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "Fact Find booked, invite sent",
+     "to": [
+      "G2"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "G2",
+   "name": "Prospect Call",
+   "owner": "PK",
+   "family": "P",
+   "track": "NP",
+   "page": "03-parents.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "prospect proceeds, meeting still on",
+     "to": [
+      "G3"
+     ]
+    },
+    {
+     "label": "not proceeding: D&R appointment",
+     "to": [
+      "G7"
+     ]
+    },
+    {
+     "label": "not proceeding: referral",
+     "to": [
+      "G8"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "G3",
+   "name": "Post Intro Call Setup",
+   "owner": "SR",
+   "family": "P",
+   "track": "NP",
+   "page": "03-parents.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "setup done",
+     "to": [
+      "G4"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "G4",
+   "name": "1st Appointment Set",
+   "owner": "SR",
+   "family": "P",
+   "track": "both",
+   "page": "03-parents.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "appointment confirmed, prospect or client proceeds",
+     "to": [
+      "G5"
+     ]
+    },
+    {
+     "label": "New Prospect not proceeding: D&R appointment",
+     "to": [
+      "G7"
+     ]
+    },
+    {
+     "label": "New Prospect not proceeding: referral",
+     "to": [
+      "G8"
+     ]
+    },
+    {
+     "label": "Review client not confirmed or final decline",
+     "to": [
+      "G8RD"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "G5",
+   "name": "Fact Find Meeting",
+   "owner": "PK",
+   "family": "P",
+   "track": "both",
+   "page": "03-parents.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "meeting held, the client proceeds with advice and sub-tasks are created",
+     "to": [
+      "G5a"
+     ]
+    },
+    {
+     "label": "meeting held, New Prospect does not proceed (NTU route through G5a)",
+     "to": [
+      "G5a"
+     ]
+    },
+    {
+     "label": "did not show up",
+     "to": [
+      "NS"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "NS",
+   "name": "No-Show (Fact Find or Review meeting)",
+   "owner": "PK",
+   "family": "P",
+   "track": "both",
+   "page": "03-parents.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "appointment rebooked",
+     "to": [
+      "RT"
+     ]
+    },
+    {
+     "label": "not rebooked: New Prospect, D&R appointment",
+     "to": [
+      "G7"
+     ]
+    },
+    {
+     "label": "not rebooked: New Prospect, referral",
+     "to": [
+      "G8"
+     ]
+    },
+    {
+     "label": "not rebooked: Review client",
+     "to": [
+      "G8RD"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "RT",
+   "name": "Rebooked Appointment Tracking (Section G4)",
+   "owner": "SR",
+   "family": "P",
+   "track": "both",
+   "page": "03-parents.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "rebooked appointment confirmed",
+     "to": [
+      "G5"
+     ]
+    },
+    {
+     "label": "not confirmed: New Prospect, D&R appointment",
+     "to": [
+      "G7"
+     ]
+    },
+    {
+     "label": "not confirmed: New Prospect, referral",
+     "to": [
+      "G8"
+     ]
+    },
+    {
+     "label": "not confirmed: Review client",
+     "to": [
+      "G8RD"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "G5a",
+   "name": "Fact Find Transcript & Summary",
+   "owner": "SR",
+   "family": "P",
+   "track": "both",
+   "page": "03-parents.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "transcript saved, summary and AdviceTech record done, sub-tasks created",
+     "to": [
+      "G5b"
+     ]
+    },
+    {
+     "label": "New Prospect does not proceed (NTU)",
+     "to": [
+      "G8"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "G5b",
+   "name": "Sub-tasks Running",
+   "owner": "SR",
+   "family": "P",
+   "track": "both",
+   "page": "03-parents.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "every sub-task ended",
+     "to": [
+      "G6"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "G6",
+   "name": "Review Monitor & Close",
+   "owner": "SR",
+   "family": "P",
+   "track": "both",
+   "page": "03-parents.md",
+   "entry": false,
+   "end": "Active",
+   "outcomes": [
+    {
+     "label": "New Prospect: every sub-task ended NTU",
+     "to": [
+      "G8"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "G7",
+   "name": "Reschedule / Replace Appts",
+   "owner": "SR",
+   "family": "P",
+   "track": "NP",
+   "page": "03-parents.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "D&R has contacted the prospect, new date given",
+     "to": [
+      "G1"
+     ]
+    },
+    {
+     "label": "D&R replaces, removes or will not replace",
+     "to": [
+      "G8"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "G8",
+   "name": "NTU",
+   "owner": "SR",
+   "family": "P",
+   "track": "NP",
+   "page": "03-parents.md",
+   "entry": false,
+   "end": "NTU",
+   "outcomes": [],
+   "note": ""
+  },
+  {
+   "id": "G8RD",
+   "name": "Review Declined (Section G8)",
+   "owner": "SR",
+   "family": "P",
+   "track": "RV",
+   "page": "03-parents.md",
+   "entry": false,
+   "end": "Active",
+   "outcomes": [],
+   "note": ""
+  },
+  {
+   "id": "R1",
+   "name": "Review Trigger",
+   "owner": "SR",
+   "family": "P",
+   "track": "RV",
+   "page": "03-parents.md",
+   "entry": true,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "30 days before the Next Review Date",
+     "to": [
+      "R2"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "R2",
+   "name": "File Prep",
+   "owner": "SR",
+   "family": "P",
+   "track": "RV",
+   "page": "03-parents.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "file prepared",
+     "to": [
+      "R3"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "R3",
+   "name": "Overview Approval",
+   "owner": "PK",
+   "family": "P",
+   "track": "RV",
+   "page": "03-parents.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "overview approved",
+     "to": [
+      "R4"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "R4",
+   "name": "Call Review Client",
+   "owner": "PK",
+   "family": "P",
+   "track": "RV",
+   "page": "03-parents.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "appointment agreed",
+     "to": [
+      "G4"
+     ]
+    },
+    {
+     "label": "client says not now",
+     "to": [
+      "CBL"
+     ]
+    },
+    {
+     "label": "client declines",
+     "to": [
+      "G8RD"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "CBL",
+   "name": "Call Back Later",
+   "owner": "PK",
+   "family": "P",
+   "track": "RV",
+   "page": "03-parents.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "call-back agreed an appointment",
+     "to": [
+      "G4"
+     ]
+    },
+    {
+     "label": "client declines",
+     "to": [
+      "G8RD"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A1",
+   "name": "Info Gathering",
+   "owner": "SR",
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": true,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "information gathered",
+     "to": [
+      "A2a"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A2a",
+   "name": "Quote Preparation",
+   "owner": "SR",
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "risk quotes analysis needed",
+     "to": [
+      "A2b"
+     ]
+    },
+    {
+     "label": "not needed",
+     "to": [
+      "A3"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A2b",
+   "name": "Risk Quotes Analysis",
+   "owner": "PK",
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "analysis done",
+     "to": [
+      "A3"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A3",
+   "name": "Overview Approval",
+   "owner": "PK",
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "approved",
+     "to": [
+      "A4"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A4",
+   "name": "Overview PDF & Email",
+   "owner": "SR",
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "sent",
+     "to": [
+      "A5"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A5",
+   "name": "Follow-Up Appt Set",
+   "owner": "SR",
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "follow-up appointment booked, client proceeds",
+     "to": [
+      "A6"
+     ]
+    },
+    {
+     "label": "client withdraws",
+     "to": [
+      "A7"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A6",
+   "name": "Follow-Up Appointment",
+   "owner": "PK",
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "client showed up",
+     "to": [
+      "A6t"
+     ]
+    },
+    {
+     "label": "client did not show up",
+     "to": [
+      "A6ns"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A6ns",
+   "name": "Follow-Up No-Show",
+   "owner": "PK",
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "appointment rebooked",
+     "to": [
+      "A5rt"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A5rt",
+   "name": "Rebooked Follow-Up Tracking (Section A5)",
+   "owner": "SR",
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "rebooked appointment confirmed",
+     "to": [
+      "A6"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A6t",
+   "name": "Follow-Up Meeting Transcript & Summary",
+   "owner": "SR",
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "client has accepted the presented quote",
+     "to": [
+      "A6d"
+     ]
+    },
+    {
+     "label": "client requires a revised quote",
+     "to": [
+      "A6b"
+     ]
+    },
+    {
+     "label": "client needs to think about it",
+     "to": [
+      "A6c"
+     ]
+    },
+    {
+     "label": "client needs to decide, follow-up call",
+     "to": [
+      "A6a"
+     ]
+    },
+    {
+     "label": "none of these",
+     "to": [
+      "A7"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A6a",
+   "name": "follow-up call (a phone call)",
+   "owner": null,
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "client has accepted the presented quote",
+     "to": [
+      "A6d"
+     ]
+    },
+    {
+     "label": "client requires a revised quote",
+     "to": [
+      "A6b"
+     ]
+    },
+    {
+     "label": "client needs to think about it",
+     "to": [
+      "A6c"
+     ]
+    },
+    {
+     "label": "another follow-up call",
+     "to": [
+      "A6a"
+     ]
+    },
+    {
+     "label": "none of these",
+     "to": [
+      "A7"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A6b",
+   "name": "revised quote",
+   "owner": "SR",
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "revised quote done, client proceeds",
+     "to": [
+      "A3"
+     ]
+    },
+    {
+     "label": "client withdraws",
+     "to": [
+      "A7"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A6c",
+   "name": "think about it, follow-up Teams appointment",
+   "owner": "SR",
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "follow-up appointment booked, client proceeds",
+     "to": [
+      "A6"
+     ]
+    },
+    {
+     "label": "client withdraws",
+     "to": [
+      "A7"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A6d",
+   "name": "Acceptance",
+   "owner": "PK",
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "application, DOC, COC and RAR answers done",
+     "to": [
+      "A8"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A7",
+   "name": "NTU",
+   "owner": null,
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": "NTU",
+   "outcomes": [],
+   "note": ""
+  },
+  {
+   "id": "A8",
+   "name": null,
+   "owner": null,
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "application ready",
+     "to": [
+      "A8a"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A8a",
+   "name": "GATE: FICA, signed pack, COC date",
+   "owner": null,
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "gate complete and submitted, client proceeds",
+     "to": [
+      "A9"
+     ]
+    },
+    {
+     "label": "client withdraws",
+     "to": [
+      "A7"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A9",
+   "name": "COC",
+   "owner": null,
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "COC done, client proceeds",
+     "to": [
+      "A10"
+     ]
+    },
+    {
+     "label": "client withdraws",
+     "to": [
+      "A7"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A10",
+   "name": "Underwriting",
+   "owner": null,
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "insurer accepts at standard rates",
+     "to": [
+      "A10a"
+     ]
+    },
+    {
+     "label": "requirements issued",
+     "to": [
+      "A10b"
+     ]
+    },
+    {
+     "label": "declines or postpones",
+     "to": [
+      "A7"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A10a",
+   "name": "Standard Acceptance",
+   "owner": null,
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "no RAR needed",
+     "to": [
+      "A11"
+     ]
+    },
+    {
+     "label": "RAR needed",
+     "to": [
+      "A10h"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A10b",
+   "name": "Requirements",
+   "owner": null,
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "standard rates, no RAR",
+     "to": [
+      "A11"
+     ]
+    },
+    {
+     "label": "standard rates, RAR needed",
+     "to": [
+      "A10h"
+     ]
+    },
+    {
+     "label": "accepts with terms, COL needed",
+     "to": [
+      "A10c"
+     ]
+    },
+    {
+     "label": "declines or postpones",
+     "to": [
+      "A7"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A10c",
+   "name": null,
+   "owner": null,
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "terms ready",
+     "to": [
+      "A10d"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A10d",
+   "name": "COL Review",
+   "owner": "PK",
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "insurer to change terms",
+     "to": [
+      "A10c"
+     ]
+    },
+    {
+     "label": "terms stand",
+     "to": [
+      "A10e"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A10e",
+   "name": null,
+   "owner": null,
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "done",
+     "to": [
+      "A10f"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A10f",
+   "name": "COL Client Discussion",
+   "owner": "PK",
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "client accepts the COL",
+     "to": [
+      "A10g"
+     ]
+    },
+    {
+     "label": "client declines",
+     "to": [
+      "A7"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A10g",
+   "name": "COL Acceptance",
+   "owner": null,
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "RAR required",
+     "to": [
+      "A10h"
+     ]
+    },
+    {
+     "label": "no RAR",
+     "to": [
+      "A11"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A10h",
+   "name": "RAR Preparation",
+   "owner": null,
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "RAR accepted and signed",
+     "to": [
+      "A11"
+     ]
+    },
+    {
+     "label": "declined",
+     "to": [
+      "A7"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A11",
+   "name": null,
+   "owner": null,
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "issued",
+     "to": [
+      "A11a"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A11a",
+   "name": null,
+   "owner": "PK",
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "checked",
+     "to": [
+      "A11b"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A11b",
+   "name": "replacement: Cancellation Letter now",
+   "owner": null,
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "done",
+     "to": [
+      "A12"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "A12",
+   "name": "Compliance Audit",
+   "owner": "SR",
+   "family": "A",
+   "track": "both",
+   "page": "04-family-a.md",
+   "entry": false,
+   "end": "CASE ISSUED",
+   "outcomes": [],
+   "note": ""
+  },
+  {
+   "id": "B1",
+   "name": null,
+   "owner": "SR",
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": true,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "information gathered",
+     "to": [
+      "B2a"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B2a",
+   "name": "Quote Preparation",
+   "owner": "SR",
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "investment quotes analysis needed",
+     "to": [
+      "B2b"
+     ]
+    },
+    {
+     "label": "not needed",
+     "to": [
+      "B3"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B2b",
+   "name": null,
+   "owner": "PK",
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "analysis done",
+     "to": [
+      "B3"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B3",
+   "name": null,
+   "owner": "PK",
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "approved",
+     "to": [
+      "B4"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B4",
+   "name": null,
+   "owner": "SR",
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "sent",
+     "to": [
+      "B5"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B5",
+   "name": "Proposal Prep & Email",
+   "owner": "PK",
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "sent",
+     "to": [
+      "B6"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B6",
+   "name": null,
+   "owner": "SR",
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "follow-up appointment booked, client proceeds",
+     "to": [
+      "B7"
+     ]
+    },
+    {
+     "label": "client withdraws",
+     "to": [
+      "B8"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B7",
+   "name": "Follow-Up Appointment",
+   "owner": "PK",
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "client showed up",
+     "to": [
+      "B7t"
+     ]
+    },
+    {
+     "label": "client did not show up",
+     "to": [
+      "B7ns"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B7ns",
+   "name": "No-Show (mirror of A6ns)",
+   "owner": "PK",
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "appointment rebooked",
+     "to": [
+      "B6rt"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B6rt",
+   "name": "Rebooked Follow-Up Tracking (Section B6)",
+   "owner": "SR",
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "rebooked appointment confirmed",
+     "to": [
+      "B7"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B7t",
+   "name": "Follow-Up Meeting Transcript & Summary",
+   "owner": "SR",
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "client has accepted the presented quote",
+     "to": [
+      "B7d"
+     ]
+    },
+    {
+     "label": "client requires a revised quote",
+     "to": [
+      "B7b"
+     ]
+    },
+    {
+     "label": "client needs to think about it",
+     "to": [
+      "B7c"
+     ]
+    },
+    {
+     "label": "client needs to decide, follow-up call",
+     "to": [
+      "B7a"
+     ]
+    },
+    {
+     "label": "none of these",
+     "to": [
+      "B8"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B7a",
+   "name": "follow-up call (mirror of A6a)",
+   "owner": null,
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "client has accepted the presented quote",
+     "to": [
+      "B7d"
+     ]
+    },
+    {
+     "label": "client requires a revised quote",
+     "to": [
+      "B7b"
+     ]
+    },
+    {
+     "label": "client needs to think about it",
+     "to": [
+      "B7c"
+     ]
+    },
+    {
+     "label": "another follow-up call",
+     "to": [
+      "B7a"
+     ]
+    },
+    {
+     "label": "none of these",
+     "to": [
+      "B8"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B7b",
+   "name": "revised quote",
+   "owner": null,
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "revised quote done, client proceeds",
+     "to": [
+      "B3"
+     ]
+    },
+    {
+     "label": "client withdraws",
+     "to": [
+      "B8"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B7c",
+   "name": "think about it, follow-up Teams appointment",
+   "owner": null,
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "follow-up appointment booked, client proceeds",
+     "to": [
+      "B7"
+     ]
+    },
+    {
+     "label": "client withdraws",
+     "to": [
+      "B8"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B7d",
+   "name": "Acceptance",
+   "owner": "PK",
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "application, risk tolerance questionnaire, accepted quote, DOC and RAR done",
+     "to": [
+      "B9"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B8",
+   "name": "NTU",
+   "owner": null,
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": "NTU",
+   "outcomes": [],
+   "note": ""
+  },
+  {
+   "id": "B9",
+   "name": "Application Setup",
+   "owner": "SR",
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "signing pack ready",
+     "to": [
+      "B9a"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B9a",
+   "name": "Application Gate",
+   "owner": "SR",
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "Section 14 only",
+     "to": [
+      "B9c"
+     ]
+    },
+    {
+     "label": "submitted, replacement case",
+     "to": [
+      "B9b"
+     ]
+    },
+    {
+     "label": "submitted, Pension/Provident",
+     "to": [
+      "B9h"
+     ]
+    },
+    {
+     "label": "submitted, otherwise",
+     "to": [
+      "B10"
+     ]
+    },
+    {
+     "label": "client withdraws after the gate",
+     "to": [
+      "B8"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B9b",
+   "name": "RAR",
+   "owner": null,
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "RAR accepted and signed",
+     "to": [
+      "B10"
+     ]
+    },
+    {
+     "label": "declined",
+     "to": [
+      "B8"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B9c",
+   "name": "Section 14 Phase 1 Initiation",
+   "owner": null,
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "Section 14 initiated",
+     "to": [
+      "B9d"
+     ]
+    },
+    {
+     "label": "client withdraws",
+     "to": [
+      "B8"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B9d",
+   "name": "Section 14 Phase 2 Client declaration and paid-up quotes",
+   "owner": null,
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "client declaration submitted",
+     "to": [
+      "B9e"
+     ]
+    },
+    {
+     "label": "client withdraws",
+     "to": [
+      "B8"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B9e",
+   "name": "Section 14 Phase 3 Form H (Tax Directives)",
+   "owner": null,
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "done",
+     "to": [
+      "B9f"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B9f",
+   "name": "Section 14 Phase 4 Fund Transfer",
+   "owner": null,
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "done",
+     "to": [
+      "B9g"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B9g",
+   "name": "Section 14 Phase 5 ROT and Form J",
+   "owner": null,
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "done",
+     "to": [
+      "B10"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B9h",
+   "name": "Pension/Provident Fund Transfer",
+   "owner": null,
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "funds dispatched and received",
+     "to": [
+      "B10"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B10",
+   "name": null,
+   "owner": null,
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "issued",
+     "to": [
+      "B10a"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B10a",
+   "name": "Issue Check",
+   "owner": "PK",
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "checked",
+     "to": [
+      "B10b"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B10b",
+   "name": null,
+   "owner": null,
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "done",
+     "to": [
+      "B11"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "B11",
+   "name": "Compliance Audit",
+   "owner": "SR",
+   "family": "B",
+   "track": "both",
+   "page": "05-family-b.md",
+   "entry": false,
+   "end": "CASE ISSUED",
+   "outcomes": [],
+   "note": ""
+  },
+  {
+   "id": "C1",
+   "name": "Info Gathering",
+   "owner": null,
+   "family": "C",
+   "track": "both",
+   "page": "06-family-cd.md",
+   "entry": true,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "information gathered",
+     "to": [
+      "C2"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "C2",
+   "name": "Report Request",
+   "owner": null,
+   "family": "C",
+   "track": "both",
+   "page": "06-family-cd.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "report requested",
+     "to": [
+      "C3"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "C3",
+   "name": "Proposal Prep",
+   "owner": "PK",
+   "family": "C",
+   "track": "both",
+   "page": "06-family-cd.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "proposal ready",
+     "to": [
+      "C4"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "C4",
+   "name": "Follow-Up Appt Set",
+   "owner": null,
+   "family": "C",
+   "track": "both",
+   "page": "06-family-cd.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "follow-up appointment booked, client proceeds",
+     "to": [
+      "C5"
+     ]
+    },
+    {
+     "label": "client withdraws",
+     "to": [
+      "C8"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "C5",
+   "name": "Presentation",
+   "owner": "PK",
+   "family": "C",
+   "track": "both",
+   "page": "06-family-cd.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "presentation done",
+     "to": [
+      "C6"
+     ]
+    },
+    {
+     "label": "client withdraws",
+     "to": [
+      "C8"
+     ]
+    },
+    {
+     "label": "client did not show up",
+     "to": [
+      "C5ns"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "C5ns",
+   "name": "Presentation No-Show",
+   "owner": null,
+   "family": "C",
+   "track": "both",
+   "page": "06-family-cd.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "appointment rebooked",
+     "to": [
+      "C4rt"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "C4rt",
+   "name": "Rebooked Presentation Tracking (Section C4)",
+   "owner": null,
+   "family": "C",
+   "track": "both",
+   "page": "06-family-cd.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "rebooked appointment confirmed",
+     "to": [
+      "C5"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "C6",
+   "name": "Wrap-Up",
+   "owner": null,
+   "family": "C",
+   "track": "both",
+   "page": "06-family-cd.md",
+   "entry": false,
+   "end": null,
+   "outcomes": [
+    {
+     "label": "done",
+     "to": [
+      "C7"
+     ]
+    }
+   ],
+   "note": ""
+  },
+  {
+   "id": "C7",
+   "name": "Compliance Audit",
+   "owner": null,
+   "family": "C",
+   "track": "both",
+   "page": "06-family-cd.md",
+   "entry": false,
+   "end": "COMPLETED",
+   "outcomes": [],
+   "note": ""
+  },
+  {
+   "id": "C8",
+   "name": "NTU",
+   "owner": "SR",
+   "family": "C",
+   "track": "both",
+   "page": "06-family-cd.md",
+   "entry": false,
+   "end": "NTU",
+   "outcomes": [],
+   "note": ""
+  },
+  {
+   "id": "D1",
+   "name": "Refer to Partner",
+   "owner": "SR",
+   "family": "D",
+   "track": "both",
+   "page": "06-family-cd.md",
+   "entry": true,
+   "end": "COMPLETED",
+   "outcomes": [],
+   "note": "three Sub Categories, each with its own starter: D-WL, D-MA, D-ST"
+  }
+ ]
+}
