@@ -6,9 +6,9 @@ THE FACTS
 - Skill name: prospect-review-funnel-at-knowledge
 - File: prospect-review-funnel-at-knowledge-20261104-1653.zip (73,803 bytes, 27 files)
 - Where it is on Paul's Windows computer, in this folder:
-  C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New
+  C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New\prospect-review-funnel-at-knowledge-skill
   Full path of the file:
-  C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New\prospect-review-funnel-at-knowledge-20261104-1653.zip
+  C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New\prospect-review-funnel-at-knowledge-skill\prospect-review-funnel-at-knowledge-20261104-1653.zip
 - What the NEW version says inside: the line "Last updated: 2026-11-04 16:53 (Athens time)", and its first section after the main title is called "Index".
 - Paul's account already has this skill (an older version). A zip with the same name REPLACES it: the account cannot hold two skills with one name. The older version is kept in the skill's version history (a dropdown on the skill's page, listing versions such as v32, v31 and so on). That history is the backup. Expect ONE entry before the upload and ONE entry after it.
 
