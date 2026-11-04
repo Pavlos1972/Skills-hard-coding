@@ -1,0 +1,17 @@
+{
+ "note": "The words that must not appear anywhere in the letter or the email for a benefit category that is out of scope (Step 0b of the old skill). The old check scanned five words; the debt cover, childcare and plain 'disability' words are new. Terminal illness is intrinsic to the death benefit and is always allowed. Edit a list here if a word is missing.",
+ "severe_illness": ["severe illness", "dread disease", "critical illness", "severe-illness"],
+ "disability": ["disability", "disabled"],
+ "income_protection": ["income protection", "income protector", "income benefit"],
+ "debt_cover": ["debt cover", "debt protection", "debt benefit"],
+ "childcare": ["childcare", "child care", "education benefit", "child benefit", "children's benefit"],
+ "life": [],
+ "category_names": {
+  "life": "Life cover",
+  "severe_illness": "Severe illness / dread disease",
+  "disability": "Disability",
+  "income_protection": "Income protection",
+  "debt_cover": "Debt cover",
+  "childcare": "Childcare / education benefits"
+ }
+}

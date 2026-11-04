@@ -1,0 +1,32 @@
+{
+ "attach_by": "paul",
+ "attach_note": "paul = Paul attaches the saved HTML letter to the Outlook draft by hand (the Microsoft 365 draft tool has no attachment field) and the Teams message to Sitamah is for her information; sitamah = the message asks Sitamah to attach it and email the client, as in the proposal skills. One word, change it here when Paul decides.",
+ "adviser": {
+  "name": "Paul Kafentzis",
+  "company": "Wealth Revolution (Pty) Ltd",
+  "fsp": "FSP 45946",
+  "whatsapp": "082 454 1751",
+  "office": "011 789 7845",
+  "email": "paulk@liferisk.co.za",
+  "note": "Taken from the live signature (paul-email-signature, 14/10/2026): WhatsApp, Office and Email. Used ONLY in the signed closing of the HTML letter. The covering email carries none of it: the Exchange rule adds the signature once when the email is sent."
+ },
+ "limits": {
+  "note": "Word limits are mine, from the old rules 'concise', 'lean' and 'Paul deliberately limits how much reaches the client' (Paul may change any number here).",
+  "banner_words": 60,
+  "opening_words": 45,
+  "verdict_min": 3,
+  "verdict_max": 6,
+  "verdict_headline_words": 15,
+  "verdict_detail_words": 40,
+  "feature_words": 40,
+  "definition_note_words": 30,
+  "email_opening_words": 60,
+  "email_bullets_min": 4,
+  "email_bullets_max": 6,
+  "email_bullet_words": 30,
+  "loyalty_when_words": 8,
+  "min_projection_years": 10,
+  "sides_min": 2,
+  "sides_max": 6
+ }
+}

@@ -1,0 +1,1018 @@
+[
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Scope",
+  "new": "references/00-rules.md (What this is; Working with Paul) and references/04-answers.md.",
+  "why": "Kept: any number of insurers, no client data in the skill, every comparison starts fresh from the client's own documents.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This skill applies to any comparison between two or more lif",
+  "new": "references/00-rules.md (What this is; Working with Paul) and references/04-answers.md.",
+  "why": "Kept: any number of insurers, no client data in the skill, every comparison starts fresh from the client's own documents.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This skill carries no client data. Every comparison starts f",
+  "new": "references/00-rules.md (What this is; Working with Paul) and references/04-answers.md.",
+  "why": "Kept: any number of insurers, no client data in the skill, every comparison starts fresh from the client's own documents.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Working with Paul: he corrects errors directly and expects t",
+  "new": "references/00-rules.md (What this is; Working with Paul) and references/04-answers.md.",
+  "why": "Kept: any number of insurers, no client data in the skill, every comparison starts fresh from the client's own documents.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 0 — Opening conversation",
+  "new": "references/01-locate.md, references/02-scope.md and steps.json (locate, scope).",
+  "why": "Derived from the client's folder and the notes; Paul is asked only what they cannot tell, once, on the confirmation table (S3, Paul's answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Start every new comparison with a short, natural conversatio",
+  "new": "references/01-locate.md, references/02-scope.md and steps.json (locate, scope).",
+  "why": "Derived from the client's folder and the notes; Paul is asked only what they cannot tell, once, on the confirmation table (S3, Paul's answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "What's this comparison about, and which insurers/products ar",
+  "new": "references/01-locate.md, references/02-scope.md and steps.json (locate, scope).",
+  "why": "Derived from the client's folder and the notes; Paul is asked only what they cannot tell, once, on the confirmation table (S3, Paul's answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Do not ask about the Header or Key Facts Banner at this stag",
+  "new": "references/01-locate.md, references/02-scope.md and steps.json (locate, scope).",
+  "why": "Derived from the client's folder and the notes; Paul is asked only what they cannot tell, once, on the confirmation table (S3, Paul's answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Once these are answered, move to Step 0b (benefit scope) bef",
+  "new": "references/01-locate.md, references/02-scope.md and steps.json (locate, scope).",
+  "why": "Derived from the client's folder and the notes; Paul is asked only what they cannot tell, once, on the confirmation table (S3, Paul's answer 2).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Step 0a — Section checklist and document voice",
+  "new": "references/02-scope.md (sections, voice) and scripts/lic.py scope_problems and scripts/run.py scope; the sections and the voice are settled on the ONE confirmation table.",
+  "why": "Asked once, with the defaults, on the confirmation table instead of as two separate questions (S3, Paul's answer 2 of 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Immediately after the opening conversation (and before start",
+  "new": "references/02-scope.md (sections, voice) and scripts/lic.py scope_problems and scripts/run.py scope; the sections and the voice are settled on the ONE confirmation table.",
+  "why": "Asked once, with the defaults, on the confirmation table instead of as two separate questions (S3, Paul's answer 2 of 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Sections — a tick-box choice of which sections to include in",
+  "new": "references/02-scope.md (sections, voice) and scripts/lic.py scope_problems and scripts/run.py scope; the sections and the voice are settled on the ONE confirmation table.",
+  "why": "Asked once, with the defaults, on the confirmation table instead of as two separate questions (S3, Paul's answer 2 of 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Section 1 — Premium Snapshot",
+  "new": "references/02-scope.md (sections, voice) and scripts/lic.py scope_problems and scripts/run.py scope; the sections and the voice are settled on the ONE confirmation table.",
+  "why": "Asked once, with the defaults, on the confirmation table instead of as two separate questions (S3, Paul's answer 2 of 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Header and Key Facts Banner are never on this list — they ar",
+  "new": "references/02-scope.md (sections, voice) and scripts/lic.py scope_problems and scripts/run.py scope; the sections and the voice are settled on the ONE confirmation table.",
+  "why": "Asked once, with the defaults, on the confirmation table instead of as two separate questions (S3, Paul's answer 2 of 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Document voice — ask whether the Key Facts Banner, section c",
+  "new": "references/02-scope.md (sections, voice) and scripts/lic.py scope_problems and scripts/run.py scope; the sections and the voice are settled on the ONE confirmation table.",
+  "why": "Asked once, with the defaults, on the confirmation table instead of as two separate questions (S3, Paul's answer 2 of 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Paul deliberately limits how much reaches the client to avoi",
+  "new": "references/02-scope.md (sections, voice) and scripts/lic.py scope_problems and scripts/run.py scope; the sections and the voice are settled on the ONE confirmation table.",
+  "why": "Asked once, with the defaults, on the confirmation table instead of as two separate questions (S3, Paul's answer 2 of 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Step 0b — Determine the client's actual requested benefi",
+  "new": "references/02-scope.md (the scope gate) and scripts/lic.py scope_problems, scope_suggestions, scope_hits and scripts/licbuild.py html_problems.",
+  "why": "Proved by the program: every category needs a line of the client's notes; every out-of-scope word is scanned over the letter and the email (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This step is not optional and runs before any quote figure i",
+  "new": "references/02-scope.md (the scope gate) and scripts/lic.py scope_problems, scope_suggestions, scope_hits and scripts/licbuild.py html_problems.",
+  "why": "Proved by the program: every category needs a line of the client's notes; every out-of-scope word is scanned over the letter and the email (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before retrieving quotes in Step 1 (or in the same pass, if ",
+  "new": "references/02-scope.md (the scope gate) and scripts/lic.py scope_problems, scope_suggestions, scope_hits and scripts/licbuild.py html_problems.",
+  "why": "Proved by the program: every category needs a line of the client's notes; every out-of-scope word is scanned over the letter and the email (Paul's answer 3).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 1 — Locate and retrieve source documents (OneDrive, ",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This is a hard, non-optional rule: this skill must locate th",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Locate the client's folder in OneDrive, matched by the clien",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If retrieval fails — the client folder can't be found by nam",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If only a RAR or replacement document is found for a side th",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Note on this session's access: this step needs either a conn",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "A client's folder structure isn't always uniform. OneDrive l",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before treating any retrieved document as complete, verify y",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "bash",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "A file reporting as Zip archive data despite a .pdf extensio",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If a schedule is scanned/image-based and OCR of the full pag",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If a document's text genuinely can't be extracted at all (a ",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Broker/insurer-supplied competitor comparison documents: if ",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "WR Overview vs. an insurer's own quote — resolving a conflic",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 2 — Product knowledge research (mandatory, every tim",
+  "new": "references/03-research.md and references/09-insurer-hints.md and scripts/lic.py _statement, check_claim and scripts/run.py doc --role guide.",
+  "why": "The guides are saved with their address and date and every statement cites a line (Paul's answer 7); the insurer traps are now hints (Paul's answer 4).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This step is non-negotiable regardless of how many insurers ",
+  "new": "references/03-research.md and references/09-insurer-hints.md and scripts/lic.py _statement, check_claim and scripts/run.py doc --role guide.",
+  "why": "The guides are saved with their address and date and every statement cites a line (Paul's answer 7); the insurer traps are now hints (Paul's answer 4).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Exact product name and tier. Insurer ranges are frequently t",
+  "new": "references/03-research.md and references/09-insurer-hints.md and scripts/lic.py _statement, check_claim and scripts/run.py doc --role guide.",
+  "why": "The guides are saved with their address and date and every statement cites a line (Paul's answer 7); the insurer traps are now hints (Paul's answer 4).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Known hard-won traps — check for these specifically whenever",
+  "new": "references/03-research.md and references/09-insurer-hints.md and scripts/lic.py _statement, check_claim and scripts/run.py doc --role guide.",
+  "why": "The guides are saved with their address and date and every statement cites a line (Paul's answer 7); the insurer traps are now hints (Paul's answer 4).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Discovery's ACI already incorporates the cost of its ABI. AC",
+  "new": "references/03-research.md and references/09-insurer-hints.md and scripts/lic.py _statement, check_claim and scripts/run.py doc --role guide.",
+  "why": "The guides are saved with their address and date and every statement cites a line (Paul's answer 7); the insurer traps are now hints (Paul's answer 4).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 3 — Verify key facts from source documents",
+  "new": "references/04-answers.md (what to extract) and scripts/lic.py answers_problems.",
+  "why": "Every figure is checked against the evidence line it cites.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Extract and verify the following for each insurer (include o",
+  "new": "references/04-answers.md (what to extract) and scripts/lic.py answers_problems.",
+  "why": "Every figure is checked against the evidence line it cites.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Policy/proposal number and start date · current or quoted mo",
+  "new": "references/04-answers.md (what to extract) and scripts/lic.py answers_problems.",
+  "why": "Every figure is checked against the evidence line it cites.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Where the source document states a total for lump-sum cover,",
+  "new": "references/04-answers.md (what to extract) and scripts/lic.py answers_problems.",
+  "why": "Every figure is checked against the evidence line it cites.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Include only where applicable: terminal illness benefit (acc",
+  "new": "references/04-answers.md (what to extract) and scripts/lic.py answers_problems.",
+  "why": "Every figure is checked against the evidence line it cites.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Deliberately excluded from this checklist — do not add them:",
+  "new": "references/04-answers.md (what to extract) and scripts/lic.py answers_problems.",
+  "why": "Every figure is checked against the evidence line it cites.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Where a Cash Conversion / guaranteed-value benefit exists, d",
+  "new": "references/04-answers.md (what to extract) and scripts/lic.py answers_problems.",
+  "why": "Every figure is checked against the evidence line it cites.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 4 — Premium pattern — how to explain it correctly",
+  "new": "references/05-check.md and scripts/lic.py proj_rows, esc_summary and scripts/licbuild.py sec_escalation, html_problems.",
+  "why": "The percentages are recomputed and the badges are checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The critical distinction for every policy is whether the pre",
+  "new": "references/05-check.md and scripts/lic.py proj_rows, esc_summary and scripts/licbuild.py sec_escalation, html_problems.",
+  "why": "The percentages are recomputed and the badges are checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Always present a year-by-year premium projection table cover",
+  "new": "references/05-check.md and scripts/lic.py proj_rows, esc_summary and scripts/licbuild.py sec_escalation, html_problems.",
+  "why": "The percentages are recomputed and the badges are checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every insurer's row in the Premium Escalation Table must sho",
+  "new": "references/05-check.md and scripts/lic.py proj_rows, esc_summary and scripts/licbuild.py sec_escalation, html_problems.",
+  "why": "The percentages are recomputed and the badges are checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If the source document *states* the escalation rate (e.g. Ol",
+  "new": "references/05-check.md and scripts/lic.py proj_rows, esc_summary and scripts/licbuild.py sec_escalation, html_problems.",
+  "why": "The percentages are recomputed and the badges are checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Watch for base-year/anchor mismatches. An insurer's stated \"",
+  "new": "references/05-check.md and scripts/lic.py proj_rows, esc_summary and scripts/licbuild.py sec_escalation, html_problems.",
+  "why": "The percentages are recomputed and the badges are checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 5 — Accuracy rules — non-negotiable",
+  "new": "references/05-check.md and references/04-answers.md (Accuracy) and references/01-locate.md (OCR) and scripts/lic.py check_claim, check_summary.",
+  "why": "The recomputation is the program's; the research and the honest tiered answer stay with the chat.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every figure must be sourced directly from a retrieved docum",
+  "new": "references/05-check.md and references/04-answers.md (Accuracy) and references/01-locate.md (OCR) and scripts/lic.py check_claim, check_summary.",
+  "why": "The recomputation is the program's; the research and the honest tiered answer stay with the chat.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Escalation-percentage verification — mandatory, every in",
+  "new": "references/05-check.md (what the program does for every insurer; what you do with the flags; the honest tiered answer) and scripts/lic.py proj_rows, esc_summary, check_summary and scripts/licbuild.py html_problems.",
+  "why": "The recomputation, the anchor check and the outlier flags are the program's; the research and the tiered honest answer stay with the chat. The old reference to Paul's industry baseline is dropped (Paul's answer 5): the program compares a year with the same insurer's neighbours and with the other insurers.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This is a hard gate, not a spot-check: run it for every insu",
+  "new": "references/05-check.md (what the program does for every insurer; what you do with the flags; the honest tiered answer) and scripts/lic.py proj_rows, esc_summary, check_summary and scripts/licbuild.py html_problems.",
+  "why": "The recomputation, the anchor check and the outlier flags are the program's; the research and the tiered honest answer stay with the chat. The old reference to Paul's industry baseline is dropped (Paul's answer 5): the program compares a year with the same insurer's neighbours and with the other insurers.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Recompute every percentage from the source document's own fi",
+  "new": "references/05-check.md (what the program does for every insurer; what you do with the flags; the honest tiered answer) and scripts/lic.py proj_rows, esc_summary, check_summary and scripts/licbuild.py html_problems.",
+  "why": "The recomputation, the anchor check and the outlier flags are the program's; the research and the tiered honest answer stay with the chat. The old reference to Paul's industry baseline is dropped (Paul's answer 5): the program compares a year with the same insurer's neighbours and with the other insurers.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "OCR discipline — \"illegible\" is a starting point, not an end",
+  "new": "references/05-check.md (what the program does for every insurer; what you do with the flags; the honest tiered answer) and scripts/lic.py proj_rows, esc_summary, check_summary and scripts/licbuild.py html_problems.",
+  "why": "The recomputation, the anchor check and the outlier flags are the program's; the research and the tiered honest answer stay with the chat. The old reference to Paul's industry baseline is dropped (Paul's answer 5): the program compares a year with the same insurer's neighbours and with the other insurers.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "bash",
+  "new": "references/05-check.md (what the program does for every insurer; what you do with the flags; the honest tiered answer) and scripts/lic.py proj_rows, esc_summary, check_summary and scripts/licbuild.py html_problems.",
+  "why": "The recomputation, the anchor check and the outlier flags are the program's; the research and the tiered honest answer stay with the chat. The old reference to Paul's industry baseline is dropped (Paul's answer 5): the program compares a year with the same insurer's neighbours and with the other insurers.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Check the crop coordinates against a view of the full page f",
+  "new": "references/05-check.md (what the program does for every insurer; what you do with the flags; the honest tiered answer) and scripts/lic.py proj_rows, esc_summary, check_summary and scripts/licbuild.py html_problems.",
+  "why": "The recomputation, the anchor check and the outlier flags are the program's; the research and the tiered honest answer stay with the chat. The old reference to Paul's industry baseline is dropped (Paul's answer 5): the program compares a year with the same insurer's neighbours and with the other insurers.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never promote a hypothetical into an asserted fact. If an ad",
+  "new": "references/05-check.md (what the program does for every insurer; what you do with the flags; the honest tiered answer) and scripts/lic.py proj_rows, esc_summary, check_summary and scripts/licbuild.py html_problems.",
+  "why": "The recomputation, the anchor check and the outlier flags are the program's; the research and the tiered honest answer stay with the chat. The old reference to Paul's industry baseline is dropped (Paul's answer 5): the program compares a year with the same insurer's neighbours and with the other insurers.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "When a document has two similarly-labelled status fields, co",
+  "new": "references/05-check.md (what the program does for every insurer; what you do with the flags; the honest tiered answer) and scripts/lic.py proj_rows, esc_summary, check_summary and scripts/licbuild.py html_problems.",
+  "why": "The recomputation, the anchor check and the outlier flags are the program's; the research and the tiered honest answer stay with the chat. The old reference to Paul's industry baseline is dropped (Paul's answer 5): the program compares a year with the same insurer's neighbours and with the other insurers.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "When a client fact changes mid-build (e.g. a new start date ",
+  "new": "references/05-check.md (what the program does for every insurer; what you do with the flags; the honest tiered answer) and scripts/lic.py proj_rows, esc_summary, check_summary and scripts/licbuild.py html_problems.",
+  "why": "The recomputation, the anchor check and the outlier flags are the program's; the research and the tiered honest answer stay with the chat. The old reference to Paul's industry baseline is dropped (Paul's answer 5): the program compares a year with the same insurer's neighbours and with the other insurers.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 6 — Loyalty/payback/bonus/cashback benefits",
+  "new": "references/04-answers.md (the loyalty table) and scripts/licbuild.py sec_loyalty and scripts/lic.py answers_problems.",
+  "why": "One small table, built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Only relevant if Section 4 was ticked in Step 0a. Keep this ",
+  "new": "references/04-answers.md (the loyalty table) and scripts/licbuild.py sec_loyalty and scripts/lic.py answers_problems.",
+  "why": "One small table, built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The entire section is one table, four columns, one row per i",
+  "new": "references/04-answers.md (the loyalty table) and scripts/licbuild.py sec_loyalty and scripts/lic.py answers_problems.",
+  "why": "One small table, built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Insurer | Benefit (its name) | Amount or % | When |",
+  "new": "references/04-answers.md (the loyalty table) and scripts/licbuild.py sec_loyalty and scripts/lic.py answers_problems.",
+  "why": "One small table, built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Amount or % — whichever the source document actually states:",
+  "new": "references/04-answers.md (the loyalty table) and scripts/licbuild.py sec_loyalty and scripts/lic.py answers_problems.",
+  "why": "One small table, built by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 7 — Insurer-specific unique features (dynamic sectio",
+  "new": "references/04-answers.md (unique features) and scripts/lic.py answers_problems (features) and scripts/licbuild.py features_block.",
+  "why": "Each feature carries a basis and a sourced line; the badges are shown to Paul before the build (Paul's answer 8).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Feeds into Section 2 (Cover Comparison) and Section 5 (Defin",
+  "new": "references/04-answers.md (unique features) and scripts/lic.py answers_problems (features) and scripts/licbuild.py features_block.",
+  "why": "Each feature carries a basis and a sourced line; the badges are shown to Paul before the build (Paul's answer 8).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Each unique feature must be verified against Step 2 research",
+  "new": "references/04-answers.md (unique features) and scripts/lic.py answers_problems (features) and scripts/licbuild.py features_block.",
+  "why": "Each feature carries a basis and a sourced line; the badges are shown to Paul before the build (Paul's answer 8).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Features relevant to the client but absent from their specif",
+  "new": "references/04-answers.md (unique features) and scripts/lic.py answers_problems (features) and scripts/licbuild.py features_block.",
+  "why": "Each feature carries a basis and a sourced line; the badges are shown to Paul before the build (Paul's answer 8).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Include a summarised \"who's ahead\" assessment across the key",
+  "new": "references/04-answers.md (unique features) and scripts/lic.py answers_problems (features) and scripts/licbuild.py features_block.",
+  "why": "Each feature carries a basis and a sourced line; the badges are shown to Paul before the build (Paul's answer 8).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 8 — Definitions and claim quality",
+  "new": "references/04-answers.md (definition quality) and scripts/licbuild.py sec_definitions.",
+  "why": "Kept lean; only when ticked.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This is the section most likely to end up carrying more deta",
+  "new": "references/04-answers.md (definition quality) and scripts/licbuild.py sec_definitions.",
+  "why": "Kept lean; only when ticked.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 9 — Spouse/partner cover (second life)",
+  "new": "references/02-scope.md (second life) and references/04-answers.md and scripts/lic.py answers_problems.",
+  "why": "Every side states the second life's cover status.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Triggered by Step 0 Q2. Always check whether the second life",
+  "new": "references/02-scope.md (second life) and references/04-answers.md and scripts/lic.py answers_problems.",
+  "why": "Every side states the second life's cover status.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 10 — Document format, visual design and tone",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Format: output as a standalone HTML file, designed to open c",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Visual design — neutral, insurer-agnostic palette, sized for",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "css",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "/* Positional insurer palette — assign in order encountered,",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "-green: #2E7D32;              /* advantage / \"wins\" badge, o",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If more than six insurers/policies genuinely need to appear ",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Totals rows: charcoal background, each insurer's values show",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Scaling tables and cards for more than two or three insurers",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Premium snapshot / summary cards: use a responsive grid —",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Handling a gap in one insurer's premium projection data (e.g",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Structure: the Header and Key Facts Banner are built into ev",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Header *(always included)* — client names, policy/proposal r",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 11 — What not to do",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Do not fabricate, estimate, or carry over figures from memor",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Do not compare, mention, or show a \"not selected\"/R0 line fo",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Do not state an escalation mechanism as independently confir",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Do not ship the document as an unaddressed report. Every doc",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Adviser-facing content does not belong in the client deliver",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 12 — Pre-delivery checks",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Run these before presenting the finished document.",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Benefit-scope check *(mandatory, every build)* — confirm the",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "bash",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every match must be investigated — if any category outside t",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Escalation-accuracy check *(mandatory, every build)* — confi",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Section 4 simplicity check *(mandatory, every build where Se",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Letter-format check *(mandatory, every build)* — confirm a s",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Personalization pass — grep for third-person slips before tr",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "bash",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Confirm every match is either metadata (a header \"Client:\" r",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Structural integrity check — catches malformed edits (a brok",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "bash",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Also grep for any footnote symbol (†, ‡, *) used in a table ",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Section-selection check — confirm the finished document cont",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Premium Escalation Table % check *(if Section 3 is included)",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Quote-version-history check *(mandatory whenever a quote/sch",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "bash",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every match must be investigated — the document states only ",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Honesty check. If the adviser asks directly whether the docu",
+  "new": "references/01-locate.md and scripts/run.py doc, access, insurers and scripts/docread.py.",
+  "why": "Kept; the three routes are tried in order and logged (S4); a page-image bundle and an image page are handled as written; the Overview-against-quote rule is kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Companion email",
+  "new": "references/07-draft-and-message.md and scripts/licbuild.py build_body, draft_problems and assets/wording.json.",
+  "why": "Built by the program, drafted with the Microsoft 365 draft tool, read back.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every finished comparison is accompanied by a covering email",
+  "new": "references/07-draft-and-message.md and scripts/licbuild.py build_body, draft_problems and assets/wording.json.",
+  "why": "Built by the program, drafted with the Microsoft 365 draft tool, read back.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Open with a personal, warm acknowledgement of the client rel",
+  "new": "references/07-draft-and-message.md and scripts/licbuild.py build_body, draft_problems and assets/wording.json.",
+  "why": "Built by the program, drafted with the Microsoft 365 draft tool, read back.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This is the standing baseline for all future life cover comp",
+  "new": "references/07-draft-and-message.md and scripts/licbuild.py build_body, draft_problems and assets/wording.json.",
+  "why": "Built by the program, drafted with the Microsoft 365 draft tool, read back.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Source first - never invent. Write only what is in the sourc",
+  "new": "references/00-rules.md rule 2: every fact comes from the client's documents or the saved guides with its source.",
+  "why": "Enforced by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Read before you write. Read the source material completely a",
+  "new": "references/00-rules.md rule 3 and steps.json (read).",
+  "why": "Enforced by the reading lock.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Check before you claim. Never tell the user something is don",
+  "new": "references/00-rules.md rule 4.",
+  "why": "Enforced by read-backs and receipts.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Deliver everything this skill lists, every time. A run is no",
+  "new": "references/08-handover.md and scripts/verify.py.",
+  "why": "Done by the checker.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every correction re-opens the whole task, not just the item.",
+  "new": "references/00-rules.md rule 8: a correction re-opens the task; the driver re-opens the later steps.",
+  "why": "Enforced by the driver.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never lower the standard. A correction, a frustrated user, a",
+  "new": "references/00-rules.md rule 10.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If a rule cannot be met, stop and say so. State exactly whic",
+  "new": "references/00-rules.md rule 9.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Delivery gate for this skill (rules 5 and 6 applied): a run ",
+  "new": "references/08-handover.md (what a finished run looks like) and scripts/verify.py.",
+  "why": "Done by the checker; the hand-over the old gate promised but never specified is now specified.",
+  "needs_paul": false
+ }
+]

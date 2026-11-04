@@ -1,0 +1,37 @@
+{
+ "skill": "life-insurer-comparison",
+ "deliverables": [
+  {
+   "name": "The comparison letter (.html), built from the fixed template",
+   "file": "out/<First>_<Surname>_Life_Insurance_Comparison - DD.MM.YY.html (sent to Paul in the chat and saved in the client's Comparative Quotes)",
+   "produced_by": "scripts/run.py check + build (scripts/licbuild.py fills assets/Life_Comparison_TEMPLATE.html from the answers)",
+   "handover": "the file in the chat; saved through the three routes in order, never overwriting without Paul's yes",
+   "checked_by": "scripts/verify.py + scripts/licbuild.py html_problems",
+   "step": "save"
+  },
+  {
+   "name": "The Outlook draft with the covering email (never sent by Claude)",
+   "file": "made with outlook_create_draft from out/draft_body.html; read-back saved as out/draft_readback.txt",
+   "produced_by": "scripts/run.py build (the body) and the chat (the draft)",
+   "handover": "left in Drafts; Paul attaches the saved HTML letter by hand (settings.json attach_by) and sends; the Exchange rule adds his signature once",
+   "checked_by": "scripts/run.py draft + scripts/verify.py (the saved read-back)",
+   "step": "draft"
+  },
+  {
+   "name": "The Teams message to Sitamah",
+   "file": "printed by scripts/run.py message; read-back saved as out/message_readback.txt",
+   "produced_by": "scripts/licbuild.py teams_text",
+   "handover": "sent through Zapier to the 1:1 chat after Paul's yes and a checked draft",
+   "checked_by": "scripts/run.py messagecheck + scripts/verify.py",
+   "step": "message"
+  },
+  {
+   "name": "Short audit",
+   "file": "printed by scripts/verify.py; full record in out_record/audit-full.txt",
+   "produced_by": "scripts/verify.py",
+   "handover": "pasted into the reply as it is: one line per check with a green tick or a red cross, one closing line for what is only attested",
+   "checked_by": "scripts/run.py done final",
+   "step": "final"
+  }
+ ]
+}

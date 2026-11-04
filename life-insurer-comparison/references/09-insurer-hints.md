@@ -1,0 +1,10 @@
+# Hints from earlier comparisons (possible, NOT facts: check each against this client's own documents every time)
+
+The old skill carried these as "known hard-won traps". Insurers change their products, so they are hints about what to look for, never statements to copy into a letter.
+- **Discovery:** the age-rated cost of insurance (ACI) may already include the cost of its benefit increase (ABI); the two may not be additive. Age-rated and accelerating over time.
+- **BrightRock:** the ACI has been stated as a flat "Yearly premium increase" figure, fixed by contract. Do not relabel it age-rated because the percentage is round and sizeable. Do not describe the two insurers as working the same way.
+- **Momentum:** the increase may be printed as a flat Compulsory / Voluntary / Total breakdown (for example "Compulsory: 10.00%"): fixed on that document unless the client's document says otherwise.
+- **Liberty and Discovery** commonly use a genuinely age-rated pattern (Liberty's own term is typically "Age Rated Premium Pattern"; Discovery's ACI is a factor against a standard age-based table).
+- **A client-selected automatic or annual benefit (cover) increase stacks multiplicatively, not additively, with an age-rated cost-of-insurance increase:** about 9 to 10% age-rated plus a separately chosen 10% benefit increase can give about 19 to 21% in a given year, that is (1+a)(1+b)-1, not a+b. A high combined figure of this kind is not necessarily wrong; the check step flags it for you to look at.
+- **Two similarly named status fields:** some documents record two statuses for the same client (a general "Vitality status" and a separate "Vitality Money status", with the same tier names for different purposes). Check the exact field label the mechanism's own table uses before stating a figure; if the document does not disambiguate, say so.
+- **A hypothetical is not a fact:** if Paul gives an illustrative example to explain a mechanism (for example "let's say Blue tier"), keep the explanation general; never write it into the letter as the client's confirmed status.
