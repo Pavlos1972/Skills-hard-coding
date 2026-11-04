@@ -1,0 +1,80 @@
+# prospect-review-funnel-at-knowledge: Phase A findings (Operation Skill Restructure, 04/11/2026)
+
+Read-only analysis of the LIVE skill (Paul's synced copy, "Last updated" 2026-11-04 12:25 Athens time, checksum `a225ae76...`, kept as `SKILL.2026-11-04.md`). **No client data found** (no emails, no long numbers, no names from the names list; "Mr John Snow" is the AdviceTech test client, to be confirmed as invented; the first names are business contacts). Nothing has been changed or built.
+
+## Facts
+- Live skill: ONE file, `SKILL.md`, 281 lines, 70,719 bytes (about 17,000 tokens, loaded in full every time a chat uses it). No script, no template, no other file. **786 rules** counted in the archived baseline.
+- Biggest parts: Decision gate catalogue 16%, AT build rules 13%, Families A to D 11%, Parent Tasks 10%, AT module map 10%, build plan and status table 7%, stamp and five-row changelog 7%, source documents 7%. Two lines are over 2,000 characters (the longest is 2,868).
+- It is a **knowledge book plus procedures**, not a job that makes a file: it holds the logic of Wealth Revolution's Prospect and Review funnel (stages G0 to G8, R1 to R4, Families A to D, owners SR / PK / CL, decision gates, loops, end states), how that logic is built in AdviceTech (module map, ids, build rules, boards), the build plan and its status, and six ways of working with it (funnel question, AT build or correction, AT test, document edit, review on the working flow page, moving a client).
+- What feeds it: six documents in OneDrive `Company - Paul/Claude/ClickUp/WR - Template Journey - Paul K` (STREAMLINED, AT MASTER PLAN, AT BUILD REGISTER, Logic & Flow, Flow Comparison, AUTOMATION) and Paul's decisions in chat. What it produces: answers, AdviceTech changes (done by the chat in Paul's Chrome, with his go-ahead), changes to the six documents, a table "one row per item with running totals", the working flow page (a claude.ai Artifact).
+- Hands over to / receives from: `advicetech-website-knowledge` (how to drive AdviceTech); `client-pipeline-board` and the product skills (per-client work); the board's `references/03-route.md` points at it. The AUTOMATION document names the skills that do each line.
+
+## Flaws found
+Client data (S11): none.
+Wrong, outdated or contradicting:
+1. **Stale chain shorthand (lines 88 and 89).** "G4 ... → G5 → G6" for both tracks, while Decisions 54 and 55 put G5a and G5b between G5 and G6 (the next bullets and the index say so).
+2. **Stale counts and names.** "AT has 75 active Sections = the master plan's 75 (before G5a, A6t, B7t, G5b)" (line 203); the STREAMLINED row (line 68) lists updates only up to Decisions 39 to 53 while the build plan (lines 255 and 256) says STREAMLINED took Decisions 54 and 55; the Project copy is still named `...STREAMLINED - 20.10.2026.md` after Paul removed dates from file names (lines 68 and 71).
+3. **Dated forecasts inside the rules (lines 221 and 257).** "Release best case Thursday 5 Nov 2026 (evening), otherwise 19 Nov", "end-to-end test planned for Friday 6 Nov": stale from 6 Nov. The same forecast is in `advicetech-website-knowledge` (line 325).
+4. **Old rules replaced by later decisions.** Rule 1 (re-load the whole skill before every deliverable) and rule 9 (put the SKILL.md forward with `propose_skills`, "if the card does not appear"): replaced by S7 (changes only in Claude Code, zip, Chrome upload). Rule 9 is also in `advicetech-website-knowledge` (line 40).
+5. **Two chains of authority.** "STREAMLINED wins" (line 77) but the Master Plan holds the AT design and Decisions 22 to 55, and the AUTOMATION document says "wording always follows the Master Plan" (line 73). For a decision that touches only AT technical detail it is not said which document wins.
+6. **Decision numbers cannot be found.** The index says "Decisions 11 to 55" but the skill never lists them; rules cite Decisions 7, 11, 12, 13, 14, 19, 22 with no place to look them up except "Appendix C" of the Master Plan.
+Nothing forces the rules (text only):
+7. **No access routes, no log (S3, S4).** The six documents are "in OneDrive" at one path (line 64). No instruction to try the computer, Microsoft 365 and Zapier in order and log each; no way to prove which version was read ("judge by Date Modified" has no check).
+8. **"Read before you write" has no proof (rule 3).** The STREAMLINED and the Master Plan (189 checklist tables) are long; nothing serves them in order or checks that the stage in question was really read.
+9. **"Documents first, always" (line 220, "emphatic") has no receipt.** Nothing records that the Master Plan and register changed before AT was touched.
+10. **Three overlapping checks, all by eye.** The nine rules, the six-part Delivery gate and the 11-box Verification checklist repeat each other (for example "check before you claim" three times); no PASS or FAIL; the line-hash audit and dry-run (line 224) are described but the method lives in another skill.
+11. **Scripts the skill leans on are not in it.** `flowi.py` (refresh the flow page from the register, line 72), `addnotes.py`, `tick.js`, `tick.css` (line 266). A fresh chat has to rewrite them. The working flow page is an Artifact link (line 266) with two database collections.
+12. **Pointers a fresh chat cannot follow.** Project files `claude/...-changelog.md`, `claude/skills-changelog-addendum-2026-11-03.md`, `claude/at-handoff-...md`, `source/...md` (lines 45, 68, 71, 75) live in the Claude Project, not in the skill or OneDrive.
+13. **No "never touch" guard a program can use.** "Charl's items are never touched: checklists #7, #8, #9, Sections 15 and 16" (lines 207 and 229) is a sentence; nothing refuses a plan that names them.
+14. **Open items hidden in the rules.** "reply-all to Matthew drafted 3 Nov, Paul sends, Register already marks it GONE, confirm" (line 258); "Permission (or AdviceTech setting it) requested in Paul's reply drafted 30 Oct" (line 223); "pre-fill each new Task (not yet tested)" (line 226).
+Repeated and long text:
+15. **Status copied by hand into many places.** "1,487 lines" 4 times, "189 of 189" 5 times, "278 triggers" and "277 triggers" side by side, MP35 20 times, Decision 55 14 times, Decision 54 5 times; Decisions 54 and 55 are told in six places (changes rows, Parent Tasks, Decision gate catalogue, module map, build plan, Using the skill). Every decision means editing six places, and items 1 to 3 above are what drift looks like.
+16. **History inside the knowledge page.** Five changelog rows of about 1 KB each (lines 48 to 52), the build plan table with every phase status (lines 231 to 258), the story of the deletion requests (Matthew, Johan, Dalene, line 207). Backstory belongs in a log.
+17. **A typed stamp and a typed changelog (line 43 and lines 45 to 54)**, kept up by whoever edits the live skill (S2: the stamp must be set by a program).
+18. **The "table with one row per item and running totals, ending with 'Go ahead with <next>'" (Delivery gate 5)** is a long report, against Paul's rule that audit reports in the chat are SHORT (one-liners with ✅ or ❌). The AT build table is Paul's live record while he watches, so I treat it as a question.
+19. **Backup and folder names typed by hand** ("AT build complete - Decision 55 04.11.2026").
+
+## Duplications between skills
+- **`advicetech-website-knowledge`** (344 lines, 79 KB, restructured later as its own job) holds the same facts, word for word in places: documents first; Charl's items never touched; the John Snow test client; deleting a template line and the many-lines-at-once tick panel; the board technique (create and reorder columns, grey description lines, auto-status); the tick-without-the-screen method; descriptions (Decision 31); "a loop adds a second copy" (proven 30 Oct); the deletion requests; the indentation-fix forecast; the 12:25 changelog row; the stale rule 9. I checked by search that each of these technique blocks exists in that skill; I did **not** compare the two line by line (that is the next skill's Phase A), so a difference may still be hiding.
+- **`client-pipeline-board`**: its playbooks are an older copy of the Family chains (see its Phase A). Two stage lists live side by side until Paul says the board is replaced; unchanged by this job.
+- **The six OneDrive documents** say the same things again; this skill is a seventh copy.
+- Proposed owner of each: this skill owns WHAT the funnel is and what AdviceTech must hold (logic, stages, routes, decisions, module map, what a checklist line must look like, the order of work). `advicetech-website-knowledge` owns HOW to work in AdviceTech (screens, routes, board and tick technique, delete procedure, bulk method, safety rules, the test client).
+
+## Score against the 13 ingredients
+Full 0. Partial 6: 1 short entry page (an Index, but 281 lines and a typed stamp), 2 inputs from the file first (a OneDrive path, no routes, no log), 5 evidence (never invent, source first; nothing proves it), 9 one checker (11 boxes by eye), 10 one reply one question ("Go ahead with <next>"), 12 history outside (changelog in the Project, no inventory). Missing 5: 3 step driver, 4 reading lock, 6 built by program, 11 tests, 13 package and upload. Does not apply 2: 7 short means short (answers follow the question), 8 sorted actions.
+
+## What a program CAN and CANNOT do here (honest)
+- CAN:
+  - Make the entry page short (Index, standing rules one line each) and move the detail to reference pages shown at the right step. A chat then loads about 2,000 tokens instead of about 17,000, and reads more only when the work needs it.
+  - Set the Athens-time stamp and draw the five-row "recent changes" from one `changes.json`.
+  - Hold every number and status (1,487 lines, 189 checklists, 278 triggers, build status per phase, open items with date and owner) in ONE status data file and draw them into every page, so they cannot disagree.
+  - Drive the six ways of working step by step and log each step (version first, run state on disk).
+  - Locate the six documents through the three routes in order (computer or OneDrive, Microsoft 365, Zapier), log every try, record each file's Date Modified, and warn when a document is newer than the skill's last status.
+  - Serve the right reference pages in order with a reading lock; prove "read before you write" by checking a verbatim line quoted from the STREAMLINED and the Master Plan for each stage touched (text search, as in the other skills).
+  - Record a documents-first receipt (Master Plan and register Date Modified earlier than the first AdviceTech change).
+  - Refuse a plan that names a never-touch object (#7, #8, #9, Sections 15 and 16).
+  - Hold the stage routes as data and prove they are consistent (every target exists, every stage has one owner, every loop has an exit, no dead end, mutually exclusive stages never together).
+  - Replace the 11 boxes by a short audit with ✅ or ❌ and one "Only attested" line.
+- CANNOT:
+  - Decide whether the funnel logic is right (yours).
+  - Read or write AdviceTech (needs your Chrome; the chat does it, with your go-ahead, using the other skill's methods).
+  - Prove that AdviceTech, the register and the Master Plan agree, unless the bigger option below is built.
+  - Know that you approved a change (it records your words, which stays attested).
+  - Keep the six documents in step by itself (it can only warn).
+- Size: **medium**, a little smaller than `client-review-notes` (no document to draw, but more reference pages to split). With the bigger option below it becomes big.
+- The honest catch: the content is your business logic and it changes almost daily (Decisions 54 and 55 landed today, the live text was edited three times today). After the rebuild each decision needs a Claude Code change, a zip and an upload (S7), not an edit in the chat. The gain is a skill that costs a tenth of the tokens, cannot drift between its six places and proves its own steps. Before packaging I compare the live checksum with the baseline and fold in anything new.
+- The bigger option (not recommended now): a program that reads the AT BUILD REGISTER (1,487 rows) and the AT MASTER PLAN (189 tables) and proves them equal, plus a fixed read-back snippet for AdviceTech. I have never seen those files, so the first real run would probably need a fix.
+
+## Yes/No list for Paul (recommended answers in brackets)
+1. **What the skill is.** The skill becomes a map and a set of procedures: stable rules and the stage routes on short pages, with the six OneDrive documents named as the source of truth. For wording and logic the STREAMLINED wins; for AdviceTech technical detail the Master Plan wins; the skill says so on the first page. (Yes)
+2. **How a new decision reaches the skill.** Documents first (as today), then one Claude Code change that updates the reference pages and the status file in one go, then a zip and an upload. Not an edit inside a chat. Catch: more work per decision. (Yes)
+3. **Split with `advicetech-website-knowledge`.** This skill keeps WHAT; the screen routes, board technique, delete procedure, bulk method and tick method stay in the other skill, and here they become one-line pointers. Nothing is deleted from the other skill in this job. (Yes)
+4. **One status file.** Counts, build status per phase, the stamp, the five recent changes and the open items live in one data file; the program draws them into the pages. The build-plan table and the backstory (requests to Matthew, Johan, Dalene) go to the history log, not the rules. (Yes)
+5. **Open items.** Which of these are closed? (a) MP15 #175 deletion request to Matthew (Register says GONE); (b) the request to set auto-status "Closed" (drafted 30 Oct); (c) "descriptions pre-fill each new Task" (not tested); (d) the release forecast (5 Nov or 19 Nov) and the end-to-end test on 6 Nov. I keep each as an open item with a date unless you say it is closed. (Tell me)
+6. **Removals.** Rules 1 and 9 (re-load, `propose_skills`), the typed stamp and changelog, the Project pointers (`claude/...md`), the stale chain shorthand "G5 → G6", the "75 Sections" count and the dated forecasts. The OneDrive documents are the only place the program looks; Project copies stay optional. (Yes)
+7. **One step driver.** One program drives the six ways of working (question, build or correction, test, document edit, review on the working page, moving a client) with the access log, the reading lock, the documents-first receipt and the never-touch guard. (Yes)
+8. **Route checker.** The stage routes are held as data (about 100 stages) and the checker proves they are consistent. It checks the skill's own table, not AdviceTech and not the Master Plan. (Yes)
+9. **Leave the register and AdviceTech audits out for now.** No program that proves register = Master Plan = AdviceTech in this job; the chat keeps doing that audit as it does today, under the AdviceTech skill's methods. I can build it later if you give me an invented sample of the register layout. (Yes, leave out)
+10. **Scripts outside the skill.** Can you send me `flowi.py`, `addnotes.py`, `tick.js` and `tick.css` (no client data in them)? If yes, they go inside the skill and are never rewritten during a run. If no, the skill says plainly that they live outside. The working flow page (the Artifact) stays as it is, with its link on a reference page. (Yes, I will send them)
+11. **Reports.** Keep the one-row-per-item table with running totals during an AdviceTech build (it is your live record) and add the short audit with ✅ or ❌ at the end. (Yes)
+12. **Names.** Keep the AdviceTech people's first names (Matthew, Johan, Ruben, Matthys, Charl, Dalene, Gareth) and the partners (Valerie Swanepoel, Capital Legacy, Cameron Maritz, Di at D&R Marketing) as business contacts, and confirm "Mr John Snow" is an invented test client. (Yes)
