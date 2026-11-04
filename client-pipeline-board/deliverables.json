@@ -1,0 +1,17 @@
+{
+ "skill": "client-pipeline-board",
+ "deliverables": [
+  {"name": "The client's pipeline board (a self-contained read-out page, published as the Artifact titled '<Client Name> - Pipeline')", "file": "out/board.html; board data inside the page and in board.json",
+   "produced_by": "scripts/run.py build (scripts/board.py, scripts/boardhtml.py), from the old board read back from the published page and the changes the chat entered",
+   "handover": "published in the same reply as any change; the page read back is compared with the built board", "checked_by": "scripts/verify.py (rebuilds the board and the page and compares)", "step": "publish"},
+  {"name": "The emails the board builds itself (provider requests, the client document request, the LOA email, the Medical Aid and Will referrals)", "file": "out/email_<id>.json and out/email_<id>.txt",
+   "produced_by": "the chat from Paul's Drafts templates; checked by scripts/board.py against the send table and scripts/contacts", "handover": "shown to Paul in full; drafts saved or emails sent only after his yes, with the native Microsoft 365 tools",
+   "checked_by": "scripts/verify.py (To and Cc exact, plain subject, no sign-off, details block, read-back equals the checked email)", "step": "send"},
+  {"name": "Teams messages to Sitamah (Action needed, and one FYI)", "file": "out/message_m*.txt", "produced_by": "scripts/run.py build (scripts/board.py, assets/triggers.json)",
+   "handover": "shown to Paul in the same reply as the board; posted once through Zapier after his yes and the checked emails", "checked_by": "scripts/verify.py (message equals the rebuild; read-back equals the message)", "step": "send"},
+  {"name": "The same-day check-in (scheduled task) for a follow-up appointment", "file": "out/checkin.json", "produced_by": "scripts/board.py checkin_settings", "handover": "created by the chat exactly as printed, after Paul's yes",
+   "checked_by": "scripts/verify.py (settings equal the rebuild; trigger id recorded)", "step": "send"},
+  {"name": "Short audit", "file": "printed by scripts/verify.py; full record in out_record/audit-full.txt", "produced_by": "scripts/verify.py",
+   "handover": "pasted into the reply as it is: one line per check with a green tick or a red cross, one closing line for what is only attested", "checked_by": "scripts/run.py done final", "step": "final"}
+ ]
+}

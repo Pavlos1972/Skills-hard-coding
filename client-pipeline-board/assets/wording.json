@@ -1,0 +1,13 @@
+{
+ "prospect_label": {"prospect": "Prospect", "existing": "Existing Client"},
+ "card_labels": {"identified": "Identified", "pending": "Pending", "actions": "Actions Taken", "claude_badge": "CLAUDE"},
+ "ff_summary_line": "Please see attached Fact Find Summary for this client.",
+ "attach_before_sending_prefix": "Attach before sending:",
+ "closed_banner": "CLOSED - {status} - {date}",
+ "board_index_line": "Board index not updated (location unknown)",
+ "stage_code_pattern": "\\b(?:LC|RA|INV|RG|EG|MA|WL|ST|STI)-\\d+\\b",
+ "jargon": ["auto-draft", "autodraft", "pendingqueue", "pending queue", "stage code", "internal stage", "stepper", "state-data", "kind:text"],
+ "sign_offs": ["kind regards", "best regards", "warm regards", "regards,", "yours sincerely", "yours faithfully", "sincerely,"],
+ "client_forbidden": ["Greece", "Greek", "Athens"],
+ "details_labels": ["Name", "ID number", "Cell number", "Email"]
+}

@@ -1,0 +1,107 @@
+[
+ {
+  "from_prefix": "# Client Pipeline Board (Board Template)",
+  "reason": "Replaced by the new short title.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "description: \"Runs a Wealth Revolution client or prospect through the ",
+  "reason": "Replaced by the new short Index (five sections).",
+  "needs_paul": false,
+  "to_prefix": "14 | Deferred / not yet built | Planned but unbuilt items, including t"
+ },
+ {
+  "from_prefix": "These rules come before everything else in this skill. They apply from",
+  "reason": "Replaced: the new skill is a program that shows its rules again at every step.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Re-load this skill before you start, and again after any compression. ",
+  "reason": "Replaced by the program: the version line is said first and the steps are shown again at the right moment (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Changes to a skill: edit the existing skill, never create a new one. U",
+  "reason": "Replaced by S7: skills are changed only in Claude Code and uploaded as a zip; the propose_skills card is gone (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "2 | Last updated + Recent changes | Athens-time stamp and the last 5 c",
+  "reason": "The stamp is set by tools/stamp_skill.py, never typed (S2).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "2 | Last updated + Recent changes | Athens-time stamp and the last 5 c",
+  "reason": "The changelog is archived in this history folder; the new skill keeps the last 5 changes. The pointer to client-pipeline-board-changelog.md (a Project file) is dropped (Paul agreed, 04/11/2026).",
+  "needs_paul": false,
+  "to_prefix": "> Whenever this skill is edited: add a new one-line row at the top of "
+ },
+ {
+  "from_prefix": "description: \"Runs a Wealth Revolution client or prospect through the ",
+  "reason": "Replaced by SKILL.md 'Where the detail lives'. The rows for the Project-only changelog, the non-existent core-ff-intake.md and planner-interim-procedure are dropped (Paul agreed: dead pointers and the Planner lines, 04/11/2026).",
+  "needs_paul": false,
+  "to_prefix": "When to open which: working a specific product line → that one playboo"
+ },
+ {
+  "from_prefix": "MS Planner is an INTERIM working surface — valid only until AdviceTech",
+  "reason": "Dropped: Paul said FORGET planner-interim-procedure and agreed to delete the Planner lines (04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Testing the skill uses a real, dormant client — never fabricated. Pick",
+  "reason": "Dropped: the program is tested on an invented client; the first real run is Paul's (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Update the board index (board-index.md at the project level) — change ",
+  "reason": "The cross-client board index (board-index.md) is a Project file whose location is not known; the program does not update it and the audit says so. Paul has not yet said where it is.",
+  "needs_paul": true
+ },
+ {
+  "from_prefix": "AdviceTech sync — out of scope until Paul reconnects the AT connector.",
+  "reason": "Replaced by references/05-publish.md (Out of scope for now), without the Planner deletion clause (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Planned rebuild of this skill's structure (not started) — Paul will re",
+  "reason": "Replaced by references/05-publish.md: the blueprint mirror is done later, when Paul says; the funnel skill owns the AdviceTech stage logic (Paul agreed, question 1, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Life Cover: the ROA date is the date the risk application was dated — ",
+  "reason": "The ROA date rules are dropped from the board: wr-roa-builder asks for the date and owns the rule (Paul agreed, 04/11/2026).",
+  "needs_paul": false,
+  "to_prefix": "Investment (RA or Investments line): the ROA date is the later of (a) "
+ },
+ {
+  "from_prefix": "One recurring daily trigger per client, covering everything outstandin",
+  "reason": "Replaced: reply tracking is owned by outlook-emails-skill (an hourly weekday watcher and a one-time silence flag); Paul agreed (04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Self-cleanup. Once every item on a client's outstanding list is resolv",
+  "reason": "Replaced by outlook-emails-skill, which stops its own watcher when every reply is in.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Example (FYI, single fact): \"Hey Sitamah! Claude here. Just completed ",
+  "reason": "The worked examples are replaced by the program's fixed wording (assets/triggers.json), checked on every message; the example client names were invented (Paul, 04/11/2026).",
+  "needs_paul": false,
+  "to_prefix": "Example (Action needed — COC completion check, one hour after): *(Adde"
+ },
+ {
+  "from_prefix": "Before every publish, sanity-check the board's JS. A single broken str",
+  "reason": "The page has no script any more, so it cannot blank; the data is checked by the program (scripts/boardhtml.py html_problems).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "> Loaded from outstanding-tracking.md, referenced by the core SKILL.md",
+  "reason": "The page header note ('loaded from ... referenced by the core SKILL.md') is replaced by the program showing each page at its step.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "> Loaded from sitamah-messaging.md, referenced by the core SKILL.md. F",
+  "reason": "The page header note ('loaded from ... referenced by the core SKILL.md') is replaced by the program showing each page at its step.",
+  "needs_paul": false
+ }
+]

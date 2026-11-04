@@ -1,0 +1,11 @@
+{
+ "paul": {"name": "Paul Kafentzis", "email": "paulk@liferisk.co.za", "role": "the adviser"},
+ "sitamah": {"name": "Sitamah Nathoo", "email": "admin@liferisk.co.za", "role": "admin; on every email this board produces"},
+ "lizelle": {"name": "Lizelle Cachado", "email": "Lizelle.Cachado@brightrock.co.za", "role": "BrightRock (the default Life Cover insurer)"},
+ "alwyn": {"name": "Alwyn", "email": "alwyn.vantonder@oldmutual.com", "role": "Old Mutual (RA, Investments, RGAR, EGAR)"},
+ "valerie": {"name": "Valerie Swanepoel", "email": "valeries@hampshireind.co.za", "role": "Hampshire (Medical Aid referral)"},
+ "hampshire_intake": {"name": "Hampshire intake", "email": "jhbhealthadmin@hampshireind.co.za", "role": "Hampshire intake, copied on the Medical Aid referral"},
+ "amber": {"name": "Amber Strydom", "email": "amber@capitallegacy.co.za", "role": "Capital Legacy (Will referral)"},
+ "cameron": {"name": "Cameron Maritz", "email": "cameron@visioninsure.co.za", "role": "Vision Insure (Short-Term referral, through cameron-short-term-skill)"},
+ "dnr": {"name": "DNR Marketing", "email": "mwpalwyn@mweb.co.za", "role": "lead source, never a request destination"}
+}

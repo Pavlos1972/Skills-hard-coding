@@ -1,0 +1,104 @@
+{
+ "skill": "client-pipeline-board",
+ "steps": [
+  {
+   "id": "locate",
+   "title": "Find the board, find the documents, log every try",
+   "ref": ["01-locate.md"],
+   "do": [
+    "One client, one chat, one board. Take the client's name from the chat title (ask only if it is truly unclear).",
+    "Look for the client's published board and read it back. Record each try: python3 {scripts}/run.py access {run} --purpose board|docs|onfile --route device|m365|zapier|artifact --result found|failed --note \"what you did\"",
+    "Load the board: python3 {scripts}/run.py base {run} --file <the published page read back> --url <its address>      OR a first board: python3 {scripts}/run.py base {run} --first-board yes --said \"Paul's words\"",
+    "Register every document a point of the board will quote (the Fact Find Summary first): python3 {scripts}/run.py doc {run} --role fact_find_summary --file <local copy> --route device|m365|zapier",
+    "Routes are tried IN ORDER: 1 device (computer / OneDrive), 2 m365 (Microsoft 365 connector), 3 zapier. Paul is asked last, with proof of what was searched."
+   ],
+   "check": "locate_ok",
+   "proof": "the board is loaded and belongs to this client, every try is logged in order, every registered document is unchanged"
+  },
+  {
+   "id": "change",
+   "title": "Enter this run's changes in ONE file; the program applies and checks them",
+   "ref": ["02-change.md"],
+   "do": [
+    "Write change.json as the reference page shows (ops, emails, notify). Never write the board itself: the program applies your changes to the old board.",
+    "Run: python3 {scripts}/run.py change {run} --file <change.json>",
+    "If it refuses, put every listed problem right in the file and run it again. Never argue with a refusal."
+   ],
+   "check": "change_ok",
+   "proof": "every change applies, every Identified point is proved, every action has its receipt, every email follows the send table"
+  },
+  {
+   "id": "route",
+   "title": "See what is allowed next, from the send table",
+   "ref": ["03-route.md"],
+   "do": [
+    "Run: python3 {scripts}/run.py route {run}",
+    "It prints, for each product line, what the playbook says comes next, and for this run each email (asked first? where it lands, who sends, whether it needs a fresh yes) and each Sitamah message."
+   ],
+   "check": "route_ok",
+   "proof": "the routing was shown and nothing in it is wrong"
+  },
+  {
+   "id": "build",
+   "title": "The program builds the board page, the messages, the email previews and the check-in",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py build {run}",
+    "It writes out/board.html (the page), out/messages.json, out/email_*.txt and out/checkin.json. You never type or edit any of them."
+   ],
+   "check": "build_ok",
+   "proof": "the board and the page are exactly what the program builds, and every rule on a card holds"
+  },
+  {
+   "id": "confirm",
+   "title": "Show Paul everything, ask ONE question, record his yes",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py show {run}",
+    "Put everything it prints in your reply (the table, every email in full, every message) and ask exactly the one question it gives. Never send, post or publish before his clear yes.",
+    "When he says yes, record his own words: python3 {scripts}/run.py approve {run} --said \"his exact words\"",
+    "If anything changes, run change and build again: the earlier yes then no longer counts."
+   ],
+   "check": "confirm_ok",
+   "proof": "Paul's yes is recorded for exactly this version, after he was shown it"
+  },
+  {
+   "id": "send",
+   "title": "Create the drafts, send the emails, message Sitamah, set the check-in; read each back",
+   "ref": ["04-send.md"],
+   "do": [
+    "Follow the rules below, in this order: emails first, then the Sitamah messages, then the check-in.",
+    "Each email: create it with the NATIVE Microsoft 365 tool exactly as out/email_<id>.json says, record what the tool returned: python3 {scripts}/run.py receipt {run} email.<id>.created_with <tool name>   and   email.<id>.draft (or .sent) <the id>",
+    "  then read the saved item back (a draft from Drafts, a sent email from Sent Items), save it to a file and run: python3 {scripts}/run.py email {run} --id <id> --file <the saved read-back>",
+    "Each message: python3 {scripts}/run.py message {run} --id m1 (add --used-today yes if she was already greeted today), post it as printed, record message.<id>.chat and message.<id>.format, read it back and run messagecheck.",
+    "Check-in (only if a follow-up date was entered): python3 {scripts}/run.py checkin {run}, create it exactly as printed, record checkin.trigger_id."
+   ],
+   "check": "send_ok",
+   "proof": "every email, message and check-in is done after the yes, and what the tools returned equals what was approved"
+  },
+  {
+   "id": "publish",
+   "title": "Publish the board in this reply and read the published page back",
+   "ref": ["05-publish.md"],
+   "do": [
+    "Publish out/board.html with the Artifact tool (load artifact-design first), titled exactly as the page's title. Update the board's own address; never force-overwrite a newer version: if a newer one exists that you cannot read, STOP and tell Paul.",
+    "Read the published page back, save it to a file, then run: python3 {scripts}/run.py publish {run} --url <the address> --file <the saved read-back>",
+    "Then record: python3 {scripts}/run.py receipt {run} publish.result <what the tool said>"
+   ],
+   "check": "publish_ok",
+   "proof": "the page read back is exactly the board the program built, and every Actions Taken line has its receipt"
+  },
+  {
+   "id": "final",
+   "title": "The final check and the SHORT AUDIT for Paul",
+   "ref": ["06-handover.md"],
+   "do": [
+    "Run: python3 {scripts}/run.py done {run} final",
+    "Put the short audit it prints in your reply exactly as it is: one line per check with a green tick or a red cross, one closing line for what is only attested. Nothing longer.",
+    "Any red cross means the job is not finished: say so."
+   ],
+   "check": "verify_final",
+   "proof": "the final checker prints no red cross"
+  }
+ ]
+}

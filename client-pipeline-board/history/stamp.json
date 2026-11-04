@@ -1,0 +1,5 @@
+{
+ "stamp": "2026-11-04 13:53",
+ "fingerprint": "67099a54811b76909a13a8ad2f2fdb88e3839a609d0caf1236a11f6931302120",
+ "change": "First program-driven version: the board is one data file, a program checks every card, applies the send table, builds the Sitamah messages and the page, and a checker rebuilds everything and compares"
+}

@@ -1,0 +1,1002 @@
+[
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Ground rules — read first",
+  "new": "references/00-rules.md, 01-locate.md, 02-change.md, 03-route.md, 04-send.md and 05-publish.md.",
+  "why": "Each rule is in the page where it is used and, where provable, a program check.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Send/draft/ask logic for every client- or provider-facing em",
+  "new": "references/00-rules.md, 01-locate.md, 02-change.md, 03-route.md, 04-send.md and 05-publish.md.",
+  "why": "Each rule is in the page where it is used and, where provable, a program check.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Key contacts",
+  "new": "assets/contacts.json and assets/routes.json (To and Cc per route).",
+  "why": "Contacts are typed once and the program fills To and Cc.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Product | Provider / Contact | What's requested there |",
+  "new": "assets/contacts.json and assets/routes.json (To and Cc per route).",
+  "why": "Contacts are typed once and the program fills To and Cc.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Board sections",
+  "new": "references/02-change.md (cards) and scripts/board.py apply_ops, board_problems and scripts/boardhtml.py.",
+  "why": "The card shapes are checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Prospect (client-level) — a short log of contact/booking act",
+  "new": "references/02-change.md (cards) and scripts/board.py apply_ops, board_problems and scripts/boardhtml.py.",
+  "why": "The card shapes are checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Fact Find (client-level) — Identified only. One plain point-",
+  "new": "references/02-change.md (cards) and scripts/board.py apply_ops, board_problems and scripts/boardhtml.py.",
+  "why": "The card shapes are checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "General (client-level, sits right after Fact Find) — the one",
+  "new": "references/02-change.md (cards) and scripts/board.py apply_ops, board_problems and scripts/boardhtml.py.",
+  "why": "The card shapes are checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Product lines (Life Cover, Retirement Annuity, Investments, ",
+  "new": "references/02-change.md (cards) and scripts/board.py apply_ops, board_problems and scripts/boardhtml.py.",
+  "why": "The card shapes are checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "A new product line is created either from a Fact Find or lat",
+  "new": "references/02-change.md (cards) and scripts/board.py apply_ops, board_problems and scripts/boardhtml.py.",
+  "why": "The card shapes are checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Follow-up appointment tracking",
+  "new": "references/02-change.md (follow-up) and references/04-send.md (same-day check-in) and scripts/board.py checkin_settings.",
+  "why": "The invite is built by teams-meeting-setup-skill; the check-in settings are printed by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Capture the date. The moment a follow-up/2nd (or later) appo",
+  "new": "references/02-change.md (follow-up) and references/04-send.md (same-day check-in) and scripts/board.py checkin_settings.",
+  "why": "The invite is built by teams-meeting-setup-skill; the check-in settings are printed by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Board change log",
+  "new": "scripts/board.py finish_log and scripts/boardhtml.py and references/05-publish.md.",
+  "why": "One entry per republish, set by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Why: the board only ever shows current state — no record of ",
+  "new": "scripts/board.py finish_log and scripts/boardhtml.py and references/05-publish.md.",
+  "why": "One entry per republish, set by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Board close-out",
+  "new": "references/02-change.md (Close-out) and scripts/board.py apply_ops (close).",
+  "why": "Never auto-closed; Paul's words and the cancelled check-ins are required.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "What this is for. Boards and chats currently accumulate fore",
+  "new": "references/02-change.md (Close-out) and scripts/board.py apply_ops (close).",
+  "why": "Never auto-closed; Paul's words and the cancelled check-ins are required.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Setting up a client's board",
+  "new": "references/01-locate.md and references/02-change.md and scripts/boardhtml.py (the layout).",
+  "why": "The layout is drawn by the program from one template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Deliberately minimal. Expect this flow to keep getting corre",
+  "new": "references/01-locate.md and references/02-change.md and scripts/boardhtml.py (the layout).",
+  "why": "The layout is drawn by the program from one template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Client name — not asked. Read it off the chat title (Paul al",
+  "new": "references/01-locate.md and references/02-change.md and scripts/boardhtml.py (the layout).",
+  "why": "The layout is drawn by the program from one template.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Publishing",
+  "new": "references/05-publish.md and scripts/run.py publish.",
+  "why": "The published page is read back and compared.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Republish in the same reply as any change, automatically. Bu",
+  "new": "references/05-publish.md and scripts/run.py publish.",
+  "why": "The published page is read back and compared.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Fact Find intake (client-level, shared, repeatable)",
+  "new": "references/01-locate.md.",
+  "why": "Kept; the Fact Find skills own the reading.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Trigger — search first, don't wait to be given the transcrip",
+  "new": "references/01-locate.md.",
+  "why": "Kept; the Fact Find skills own the reading.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Reading a WR Fact Find's actual values",
+  "new": "references/01-locate.md (a field contradicted by its own note is provisional) and scripts/board.py identified_problems.",
+  "why": "The provisional rule is kept; the form-reading technique belongs to ff-population-transcript.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "A decision-driving field contradicted by its own note is pro",
+  "new": "references/01-locate.md (a field contradicted by its own note is provisional) and scripts/board.py identified_problems.",
+  "why": "The provisional rule is kept; the form-reading technique belongs to ff-population-transcript.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "--",
+  "new": "references/01-locate.md (a field contradicted by its own note is provisional) and scripts/board.py identified_problems.",
+  "why": "The provisional rule is kept; the form-reading technique belongs to ff-population-transcript.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## ROA vs SROA",
+  "new": "references/03-route.md (ROA or SROA).",
+  "why": "Kept without the ROA date rule, which wr-roa-builder owns.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Once a line reaches Policy Issue (Life Cover) or the accept ",
+  "new": "references/03-route.md (ROA or SROA).",
+  "why": "Kept without the ROA date rule, which wr-roa-builder owns.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "New Business → wr-roa-builder. Needs the FNA Quote, the Redu",
+  "new": "references/03-route.md (ROA or SROA).",
+  "why": "Kept without the ROA date rule, which wr-roa-builder owns.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "--",
+  "new": "references/03-route.md (ROA or SROA).",
+  "why": "Kept without the ROA date rule, which wr-roa-builder owns.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Deferred / not yet built",
+  "new": "references/05-publish.md (Out of scope for now).",
+  "why": "Kept as the list of what is not built.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "AdviceTech sync — out of scope until Paul reconnects the AT ",
+  "new": "references/05-publish.md (Out of scope for now).",
+  "why": "Kept as the list of what is not built.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "<!-- FILE: send-decision-rules.md -->",
+  "new": "references/05-publish.md (Out of scope for now).",
+  "why": "Kept as the list of what is not built.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# Send / Draft / Ask — Decision Rules",
+  "new": "references/03-route.md (the two questions) and assets/routes.json.",
+  "why": "The send table is now data; Step 1 and Step 2 are printed by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "> Loaded from send-decision-rules.md, referenced by the core",
+  "new": "references/03-route.md (the two questions) and assets/routes.json.",
+  "why": "The send table is now data; Step 1 and Step 2 are printed by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "There are two separate questions, asked at two separate mome",
+  "new": "references/03-route.md (the two questions) and assets/routes.json.",
+  "why": "The send table is now data; Step 1 and Step 2 are printed by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before building it: does Paul need to make a decision first?",
+  "new": "references/03-route.md (the two questions) and assets/routes.json.",
+  "why": "The send table is now data; Step 1 and Step 2 are printed by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "\"Builds automatically\" and \"sends automatically\" are never t",
+  "new": "references/03-route.md (the two questions) and assets/routes.json.",
+  "why": "The send table is now data; Step 1 and Step 2 are printed by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 1 — Does building this need Paul's decision first?",
+  "new": "references/03-route.md (Step 1) and assets/routes.json (ask_first).",
+  "why": "Ask first or build automatically is a table the program checks (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "This item | Ask Paul first, before building anything | Build",
+  "new": "references/03-route.md (Step 1) and assets/routes.json (ask_first).",
+  "why": "Ask first or build automatically is a table the program checks (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Not on this list → ask first. Silence isn't permission; defa",
+  "new": "references/03-route.md (Step 1) and assets/routes.json (ask_first).",
+  "why": "Ask first or build automatically is a table the program checks (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Step 2 — Once it's built (or approved to build), where do",
+  "new": "references/03-route.md (Step 2) and assets/routes.json (lands, sender, yes_before_send) and scripts/board.py email_problems.",
+  "why": "Where it lands and who sends is a table; proposals now follow the proposal skills (Sitamah sends).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Content type | Lands as | Who actually sends it | Separate c",
+  "new": "references/03-route.md (Step 2) and assets/routes.json (lands, sender, yes_before_send) and scripts/board.py email_problems.",
+  "why": "Where it lands and who sends is a table; proposals now follow the proposal skills (Sitamah sends).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "The four rows that build automatically in Step 1 (RGAR reque",
+  "new": "references/03-route.md (Step 2) and assets/routes.json (lands, sender, yes_before_send) and scripts/board.py email_problems.",
+  "why": "Where it lands and who sends is a table; proposals now follow the proposal skills (Sitamah sends).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## The one attachment exception — Lizelle / BrightRock",
+  "new": "references/03-route.md (the Lizelle exception) and scripts/board.py email_problems (ff_summary_line) and assets/triggers.json (lizelle_attach).",
+  "why": "The line and the message are checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Claude cannot attach a real file to an Outlook Draft or a se",
+  "new": "references/03-route.md (the Lizelle exception) and scripts/board.py email_problems (ff_summary_line) and assets/triggers.json (lizelle_attach).",
+  "why": "The line and the message are checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Why this exception exists: the M365 connector's draft tools ",
+  "new": "references/03-route.md (the Lizelle exception) and scripts/board.py email_problems (ff_summary_line) and assets/triggers.json (lizelle_attach).",
+  "why": "The line and the message are checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Always true, regardless of pathway",
+  "new": "references/03-route.md (Every email) and scripts/board.py email_problems.",
+  "why": "Cc Sitamah, no sign-off, native tools only: checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "CC Sitamah Nathoo (admin@liferisk.co.za) on every drafted or",
+  "new": "references/03-route.md (Every email) and scripts/board.py email_problems.",
+  "why": "Cc Sitamah, no sign-off, native tools only: checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "<!-- FILE: outstanding-tracking.md -->",
+  "new": "references/03-route.md (Every email) and scripts/board.py email_problems.",
+  "why": "Cc Sitamah, no sign-off, native tools only: checked by the program.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Outstanding request tracking",
+  "new": "references/04-send.md (Outstanding requests).",
+  "why": "Reply tracking is owned by outlook-emails-skill (Paul agreed, 04/11/2026); the folder-drop check stays as a marked, unproven text rule.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "How Claude finds out a quote came back, a report's in, or a ",
+  "new": "references/04-send.md (Outstanding requests).",
+  "why": "Reply tracking is owned by outlook-emails-skill (Paul agreed, 04/11/2026); the folder-drop check stays as a marked, unproven text rule.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Paul tells Claude in chat. Always works, and the only channe",
+  "new": "references/04-send.md (Outstanding requests).",
+  "why": "Reply tracking is owned by outlook-emails-skill (Paul agreed, 04/11/2026); the folder-drop check stays as a marked, unproven text rule.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Not yet confirmed: pulling the actual attachment bytes out o",
+  "new": "references/04-send.md (Outstanding requests).",
+  "why": "Reply tracking is owned by outlook-emails-skill (Paul agreed, 04/11/2026); the folder-drop check stays as a marked, unproven text rule.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "<!-- FILE: sitamah-messaging.md -->",
+  "new": "references/04-send.md (Outstanding requests).",
+  "why": "Reply tracking is owned by outlook-emails-skill (Paul agreed, 04/11/2026); the folder-drop check stays as a marked, unproven text rule.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Keeping Sitamah in the loop",
+  "new": "references/04-send.md (Teams messages) and assets/triggers.json.",
+  "why": "Every trigger is kept as data; one message per event after Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Sitamah gets a Teams direct message for every instance below",
+  "new": "references/04-send.md (Teams messages) and assets/triggers.json.",
+  "why": "Every trigger is kept as data; one message per event after Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Two tiers, so the messages that need her to actually do some",
+  "new": "references/04-send.md (Teams messages) and assets/triggers.json.",
+  "why": "Every trigger is kept as data; one message per event after Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Action needed — the message asks Sitamah to do something (no",
+  "new": "references/04-send.md (Teams messages) and assets/triggers.json.",
+  "why": "Every trigger is kept as data; one message per event after Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "When to message her — Action needed:",
+  "new": "references/04-send.md (Teams messages) and assets/triggers.json.",
+  "why": "Every trigger is kept as data; one message per event after Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "An email actually being sent that needs a reply watched for.",
+  "new": "references/04-send.md (Teams messages) and assets/triggers.json.",
+  "why": "Every trigger is kept as data; one message per event after Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "When to message her — FYI:",
+  "new": "references/04-send.md (Teams messages) and assets/triggers.json.",
+  "why": "Every trigger is kept as data; one message per event after Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every ordinary Actions Taken entry, on every card. Document-",
+  "new": "references/04-send.md (Teams messages) and assets/triggers.json.",
+  "why": "Every trigger is kept as data; one message per event after Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "How to write the message:",
+  "new": "references/04-send.md (Teams messages) and assets/triggers.json.",
+  "why": "Every trigger is kept as data; one message per event after Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Lead with the tier, right after the greeting. Action needed ",
+  "new": "references/04-send.md (Teams messages) and assets/triggers.json.",
+  "why": "Every trigger is kept as data; one message per event after Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "<!-- FILE: verification-checklist.md -->",
+  "new": "references/04-send.md (Teams messages) and assets/triggers.json.",
+  "why": "Every trigger is kept as data; one message per event after Paul's yes.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# Pre-Publish Verification Checklist",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "> Loaded from verification-checklist.md, referenced by the c",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Verification",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before every publish, check each card: does it show only Ide",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "General specifically: does its Identified list contain only ",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every product card: does its Identified list trace to the FF",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Setup specifically: was the client's name read from the chat",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every Fact Find processed: did all three mandatory outputs a",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before any client-/provider-facing action that is NOT an aut",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every auto-draft line (RGAR, every Claude-drafted proposal):",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Short-Term Insurance/Cameron, Medical Aid/Valerie, and Will/",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Lizelle/BrightRock attachment workaround specifically: does ",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Insurer Comparison (replacement cases): was Paul actually as",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "COC (Life Cover): was the 30-minute invite actually sent, an",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Underwriting (Life Cover): for Requirements Issued, did Clau",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every Actions Taken bullet: short, one fact, point form — ne",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before every publish, sanity-check the board's JS. A single ",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Does \"Last updated\" reflect current Athens time? Has the boa",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Change Log: does this republish add a new dated entry at the",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Close-out (only relevant once every line on a board has reso",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "LOA email (Fact Find intake): were the LOA/Disclosure docume",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every drafted email: is Sitamah actually on the CC line? Was",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Life Cover's insurer/GR questions: is the standard insurer l",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Follow-up appointment tracking: once a follow-up date is con",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "ROA/SROA: does the line's New Business/Servicing tag match w",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "<!-- FILE: playbooks/life-cover.md -->",
+  "new": "scripts/board.py board_problems, scripts/boardhtml.py html_problems, scripts/verify.py (the checks) and references/05-publish.md.",
+  "why": "The checklist's questions are program checks where provable; the rest stay as rules in the pages.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# Life Cover — Stage Logic",
+  "new": "references/playbook-life-cover.md.",
+  "why": "Kept; two stale lines corrected.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "> Loaded from playbooks/life-cover.md, referenced by the cor",
+  "new": "references/playbook-life-cover.md.",
+  "why": "Kept; two stale lines corrected.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Life Cover",
+  "new": "references/playbook-life-cover.md.",
+  "why": "Kept; two stale lines corrected.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "<!-- FILE: playbooks/retirement-annuity.md -->",
+  "new": "references/playbook-life-cover.md.",
+  "why": "Kept; two stale lines corrected.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# Retirement Annuity — Stage Logic",
+  "new": "references/playbook-retirement-annuity.md.",
+  "why": "Kept; the lump sum line follows om-optimal-ra-proposal.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "> Loaded from playbooks/retirement-annuity.md, referenced by",
+  "new": "references/playbook-retirement-annuity.md.",
+  "why": "Kept; the lump sum line follows om-optimal-ra-proposal.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Retirement Annuity",
+  "new": "references/playbook-retirement-annuity.md.",
+  "why": "Kept; the lump sum line follows om-optimal-ra-proposal.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "<!-- FILE: playbooks/investments.md -->",
+  "new": "references/playbook-retirement-annuity.md.",
+  "why": "Kept; the lump sum line follows om-optimal-ra-proposal.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# Investments — Stage Logic",
+  "new": "references/playbook-investments.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "> Loaded from playbooks/investments.md, referenced by the co",
+  "new": "references/playbook-investments.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Investments",
+  "new": "references/playbook-investments.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "<!-- FILE: playbooks/rgar-egar.md -->",
+  "new": "references/playbook-investments.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# RGAR / EGAR — Stage Logic",
+  "new": "references/playbook-rgar-egar.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "> Loaded from playbooks/rgar-egar.md, referenced by the core",
+  "new": "references/playbook-rgar-egar.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Internal stage | What happens | Feeds the board as |",
+  "new": "references/playbook-rgar-egar.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Internal stage | What happens | Feeds the board as |",
+  "new": "references/playbook-rgar-egar.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "<!-- FILE: playbooks/medical-aid-will.md -->",
+  "new": "references/playbook-rgar-egar.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# Medical Aid / Will — Stage Logic",
+  "new": "references/playbook-medical-aid-will.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "> Loaded from playbooks/medical-aid-will.md, referenced by t",
+  "new": "references/playbook-medical-aid-will.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Medical Aid",
+  "new": "references/playbook-medical-aid-will.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Internal stage | What happens | Feeds the board as |",
+  "new": "references/playbook-medical-aid-will.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "<!-- FILE: playbooks/short-term-insurance.md -->",
+  "new": "references/playbook-medical-aid-will.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# Short-Term Insurance — Stage Logic",
+  "new": "references/playbook-short-term.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "> Loaded from playbooks/short-term-insurance.md, referenced ",
+  "new": "references/playbook-short-term.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "### Short-Term Insurance",
+  "new": "references/playbook-short-term.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Source first - never invent. Write only what is in the sourc",
+  "new": "references/00-rules.md rule 1: every point comes from a registered document line or Paul's words.",
+  "why": "Enforced by the program (evidence lines).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Read before you write. Read the source material completely a",
+  "new": "references/00-rules.md rule 1 and references/01-locate.md: the long reading is done by the product skills.",
+  "why": "The board reads little; the evidence line check replaces it.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Check before you claim. Never tell the user something is don",
+  "new": "references/00-rules.md rule 2.",
+  "why": "Enforced by receipts and read-backs.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Deliver everything this skill lists, every time. A run is no",
+  "new": "references/00-rules.md rule 3 and references/06-handover.md and scripts/verify.py.",
+  "why": "Done by the checker.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every correction re-opens the whole task, not just the item.",
+  "new": "references/00-rules.md rule 4.",
+  "why": "The driver re-opens the later steps.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never lower the standard. A correction, a frustrated user, a",
+  "new": "references/00-rules.md rule 5.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If a rule cannot be met, stop and say so. State exactly whic",
+  "new": "references/00-rules.md rule 5.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "1 | Universal operating rules + Delivery gate | The nine rul",
+  "new": "references/00-rules.md rule 3 and scripts/verify.py.",
+  "why": "Done by the checker.",
+  "needs_paul": false
+ }
+]

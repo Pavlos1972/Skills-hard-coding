@@ -1,0 +1,316 @@
+{
+ "_note": "The send table (send-decision-rules.md Steps 1 and 2) as data. ask_first: Paul decides BEFORE it is built (his own words are recorded). yes_before_send: a fresh yes right before it reaches a recipient. Anything not on this list is ask_first.",
+ "routes": {
+  "judgement_email": {
+   "label": "Any other email not on this list (ask Paul first), for example an RAR request to the insurer or an email with a real judgment call",
+   "kind": "draft",
+   "ask_first": true,
+   "lands": "Outlook Draft",
+   "sender": "Paul",
+   "yes_before_send": false,
+   "to": [
+    "*"
+   ],
+   "cc": [
+    "sitamah"
+   ],
+   "checks": [
+    "thread",
+    "no_bracket_subject"
+   ]
+  },
+  "quote_request_life": {
+   "label": "Life Cover quote request (FNA / Shortfall / Reduced / Standard, or the Servicing types)",
+   "kind": "draft",
+   "ask_first": true,
+   "lands": "Outlook Draft",
+   "sender": "Paul",
+   "yes_before_send": false,
+   "to": [
+    "lizelle"
+   ],
+   "cc": [
+    "sitamah"
+   ],
+   "checks": [
+    "thread",
+    "no_bracket_subject",
+    "ff_summary_line"
+   ],
+   "notify": "lizelle_attach"
+  },
+  "quote_request_ra": {
+   "label": "Retirement Annuity quote request to Old Mutual",
+   "kind": "draft",
+   "ask_first": true,
+   "lands": "Outlook Draft",
+   "sender": "Paul",
+   "yes_before_send": false,
+   "to": [
+    "alwyn"
+   ],
+   "cc": [
+    "sitamah"
+   ],
+   "checks": [
+    "thread",
+    "no_bracket_subject"
+   ]
+  },
+  "quote_request_inv": {
+   "label": "Investments quote request to Old Mutual (Tax-Free and/or General Investment)",
+   "kind": "draft",
+   "ask_first": true,
+   "lands": "Outlook Draft",
+   "sender": "Paul",
+   "yes_before_send": false,
+   "to": [
+    "alwyn"
+   ],
+   "cc": [
+    "sitamah"
+   ],
+   "checks": [
+    "thread",
+    "no_bracket_subject"
+   ]
+  },
+  "general_document_request": {
+   "label": "General: ONE consolidated document-request email to the client",
+   "kind": "draft",
+   "ask_first": true,
+   "lands": "Outlook Draft",
+   "sender": "Sitamah",
+   "yes_before_send": false,
+   "to": [
+    "client"
+   ],
+   "cc": [
+    "sitamah"
+   ],
+   "checks": [
+    "no_bracket_subject"
+   ],
+   "notify": "general_email_drafted"
+  },
+  "rgar_request": {
+   "label": "RGAR request to Old Mutual",
+   "kind": "draft",
+   "ask_first": false,
+   "lands": "Outlook Draft",
+   "sender": "Paul",
+   "yes_before_send": false,
+   "to": [
+    "alwyn"
+   ],
+   "cc": [
+    "sitamah"
+   ],
+   "checks": [
+    "thread",
+    "no_bracket_subject"
+   ]
+  },
+  "egar_request": {
+   "label": "EGAR request to Old Mutual (always separate from any RGAR request, one per child)",
+   "kind": "draft",
+   "ask_first": false,
+   "lands": "Outlook Draft",
+   "sender": "Paul",
+   "yes_before_send": false,
+   "to": [
+    "alwyn"
+   ],
+   "cc": [
+    "sitamah"
+   ],
+   "checks": [
+    "thread",
+    "no_bracket_subject"
+   ]
+  },
+  "loa_email": {
+   "label": "LOA explanatory email to the client",
+   "kind": "send",
+   "ask_first": false,
+   "lands": "shown complete in chat",
+   "sender": "Claude (outlook_send_mail)",
+   "yes_before_send": true,
+   "to": [
+    "client"
+   ],
+   "cc": [
+    "sitamah"
+   ],
+   "checks": [
+    "no_bracket_subject"
+   ],
+   "notify": "loa_sent"
+  },
+  "medical_aid_referral": {
+   "label": "Medical Aid referral to Valerie (Hampshire)",
+   "kind": "send",
+   "ask_first": false,
+   "lands": "shown complete in chat",
+   "sender": "Claude (outlook_send_mail)",
+   "yes_before_send": true,
+   "to": [
+    "valerie"
+   ],
+   "cc": [
+    "hampshire_intake",
+    "client",
+    "sitamah",
+    "paul"
+   ],
+   "checks": [
+    "details_block",
+    "no_bracket_subject"
+   ],
+   "fyi_only": true
+  },
+  "will_referral": {
+   "label": "Will referral to Amber (Capital Legacy)",
+   "kind": "send",
+   "ask_first": false,
+   "lands": "shown complete in chat",
+   "sender": "Claude (outlook_send_mail)",
+   "yes_before_send": true,
+   "to": [
+    "amber"
+   ],
+   "cc": [
+    "client",
+    "sitamah",
+    "paul"
+   ],
+   "checks": [
+    "details_block",
+    "no_bracket_subject"
+   ],
+   "fyi_only": true
+  },
+  "proposal_ra": {
+   "label": "RA proposal to the client",
+   "kind": "delegated",
+   "skill": "om-optimal-ra-proposal",
+   "ask_first": false,
+   "lands": "Outlook Draft",
+   "sender": "Sitamah (checks, attaches, sends)",
+   "yes_before_send": false,
+   "own_message": true
+  },
+  "proposal_taxfree": {
+   "label": "Tax-Free proposal to the client",
+   "kind": "delegated",
+   "skill": "om-tax-free-skill",
+   "ask_first": false,
+   "lands": "Outlook Draft",
+   "sender": "Sitamah (checks, attaches, sends)",
+   "yes_before_send": false,
+   "own_message": true
+  },
+  "proposal_compare": {
+   "label": "Cross-provider investment comparison",
+   "kind": "delegated",
+   "skill": "investment-comparisons-skill",
+   "ask_first": false,
+   "lands": "Outlook Draft",
+   "sender": "Sitamah (checks, attaches, sends)",
+   "yes_before_send": false,
+   "own_message": true
+  },
+  "proposal_rgar": {
+   "label": "RGAR proposal to the client",
+   "kind": "delegated",
+   "skill": "rgar-skill",
+   "ask_first": false,
+   "lands": "Outlook Draft",
+   "sender": "Sitamah (checks, attaches, sends)",
+   "yes_before_send": false,
+   "own_message": true
+  },
+  "comparison_life": {
+   "label": "Life insurer comparison letter (any number of insurers)",
+   "kind": "delegated",
+   "skill": "life-insurer-comparison",
+   "ask_first": true,
+   "lands": "Outlook Draft (covering email); Paul attaches the letter",
+   "sender": "Paul",
+   "yes_before_send": false,
+   "own_message": true
+  },
+  "analysis_schedule": {
+   "label": "Life policy schedule analysis (on Paul's request)",
+   "kind": "delegated",
+   "skill": "life-policy-schedule-analyzer",
+   "ask_first": true,
+   "lands": "PDFs saved in the client's folder",
+   "sender": "nothing is sent",
+   "yes_before_send": false,
+   "own_message": false
+  },
+  "sti_referral": {
+   "label": "Short-Term referral to Cameron (Vision Insure)",
+   "kind": "delegated",
+   "skill": "cameron-short-term-skill",
+   "ask_first": false,
+   "lands": "shown complete in chat",
+   "sender": "Claude (outlook_send_mail)",
+   "yes_before_send": true,
+   "own_message": true
+  },
+  "teams_invite": {
+   "label": "Teams follow-up meeting invite",
+   "kind": "delegated",
+   "skill": "teams-meeting-setup-skill",
+   "ask_first": false,
+   "lands": "event created directly",
+   "sender": "Claude (the client is emailed on creation)",
+   "yes_before_send": true,
+   "own_message": true
+  }
+ },
+ "lines": {
+  "life_cover": {
+   "title": "Life Cover",
+   "taggable": true,
+   "playbook": "playbook-life-cover.md"
+  },
+  "retirement_annuity": {
+   "title": "Retirement Annuity",
+   "taggable": true,
+   "playbook": "playbook-retirement-annuity.md"
+  },
+  "investments": {
+   "title": "Investments",
+   "taggable": true,
+   "playbook": "playbook-investments.md"
+  },
+  "rgar": {
+   "title": "RGAR",
+   "taggable": false,
+   "playbook": "playbook-rgar-egar.md"
+  },
+  "egar": {
+   "title": "EGAR",
+   "taggable": false,
+   "playbook": "playbook-rgar-egar.md"
+  },
+  "medical_aid": {
+   "title": "Medical Aid",
+   "taggable": false,
+   "playbook": "playbook-medical-aid-will.md"
+  },
+  "will": {
+   "title": "Will",
+   "taggable": false,
+   "playbook": "playbook-medical-aid-will.md"
+  },
+  "short_term": {
+   "title": "Short-Term Insurance",
+   "taggable": false,
+   "playbook": "playbook-short-term.md"
+  }
+ }
+}

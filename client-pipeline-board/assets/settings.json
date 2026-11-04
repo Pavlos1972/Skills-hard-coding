@@ -1,0 +1,21 @@
+{
+ "signature_mode": "server",
+ "note": "server = the Exchange rule adds Paul's signature once, Claude types no sign-off (paul-email-signature). Every email this board drafts or sends follows that.",
+ "limits": {
+  "identified_words": 25,
+  "action_words": 30,
+  "pending_words": 70,
+  "prospect_log_words": 30,
+  "log_fold_after": 40,
+  "log_keep_open": 15
+ },
+ "sitamah": {
+  "name": "Sitamah Nathoo",
+  "email": "admin@liferisk.co.za",
+  "chat": "19:bd2a130a-35d9-459e-9025-55f356810236_e6901cee-de73-46d9-88a5-5e4a1c296418@unq.gbl.spaces",
+  "chat_label": "(1:1 Chat) Paul Kafentzis, Sitamah Nathoo"
+ },
+ "checkin": {"time_sast": "08:00"},
+ "doc_roles": ["fact_find_summary", "fact_find_transcript", "policy_schedule", "quote", "statement", "other"],
+ "on_file_folders": ["3. LOA & Disclosure", "4. FICA & POI", "6. Policy Schedules"]
+}
