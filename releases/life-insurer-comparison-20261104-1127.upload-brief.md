@@ -6,9 +6,9 @@ THE FACTS
 - Skill name: life-insurer-comparison
 - File: life-insurer-comparison-20261104-1127.zip (80,523 bytes, 23 files)
 - Where it is on Paul's Windows computer, in this folder:
-  C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New
+  C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New\life-insurer-comparison
   Full path of the file:
-  C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New\life-insurer-comparison-20261104-1127.zip
+  C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New\life-insurer-comparison\life-insurer-comparison-20261104-1127.zip
 - What the NEW version says inside: the line "Last updated: 2026-11-04 11:27 (Athens time)", and its first section after the main title is called "Index".
 - Paul's account already has this skill (an older version). A zip with the same name REPLACES it: the account cannot hold two skills with one name. The older version is kept in the skill's version history (a dropdown on the skill's page, listing versions such as v32, v31 and so on). That history is the backup. Expect ONE entry before the upload and ONE entry after it.
 
