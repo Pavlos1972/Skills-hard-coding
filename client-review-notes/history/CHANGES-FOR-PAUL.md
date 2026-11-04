@@ -29,3 +29,7 @@ A program holds the Client Record as ONE data file and draws the `.md` itself, i
 - How a real conflict between two duplicate records should be resolved (it asks you).
 - If the raw notes carry no recognisable dates, the program checks the whole note instead of entry by entry, and the audit says so.
 - I have never seen a real set of raw notes, so the first real run may need one fix.
+
+## Paul's answers (04/11/2026)
+"Agree to all." So the recommended answers stand: 1 the coverage check is strict on names too (a few `left_out` lines may be needed at first; he can tell me which kinds of word to drop from the check); 2 the one-character-apart flag stays a flag only; 3 the record keeps the full ID and tax number, the audit and the block for him mask them to the last 4; 4 the do-not-contact warning shows the whole raw line; 5 the invented sample of a raw note is **still not supplied** (question 1 of Phase A and question 5 here): until it arrives the entry splitting uses date patterns with a whole-note fallback, and the audit says which was used. No change to the skill: the zip and the upload brief stay valid.
+
