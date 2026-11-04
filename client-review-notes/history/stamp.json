@@ -1,0 +1,5 @@
+{
+ "stamp": "2026-11-04 15:32",
+ "fingerprint": "1c28f7257d70559047d3ec3f4022e236142536d7ed65c1add9e239248765e938",
+ "change": "First program-driven version: the Client Record is one data file drawn by a program in the fixed layout, every verbatim item and every date, amount, number, code, link and name of the raw notes is checked, and a checker rebuilds everything and compares"
+}

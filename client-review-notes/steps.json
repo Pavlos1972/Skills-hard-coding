@@ -1,0 +1,71 @@
+{
+ "skill": "client-review-notes",
+ "steps": [
+  {
+   "id": "source",
+   "title": "Register the raw notes as the only source (and any earlier records)",
+   "ref": ["01-source.md"],
+   "do": [
+    "The raw notes come from Paul: pasted into the chat or attached. Write them to a text file exactly as given (never tidied, never shortened) and register them: python3 {scripts}/run.py notes {run} --file <that file> --route pasted      (or --route device|m365|zapier after logging the try: python3 {scripts}/run.py access {run} --purpose notes --route device|m365|zapier --result found|failed --note \"what you did\")",
+    "Earlier Client Records of the same client that Paul gives you (for the duplicate check): python3 {scripts}/run.py earlier {run} --id e1 --file <the earlier .md> --route pasted",
+    "The program splits the notes into dated entries and says how many it recognised. No other source is used: never fill a gap from memory or a guess."
+   ],
+   "check": "source_ok",
+   "proof": "the raw notes are registered and unchanged, any route is logged in order, and the entries are counted"
+  },
+  {
+   "id": "read",
+   "title": "Read the raw notes completely, in order",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py read {run}  and read the part it shows, completely. Then acknowledge it with one line on what is in it: python3 {scripts}/run.py read {run} --ack 1 --note \"...\"  Repeat until every part is acknowledged. Searching for keywords is not reading."
+   ],
+   "check": "read_ok",
+   "proof": "every part of the raw notes was served in order and acknowledged"
+  },
+  {
+   "id": "duplicates",
+   "title": "Check for an earlier record of the same client; Paul decides",
+   "ref": ["03-duplicates.md"],
+   "do": [
+    "Run: python3 {scripts}/run.py duplicate {run} --decision merge|separate --said \"Paul's words\"  ONLY when the program says an earlier record matches. Show Paul both and ask; never merge silently. When nothing matches, the program says there is nothing to decide."
+   ],
+   "check": "dup_ok",
+   "proof": "no earlier record matches, or Paul's decision is recorded in his own words"
+  },
+  {
+   "id": "record",
+   "title": "Enter the Client Record as ONE data file; the program checks it against the raw notes and draws the .md",
+   "ref": ["02-record.md"],
+   "do": [
+    "Write record.json as the reference page shows. Never write the Markdown yourself: the program draws it.",
+    "Run: python3 {scripts}/run.py record {run} --file <record.json>",
+    "If it refuses, put every listed problem right in the file and run it again. Never argue with a refusal; never make a fact fit by inventing it. Keep what the notes hold (condensed), or list it in left_out with a reason Paul will see."
+   ],
+   "check": "record_ok",
+   "proof": "every field is checked against the raw notes, every verbatim item is character for character in them, nothing the notes hold is missing, and the Markdown is the program's"
+  },
+  {
+   "id": "deliver",
+   "title": "Send the .md file in the chat (and a copy in the client's folder only if Paul asked)",
+   "ref": ["04-deliver.md"],
+   "do": [
+    "Send out/<file name>.md in the chat as a downloadable file (never chat-only text), then record: python3 {scripts}/run.py receipt {run} chat.sent yes",
+    "ONLY if Paul asked for a copy in the client's folder: record his words (receipt save.paul_said) and the folder path (receipt save.folder), save it by the routes in order, list the folder, save the listing to a file and run: python3 {scripts}/run.py save {run} --file <the saved listing>"
+   ],
+   "check": "deliver_ok",
+   "proof": "the file was sent in the chat, and a saved copy (only if Paul asked) shows in the folder listing"
+  },
+  {
+   "id": "final",
+   "title": "The final check and the SHORT AUDIT for Paul",
+   "ref": ["05-handover.md"],
+   "do": [
+    "Run: python3 {scripts}/run.py done {run} final",
+    "Put the short audit and the block for Paul it prints in your reply exactly as they are. Nothing longer. Any red cross means the job is not finished: say so."
+   ],
+   "check": "verify_final",
+   "proof": "the final checker prints no red cross"
+  }
+ ]
+}

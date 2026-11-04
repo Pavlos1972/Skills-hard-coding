@@ -1,0 +1,562 @@
+[
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "# Client Review Notes — Wealth Revolution (FSP45946)",
+  "new": "SKILL.md and references/00-rules.md (rule 1: the core principle).",
+  "why": "Kept; the core principle is now backed by program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Format raw Outlook contact notes into a standardised, consis",
+  "new": "SKILL.md and references/00-rules.md (rule 1: the core principle).",
+  "why": "Kept; the core principle is now backed by program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Core principle: this is reformatting with summarisation of n",
+  "new": "SKILL.md and references/00-rules.md (rule 1: the core principle).",
+  "why": "Kept; the core principle is now backed by program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Working with Paul",
+  "new": "references/00-rules.md (rules 6 and 7).",
+  "why": "Kept; the no-confirmation rule stays, only a duplicate stops the record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Clean redos over patches. When Paul supplies substantial new",
+  "new": "references/00-rules.md (rules 6 and 7).",
+  "why": "Kept; the no-confirmation rule stays, only a duplicate stops the record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Header format",
+  "new": "scripts/crn.py render (the header line) and references/02-record.md.",
+  "why": "Drawn by the program; the bracket shows the Categories field as written (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Begin the record with the client's full display name, catego",
+  "new": "scripts/crn.py render (the header line) and references/02-record.md.",
+  "why": "Drawn by the program; the bracket shows the Categories field as written (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Firstname Lastname (Client) (ID number)",
+  "new": "scripts/crn.py render (the header line) and references/02-record.md.",
+  "why": "Drawn by the program; the bracket shows the Categories field as written (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If the client has a known/preferred name, insert it in paren",
+  "new": "scripts/crn.py render (the header line) and references/02-record.md.",
+  "why": "Drawn by the program; the bracket shows the Categories field as written (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Firstname (Knownname) Lastname (Client) (ID number)",
+  "new": "scripts/crn.py render (the header line) and references/02-record.md.",
+  "why": "Drawn by the program; the bracket shows the Categories field as written (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Field order (always use this exact sequence)",
+  "new": "assets/settings.json (fields) and scripts/crn.py render, layout_problems and references/02-record.md.",
+  "why": "The 18 fields are drawn in this order and checked.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Full Name",
+  "new": "assets/settings.json (fields) and scripts/crn.py render, layout_problems and references/02-record.md.",
+  "why": "The 18 fields are drawn in this order and checked.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Formatting rules",
+  "new": "references/02-record.md and scripts/crn.py check, render, layout_problems.",
+  "why": "Each formatting rule is a program rule or check; Not recorded. everywhere (Paul agreed).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "General layout",
+  "new": "references/02-record.md and scripts/crn.py check, render, layout_problems.",
+  "why": "Each formatting rule is a program rule or check; Not recorded. everywhere (Paul agreed).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Missing or unrecorded fields",
+  "new": "references/02-record.md and scripts/crn.py check, render, layout_problems.",
+  "why": "Each formatting rule is a program rule or check; Not recorded. everywhere (Paul agreed).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Known As",
+  "new": "references/02-record.md and scripts/crn.py check, render, layout_problems.",
+  "why": "Each formatting rule is a program rule or check; Not recorded. everywhere (Paul agreed).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Categories",
+  "new": "references/02-record.md and scripts/crn.py check, render, layout_problems.",
+  "why": "Each formatting rule is a program rule or check; Not recorded. everywhere (Paul agreed).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Medical Aid / Short Term Insurance",
+  "new": "references/02-record.md and scripts/crn.py check, render, layout_problems.",
+  "why": "Each formatting rule is a program rule or check; Not recorded. everywhere (Paul agreed).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Family Information",
+  "new": "references/02-record.md and scripts/crn.py check, render, layout_problems.",
+  "why": "Each formatting rule is a program rule or check; Not recorded. everywhere (Paul agreed).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Life & Investments",
+  "new": "references/02-record.md and scripts/crn.py check, render, layout_problems.",
+  "why": "Each formatting rule is a program rule or check; Not recorded. everywhere (Paul agreed).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Organise in chronological order.",
+  "new": "references/02-record.md and scripts/crn.py check, render, layout_problems.",
+  "why": "Each formatting rule is a program rule or check; Not recorded. everywhere (Paul agreed).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Commission",
+  "new": "references/02-record.md and scripts/crn.py check, render, layout_problems.",
+  "why": "Each formatting rule is a program rule or check; Not recorded. everywhere (Paul agreed).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Delivery format — MANDATORY",
+  "new": "references/04-deliver.md and scripts/run.py, verify.py (deliver).",
+  "why": "The file is the deliverable, with a program-built file name.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every formatted client record must be delivered as a downloa",
+  "new": "references/04-deliver.md and scripts/run.py, verify.py (deliver).",
+  "why": "The file is the deliverable, with a program-built file name.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Duplicate checking",
+  "new": "references/03-duplicates.md and scripts/engine.py duplicates, scripts/crn.py merge_lost.",
+  "why": "Earlier records are registered; Paul decides; a merged record must keep everything.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Before formatting any record, check whether a client with th",
+  "new": "references/03-duplicates.md and scripts/engine.py duplicates, scripts/crn.py merge_lost.",
+  "why": "Earlier records are registered; Paul decides; a merged record must keep everything.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Data integrity rules",
+  "new": "references/02-record.md and scripts/crn.py check, scripts/notes.py raw_flags.",
+  "why": "Verbatim proof, flags and the scope of a request are program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Contract numbers, DOC dates, policy details, ID numbers, and",
+  "new": "references/02-record.md and scripts/crn.py check, scripts/notes.py raw_flags.",
+  "why": "Verbatim proof, flags and the scope of a request are program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Reference: domain terminology",
+  "new": "references/06-reference.md and assets/settings.json (glossary).",
+  "why": "Kept as a leave-as-written list; four meanings marked not confirmed (Paul agreed).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Recognise these abbreviations when they appear in source not",
+  "new": "references/06-reference.md and assets/settings.json (glossary).",
+  "why": "Kept as a leave-as-written list; four meanings marked not confirmed (Paul agreed).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "FNA — Financial Needs Analysis",
+  "new": "references/06-reference.md and assets/settings.json (glossary).",
+  "why": "Kept as a leave-as-written list; four meanings marked not confirmed (Paul agreed).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Reference: key contacts",
+  "new": "references/06-reference.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Recognise these names when they appear by first name or role",
+  "new": "references/06-reference.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Sitamah Nathoo — Paul's personal assistant; handles follow-u",
+  "new": "references/06-reference.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Paul's own broker code is 721077. The practice records/track",
+  "new": "references/06-reference.md.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Example",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Full Name:",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "--",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Last Name:",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "--",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "First Name:",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "--",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Known As:",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "--",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Categories:",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "--",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "(...continue through all 18 fields in order...)*",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "--",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Notes:",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "--",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "FEBRUARY 2024",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Paul took over as broker on BrightRock (contract no.), Sanla",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "--",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "MARCH 2025",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Old Mutual AML/compliance reminder ((reference no.)) — (Clie",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "(Note how each bullet is condensed to one line but still car",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "--",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Commission:",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "BrightRock – Personal Covers (March '20)",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Old Mutual – Pension Preservation (March 2019)",
+  "new": "references/06-reference.md (layout example).",
+  "why": "Kept as a shape; the program draws the real record.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "## Final checklist before outputting any record",
+  "new": "scripts/verify.py and scripts/crn.py (the checks) and references/05-handover.md.",
+  "why": "The 12 boxes ticked by eye became program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "[ ] All 18 fields present, in correct order",
+  "new": "scripts/verify.py and scripts/crn.py (the checks) and references/05-handover.md.",
+  "why": "The 12 boxes ticked by eye became program checks.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Source first - never invent. Write only what is in the sourc",
+  "new": "references/00-rules.md rule 2: the raw notes are the only source.",
+  "why": "Enforced by the program (verbatim proof and coverage).",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Read before you write. Read the source material completely a",
+  "new": "references/00-rules.md rule 3 and steps.json (read).",
+  "why": "Enforced by the reading lock.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Check before you claim. Never tell the user something is don",
+  "new": "references/00-rules.md rule 4.",
+  "why": "Enforced by the audit.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Deliver everything this skill lists, every time. A run is no",
+  "new": "references/05-handover.md and scripts/verify.py.",
+  "why": "Done by the checker.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Every correction re-opens the whole task, not just the item.",
+  "new": "references/00-rules.md rule 8.",
+  "why": "The driver re-opens the later steps.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "Never lower the standard. A correction, a frustrated user, a",
+  "new": "references/00-rules.md rule 9.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "If a rule cannot be met, stop and say so. State exactly whic",
+  "new": "references/00-rules.md rule 9.",
+  "why": "Kept.",
+  "needs_paul": false
+ },
+ {
+  "file": "references/*",
+  "kind": "reworded",
+  "old": "1 | Universal operating rules + Delivery gate | The nine rul",
+  "new": "references/05-handover.md and scripts/verify.py.",
+  "why": "Done by the checker.",
+  "needs_paul": false
+ }
+]

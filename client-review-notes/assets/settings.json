@@ -1,0 +1,23 @@
+{
+ "fields": ["Full Name", "Last Name", "First Name", "Known As", "Categories", "First meeting", "First policy signed", "Portfolio Review Month", "Got details from", "Client ID No",
+            "Income Tax Number", "Adviser Allocation", "Medical Aid", "Short Term Insurance", "Family Information", "Life & Investments", "Notes", "Commission"],
+ "simple_fields": ["Full Name", "Last Name", "First Name", "Known As", "Categories", "First meeting", "First policy signed", "Portfolio Review Month", "Got details from", "Client ID No", "Income Tax Number", "Adviser Allocation"],
+ "free_fields": ["Medical Aid", "Short Term Insurance"],
+ "list_fields": ["Family Information"],
+ "must_appear": ["Full Name", "Last Name", "First Name", "Known As", "Categories", "First meeting", "First policy signed", "Portfolio Review Month", "Got details from", "Client ID No", "Income Tax Number", "Adviser Allocation"],
+ "policy_groups": [["previous", "Previous/Replaced Policies:"], ["current", "Current/Active Policies:"], ["inactive", "Non-active/Lapsed Policies:"]],
+ "not_recorded": "Not recorded.",
+ "warn": "⚠️",
+ "file_name": "Client Record - {date} - {first} {surname}.md",
+ "months": ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"],
+ "do_not_contact": ["do not contact", "don't contact", "do not call", "don't call", "no contact", "dnc"],
+ "glossary": {"FNA": "Financial Needs Analysis", "FF": "Fact Find", "RGAR": "Retirement Goal Analysis Report", "NTU": "Not Taken Up", "DOC": "Date of Commencement", "ACI": "Annual Contribution Increase",
+              "ECBU": "Extended Cover Benefit Upgrade", "ICB": "Income Continuation Benefit", "COC": "Certificate of Compliance", "DRO": "Debt Review Order", "LOA": "Letter of Authority"},
+ "glossary_unconfirmed": ["GPMR", "PMA report", "BSC Personalised", "GCS monthly run"],
+ "name_stop": ["Paul", "Client", "Mr", "Mrs", "Ms", "Miss", "Dr", "The", "This", "That", "These", "Please", "Thanks", "Thank", "Also", "And", "But", "For", "With", "From", "Not", "Yes", "She", "He", "They", "Her", "His", "Their", "Our", "We",
+               "JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER",
+               "January", "February", "March", "April", "June", "July", "August", "September", "October", "November", "December", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday",
+               "AND", "THE", "FOR", "NOT", "YES", "OK", "NO", "PER", "ALL", "ANY"],
+ "entry_part_chars": 4000,
+ "system_stamp_repeats": 3
+}

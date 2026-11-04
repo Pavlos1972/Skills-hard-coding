@@ -1,0 +1,10 @@
+{
+ "skill": "client-review-notes",
+ "deliverables": [
+  {"name": "The Client Record (a downloadable Markdown file: header, the 18 fields in fixed order, Life & Investments, Notes, Commission)", "file": "out/Client Record - DD.MM.YY - First Surname.md",
+   "produced_by": "scripts/run.py record (scripts/crn.py), from the record data file the chat entered and the raw notes", "handover": "sent in the chat as a file; a copy in the client's folder only when Paul asks",
+   "checked_by": "scripts/verify.py (rebuilds the checks and the Markdown and compares)", "step": "deliver"},
+  {"name": "Short audit and the block for Paul (what was left out on purpose, the flags)", "file": "printed by scripts/run.py done final; full record in out_record/audit-full.txt", "produced_by": "scripts/verify.py and scripts/run.py",
+   "handover": "pasted into the reply as they are", "checked_by": "scripts/run.py done final", "step": "final"}
+ ]
+}

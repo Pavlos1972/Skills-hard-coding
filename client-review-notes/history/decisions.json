@@ -1,0 +1,29 @@
+[
+ {
+  "from_prefix": "## Index",
+  "reason": "Replaced by the new short Index (five sections).",
+  "needs_paul": false,
+  "to_prefix": "13 | Final checklist before outputting any record | Tick-list to run b"
+ },
+ {
+  "from_prefix": "These rules come before everything else in this skill. They apply from",
+  "reason": "Replaced: the new skill is a program that shows its rules again at every step.",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Re-load this skill before you start, and again after any compression. ",
+  "reason": "Replaced by the program: the version line is said first and the steps are shown again at the right moment (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "Changes to a skill: edit the existing skill, never create a new one. U",
+  "reason": "Replaced by S7: skills are changed only in Claude Code and uploaded as a zip; the propose_skills card is gone (Paul agreed, 04/11/2026).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "2 | Last updated + Changelog | Athens-time stamp, last 5 changes, stan",
+  "reason": "The stamp is set by tools/stamp_skill.py, never typed (S2); the changelog is archived in this history folder and the pointer to the Project file client-review-notes-changelog.md is dropped (Paul agreed, 04/11/2026).",
+  "needs_paul": false,
+  "to_prefix": "> Standing rule: whenever this SKILL.md is edited, add a one-line row "
+ }
+]
