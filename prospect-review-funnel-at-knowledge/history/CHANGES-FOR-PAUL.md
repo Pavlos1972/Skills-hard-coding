@@ -38,3 +38,11 @@ Proven by the program and the one test: the stage routes are consistent; a quote
 
 ## Not yet proven
 The reading of your real Word and Excel files, the access routes to OneDrive in the chat (computer, Microsoft 365, Zapier), and a real AdviceTech build under the new steps. The first real run is the real test.
+
+## Paul's answers (04/11/2026)
+"Agree to all." So all 5 recommended answers stand:
+1. **Which document first:** the program keeps its rule (all documents before AdviceTech, no order between them). You have not yet told me which order to write in the pages, so both old sentences stay as they are until you do.
+2. **Owners and names of the unstated stages:** left as "not stated, read the Master Plan" for now.
+3. **The four scripts** (`flowi.py`, `addnotes.py`, `tick.js`, `tick.css`): you will send them. NOT yet received; until then the pages say they live outside the skill.
+4. **Open items:** you named none as closed, so all four stay open with their dates.
+5. **After the upload the AdviceTech chats stop editing this skill:** a change goes in the documents first and then to Claude Code (a zip and an upload). The entry page says so; the chats that built the funnel need to be told.
