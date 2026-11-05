@@ -15,17 +15,17 @@ description: "Builds the WR Fact Find from the Fact Find form's data file (named
 | 4 | When something goes wrong | What to do instead of improvising |
 | 5 | Where the detail lives | The pages the program shows at each step |
 
-**Last updated: 2026-11-05 10:43 (Athens time)**
+**Last updated: 2026-11-05 14:20 (Athens time)**
 
 **Recent changes** (last 5, one line each; full history in the repo `history/` folder)
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-11-05 14:20 | Fix: the form's summary lines that only repeat a row's own label and form value are no leak (row-by-row check); tests added |
 | 2026-11-05 10:43 | Comment tidy |
 | 2026-11-05 10:43 | Dated notes moved out of the live pages |
 | 2026-11-05 10:42 | Strict changes after the first real run: files found automatically through Microsoft 365 (no permission step, no attach), a quiet run, the short audit as the program's own printout, the message to Sitamah posted automatically |
 | 2026-11-03 06:12 | Fix round 5 after a confirmation review: a quote line naming two products needs a cover for each, N/A and not-on-the-call are refused like Not discussed, credit life is a hard word, and Requested is refused when the call mentions the field |
-| 2026-11-03 05:31 | Fix round 4 after a confirmation review: a quote request is covered only by its own product's row, a freed request line needs a question that quotes it, and a shared verb no longer counts |
 
 ## Run it
 

@@ -76,7 +76,9 @@ def pat_form():
         "bfred": [], "raq": [], "invq": [],
     }
     return {"app": "wr-fact-find", "schema": "3.0", "created": "2026-11-05T15:00:00.000Z", "modified": "2026-11-05T15:20:00.000Z", "f": f, "l": lists,
-            "sum": {"life": "A drafted summary that must be ignored"}, "pa": {"x": 1}, "unplaced": [{"fact": "Pat mentioned an old policy somewhere", "why": "no box"}],
+            "sum": {"life": "A drafted summary that must be ignored", "broker": "Broker on record: Other broker", "will": "Will held with: Attorney", "job": "Operations manager"},
+            "pa": {"x": 1},
+            "unplaced": [{"fact": "Pat mentioned an old policy somewhere", "why": "no box"}, {"fact": "Broker on record: Other broker also manages an old policy", "why": "no box"}],
             "claude": {"in": 1, "out": 2}, "openai": {"sec": 3}}
 
 

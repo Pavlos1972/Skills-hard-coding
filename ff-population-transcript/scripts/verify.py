@@ -97,6 +97,18 @@ def row_text(r):
     return " ".join([S(r.get("label"))] + [S(b) for b in r.get("bullets") or []] + [S(f.get("text")) for f in r.get("flags") or []])
 
 
+def row_own_text(r, fr):
+    """What a row may legitimately repeat: its own label and the values of the form fields it cites. The form's summary lines often restate exactly that
+    ("Broker on record: Other broker"), which is no leak; any other text in the row is still checked."""
+    parts = [S(r.get("label"))]
+    for s_ in r.get("src") or []:
+        if isinstance(s_, dict) and "form" in s_ and fr:
+            v_ = form_value(fr, S(s_["form"]))
+            if v_:
+                parts.append(v_)
+    return w.norm(" ".join(parts))
+
+
 # ---------------------------------------------------------------- quotes in the transcript and documents
 def window_norm(lines, line):
     lo, hi = max(0, line - 1 - QUOTE_WINDOW), min(len(lines), line + QUOTE_WINDOW)
@@ -535,7 +547,14 @@ def check_form(run, R, lines, content):
     pa = ((raw.get("f") or {}).get("pa_actions") or {}) if isinstance(raw.get("f"), dict) else {}
     ignored_texts += [s for s in compose_strings(pa) if len(s) >= 12]
     printed = w.norm(" ".join(row_text(r) for _, _, r in iter_rows(content))) if isinstance(content, dict) else ""
-    leaked = [t[:40] for t in ignored_texts if w.norm(t) in printed]
+    leaked = []
+    if isinstance(content, dict):
+        for _, _, r_ in iter_rows(content):
+            rt_, own_ = w.norm(row_text(r_)), row_own_text(r_, fr)
+            for t in ignored_texts:
+                nt_ = w.norm(t)
+                if nt_ and nt_ in rt_ and nt_ not in own_ and t[:40] not in leaked:
+                    leaked.append(t[:40])
     if leaked:
         fail("text from the form's parking list, summaries or drafted action list (never a source) is printed: %s" % leaked[:3])
     lk = fr.get("lookup") or {}

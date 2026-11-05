@@ -216,6 +216,31 @@ class Mutations(unittest.TestCase):
         self.edit_content(lambda c: self.row(c, "occ")["bullets"].append(parked))
         self.caught("text from the form's parking list, summaries or drafted action list (never a source) is printed")
 
+    def test_summary_lines_that_only_repeat_the_forms_own_values_are_no_leak(self):
+        # real-run false positive: the form's own summary lines ("Broker on record: Other broker", "Will held with: Attorney", "Operations manager")
+        # repeat the real field values that the rows print from the form. The untouched run (whose fixture now carries such lines) must pass the parking check.
+        src = jload(self.p("form_source.json"))
+        self.assertIn("Broker on record: Other broker", src["sum"].values())
+        out = self.verify("--full")
+        self.assertEqual(out.returncode, 0, out.stdout[-3000:])
+        self.assertNotIn("never a source) is printed", out.stdout)
+
+    def test_parking_text_added_to_a_row_that_is_otherwise_only_form_sourced_is_still_a_leak(self):
+        # the broker row cites only the form; its label and value may repeat a summary line, but anything ELSE in the row is still checked
+        parked = jload(self.p("form_source.json"))["unplaced"][0]["fact"]
+        self.edit_content(lambda c: self.row(c, "sti_broker")["bullets"].append(parked))
+        self.caught("text from the form's parking list, summaries or drafted action list (never a source) is printed")
+
+    def test_a_parking_line_that_only_starts_like_a_real_value_is_still_a_leak(self):
+        # "Broker on record: Other broker also manages an old policy" begins with the label and the real value, but the rest is parking text only
+        self.edit_content(lambda c: self.row(c, "sti_broker").update(bullets=["Other broker also manages an old policy"]))
+        self.caught("text from the form's parking list, summaries or drafted action list (never a source) is printed")
+
+    def test_parking_text_in_a_flag_on_a_form_sourced_row_is_still_a_leak(self):
+        parked = jload(self.p("form_source.json"))["unplaced"][0]["fact"]
+        self.edit_content(lambda c: self.row(c, "sti_broker").update(flags=[{"text": parked}]))
+        self.caught("text from the form's parking list, summaries or drafted action list (never a source) is printed")
+
     def test_the_forms_own_drafted_action_text_printed_in_the_document(self):
         drafted = jload(self.p("form_source.json"))["f"]["pa_actions"]["v"]
         self.edit_content(lambda c: self.row(c, "occ")["bullets"].append(drafted))

@@ -1,5 +1,5 @@
 {
- "stamp": "2026-11-05 10:43",
- "fingerprint": "9985eb63ed16bd3d0d2790a521d3007bbcf8bee04f08c75e1775c2293bc50df5",
- "change": "Comment tidy"
+ "stamp": "2026-11-05 14:20",
+ "fingerprint": "89122135dce8992bc81c5a8c7d4b0cfb0735c4667cffadad14192f8084e0d3af",
+ "change": "Fix: the form's summary lines that only repeat a row's own label and form value are no leak (row-by-row check); tests added"
 }
