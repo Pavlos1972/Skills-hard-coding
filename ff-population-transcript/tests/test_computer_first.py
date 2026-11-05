@@ -1,20 +1,25 @@
 """The computer comes first (Paul, 05/11/2026, after the first full real run): the program finds the client's OneDrive folder itself, stops at the start when it is not
 there, proves every copy of a client file (byte for byte against the original on the computer, or by the connector's size), never reads a PDF as text or cut off,
 lists the amounts only the form's PDF holds, and notices a ledger edited by hand. Invented data only."""
+import hashlib
 import os
 
 from support import Chat, ENV, SCRIPTS, drv, sh, jdump, jload, slurp, spit
+import wrlib as w
 
 
 class ComputerFirst(Chat):
-    def test_the_run_stops_at_the_start_when_the_computer_is_not_connected(self):
+    def test_the_run_stops_at_the_start_when_the_computer_cannot_be_connected(self):
         self.s_start()
-        ENV["WR_COMPUTER_ROOT"] = os.path.join(self.tmp, "no-such-folder")
+        ENV["WR_COMPUTER_ROOT"] = os.path.join(self.tmp, "no-such-folder")          # no folder mounted into this machine either
         r = drv("computer", self.run_dir)
         self.assertEqual(r.returncode, 6, r.stdout + r.stderr)
-        self.assertIn("STOP. This chat is not connected to your computer", r.stdout)
+        self.assertIn("No connection is recorded yet", r.stdout)
+        r = drv("computer", self.run_dir, "--none", "the request for folder access was refused")
+        self.assertEqual(r.returncode, 6, r.stdout + r.stderr)
+        self.assertIn("I could not connect this chat to your computer", r.stdout)
         r = self.refused("done", self.run_dir, "locate")
-        self.assertIn("This chat is not connected to your computer", r.stdout)
+        self.assertIn("could not connect this chat to your computer", r.stdout)
         r = drv("access", self.run_dir, "--need", "form", "--route", "device", "--tool", "cp", "--result", "ok", "--file", self.form_path, "--original", self.form_path)
         self.assertNotEqual(r.returncode, 0)
         self.assertIn("has not found the computer", r.stdout + r.stderr)
@@ -22,7 +27,46 @@ class ComputerFirst(Chat):
         self.refused("computer", self.run_dir, "--paul-go-on", "ok")
         self.ok("computer", self.run_dir, "--paul-go-on", "Go on without the computer")
         r = self.refused("done", self.run_dir, "locate")
-        self.assertNotIn("This chat is not connected to your computer", r.stdout)
+        self.assertNotIn("could not connect this chat to your computer", r.stdout)
+
+    def test_the_computer_through_the_device_tools_and_the_computers_own_fingerprint(self):
+        self.s_start()
+        ENV["WR_COMPUTER_ROOT"] = os.path.join(self.tmp, "no-such-folder")
+        self.refused("computer", self.run_dir, "--device", "paul-pc", "--folder", "C:\\Users\\Paul\\Documents", "--listing", "a file name and another file name here")
+        self.refused("computer", self.run_dir, "--device", "paul-pc", "--folder", "C:\\Users\\Paul\\liferisk.co.za", "--listing", "short")
+        r = self.ok("computer", self.run_dir, "--device", "paul-kafentzis", "--folder", "C:\\Users\\Paul\\liferisk.co.za", "--listing",
+                    "Fact Find (Audio to Text) - 05.11.2026 - Pat Samplecase.json; Teams meeting transcript - 05.11.26 - (Pat Samplecase).docx")
+        self.assertIn("COMPUTER CONNECTED through the device tools", r.stdout)
+        self.assertEqual(jload(self.p("run.json"))["computer"]["mode"], "bridge")
+        with open(self.form_path, "rb") as fh:
+            data = fh.read()
+        sha, name = hashlib.sha256(data).hexdigest(), os.path.basename(self.form_path)
+        out = "%s  /home/user/mnt/liferisk.co.za/Company - Paul/New Business/Samplecase, Pat/2. Fact Find/%s\n%d\n" % (sha, name, len(data))
+        args = ("access", self.run_dir, "--need", "form", "--route", "device", "--tool", "device_stage_files", "--result", "ok")
+        # a whole copy matching the computer's own fingerprint is proved
+        self.ok(*args, "--file", self.form_path, "--device-output", out)
+        last = jload(self.p("access_log.json"))[-1]
+        self.assertTrue(last["verified"])
+        self.assertIn("identical to the file on the computer", last["detail"])
+        # a cut-off copy cannot match it: logged as a failure
+        short = os.path.join(self.tmp, name)
+        os.makedirs(os.path.join(self.tmp, "short"), exist_ok=True)
+        short = os.path.join(self.tmp, "short", name)
+        with open(short, "wb") as fh:
+            fh.write(data[:100])
+        r = self.ok(*args, "--file", short, "--device-output", out)
+        self.assertIn("logged as a FAIL", r.stdout)
+        self.assertFalse(jload(self.p("access_log.json"))[-1]["verified"])
+        # the fingerprint of ANOTHER file, or no size, is refused
+        r = drv(*args, "--file", self.form_path, "--device-output", out.replace(name, "other.json"))
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("names 'other.json'", r.stdout + r.stderr)
+        r = drv(*args, "--file", self.form_path, "--device-output", "%s  %s\n" % (sha, name))
+        self.assertNotEqual(r.returncode, 0)
+        self.assertIn("paste the whole output", r.stdout + r.stderr)
+        # the PDF through Microsoft 365 is still refused, and the parser is exact
+        self.assertEqual(w.parse_device_output(out, name), (sha, len(data), None))
+        self.assertIsNotNone(w.parse_device_output(out, "x.json")[2])
 
     def test_a_found_file_without_its_proof_is_refused(self):
         self.s_start()

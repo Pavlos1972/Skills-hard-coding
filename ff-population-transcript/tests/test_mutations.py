@@ -257,6 +257,23 @@ class Mutations(unittest.TestCase):
         self.assertNotIn("neither printed in the document nor reviewed", out.stdout)
         self.assertIn("which the document does not print", out.stdout)
 
+    def test_a_pdf_saved_on_the_computer_must_match_the_pdf_built_here(self):
+        # in a cloud chat the save is proved by the computer's own fingerprint of the saved file (device_bash sha256sum and stat)
+        rj = jload(self.p("run.json"))
+        rj["computer"] = {"found": True, "mode": "bridge", "device": "paul-pc", "folder": "C:\\\\Users\\\\Paul\\\\liferisk.co.za", "listing": "the client's files, listed", "t": "x"}
+        jdump(self.p("run.json"), rj)
+        b = jload(self.p("state.json"))["build"]
+        self.caught("saved.device_output (the computer's own fingerprint of the saved PDF)")
+        rc = jload(self.p("receipt.json"))
+        rc["saved"]["device_output"] = "%s  /home/u/mnt/liferisk.co.za/x/%s\n%d\n" % ("0" * 64, b["pdf"], b["pdf_size"])
+        jdump(self.p("receipt.json"), rc)
+        self.caught("the PDF saved on the computer is not the PDF built here")
+        rc["saved"]["device_output"] = "%s  /home/u/mnt/liferisk.co.za/x/%s\n%d\n" % (b["pdf_sha"], b["pdf"], b["pdf_size"])
+        jdump(self.p("receipt.json"), rc)
+        out = self.verify("--full")
+        self.assertNotIn("not the PDF built here", out.stdout)
+        self.assertNotIn("saved.device_output", out.stdout)
+
     def test_the_forms_own_drafted_action_text_printed_in_the_document(self):
         drafted = jload(self.p("form_source.json"))["f"]["pa_actions"]["v"]
         self.edit_content(lambda c: self.row(c, "occ")["bullets"].append(drafted))

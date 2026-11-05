@@ -437,10 +437,17 @@ def ck_receipt(*keys, n=1):
 
 
 def ck_pdf_saved(run, rj):
-    errs = ck_receipt("pdf_sent_in_chat", "saved.tool", "saved.folder", "saved.filename", "saved.tool_result", "saved.folder_listing_check", "saved.listed_size")(run, rj)
+    bridge = (rj.get("computer") or {}).get("mode") == "bridge"
+    errs = ck_receipt("pdf_sent_in_chat", "saved.tool", "saved.folder", "saved.filename", "saved.tool_result", "saved.folder_listing_check", "saved.listed_size", *(("saved.device_output",) if bridge else ()))(run, rj)
     if errs:
         return errs
     b = _state(run).get("build") or {}
+    if bridge:
+        dsha, dsize, why = w.parse_device_output(str(rc_get(run, "saved.device_output") or ""), str(b.get("pdf")))
+        if why:
+            errs.append("saved.device_output: " + why)
+        elif dsha != b.get("pdf_sha") or dsize != b.get("pdf_size"):
+            errs.append("the PDF on the computer is not the PDF built here (computer: %d bytes, %s...; built: %s bytes, %s...): commit it again and fingerprint it again" % (dsize, dsha[:12], b.get("pdf_size"), str(b.get("pdf_sha"))[:12]))
     if str(rc_get(run, "saved.listed_size")).strip().replace(",", "") != str(b.get("pdf_size")):
         errs.append("the folder listing shows %s bytes but the local PDF is %s bytes: the save is not proven (a new time with the old size means the copy lagged). Commit it again, list again, record the new listing" % (rc_get(run, "saved.listed_size"), b.get("pdf_size")))
     if str(rc_get(run, "saved.filename")) != b.get("pdf"):
@@ -509,12 +516,13 @@ def cmd_done(a):
 
 # ------------------------------------------------------------------ logs
 def cmd_computer(a):
-    """The program itself looks for the client's OneDrive folder mounted into this chat. Nothing is requested and nobody is asked."""
+    """Records how this chat reaches the client's OneDrive folder on the computer. In a cloud chat the computer is a separate machine reached through the device tools
+    (the chat connects, lists the client's folder and records it here); where the folder is mounted into this machine (a test, or a chat running on the computer) the program finds it itself."""
     rj = load_run(a.run)
     comp = rj.get("computer") or {}
     if a.paul_go_on:
         if comp.get("found") is not False:
-            w.die("REFUSED: going on without the computer is only possible after the program looked and did not find it (run.py computer %s)." % a.run)
+            w.die("REFUSED: going on without the computer is only possible after the connection was tried and recorded as not made (run.py computer %s --none \"<what happened>\")." % a.run)
         if len(a.paul_go_on.strip()) < 3:
             w.die("REFUSED: record Paul's own words (at least 3 characters).")
         comp["paul_go_on"] = a.paul_go_on.strip()
@@ -523,14 +531,34 @@ def cmd_computer(a):
         print("recorded Paul's words (%r): the run goes on WITHOUT the computer. Microsoft 365 then serves small text files only, each copy proved by its size; "
               "a PDF cannot be read that way, so the form's saved PDF will be recorded as missing and the checker will say so." % comp["paul_go_on"])
         return
-    root = w.find_computer_root()
-    rj["computer"] = {"found": bool(root), "root": root, "t": w.now(), "paul_go_on": comp.get("paul_go_on")}
-    save_run(a.run, rj)
-    if root:
-        print("COMPUTER CONNECTED: the client's OneDrive folder is at %s. Read every client file from there as real bytes and save the finished PDF there (page 01 and page 10)." % root)
+    if a.none:
+        if len(a.none.strip()) < 8:
+            w.die("REFUSED: say what happened to the connection (at least 8 characters).")
+        rj["computer"] = {"found": False, "t": w.now(), "detail": a.none.strip(), "paul_go_on": comp.get("paul_go_on")}
+        save_run(a.run, rj)
+        print(w.COMPUTER_STOP)
+        print("\nYour whole reply is those words, nothing more, and no question. When Paul says to go on, connect again and run: python3 %s/run.py computer %s --device ... --folder ... --listing ..." % (SCRIPTS, a.run))
+        sys.exit(6)
+    if a.device or a.folder or a.listing:
+        if not (a.device and a.folder and a.listing):
+            w.die("REFUSED: give --device (the computer's name), --folder (the folder the connection was granted for) and --listing (the file names device_list_dir showed in the client's folder).")
+        if "liferisk.co.za" not in a.folder.lower().replace("/", "\\"):
+            w.die("REFUSED: the connected folder must be the client files' root, liferisk.co.za (it was %r)." % a.folder)
+        if len(a.listing.strip()) < 20:
+            w.die("REFUSED: --listing must be what device_list_dir showed in the client's folder (the file names), not a summary.")
+        rj["computer"] = {"found": True, "mode": "bridge", "device": a.device.strip(), "folder": a.folder.strip(), "listing": a.listing.strip()[:2000], "t": w.now(), "paul_go_on": comp.get("paul_go_on")}
+        save_run(a.run, rj)
+        print("COMPUTER CONNECTED through the device tools (%s, folder %s). Read every client file as page 01 says: device_bash for its fingerprint, device_stage_files for the copy, then run.py access with --device-output." % (a.device.strip(), a.folder.strip()))
         return
-    print(w.COMPUTER_STOP)
-    print("\nYour whole reply is those words, nothing more, and no question. When Paul says to go on, run: python3 %s/run.py computer %s" % (SCRIPTS, a.run))
+    root = w.find_computer_root()
+    if root:
+        rj["computer"] = {"found": True, "mode": "mount", "root": root, "t": w.now(), "paul_go_on": comp.get("paul_go_on")}
+        save_run(a.run, rj)
+        print("COMPUTER FOUND: the client's OneDrive folder is mounted at %s. Copy each file with cp and log it with --original." % root)
+        return
+    print("No connection is recorded yet. Connect with the device tools (page 01: get_device_info, then device_request_folder_access for ~/liferisk.co.za if it is not connected, then device_list_dir "
+          "on the client's folder) and record it: python3 %s/run.py computer %s --device <name> --folder <granted folder> --listing \"<the file names>\"   "
+          "If the connection is refused or cannot be made: python3 %s/run.py computer %s --none \"<what happened>\"" % (SCRIPTS, a.run, SCRIPTS, a.run))
     sys.exit(6)
 
 
@@ -545,7 +573,9 @@ def cmd_access(a):
               "or use --route passed when another skill handed it over." % ("Microsoft 365" if a.route == "m365" else "Zapier"))
     if a.route == "device" and a.result == "ok" and not (rj.get("computer") or {}).get("found"):
         w.die("REFUSED: the program has not found the computer in this run (run.py computer %s). A try on the computer is logged only when the folder is really there." % a.run)
-    if a.file or a.source_size is not None or a.original:
+    if a.device_output and a.original:
+        w.die("REFUSED: give --original (a mounted folder) or --device-output (the computer's own fingerprint), not both.")
+    if a.file or a.source_size is not None or a.original or a.device_output:
         # a file copied into the run folder must be PROVED: identical to its original on the computer, or as big as the connector said the file is
         if not a.file:
             w.die("REFUSED: give --file (the copy you saved in the run folder) together with --original (the computer) or --source-size (the connector's size).")
@@ -568,6 +598,19 @@ def cmd_access(a):
             else:
                 verified = True
                 detail = (detail + " ").lstrip() + "copy verified: identical to the original on the computer (%d bytes)" % got
+        elif a.device_output:
+            if a.route != "device":
+                w.die("REFUSED: --device-output is for the computer route (--route device).")
+            dsha, dsize, why = w.parse_device_output(a.device_output, os.path.basename(a.file))
+            if why:
+                w.die("REFUSED: " + why)
+            if dsha != sha or dsize != got:
+                result = "fail"
+                detail = (detail + " ").lstrip() + "copy NOT identical to the file on the computer (copy: %d bytes, %s...; the computer: %d bytes, %s...)" % (got, sha[:12], dsize, dsha[:12])
+                print("logged as a FAIL: the copy is not identical to the file on the computer. Stage it again (device_stage_files) and compare again.")
+            else:
+                verified = True
+                detail = (detail + " ").lstrip() + "copy verified: identical to the file on the computer (%d bytes, sha256 %s...)" % (got, sha[:12])
         elif a.source_size is not None:
             if got != a.source_size:
                 result = "fail"
@@ -577,9 +620,9 @@ def cmd_access(a):
                 verified = True
                 detail = (detail + " ").lstrip() + "copy verified: %d bytes = the connector's size" % got
         else:
-            w.die("REFUSED: give --original (the computer) or --source-size (the connector's size in bytes) with --file.")
+            w.die("REFUSED: give --device-output (the computer's own fingerprint), --original (a mounted folder) or --source-size (the connector's size in bytes) with --file.")
     elif a.need in w.FILE_NEEDS and a.route in w.COPY_ROUTES and a.result == "ok":
-        w.die("REFUSED: a file taken from %s needs its proof, or the copy may be cut off: --file <your copy> with --original <the file on the computer> (computer) or "
+        w.die("REFUSED: a file taken from %s needs its proof, or the copy may be cut off: --file <your copy> with --device-output <the output of sha256sum and stat run on the computer> (computer) or "
               "--source-size <the connector's size in bytes> (Microsoft 365, Zapier). Nobody is asked for anything." % a.route)
     log.append({"t": w.now(), "need": a.need, "route": a.route, "tool": a.tool, "result": result, "detail": detail, "verified": verified, "bytes": got, "sha256": sha})
     w.save_json(p(a.run, w.ACCESS), log)
@@ -1259,9 +1302,14 @@ def main():
     sp.add_argument("--detail")
     sp.add_argument("--file", help="the copy you saved in the run folder")
     sp.add_argument("--source-size", dest="source_size", type=int, help="the size in bytes the connector reported for that file (Microsoft 365, Zapier)")
-    sp.add_argument("--original", help="the file on the computer that you copied (the program compares the two byte for byte)")
+    sp.add_argument("--original", help="a file in a folder mounted into this machine that you copied (the program compares the two byte for byte)")
+    sp.add_argument("--device-output", dest="device_output", help="the whole output of sha256sum and stat -c %%s for that file, run on the computer with device_bash")
     sp = add("computer", cmd_computer, "run")
-    sp.add_argument("--paul-go-on", dest="paul_go_on", help="Paul's own words, only after the computer was not found")
+    sp.add_argument("--device", help="the computer's name (get_device_info)")
+    sp.add_argument("--folder", help="the folder the connection was granted for (for example C:\\Users\\Paul\\liferisk.co.za)")
+    sp.add_argument("--listing", help="the file names device_list_dir showed in the client's folder")
+    sp.add_argument("--none", help="what happened, when the connection was refused or could not be made (prints the STOP)")
+    sp.add_argument("--paul-go-on", dest="paul_go_on", help="Paul's own words, only after the connection was recorded as not made")
     sp = add("source", cmd_source, "run")
     sp.add_argument("--kind", required=True)
     sp.add_argument("--path")

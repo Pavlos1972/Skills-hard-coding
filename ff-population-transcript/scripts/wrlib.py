@@ -52,8 +52,8 @@ DOC_TYPES = SOURCE_KINDS + ["Paul (chat)"]
 FILE_NEEDS = ("form", "formpdf", "transcript") + tuple(SOURCE_KINDS)       # access entries for these are files: every copy must be proved
 COPY_ROUTES = ("device", "m365", "zapier")
 LEDGER_LOCK = "ledger.lock"
-COMPUTER_STOP = ("STOP. This chat is not connected to your computer, and the large client files (the form's PDF above all) cannot be read through Microsoft 365: "
-                 "it returns them cut off. Connect this chat to your computer (the folder liferisk.co.za, with Company - Paul inside it), then tell me to go on.")
+COMPUTER_STOP = ("STOP. I could not connect this chat to your computer (the connection was refused or did not go through), and the large client files (the form's PDF above all) "
+                 "cannot be read through Microsoft 365: it returns them cut off. Please allow the connection to the folder liferisk.co.za, then tell me to go on.")
 
 
 def find_computer_root():
@@ -73,6 +73,24 @@ def find_computer_root():
             if os.path.basename(d) in ("Company - Paul", "Company - WR Clients"):
                 return os.path.realpath(os.path.dirname(d))
     return None
+
+
+def parse_device_output(text, name):
+    """The output of `sha256sum FILE` and `stat -c %s FILE` run ON THE COMPUTER (device_bash), pasted whole: (sha256, size, None), or (None, None, what is wrong).
+    The file name in the sha256sum line must be the copy's own name, so a hash of another file cannot be passed off."""
+    sha, size = None, None
+    for ln in (text or "").splitlines():
+        m = re.match(r"^\s*([0-9a-fA-F]{64})\s+[*]?(.+?)\s*$", ln)
+        if m:
+            base = os.path.basename(m.group(2).replace("\\", "/"))
+            if base != name:
+                return None, None, "the sha256sum line names %r, not %r" % (base, name)
+            sha = m.group(1).lower()
+        elif re.fullmatch(r"\s*\d+\s*", ln):
+            size = int(ln)
+    if not sha or size is None:
+        return None, None, "paste the whole output of: sha256sum \"<file>\" && stat -c %%s \"<file>\" (run with device_bash on the computer): a 64-character fingerprint with the file's name, and its size on its own line"
+    return sha, size, None
 
 
 def under_root(path, root):

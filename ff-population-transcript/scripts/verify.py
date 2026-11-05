@@ -402,7 +402,10 @@ def check_sources(run, R, lines=None, content=None):
         fail("the transcript has no successful access entry (run.py access --need transcript ... --result ok)")
     comp = rj.get("computer") or {}
     if not comp.get("found") and len(S(comp.get("paul_go_on")).strip()) < 3:
-        fail("the computer was not found at the start and Paul did not say to go on without it: the run should have stopped (run.py computer). " + w.COMPUTER_STOP)
+        fail("the computer was not connected at the start and Paul did not say to go on without it: the run should have stopped (run.py computer). " + w.COMPUTER_STOP)
+    elif comp.get("found") and comp.get("mode") == "bridge":
+        R.add("PASS", g, "the computer is connected through the device tools (%s, folder %s): the client files are copied from it and the PDF is saved to it" % (comp.get("device"), comp.get("folder")))
+        R.add("ATTEST", g, "that the fingerprints and sizes pasted from the computer's own shell are really the computer's (a copy that differs from them is caught; the program cannot see the computer itself)")
     elif comp.get("found"):
         R.add("PASS", g, "the computer is connected: the client files are read from, and the PDF saved to, %s" % comp.get("root"))
     else:
@@ -410,7 +413,7 @@ def check_sources(run, R, lines=None, content=None):
     _cop = [e for e in access if isinstance(e, dict) and e.get("result") == "ok" and e.get("route") in w.COPY_ROUTES and e.get("need") in w.FILE_NEEDS]
     for e in _cop:
         if not e.get("verified"):
-            fail("'%s' was taken from %s with no proof that the copy is whole (--original on the computer, or --source-size from the connector): a cut-off copy cannot be told from a whole one" % (e.get("need"), e.get("route")))
+            fail("'%s' was taken from %s with no proof that the copy is whole (--device-output from the computer, --original, or --source-size from the connector): a cut-off copy cannot be told from a whole one" % (e.get("need"), e.get("route")))
         if e.get("need") == "formpdf" and e.get("route") in ("m365", "zapier"):
             fail("the form's saved PDF was taken through %s: a PDF arrives there cut off, as text. It must come from the computer" % e.get("route"))
     if _cop and all(e.get("verified") for e in _cop):
@@ -2074,6 +2077,15 @@ def check_receipt(run, st, content, R, skip=()):
         if fp_:
             fail("saved.folder: " + fp_)
             bad += 1
+        if (rj.get("computer") or {}).get("mode") == "bridge":
+            _b = st.get("build") or {}
+            dsha, dsize, why = w.parse_device_output(S(sv.get("device_output")), S(_b.get("pdf")))
+            if why:
+                fail("saved.device_output (the computer's own fingerprint of the saved PDF): " + why)
+                bad += 1
+            elif dsha != _b.get("pdf_sha") or dsize != _b.get("pdf_size"):
+                fail("the PDF saved on the computer is not the PDF built here (computer: %d bytes, %s...; built: %s bytes, %s...)" % (dsize, dsha[:12], _b.get("pdf_size"), S(_b.get("pdf_sha"))[:12]))
+                bad += 1
         if str(sv["listed_size"]).strip().replace(",", "") != str(local):
             fail("saved.listed_size is %s but the local PDF is %s bytes: a save is proven only when the listed size equals the local file's (a new time with the old size means the copy lagged: commit again and list again)" % (sv["listed_size"], local))
             bad += 1

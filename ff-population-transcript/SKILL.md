@@ -15,23 +15,23 @@ description: "Builds the WR Fact Find from the Fact Find form's data file (named
 | 4 | When something goes wrong | What to do instead of improvising |
 | 5 | Where the detail lives | The pages the program shows at each step |
 
-**Last updated: 2026-11-05 15:59 (Athens time)**
+**Last updated: 2026-11-05 17:11 (Athens time)**
 
 **Recent changes** (last 5, one line each; full history in the repo `history/` folder)
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-11-05 17:11 | Computer through the device tools: the chat connects once, every file proved by the computer's own fingerprint, the finished PDF saved with device_commit_files and fingerprinted there |
 | 2026-11-05 15:59 | Computer first: the program finds the client's OneDrive folder and stops at the start if it is not there; every copy proved byte for byte; a PDF only as whole real bytes; amounts only the PDF holds; the PDF saved on the computer; the ledger locked |
 | 2026-11-05 14:20 | Fix: the form's summary lines that only repeat a row's own label and form value are no leak (row-by-row check); tests added |
 | 2026-11-05 10:43 | Comment tidy |
 | 2026-11-05 10:43 | Dated notes moved out of the live pages |
-| 2026-11-05 10:42 | Strict changes after the first real run: files found automatically through Microsoft 365 (no permission step, no attach), a quiet run, the short audit as the program's own printout, the message to Sitamah posted automatically |
 
 ## Run it
 
 This skill is a program that walks you through the job one step at a time. You do not work from memory of this page. Everything below is shown again, at the right moment, by the program.
 
-**A quiet run, and nothing is asked of Paul (Paul's rule).** Start your reply with the one version sentence the program gives you, then work. You may show ONE short progress line per step (for example "Step 3 of 16: preparing the transcript"). Never write an opening recap of this skill, its rules, the files found or the information read; do not read the reference pages yourself (the program shows each page at its step). Never ask Paul for permission, to click Allow, to attach, upload or drag a file: find the files yourself, from the computer first (the program checks the connection in step 1: if it prints STOP, your whole reply is that text). The reply at the end is the outputs and the SHORT audit.
+**A quiet run, and nothing is asked of Paul (Paul's rule).** Start your reply with the one version sentence the program gives you, then work. You may show ONE short progress line per step (for example "Step 3 of 16: preparing the transcript"). Never write an opening recap of this skill, its rules, the files found or the information read; do not read the reference pages yourself (the program shows each page at its step). Never ask Paul for permission, to click Allow, to attach, upload or drag a file: find the files yourself, from the computer first (step 1 connects through the device tools: if the connection cannot be made, the program prints a STOP and your whole reply is that text). The reply at the end is the outputs and the SHORT audit.
 
 1. Find this skill's folder (the "Base directory" shown when the skill loaded; it contains `scripts/run.py`). If you are unsure: `find /mnt /root /home /opt /tmp -path '*ff-population-transcript/scripts/run.py' 2>/dev/null | head -1`
 2. Choose a new run folder, for example `/tmp/wr-ff-<Surname>-<DDMMYY>`, and start: `python3 <skill folder>/scripts/run.py start <run folder> --client "First Surname" --date DD/MM/YYYY`. The client and the meeting date are taken exactly from Paul's message; the program checks every later file against them. For two spouses in one meeting start one run per spouse (`--spouse "Other Surname" --spouse-run <their run folder>`). The program's first lines give you one sentence to say to Paul before anything else: which version of this skill is running. It comes from the Last updated line above, so it moves with every update.
@@ -53,7 +53,7 @@ Never rewrite, shorten or "improve" the programs during a run, and never replace
 1. Source order: the form's data file first (and its saved PDF), the Teams transcript second, the latest Overview as a reference, the Manual Fact Find only if Paul says so after the program asked him; where they differ the form wins and the difference is flagged with both values.
 2. Never invent: every value in the PDF traces to its source, and the program checks the quote or the figure.
 3. Read the whole transcript twice, in order, before anything is drafted. The program enforces it.
-4. Client information comes from the client's file first, read from the COMPUTER (the client's OneDrive folder, real bytes, every copy proved identical to its original); Microsoft 365 and Zapier serve small text files only and never a PDF. The finished PDF is saved on the computer. Log each try. Never ask Paul for permission, to click Allow, or to attach, upload or drag a file.
+4. Client information comes from the client's file first, read from the COMPUTER (the client's OneDrive folder through the device tools: each file fingerprinted on the computer, staged whole, every copy proved identical); Microsoft 365 and Zapier serve small text files only and never a PDF. The finished PDF is saved on the computer and fingerprinted there. Log each try. Never ask Paul for permission, to click Allow, or to attach, upload or drag a file.
 5. If the form's data file is missing on all three routes, STOP and ask Paul: the Manual Fact Find PDF, or the transcript alone? Record his words.
 6. The form's schema must be 3.0; anything else stops the run with one line for Paul. The form's summaries, drafted actions, parking list and cost counters are never a source.
 7. `Not discussed` is a claim: the program searches the call, the documents and the form's own related fields first, with search words written for each field. A field the search finds something for is never called `Not discussed` without your written reason that names a found call line and quotes some of its words. Never write it as a default.
