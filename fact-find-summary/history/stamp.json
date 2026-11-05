@@ -1,5 +1,5 @@
 {
- "stamp": "2026-11-03 09:41",
- "fingerprint": "a7c23b9a1afe3ba11b7a6caab48191a3f669213d4b2f9c5e9f54d4d81a5b2808",
- "change": "Added the self-test command the packager needs (run.py preflight)"
+ "stamp": "2026-11-05 11:27",
+ "fingerprint": "021c841757eb407351f8e9a25096bb912f3a622e9ca490da39fcd3c03f190350",
+ "change": "Strict changes after the first real run: the PDF found automatically through Microsoft 365 or passed in by ff-population-transcript, no permission step, a quiet run"
 }

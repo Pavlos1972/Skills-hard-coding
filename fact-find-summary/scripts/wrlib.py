@@ -21,7 +21,8 @@ CONTENT = "content.json"
 OUT = "out"
 
 ROUTES = ("device", "m365", "zapier")
-ROUTE_NAMES = {"device": "the computer (local drive / OneDrive through the device bridge)",
+SOURCE_ROUTES = ROUTES + ("passed",)          # "passed": the PDF was handed over by ff-population-transcript in the same chat
+ROUTE_NAMES = {"device": "the computer, only if this chat is ALREADY connected to it (checked, never requested)",
                "m365": "the Microsoft 365 connector (SharePoint / OneDrive)",
                "zapier": "the Zapier Office 365 tools"}
 OWNERS = ("Cameron", "CL", "Valerie", "Lizelle")          # Paul, 03/11/2026: Lizelle replaces Martin

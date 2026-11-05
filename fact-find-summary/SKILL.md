@@ -15,12 +15,13 @@ description: "Builds the Fact Find Summary PDF for Paul Kafentzis (FSP45946) fro
 | 4 | When something goes wrong | What to do instead of improvising |
 | 5 | Where the detail lives | The pages the program shows at each step |
 
-**Last updated: 2026-11-03 09:41 (Athens time)**
+**Last updated: 2026-11-05 11:27 (Athens time)**
 
 **Recent changes** (last 5, one line each; full history in the repo `history/` folder)
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-11-05 11:27 | Strict changes after the first real run: the PDF found automatically through Microsoft 365 or passed in by ff-population-transcript, no permission step, a quiet run |
 | 2026-11-03 09:41 | Added the self-test command the packager needs (run.py preflight) |
 | 2026-11-03 09:41 | Added the reference page of true stories, the one end-to-end test, the rule-by-rule records and the list for Paul |
 | 2026-11-03 09:38 | First program-driven version: a program reads the Fact Find Transcript PDF, composes the nine sections, recomputes totals and draws an A4 PDF; a checker prints a short audit with green ticks and red crosses |
@@ -29,6 +30,8 @@ description: "Builds the Fact Find Summary PDF for Paul Kafentzis (FSP45946) fro
 ## Run it
 
 This skill is a program that walks you through the job one step at a time. You do not work from memory of this page: the program shows everything below again, at the right moment.
+
+**A quiet run, and nothing is asked of Paul (Paul's rule).** Start your reply with the one version sentence the program gives you, then work. You may show ONE short progress line per step (for example "Step 3 of 7: composing the nine sections"). Never write an opening recap of this skill, its rules, the files found or the information read; do not read the reference pages yourself (the program shows each page at its step). Never ask Paul for permission, to click Allow, to attach, upload or drag a file, or to say "go": find the file yourself through Microsoft 365. The reply at the end is the PDF and the SHORT audit.
 
 1. Find this skill's folder (the "Base directory" shown when the skill loaded; it contains `scripts/run.py`). If you are unsure: `find /mnt /root /home /opt /tmp -path '*fact-find-summary/scripts/run.py' 2>/dev/null | head -1`
 2. Choose a new run folder, for example `/tmp/wr-fs-<Surname>-<DDMMYY>`, and start: `python3 <skill folder>/scripts/run.py start <run folder> --client "First Surname" --date DD/MM/YYYY`. The client and the meeting date are taken exactly from Paul's message; the program checks the Fact Find PDF against them. For a spouse seen in the same meeting add `--joint "Other Surname"`. The program's first lines give you one sentence to say to Paul before anything else: which version of this skill is running.
@@ -42,14 +45,14 @@ Never rewrite, shorten or "improve" the programs during a run, and never replace
 
 - The **Fact Find Summary PDF** (`Fact Find Summary - DD.MM.YY - (First Surname).pdf`), drawn by the program in the fixed nine sections, sent in the chat, saved into the client's `2. Fact Find` folder and listed back (the listed size must equal the local file's).
 - The **short audit** (Paul, 03/11/2026): one line per check in point form, each with a green tick or a red cross, and one closing line for what is only attested. No long printout.
-- No message and no Planner note: `client-teams-transcript-skill` makes those once. Nothing is sent without Paul's yes.
+- No message and no Planner note: `client-teams-transcript-skill` makes those once. This skill sends nothing.
 - A run without a PASS audit is not finished: say so.
 
 ## Standing rules
 
 1. The source is the Fact Find Transcript PDF made by `ff-population-transcript`; the Summary never has a value the Fact Find does not have.
 2. Never invent: the checker compares every Summary value with its Fact Find value.
-3. Client facts come from the client's file first: computer, then Microsoft 365, then Zapier, every try logged; Paul is asked last.
+3. Client facts come from the client's file first, found automatically: the PDF passed in by `ff-population-transcript`, or Microsoft 365, then Zapier, the computer only if already connected and never requested; every try logged; never a permission step and never "attach the file" (Paul's rule).
 4. Totals reconcile to the cent and debt is never left out because of credit life.
 5. The standing ABIs are fixed: Life Cover (WOL) 3%, Childcare 5%, Household needs 5%, Dread Disease 3%.
 6. The nine sections and the Section 8 sub-headings are fixed.
@@ -63,7 +66,7 @@ Never rewrite, shorten or "improve" the programs during a run, and never replace
 
 - The program refuses a step: read what it says is missing, fix that, run `done` again.
 - The program says STOP at the read step (the PDF is not the program-drawn Fact Find, or it is for another client or date): tell Paul in one line. Do not guess.
-- You cannot reach the file: try all three routes and log each, then ask Paul.
+- You cannot reach the file: go to the next route at once; when every route has failed, say in at most five lines what failed and stop. Never ask Paul to attach or click anything.
 - A red cross in the audit: fix its cause. If the Fact Find itself is wrong, tell Paul; do not edit the Summary.
 - Paul corrects something: rule 9 above.
 

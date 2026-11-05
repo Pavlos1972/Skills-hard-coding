@@ -38,3 +38,10 @@ A program (`tools/inventory.py`) went through all 392 rules of the old text: **1
 - **I could not run it inside your chat.** The access routes (computer, Microsoft 365, Zapier), the folder save and listing, and sending the PDF are only attested in the audit, not proven.
 - **The reader needs the `pdfplumber` program** in the chat's environment. The self-test at the start says so if it is missing, and the job stops.
 - Only one test was run, as agreed: one end-to-end run on invented data, which also proves that a hand-edited Summary is caught.
+
+## Strict changes of 05/11/2026 (Paul, after the first real run of the Fact Find chain)
+- **The PDF is found automatically.** In the Fact Find chain the PDF that `ff-population-transcript` has just made is used directly (route `passed`). Otherwise Microsoft 365 is the working route: the chat reads the PDF through the connector, saves it, and the program refuses a copy whose size differs from the connector's. The computer is used only if the chat is already connected to it; it is never requested and is logged at once as "not connected, not requested". Zapier is next.
+- **Nothing is asked of Paul:** no permission, no Allow, no attaching, uploading or dragging a file. If every route fails, the chat says in at most five lines what failed and stops.
+- **A quiet run:** the version sentence, then work, with one short progress line per step; no opening recap; the chat does not read the pages itself. The reply is the PDF and the short audit (this skill already ended in the short audit).
+- **Saving:** the Summary PDF goes into the client's `2. Fact Find` folder through Microsoft 365 (SharePoint upload), then the folder is listed and the size compared.
+- **Not changed:** this skill still sends nothing; the Sitamah message is made and posted by `client-teams-transcript-skill`.

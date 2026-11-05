@@ -34,8 +34,12 @@ class Journey(unittest.TestCase):
         out = run("run.py", "start", R, "--client", "Pat Samplecase", "--date", "05/11/2026")
         self.assertIn("Using fact-find-summary, last updated", out)                       # the version is said first
         run("run.py", "done", R, "build", expect=3)                                       # 1. no step can be skipped
-        run("run.py", "access", R, "--route", "device", "--result", "found", "--note", "test")
-        run("run.py", "source", R, "--file", FIXTURE, "--route", "device")
+        # the way in (Paul, 05/11/2026): the computer is logged at once as not connected, Microsoft 365 finds the PDF, the copy must have the connector's size
+        run("run.py", "access", R, "--route", "device", "--result", "failed", "--note", "not connected; not requested")
+        run("run.py", "access", R, "--route", "m365", "--result", "found", "--note", "test")
+        size = str(os.path.getsize(FIXTURE))
+        run("run.py", "source", R, "--file", FIXTURE, "--route", "m365", "--source-size", str(int(size) - 1), expect=1)   # a copy of the wrong size is refused
+        run("run.py", "source", R, "--file", FIXTURE, "--route", "m365", "--source-size", size)
         run("run.py", "done", R, "locate")
         run("run.py", "read", R)
         run("run.py", "done", R, "read")
@@ -43,6 +47,11 @@ class Journey(unittest.TestCase):
         run("run.py", "done", R, "compose")
         run("run.py", "build", R)
         run("run.py", "done", R, "build")
+        R2 = os.path.join(d, "run-passed")
+        run("run.py", "start", R2, "--client", "Pat Samplecase", "--date", "05/11/2026")
+        run("run.py", "access", R2, "--route", "passed", "--result", "found", "--note", "made by ff-population-transcript in this chat")
+        run("run.py", "source", R2, "--file", FIXTURE, "--route", "passed")
+        run("run.py", "done", R2, "locate")
         pre = run("verify.py", R, "pre")
         self.assertIn("RESULT: PASS", pre)
         run("run.py", "done", R, "check")

@@ -86,6 +86,8 @@ def run_checks(run, stage):
     order_ok, why = True, ""
     seen_fail = set()
     for e in log:
+        if e.get("route") == "passed":                   # handed over by ff-population-transcript in the same chat: no order to keep
+            continue
         i = w.ROUTES.index(e["route"]) if e.get("route") in w.ROUTES else -1
         if i < 0 or any(r not in seen_fail for r in w.ROUTES[:i]):
             order_ok, why = False, "route %r was used before the earlier routes were tried and failed" % e.get("route")
@@ -93,7 +95,7 @@ def run_checks(run, stage):
             seen_fail.add(e["route"])
     found = [e for e in log if e.get("result") == "found"]
     R.add(bool(log) and order_ok and bool(found) and src.get("route") == found[-1]["route"],
-          "Access routes tried in order and logged (%s)" % (", ".join("%s %s" % (e["route"], e["result"]) for e in log) or "none"), why or "access log: " + str(log))
+          "Access routes tried in order and logged (%s)%s" % (", ".join("%s %s" % (e["route"], e["result"]) for e in log) or "none", "; copy size equals the connector's" if src.get("size_checked") else ""), why or "access log: " + str(log))
     R.add(bool(src) and os.path.getsize(pdf) == src.get("size") and w.sha256_file(pdf) == src.get("sha256"), "The PDF in the run folder is the file that was found (size and fingerprint equal)")
     # ------------------------------------------------------------- C. the Summary content
     cpath = os.path.join(run, w.CONTENT)

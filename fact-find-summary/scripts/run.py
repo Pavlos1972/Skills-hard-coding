@@ -97,8 +97,8 @@ def ck_locate(run, rj):
     log = w.load_opt(p(run, w.ACCESS), [])
     if not log:
         out.append("no access try is recorded: run.py access for EVERY route you try, failures included")
-    elif log[0].get("route") != "device":
-        out.append("the first try must be the computer (device); the first recorded try is %r" % log[0].get("route"))
+    elif log[0].get("route") not in ("device", "passed"):
+        out.append("the first try must be the computer (log it at once as not connected) or the PDF passed in by ff-population-transcript; the first recorded try is %r" % log[0].get("route"))
     if not rj.get("source"):
         out.append("the Fact Find Transcript PDF has not been brought into the run folder: run.py source --file ... --route ...")
     return out
@@ -264,8 +264,10 @@ def cmd_source(a):
     log = w.load_opt(p(a.run, w.ACCESS), [])
     if not any(e["route"] == a.route and e["result"] == "found" for e in log):
         w.die("REFUSED: record the access try first: run.py access %s --route %s --result found" % (a.run, a.route))
+    if a.source_size is not None and os.path.getsize(a.file) != a.source_size:
+        w.die("REFUSED: the copy is %d bytes but the connector reports %d. Read the file again through the connector and save it whole. Do NOT ask Paul for anything." % (os.path.getsize(a.file), a.source_size))
     shutil.copyfile(a.file, p(a.run, w.FACTFIND_PDF))
-    rj["source"] = {"route": a.route, "name": os.path.basename(a.file), "size": os.path.getsize(a.file), "sha256": w.sha256_file(a.file)}
+    rj["source"] = {"route": a.route, "name": os.path.basename(a.file), "size": os.path.getsize(a.file), "sha256": w.sha256_file(a.file), "size_checked": a.source_size is not None}
     save_run(a.run, rj)
     print("Fact Find PDF brought into the run folder: %s (%d bytes) via %s" % (rj["source"]["name"], rj["source"]["size"], a.route))
 
@@ -345,14 +347,15 @@ def main():
     x.set_defaults(fn=cmd_done)
     x = sub.add_parser("access")
     x.add_argument("run")
-    x.add_argument("--route", required=True, choices=w.ROUTES)
+    x.add_argument("--route", required=True, choices=w.SOURCE_ROUTES)
     x.add_argument("--result", required=True, choices=("found", "failed"))
     x.add_argument("--note")
     x.set_defaults(fn=cmd_access)
     x = sub.add_parser("source")
     x.add_argument("run")
     x.add_argument("--file", required=True)
-    x.add_argument("--route", required=True, choices=w.ROUTES)
+    x.add_argument("--route", required=True, choices=w.SOURCE_ROUTES)
+    x.add_argument("--source-size", dest="source_size", type=int, help="the size in bytes the connector reported for the PDF")
     x.set_defaults(fn=cmd_source)
     x = sub.add_parser("receipt")
     x.add_argument("run")
