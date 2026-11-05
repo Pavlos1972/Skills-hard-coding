@@ -94,11 +94,12 @@ def preflight():
 # ------------------------------------------------------------------ the checks behind each step
 def ck_locate(run, rj):
     out = []
+    comp = rj.get("computer") or {}
+    if not comp.get("found"):
+        out.append(w.COMPUTER_STOP + " (record the connection: run.py computer %s --device ... --folder ... --listing ..., or run.py computer %s --none \"<what happened>\")" % (run, run))
     log = w.load_opt(p(run, w.ACCESS), [])
     if not log:
-        out.append("no access try is recorded: run.py access for EVERY route you try, failures included")
-    elif log[0].get("route") not in ("device", "passed"):
-        out.append("the first try must be the computer (log it at once as not connected) or the PDF passed in by ff-population-transcript; the first recorded try is %r" % log[0].get("route"))
+        out.append("no access try is recorded: run.py access for the PDF (route device with its fingerprint, or passed)")
     if not rj.get("source"):
         out.append("the Fact Find Transcript PDF has not been brought into the run folder: run.py source --file ... --route ...")
     return out
@@ -142,9 +143,18 @@ def ck_deliver(run, rj):
     rc = w.load_opt(p(run, w.RECEIPT), {})
     need = [("pdf.sent", "yes"), ("images.looked", "yes")]
     out = ["run.py receipt %s %s" % (k, v) for k, v in need if rc.get(k) != v]
-    for k in ("pdf.saved_folder", "pdf.listed_bytes"):
+    bridge = (rj.get("computer") or {}).get("mode") == "bridge"
+    for k in ("pdf.saved_folder", "pdf.listed_bytes") + (("pdf.device_output",) if bridge else ()):
         if not rc.get(k):
-            out.append("run.py receipt %s <value from the real folder listing>" % k)
+            out.append("run.py receipt %s <value from the computer's own listing%s>" % (k, " and fingerprint" if k == "pdf.device_output" else ""))
+    if bridge and rc.get("pdf.device_output"):
+        st = w.load_opt(p(run, w.STATE), {})
+        b = st.get("build") or {}
+        dsha, dsize, why = w.parse_device_output(str(rc["pdf.device_output"]), str(b.get("pdf")))
+        if why:
+            out.append("pdf.device_output: " + why)
+        elif dsha != b.get("pdf_sha") or dsize != b.get("pdf_size"):
+            out.append("the PDF on the computer is not the PDF built here (computer: %d bytes, %s...; built: %s bytes, %s...): commit it again and fingerprint it again" % (dsize, dsha[:12], b.get("pdf_size"), str(b.get("pdf_sha"))[:12]))
     return out
 
 
@@ -247,13 +257,86 @@ def cmd_done(a):
     show_step(a.run, rj, nxt)
 
 
+def cmd_computer(a):
+    """Records how this chat reaches the client's OneDrive folder on the computer. In a cloud chat the computer is a separate machine reached through the device tools
+    (the chat connects, lists the client's folder and records it here); where the folder is mounted into this machine (a test) the program finds it itself."""
+    rj = load_run(a.run)
+    comp = rj.get("computer") or {}
+    if a.none:
+        if len(a.none.strip()) < 8:
+            w.die("REFUSED: say what happened to the connection (at least 8 characters).")
+        rj["computer"] = {"found": False, "t": w.now(), "detail": a.none.strip()}
+        save_run(a.run, rj)
+        print(w.COMPUTER_STOP)
+        print("\nYour whole reply is those words, nothing more, and no question. When Paul says to go on, connect again and run: python3 %s/run.py computer %s --device ... --folder ... --listing ..." % (SCRIPTS, a.run))
+        sys.exit(6)
+    if a.device or a.folder or a.listing:
+        if not (a.device and a.folder and a.listing):
+            w.die("REFUSED: give --device (the computer's name), --folder (the folder the connection was granted for) and --listing (the file names device_list_dir showed in the client's folder).")
+        if "liferisk.co.za" not in a.folder.lower().replace("/", "\\"):
+            w.die("REFUSED: the connected folder must be the client files' root, liferisk.co.za (it was %r)." % a.folder)
+        if len(a.listing.strip()) < 20:
+            w.die("REFUSED: --listing must be what device_list_dir showed in the client's folder (the file names), not a summary.")
+        rj["computer"] = {"found": True, "mode": "bridge", "device": a.device.strip(), "folder": a.folder.strip(), "listing": a.listing.strip()[:2000], "t": w.now()}
+        save_run(a.run, rj)
+        print("COMPUTER CONNECTED through the device tools (%s, folder %s). Read the PDF and save the Summary as pages 01 and 04 say." % (a.device.strip(), a.folder.strip()))
+        return
+    root = w.find_computer_root()
+    if root:
+        rj["computer"] = {"found": True, "mode": "mount", "root": root, "t": w.now()}
+        save_run(a.run, rj)
+        print("COMPUTER FOUND: the client's OneDrive folder is mounted at %s. Copy each file with cp and log it with --original." % root)
+        return
+    print("No connection is recorded yet. Connect with the device tools (page 01: get_device_info, then device_request_folder_access for ~/liferisk.co.za if it is not connected, then device_list_dir "
+          "on the client's folder) and record it: python3 %s/run.py computer %s --device <name> --folder <granted folder> --listing \"<the file names>\"   "
+          "If the connection is refused or cannot be made: python3 %s/run.py computer %s --none \"<what happened>\"" % (SCRIPTS, a.run, SCRIPTS, a.run))
+    sys.exit(6)
+
+
 def cmd_access(a):
     rj = load_run(a.run)
     guard(rj)
     log = w.load_opt(p(a.run, w.ACCESS), [])
-    log.append({"route": a.route, "result": a.result, "note": a.note or "", "t": w.now()})
+    detail, result, verified, got, sha = a.note or "", a.result, False, None, None
+    if a.route in ("m365", "zapier") and a.result == "found":
+        w.die("REFUSED: the Fact Find Transcript PDF cannot be taken through %s: a PDF arrives there cut off, as text. Take it from the computer (--route device, with --device-output), "
+              "or use --route passed when ff-population-transcript handed it over in this chat." % ("Microsoft 365" if a.route == "m365" else "Zapier"))
+    if a.route == "device" and a.result == "found":
+        if not (rj.get("computer") or {}).get("found"):
+            w.die("REFUSED: no computer connection is recorded in this run (run.py computer %s). A try on the computer is logged only when it is connected." % a.run)
+        if not a.file or not (a.device_output or a.original):
+            w.die("REFUSED: a PDF taken from the computer needs its proof: --file <your copy> with --device-output <the whole output of sha256sum and stat run on the computer with device_bash> "
+                  "(or --original, where the folder is mounted into this machine). Nobody is asked for anything.")
+    if a.device_output and a.original:
+        w.die("REFUSED: give --original (a mounted folder) or --device-output (the computer's own fingerprint), not both.")
+    if a.file or a.device_output or a.original:
+        if not a.file or not os.path.isfile(a.file):
+            w.die("MISSING: the copy %s" % a.file)
+        if a.route != "device":
+            w.die("REFUSED: --device-output and --original are for the computer route (--route device).")
+        got, sha = os.path.getsize(a.file), w.sha256_file(a.file)
+        if a.original:
+            root = (rj.get("computer") or {}).get("root")
+            if not root or not w.under_root(a.original, root):
+                w.die("REFUSED: --original must be a file on the computer, inside %s." % root)
+            if not os.path.isfile(a.original):
+                w.die("MISSING: the original %s" % a.original)
+            same = w.sha256_file(a.original) == sha
+        else:
+            dsha, dsize, why = w.parse_device_output(a.device_output, os.path.basename(a.file))
+            if why:
+                w.die("REFUSED: " + why)
+            same = dsha == sha and dsize == got
+        if same:
+            verified = True
+            detail = (detail + " ").lstrip() + "copy verified: identical to the file on the computer (%d bytes, sha256 %s...)" % (got, sha[:12])
+        else:
+            result = "failed"
+            detail = (detail + " ").lstrip() + "copy NOT identical to the file on the computer (%d bytes saved)" % got
+            print("logged as a FAIL: the copy is not identical to the file on the computer. Stage it again (device_stage_files) and compare again.")
+    log.append({"route": a.route, "result": result, "note": detail, "t": w.now(), "verified": verified, "bytes": got, "sha256": sha})
     w.save_json(p(a.run, w.ACCESS), log)
-    print("access try recorded: %s %s (%d on record)" % (a.route, a.result, len(log)))
+    print("access try recorded: %s %s (%d on record)" % (a.route, result, len(log)))
 
 
 def cmd_source(a):
@@ -262,12 +345,16 @@ def cmd_source(a):
     if not os.path.isfile(a.file):
         w.die("MISSING: %s" % a.file)
     log = w.load_opt(p(a.run, w.ACCESS), [])
-    if not any(e["route"] == a.route and e["result"] == "found" for e in log):
-        w.die("REFUSED: record the access try first: run.py access %s --route %s --result found" % (a.run, a.route))
-    if a.source_size is not None and os.path.getsize(a.file) != a.source_size:
-        w.die("REFUSED: the copy is %d bytes but the connector reports %d. Read the file again through the connector and save it whole. Do NOT ask Paul for anything." % (os.path.getsize(a.file), a.source_size))
+    mine = [e for e in log if e["route"] == a.route and e["result"] == "found"]
+    if a.route not in ("device", "passed") or not mine:
+        w.die("REFUSED: record the access try first: run.py access %s --route device --result found --file <copy> --device-output <the computer's fingerprint> (or --route passed when ff-population-transcript handed it over)" % a.run)
+    if a.route == "device" and not (mine[-1].get("verified") and mine[-1].get("sha256") == w.sha256_file(a.file)):
+        w.die("REFUSED: this file is not the copy that was proved identical to the file on the computer. Log it with --file <this copy> --device-output <the computer's fingerprint> first.")
+    bad = w.pdf_file_problems(a.file)
+    if bad:
+        w.die("STOP: this is not the whole PDF: %s. Nothing was recorded. Take the PDF from the computer (it must be identical to the file there)." % "; ".join(bad), 4)
     shutil.copyfile(a.file, p(a.run, w.FACTFIND_PDF))
-    rj["source"] = {"route": a.route, "name": os.path.basename(a.file), "size": os.path.getsize(a.file), "sha256": w.sha256_file(a.file), "size_checked": a.source_size is not None}
+    rj["source"] = {"route": a.route, "name": os.path.basename(a.file), "size": os.path.getsize(a.file), "sha256": w.sha256_file(a.file), "size_checked": a.route == "device"}
     save_run(a.run, rj)
     print("Fact Find PDF brought into the run folder: %s (%d bytes) via %s" % (rj["source"]["name"], rj["source"]["size"], a.route))
 
@@ -350,13 +437,22 @@ def main():
     x.add_argument("--route", required=True, choices=w.SOURCE_ROUTES)
     x.add_argument("--result", required=True, choices=("found", "failed"))
     x.add_argument("--note")
+    x.add_argument("--file", help="the copy you staged from the computer")
+    x.add_argument("--device-output", dest="device_output", help="the whole output of sha256sum and stat -c %%s for that file, run on the computer with device_bash")
+    x.add_argument("--original", help="a file in a folder mounted into this machine that you copied (the program compares the two byte for byte)")
     x.set_defaults(fn=cmd_access)
     x = sub.add_parser("source")
     x.add_argument("run")
     x.add_argument("--file", required=True)
     x.add_argument("--route", required=True, choices=w.SOURCE_ROUTES)
-    x.add_argument("--source-size", dest="source_size", type=int, help="the size in bytes the connector reported for the PDF")
     x.set_defaults(fn=cmd_source)
+    x = sub.add_parser("computer")
+    x.add_argument("run")
+    x.add_argument("--device", help="the computer's name (get_device_info)")
+    x.add_argument("--folder", help="the folder the connection was granted for (for example C:\\Users\\Paul\\liferisk.co.za)")
+    x.add_argument("--listing", help="the file names device_list_dir showed in the client's folder")
+    x.add_argument("--none", help="what happened, when the connection was refused or could not be made (prints the STOP)")
+    x.set_defaults(fn=cmd_computer)
     x = sub.add_parser("receipt")
     x.add_argument("run")
     x.add_argument("key")

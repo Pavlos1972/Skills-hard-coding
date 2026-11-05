@@ -83,19 +83,26 @@ def run_checks(run, stage):
     # ------------------------------------------------------------- B. access routes and the source file
     log = w.load_opt(os.path.join(run, w.ACCESS), [])
     src = rj.get("source") or {}
-    order_ok, why = True, ""
-    seen_fail = set()
+    comp = rj.get("computer") or {}
+    probs_ = []
+    if not comp.get("found"):
+        probs_.append("no computer connection is recorded (run.py computer): the PDF cannot be read, and the Summary cannot be saved, through Microsoft 365")
     for e in log:
-        if e.get("route") == "passed":                   # handed over by ff-population-transcript in the same chat: no order to keep
-            continue
-        i = w.ROUTES.index(e["route"]) if e.get("route") in w.ROUTES else -1
-        if i < 0 or any(r not in seen_fail for r in w.ROUTES[:i]):
-            order_ok, why = False, "route %r was used before the earlier routes were tried and failed" % e.get("route")
-        if e.get("result") == "failed":
-            seen_fail.add(e["route"])
+        if e.get("route") in ("m365", "zapier") and e.get("result") == "found":
+            probs_.append("the PDF was taken through %s: a PDF arrives there cut off, as text" % e["route"])
+        if e.get("route") == "device" and e.get("result") == "found" and not e.get("verified"):
+            probs_.append("the PDF taken from the computer has no proof that the copy is identical (--device-output)")
     found = [e for e in log if e.get("result") == "found"]
-    R.add(bool(log) and order_ok and bool(found) and src.get("route") == found[-1]["route"],
-          "Access routes tried in order and logged (%s)%s" % (", ".join("%s %s" % (e["route"], e["result"]) for e in log) or "none", "; copy size equals the connector's" if src.get("size_checked") else ""), why or "access log: " + str(log))
+    good = (not probs_) and bool(found) and src.get("route") == found[-1]["route"]
+    if good and src.get("route") == "device" and not (found[-1].get("verified") and found[-1].get("sha256") == src.get("sha256")):
+        good, probs_ = False, probs_ + ["the PDF the program read is not the copy that was proved identical to the file on the computer"]
+    R.add(good, ("The PDF came %s%s; the computer is connected (%s)" % (("from the computer, identical to the file there (%s bytes)" % src.get("size")) if src.get("route") == "device" else "from ff-population-transcript in this chat",
+                                                                       "", comp.get("device") or comp.get("root") or "")) if good else
+          "Source problem: %s" % ("; ".join(probs_) or "no PDF was found on a proved route"), "access log: " + str(log))
+    if comp.get("found") and comp.get("mode") == "bridge":
+        R.attested.append("that the fingerprints pasted from the computer's shell are really the computer's (a copy that differs is caught)")
+    wp = w.pdf_file_problems(pdf) if os.path.exists(pdf) else ["missing"]
+    R.add(not wp, "The Fact Find Transcript PDF is a whole PDF file" if not wp else "The Fact Find Transcript PDF is not a whole PDF: " + "; ".join(wp))
     R.add(bool(src) and os.path.getsize(pdf) == src.get("size") and w.sha256_file(pdf) == src.get("sha256"), "The PDF in the run folder is the file that was found (size and fingerprint equal)")
     # ------------------------------------------------------------- C. the Summary content
     cpath = os.path.join(run, w.CONTENT)
@@ -255,6 +262,14 @@ def _final_checks(R, run, rj, st, c):
     want = "%s, %s" % (rj["client"]["surname"], rj["client"]["first"])
     root_ok = ("company - paul" in parts[:5]) or ("company - wr clients" in parts[:5] and "paul kafentzis (client files)" in parts[:7])
     folder_ok = bool(parts) and parts[-1] == "2. fact find" and w.norm(want) == w.norm(parts[-2] if len(parts) > 1 else "") and root_ok
+    if (rj.get("computer") or {}).get("mode") == "bridge":
+        _b = st.get("build") or {}
+        dsha, dsize, why = w.parse_device_output(str(rc.get("pdf.device_output") or ""), str(_b.get("pdf")))
+        if why:
+            R.add(False, "The computer's own fingerprint of the saved Summary is missing or wrong: " + why)
+        else:
+            R.add(dsha == _b.get("pdf_sha") and dsize == _b.get("pdf_size"), "The Summary saved on the computer is identical to the PDF built here (fingerprint and size from the computer)" if dsha == _b.get("pdf_sha") and dsize == _b.get("pdf_size") else
+                  "The Summary saved on the computer is NOT the PDF built here (computer: %d bytes, %s...; built: %s bytes, %s...)" % (dsize, dsha[:12], _b.get("pdf_size"), str(_b.get("pdf_sha"))[:12]))
     R.add(size is not None and str(listed) == str(size) and folder_ok, "Saved in the client's own 2. Fact Find folder and the listed size equals the local file (%s bytes)" % size
           if (size is not None and str(listed) == str(size) and folder_ok) else
           "Save not proven: listed size %r vs local %r; folder %r (needs ...\\%s\\2. Fact Find under Company - Paul or Paul Kafentzis (Client Files))" % (listed, size, folder, want))

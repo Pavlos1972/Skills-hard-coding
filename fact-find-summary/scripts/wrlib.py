@@ -20,11 +20,16 @@ FACTFIND = "fact_find.json"
 CONTENT = "content.json"
 OUT = "out"
 
+# The source is a PDF, and a PDF cannot come through Microsoft 365 or Zapier (it arrives cut off, as text). It comes from the computer, or is handed over by
+# ff-population-transcript in the same chat ("passed"). The finished Summary is saved on the computer too, so the connection is needed in every run.
 ROUTES = ("device", "m365", "zapier")
 SOURCE_ROUTES = ROUTES + ("passed",)          # "passed": the PDF was handed over by ff-population-transcript in the same chat
-ROUTE_NAMES = {"device": "the computer, only if this chat is ALREADY connected to it (checked, never requested)",
-               "m365": "the Microsoft 365 connector (SharePoint / OneDrive)",
-               "zapier": "the Zapier Office 365 tools"}
+COPY_ROUTES = ("device", "m365", "zapier")
+ROUTE_NAMES = {"device": "the computer: the client's OneDrive folder reached through the device tools",
+               "m365": "the Microsoft 365 connector (it cannot carry a PDF)",
+               "zapier": "the Zapier Office 365 tools (they cannot carry a PDF)"}
+COMPUTER_STOP = ("STOP. I could not connect this chat to your computer (the connection was refused or did not go through). The Fact Find Transcript PDF cannot be read, and the Summary cannot be saved, "
+                 "through Microsoft 365: it returns a PDF cut off. Please allow the connection to the folder liferisk.co.za, then tell me to go on.")
 OWNERS = ("Cameron", "CL", "Valerie", "Lizelle")          # Paul, 03/11/2026: Lizelle replaces Martin
 ADVISOR = "Paul Kafentzis"
 
@@ -212,3 +217,63 @@ def output_name(first, surname, date_completed):
     if not (first and surname and sd):
         return None
     return safe_filename("Fact Find Summary - %s - (%s %s)" % (sd, first, surname)) + ".pdf"
+
+
+def find_computer_root():
+    """The folder of the computer's OneDrive when it is mounted into THIS machine (a test, or a chat running on the computer), or None. WR_COMPUTER_ROOT overrides the search."""
+    env = os.environ.get("WR_COMPUTER_ROOT")
+    if env:
+        return os.path.realpath(env) if os.path.isdir(env) else None
+    for base in (os.path.expanduser("~/mnt"), "/mnt"):
+        if not os.path.isdir(base):
+            continue
+        for d, dirs, _files in os.walk(base):
+            if d[len(base):].count(os.sep) >= 3:
+                dirs[:] = []
+                continue
+            if "Company - Paul" in dirs or "Company - WR Clients" in dirs:
+                return os.path.realpath(d)
+            if os.path.basename(d) in ("Company - Paul", "Company - WR Clients"):
+                return os.path.realpath(os.path.dirname(d))
+    return None
+
+
+def under_root(path, root):
+    rp, rr = os.path.realpath(path), os.path.realpath(root)
+    return rp == rr or rp.startswith(rr.rstrip(os.sep) + os.sep)
+
+
+def parse_device_output(text, name):
+    """The output of `sha256sum FILE` and `stat -c %s FILE` run ON THE COMPUTER (device_bash), pasted whole: (sha256, size, None), or (None, None, what is wrong).
+    The file name in the sha256sum line must be the copy's own name, so a hash of another file cannot be passed off."""
+    sha, size = None, None
+    for ln in (text or "").splitlines():
+        m = re.match(r"^\s*([0-9a-fA-F]{64})\s+[*]?(.+?)\s*$", ln)
+        if m:
+            base = os.path.basename(m.group(2).replace("\\", "/"))
+            if base != name:
+                return None, None, "the sha256sum line names %r, not %r" % (base, name)
+            sha = m.group(1).lower()
+        elif re.fullmatch(r"\s*\d+\s*", ln):
+            size = int(ln)
+    if not sha or size is None:
+        return None, None, "paste the whole output of: sha256sum \"<file>\" && stat -c %%s \"<file>\" (run with device_bash on the computer): a 64-character fingerprint with the file's name, and its size on its own line"
+    return sha, size, None
+
+
+def pdf_file_problems(path):
+    """A PDF is real bytes, whole: it starts with %PDF- and ends with %%EOF. A text copy or a cut-off copy is never accepted."""
+    try:
+        size = os.path.getsize(path)
+        with open(path, "rb") as fh:
+            head = fh.read(8)
+            fh.seek(max(0, size - 2048))
+            tail = fh.read()
+    except OSError as e:
+        return ["the PDF cannot be opened (%s)" % e]
+    out = []
+    if not head.startswith(b"%PDF-"):
+        out.append("it does not start like a PDF file (it may be text)")
+    if b"%%EOF" not in tail:
+        out.append("it does not end like a whole PDF file (cut off? %d bytes)" % size)
+    return out

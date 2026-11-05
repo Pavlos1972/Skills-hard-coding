@@ -1,6 +1,6 @@
 INVENTORY of the old skill: 392 sentences
-  kept (word for word or nearly): 13
-  reworded, with a recorded change: 93
+  kept (word for word or nearly): 11
+  reworded, with a recorded change: 95
   dropped, with a recorded decision: 286
   UNACCOUNTED: 0
 
@@ -10,34 +10,34 @@ REWORDED (each is covered by a recorded change):
     now: Write only what is in the Fact Find Transcript PDF (the report ff-population-transcript made).
     why: Paul, 03/11/2026 (question 1): the Summary is built from the finished Fact Find Transcript PDF and proves it matches it.
 - old line 27: If a line is unclear, garbled or ambiguous, do not turn it into a fact:
-    now: If a value is missing there, the Summary does not have it:
+    now: If the request is refused or the tools do not exist, run.py computer --none "<what happened>":
     why: Paul, 03/11/2026 (question 1): the Summary is built from the finished Fact Find Transcript PDF and proves it matches it.
 - old line 27: flag it to the user.
-    now: "pasted into the reply as it is:
+    now: \"/mnt/user-data/outputs/<the Summary file name>\"}] (no force).
     why: Paul, 03/11/2026 (question 1): the Summary is built from the finished Fact Find Transcript PDF and proves it matches it.
 - old line 27: "It seems implied", "it is usual" and "it would make sense" are not sources.
-    now: Rows that say 'Not discussed' / 'N/A' are left out (and counted) unless they are on Paul's always-include list."""
+    now: if (size is not None and str(listed) == str(size) and folder_ok) else
     why: Paul, 03/11/2026 (question 1): the Summary is built from the finished Fact Find Transcript PDF and proves it matches it.
 - old line 30: Deliver everything this skill lists, every time.
     now: which version of this skill is running.
     why: Paul, 03/11/2026 (question 1): the Summary is built from the finished Fact Find Transcript PDF and proves it matches it.
 - old line 30: A run is not finished until every deliverable this skill names has been produced AND handed over exactly the way this skill specifies (the Summary PDF sent as a file in the chat and saved to the named
-    now: ...", for what the program cannot prove (that the PDF was sent in the chat, the folder save and its listing as typed by Claude, the page images looked at, Paul's yes);
+    now: R.add(bool(src) and os.path.getsize(pdf) == src.get("size") and w.sha256_file(pdf) == src.get("sha256"), "The PDF in the run folder is the file that was found (size and fingerprint equal)")
     why: Paul, 03/11/2026 (question 1): the Summary is built from the finished Fact Find Transcript PDF and proves it matches it.
 - old line 30: Before you reply, list each deliverable and confirm each was handed over.
-    now: R.add(titles == list(enumerate(cp.TITLES, 1)) and heads_ok, "Nine sections in the fixed order;
+    now: the PDF and the hand-over
     why: Paul, 03/11/2026 (question 1): the Summary is built from the finished Fact Find Transcript PDF and proves it matches it.
 - old line 31: Every correction re-opens the whole task, not just the item.
-    now: Every correction re-opens the whole task:
+    now: Every correction re-opens the whole task.
     why: Paul, 03/11/2026 (question 1): the Summary is built from the finished Fact Find Transcript PDF and proves it matches it.
 - old line 31: When the user corrects anything:
-    now: FLAG_MARKS = ("⚠", "!")                 # '!' when the font could not draw the warning sign
+    now: Always shown when the Fact Find has children.
     why: Paul, 03/11/2026 (question 1): the Summary is built from the finished Fact Find Transcript PDF and proves it matches it.
 - old line 31: (a) go back to the source and re-check that point and everything related to it;
-    now: 1 | Run it | The one command that starts the job and how every step works |
+    now: 2 | What a finished run contains | The deliverable and the short audit that ends the job |
     why: Paul, 03/11/2026 (question 1): the Summary is built from the finished Fact Find Transcript PDF and proves it matches it.
 - old line 31: (b) fix it everywhere it appears, in every deliverable;
-    now: 1 | Run it | The one command that starts the job and how every step works |
+    now: if not s["blocks"] or not any(b["rows"] for b in s["blocks"]):
     why: Paul, 03/11/2026 (question 1): the Summary is built from the finished Fact Find Transcript PDF and proves it matches it.
 - old line 31: (c) re-run this skill's full checklist;
     now: fix the Fact Find, run this skill again from the read step.
@@ -49,13 +49,13 @@ REWORDED (each is covered by a recorded change):
     now: The program checks the proof and only then shows the next step.
     why: Paul, 03/11/2026 (question 1): the Summary is built from the finished Fact Find Transcript PDF and proves it matches it.
 - old line 64: Ask Paul to attach the file — last resort only.
-    now: "Ask Paul to attach the file ONLY after all three routes have failed.
+    now: Never ask Paul to attach anything.
     why: Three routes (computer, Microsoft 365, Zapier) in order, every try logged (S4).
 - old line 64: Only once both the local machine and SharePoint have genuinely been tried (both locations) and neither works does this skill ask Paul to upload the Fact Find directly.
     now: For a spouse of a couple seen together, one line says it is a joint meeting with a spouse, covers this spouse only, and that debts and children are common to both.
     why: Three routes (computer, Microsoft 365, Zapier) in order, every try logged (S4).
 - old line 64: A project's own file list (e.g.
-    now: Client facts come from the client's file first:
+    now: the copy %s" % a.file)
     why: Three routes (computer, Microsoft 365, Zapier) in order, every try logged (S4).
 - old line 64: a "Fact Find Summary Reports" project with a single client PDF attached) is a convenience cache, not a substitute for the Client File Access check above — always check the client's folder first, even 
     now: A project's file list is a convenience cache, not a substitute for the client's folder.
@@ -67,7 +67,13 @@ REWORDED (each is covered by a recorded change):
     now: Paul Kafentzis (Client Files) is the only one under it this skill ever reads from or writes to.
     why: Three routes (computer, Microsoft 365, Zapier) in order, every try logged (S4).
 - old line 67: This applies both to locating the Fact Find/transcript (Workflow Step 1 below) and to saving this skill's output (Workflow Step 7 below) — same order, every time.
-    now: "Find the client's folder and the Fact Find Transcript PDF (three routes, in order, every try logged)",
+    now: the same shape as the Fact Find Transcript and the Follow-Up Appointment Summary Notes.
+    why: Workflow step names replaced by the step driver.
+- old line 67: After every save, list the folder and confirm the listed size equals the size of the local file (a new time with the old size means the copy lagged:
+    now: Fact Find folder and the listed size equals the local file (%s bytes)" % size
+    why: Workflow step names replaced by the step driver.
+- old line 67: commit again and re-list).
+    now: commit it again and fingerprint it again" % (dsize, dsha[:12], b.get("pdf_size"), str(b.get("pdf_sha"))[:12]))
     why: Workflow step names replaced by the step driver.
 - old line 87: Debt is never excluded from an income-needed/FNA calculation because it carries credit life — that is not Claude's judgment call to make.
     now: Totals reconcile to the cent, and debt is never left out of any calculation because it carries credit life.
@@ -118,7 +124,7 @@ REWORDED (each is covered by a recorded change):
     now: ## Two spouses in one meeting
     why: The dated attribution moved to history (S5).
 - old line 114: Never mix the spouses' information.
-    now: the Summary never has a value the Fact Find does not have.
+    now: Never write an opening recap of this skill, its rules, the files found or the information read;
     why: Shortened: the program carries the joint line and the check.
 - old line 114: Only the debts and the children / childcare are common to both and appear in both Summaries (every debt and every child, in full);
     now: The debts and the children are common to both." %
@@ -127,13 +133,13 @@ REWORDED (each is covered by a recorded change):
     now: A red cross in the audit:
     why: Shortened: the program carries the joint line and the check.
 - old line 114: Everything else belongs only to the spouse it was stated about.
-    now: The reply to Paul carries the SHORT AUDIT it prints:
+    now: Paul Kafentzis (Client Files) is the only one under it this skill ever reads from or writes to.
     why: Shortened: the program carries the joint line and the check.
 - old line 115: each Summary starts with one line saying it is a joint meeting with a spouse, covers this spouse only, and that debts and children are common to both.
     now: For a spouse of a couple seen together, one line says it is a joint meeting with a spouse, covers this spouse only, and that debts and children are common to both.
     why: Shortened: the program carries the joint line and the check.
 - old line 119: ## Internal follow-up routing (reference — used by Workflow Step 6)
-    now: Items Requiring Follow-Up last",
+    now: print("Items Requiring Follow-Up (%d):" % len(items))
     why: The program names the owner from the Fact Find's rows.
 - old line 121: When the "Items Requiring Follow-Up" section (Report Structure §9) flags one of the recurring categories below, name the internal owner alongside the item so Paul doesn't have to look it up himself.
     now: Every flag of the Fact Find is carried into Items Requiring Follow-Up, and the owner is named from the routing list only.
@@ -148,10 +154,10 @@ REWORDED (each is covered by a recorded change):
     now: ("Medical aid", "Has medical aid", "No medical aid on record", "Valerie"),
     why: Paul, 03/11/2026: Cameron and Valerie confirmed correct; BrightRock / gross income goes to Lizelle instead of Martin; CL stays.
 - old line 126: Martin — responsible for confirming gross income details (flag an unconfirmed/ambiguous gross income figure, e.g.
-    now: add("Gross monthly income not confirmed", "Lizelle", "gross", [src(3, "Income", "Gross monthly income")])
+    now: """'R 24 000.00' / 'R24,000.00' / '24000' -> Decimal (2 places), or None when it is not an amount or is ambiguous ('R 2.000')."""
     why: Paul, 03/11/2026: Cameron and Valerie confirmed correct; BrightRock / gross income goes to Lizelle instead of Martin; CL stays.
 - old line 126: an ACI marked "??", to Martin).
-    now: Use when asked to summarize a fact find."
+    now: ACI values still pending the FNA.
     why: Paul, 03/11/2026: Cameron and Valerie confirmed correct; BrightRock / gross income goes to Lizelle instead of Martin; CL stays.
 - old line 128: This is a routing convenience, not a substitute for the flag itself — still state the underlying open item plainly (per Report Structure §9) even where no owner applies.
     now: A project's file list is a convenience cache, not a substitute for the client's folder.
@@ -163,7 +169,7 @@ REWORDED (each is covered by a recorded change):
     now: The Summary keeps this fixed nine-section structure (Paul, 28/10/2026;
     why: Source mapping shortened: the composer does the mapping.
 - old line 189: keep the old Summary structure;
-    now: """The one checker of the fact-find-summary skill.
+    now: do not edit the Summary.
     why: Source mapping shortened: the composer does the mapping.
 - old line 189: The Summary carries no source box or source report of its own — that note goes in the hand-over message (Workflow step 7);
     now: the Summary carries no source box of its own, and the red Items Requiring Follow-Up section carries the important flags):
@@ -172,7 +178,7 @@ REWORDED (each is covered by a recorded change):
     now: the Summary carries no source box of its own, and the red Items Requiring Follow-Up section carries the important flags):
     why: Source mapping shortened: the composer does the mapping.
 - old line 191: *Where each Summary section comes from in the v3.0 Fact Find:
-    now: Each Summary row keeps a pointer to the Fact Find row it came from, and the checker compares the two.
+    now: the Summary never has a value the Fact Find does not have.
     why: The mapping is built into the program.
 - old line 191: Occupation & Income ← Occupation + Income & Household;
     now: occupation, business details (only for a business owner), occupational duties, income and expenses.
@@ -187,7 +193,7 @@ REWORDED (each is covered by a recorded change):
     now: "What the Client Requires", "Action Plan — Cover Calculations", "Items Requiring Follow-Up"]
     why: The mapping is built into the program.
 - old line 191: Items Requiring Follow-Up ← the ⚠ flags, open items and Next Steps & Next Meeting.
-    now: Items Requiring Follow-Up last",
+    now: print("Items Requiring Follow-Up (%d):" % len(items))
     why: The mapping is built into the program.
 - old line 193: For a spouse of a couple seen together, add the one-line joint-meeting note described in "Two spouses in one meeting".
     now: For a spouse of a couple seen together, one line says it is a joint meeting with a spouse, covers this spouse only, and that debts and children are common to both.
@@ -205,22 +211,22 @@ REWORDED (each is covered by a recorded change):
     now: one block per child, then the total childcare cost.
     why: Shortened.
 - old line 198: name, DOB (and/or age), gender, education stage, monthly cost;
-    now: owner = OWNER_BY_SUB.get(b["sub"]) or ("Lizelle" if (s["num"] == 11 and "ACI" in r["label"]) or r["label"] == "Gross monthly income" else None)
+    now: name = (meta or {}).get("name", "").strip()
     why: Shortened.
 - old line 198: total childcare cost at the end.
     now: (8, "Totals", (("Total childcare (monthly)", "kids_monthly"),))):
     why: Shortened.
 - old line 198: Always include this section if the client has any children on the Fact Find, even if childcare costs are nominal/policy-inclusion figures rather than real spend — note that distinction if the Fact Fin
-    now: A first attempt to fix this excluded the home loan from Section 8 on the reasoning that its own credit life cover made it unnecessary there.
+    now: Run this skill once per spouse, each from that spouse's own Fact Find Transcript PDF, each saved into that spouse's own 2.
     why: Shortened.
 - old line 198: figures used for cover-inclusion purposes rather than actual costs).
-    now: fractured cover", "Life Cover - Fractured Cover"), ("Life cover:
+    now: The words "Action Plan" are never used in those sub-headings.
     why: Shortened.
 - old line 199: Health — general health, diabetes, cholesterol, blood pressure, BMI, other health issues/notes.
-    now: client, meeting_date, advisor, title_ok, sections [{num,title,blocks:[{sub,rows}]}], closing {title, blocks}, other [rows], stats."""
+    now: notes = next((b for b in self.ff.blocks(num) if b["sub"].lower().endswith("notes")), None)
     why: Shortened.
 - old line 200: What the Client Requires — subsections:
-    now: Save it into the client's own 2.
+    now: "What the Client Requires", "Action Plan — Cover Calculations", "Items Requiring Follow-Up"]
     why: Shortened.
 - old line 200: Investment & Insurance Needs (education planning, general investing, short-term insurance, medical aid/gap cover, will).
     now: Investment & Insurance Needs (Business Assurance and Key Man only for a business owner).
@@ -235,7 +241,7 @@ REWORDED (each is covered by a recorded change):
     now: Life Cover - Fractured Cover (then Standard Life Cover), Disability Cover - Fractured Cover (then Standard Permanent Disability), Dread Disease Cover and Income Protection / Sickness Benefit Cover.
     why: Shortened.
 - old line 201: fractured cover math, ABI percentages (fixed per "Standing ABIs in Section 8" above:
-    now: "scripts/verify.py (values traced to the Fact Find, totals to the cent, standing ABIs, fixed structure, flags carried, PDF rebuilt identical, A4, file name, save size)",
+    now: ## Standing values in Section 8 (the checker compares them with the Fact Find)
     why: Shortened.
 - old line 201: Life Cover (WOL) ABI 3% and Childcare ABI 5% under Life Cover - Fractured Cover;
     now: Life Cover (WOL) 3%, Childcare 5%, Household needs 5%, Dread Disease 3%.
@@ -253,19 +259,19 @@ REWORDED (each is covered by a recorded change):
     now: Every flag of the Fact Find is carried into Items Requiring Follow-Up, and the owner is named from the routing list only.
     why: Shortened.
 - old line 206: Use reportlab SimpleDocTemplate, letter page size, ~18-20mm margins.
-    now: from reportlab.lib.pagesizes import A4
+    now: A4, about 18 mm margins.
     why: Letter replaced by A4; the drawing is done by build.py.
 - old line 207: Navy (#1F3A5F) for titles/headings, light blue (#EAF1F8) shaded label column in two-column tables, grey subtitle line under the title.
     now: Navy #1F3A5F titles and headings, light-blue #EAF1F8 shaded label column in the two-column tables, 0.5 pt grey grid, follow-up flags in red #B0271A, no page numbers.
     why: Letter replaced by A4; the drawing is done by build.py.
 - old line 208: Two-column Table per section:
-    now: sub-headings and two-column tables (bold label | value), then "Next Steps & Next Meeting".
+    now: story.append(table(rows[2:]))
     why: Letter replaced by A4; the drawing is done by build.py.
 - old line 208: left column bold field label (shaded), right column value, 0.5pt grey grid lines.
     now: sub-headings and two-column tables (bold label | value), then "Next Steps & Next Meeting".
     why: Letter replaced by A4; the drawing is done by build.py.
 - old line 209: Follow-up flags in red text (#B0271A), bullet points, no table.
-    now: BULLET_CID = re.compile(r"^\(cid:\d+\)\s*")             # the bullet glyph, when the PDF font has no text map for it
+    now: "Read the follow-up items it prints.
     why: Letter replaced by A4; the drawing is done by build.py.
 - old line 210: Fact Find Summary - DD.MM.YY - (FirstName Surname).pdf — use the client's first name followed by surname, space-separated, inside the parentheses (matching the name order used in the Fact Find's "Clie
     now: Fact Find Summary - DD.MM.YY - (First Surname).pdf, derived by the program (date = the Fact Find's Date Completed, not today's date):

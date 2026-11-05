@@ -1,5 +1,5 @@
 {
- "stamp": "2026-11-05 11:27",
- "fingerprint": "021c841757eb407351f8e9a25096bb912f3a622e9ca490da39fcd3c03f190350",
- "change": "Strict changes after the first real run: the PDF found automatically through Microsoft 365 or passed in by ff-population-transcript, no permission step, a quiet run"
+ "stamp": "2026-11-05 18:03",
+ "fingerprint": "7752e3131d3a7b38d20ffcfdf4e60a4bd524a00b29b60db6aae735b72380bfd4",
+ "change": "Computer through the device tools: connect once, the PDF proved by the computer's own fingerprint, never through Microsoft 365, the Summary saved with device_commit_files and fingerprinted there"
 }

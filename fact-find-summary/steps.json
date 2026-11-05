@@ -1,102 +1,101 @@
 {
-  "skill": "fact-find-summary",
-  "steps": [
-    {
-      "id": "locate",
-      "title": "Find the client's folder and the Fact Find Transcript PDF (three routes, in order, every try logged)",
-      "ref": [
-        "01-locate.md"
-      ],
-      "do": [
-        "Find, for this client and the meeting date Paul gave, the PDF `Fact Find Transcript - DD.MM.YY - (First Surname).pdf` in the client's `2. Fact Find` folder. In the Fact Find chain `ff-population-transcript` has just made this PDF in this same chat: use it directly (route `passed`). Otherwise find it YOURSELF, AUTOMATICALLY, through Microsoft 365: never ask Paul for permission, to click Allow, or to attach, upload or drag a file, and never call a tool that opens a permission or folder-access box. Record EVERY try, failures too:",
-        "  1  device: the computer, ONLY if this chat is already connected to it. Do NOT request the connection. Not connected: log it at once (python3 {scripts}/run.py access {run} --route device --result failed --note \"not connected; not requested\") and go on.",
-        "  2  m365: the Microsoft 365 connector (SharePoint / OneDrive search and read): the working route. Read the PDF through the connector and save the file it returns (its bytes) into the run folder.",
-        "  3  zapier: the Zapier Office 365 tools, when Microsoft 365 failed.",
-        "Record each try: python3 {scripts}/run.py access {run} --route device|m365|zapier|passed --result failed|found --note \"what you did\"   (a PDF passed in from ff-population-transcript: --route passed --result found)",
-        "When a route has the PDF, bring a copy into the run folder: python3 {scripts}/run.py source {run} --file <local copy of the PDF> --route <the route> [--source-size <the size in bytes the connector reported>]: the program compares the two sizes to the byte and refuses a copy of a different size.",
-        "If a route fails, go on to the next one at once and say nothing to Paul. If every route failed, your reply is at most five lines: what failed and the log of the tries. Never ask Paul to attach anything. Never open another broker's folder."
-      ],
-      "check": "locate_ok",
-      "proof": "the PDF was passed in by ff-population-transcript, or the access log tries the routes in order (the computer logged at once as not connected when it is not), and the PDF was copied into the run folder by run.py source"
-    },
-    {
-      "id": "read",
-      "title": "The program reads the Fact Find PDF (it stops if this is not the program-drawn report)",
-      "ref": [
-        "02-read-and-compose.md"
-      ],
-      "do": [
-        "Run: python3 {scripts}/run.py read {run}",
-        "It reads every section and row of the Fact Find Transcript PDF and checks that the client and the meeting date are the ones Paul asked for.",
-        "If it prints STOP, tell Paul in one line what it said. Do not guess any value and do not make a Summary from another kind of Fact Find."
-      ],
-      "check": "read_ok",
-      "proof": "fact_find.json exists and the layout check found no problem"
-    },
-    {
-      "id": "compose",
-      "title": "The program builds the nine sections, the totals and the follow-up list",
-      "ref": [
-        "03-summary-structure.md"
-      ],
-      "do": [
-        "Run: python3 {scripts}/run.py compose {run}",
-        "Nothing is typed by you: the content is a function of the Fact Find, and the checker recomposes it and refuses a hand-edited file.",
-        "Read the follow-up items it prints. If one is wrong, the Fact Find is wrong: tell Paul (never change content.json by hand)."
-      ],
-      "check": "compose_ok",
-      "proof": "content.json exists"
-    },
-    {
-      "id": "build",
-      "title": "The program draws the Summary PDF (A4) and the page images",
-      "ref": [],
-      "do": [
-        "Run: python3 {scripts}/run.py build {run}",
-        "It refuses to draw until every content check passes. Look at the page images it lists (out/page-*.png) yourself."
-      ],
-      "check": "build_ok",
-      "proof": "the PDF exists in out/ and has not changed since it was built"
-    },
-    {
-      "id": "check",
-      "title": "Check before handing over (every line must be a green tick)",
-      "ref": [],
-      "do": [
-        "Run: python3 {scripts}/verify.py {run} pre",
-        "Every line must be a green tick. A red cross means fix the cause (usually: the Fact Find itself is wrong, so tell Paul) and rebuild."
-      ],
-      "check": "verify_pre",
-      "proof": "the checker prints no red cross"
-    },
-    {
-      "id": "deliver",
-      "title": "Send the PDF in the chat and save it into the client's 2. Fact Find folder",
-      "ref": [
-        "04-handover.md"
-      ],
-      "do": [
-        "1. Send the PDF in the chat as a file.",
-        "2. Save the same file into the client's `2. Fact Find` folder (the folder the PDF was found in) through the Microsoft 365 connector (SharePoint upload; no permission step; the computer only if this chat is already connected), then LIST the folder and read the size it shows.",
-        "3. Record: python3 {scripts}/run.py receipt {run} pdf.sent yes",
-        "          python3 {scripts}/run.py receipt {run} pdf.saved_folder \"<the full folder path>\"",
-        "          python3 {scripts}/run.py receipt {run} pdf.listed_bytes <the size shown in the listing>",
-        "          python3 {scripts}/run.py receipt {run} images.looked yes   (only after you really looked at the page images)"
-      ],
-      "check": "deliver_ok",
-      "proof": "the four receipts are recorded"
-    },
-    {
-      "id": "final",
-      "title": "The final check and the SHORT AUDIT for Paul",
-      "ref": [],
-      "do": [
-        "Run: python3 {scripts}/run.py done {run} final",
-        "Put the short audit it prints in your reply exactly as it is: one line per check with a green tick or a red cross, one closing line for what is only attested. Nothing longer.",
-        "Any red cross means the job is not finished: say so."
-      ],
-      "check": "verify_final",
-      "proof": "the final checker prints no red cross"
-    }
-  ]
+ "skill": "fact-find-summary",
+ "steps": [
+  {
+   "id": "locate",
+   "title": "Connect to the computer, then find the client's folder and the Fact Find Transcript PDF",
+   "ref": [
+    "01-locate.md"
+   ],
+   "do": [
+    "Find, for this client and the meeting date Paul gave, the PDF `Fact Find Transcript - DD.MM.YY - (First Surname).pdf` in the client's `2. Fact Find` folder. YOURSELF: never ask Paul for permission, to attach, upload or drag a file.",
+    "FIRST, before anything else, connect to the computer with the device tools (they are deferred: load them with ToolSearch, query select:mcp__remote-devices__get_device_info,mcp__remote-devices__device_request_folder_access,mcp__remote-devices__device_list_dir,mcp__remote-devices__device_bash,mcp__remote-devices__device_stage_files,mcp__remote-devices__device_commit_files). (a) get_device_info: if the folder liferisk.co.za is not in connectedFolders, call device_request_folder_access for ~/liferisk.co.za. That one request is the ONLY thing Paul is ever asked to click, and you say nothing else to him. (b) device_list_dir on the client's `2. Fact Find` folder (under Company - Paul, or Company - WR Clients > Paul Kafentzis (Client Files)). (c) Record it: python3 {scripts}/run.py computer {run} --device \"<deviceName>\" --folder \"<the folder the access was granted for>\" --listing \"<the file names you saw>\"   If the request is refused or the device tools do not exist in this chat: python3 {scripts}/run.py computer {run} --none \"<what happened>\". It prints the STOP; your WHOLE reply is that text, with no question and no analysis. This skill always needs the connection, because the Summary is saved on the computer.",
+    "THEN the PDF. In the Fact Find chain `ff-population-transcript` has just made it in this same chat: use that file (python3 {scripts}/run.py access {run} --route passed --result found --note \"made by ff-population-transcript in this chat\", then run.py source --route passed --file <that PDF>). Otherwise take it from the computer: (i) device_bash: sha256sum \"$HOME/mnt/liferisk.co.za/<path>\" && stat -c %s \"$HOME/mnt/liferisk.co.za/<path>\"   (ii) device_stage_files with paths=[\"C:\\Users\\Paul\\liferisk.co.za\\<path, with backslashes>\"]: a whole, read-only copy lands under /mnt/user-data/uploads/liferisk.co.za/<path>   (iii) python3 {scripts}/run.py access {run} --route device --result found --note \"<what you did>\" --file \"<the staged copy>\" --device-output \"<the whole output of (i)>\"   (iv) python3 {scripts}/run.py source {run} --route device --file \"<the staged copy>\". The program fingerprints the copy itself and compares it with the computer's: a copy that differs is logged as a fail, and a PDF that is cut off or is text is refused. A PDF is NEVER taken through Microsoft 365 or Zapier: it arrives there cut off, as text.",
+    "If the PDF cannot be found on the computer, your reply is at most five lines: what failed and the log of the tries. Never ask Paul to attach anything. Never open another broker's folder."
+   ],
+   "check": "locate_ok",
+   "proof": "the computer is connected and recorded, and the PDF was passed in by ff-population-transcript or taken from the computer with its fingerprint proved, and run.py source brought it into the run folder"
+  },
+  {
+   "id": "read",
+   "title": "The program reads the Fact Find PDF (it stops if this is not the program-drawn report)",
+   "ref": [
+    "02-read-and-compose.md"
+   ],
+   "do": [
+    "Run: python3 {scripts}/run.py read {run}",
+    "It reads every section and row of the Fact Find Transcript PDF and checks that the client and the meeting date are the ones Paul asked for.",
+    "If it prints STOP, tell Paul in one line what it said. Do not guess any value and do not make a Summary from another kind of Fact Find."
+   ],
+   "check": "read_ok",
+   "proof": "fact_find.json exists and the layout check found no problem"
+  },
+  {
+   "id": "compose",
+   "title": "The program builds the nine sections, the totals and the follow-up list",
+   "ref": [
+    "03-summary-structure.md"
+   ],
+   "do": [
+    "Run: python3 {scripts}/run.py compose {run}",
+    "Nothing is typed by you: the content is a function of the Fact Find, and the checker recomposes it and refuses a hand-edited file.",
+    "Read the follow-up items it prints. If one is wrong, the Fact Find is wrong: tell Paul (never change content.json by hand)."
+   ],
+   "check": "compose_ok",
+   "proof": "content.json exists"
+  },
+  {
+   "id": "build",
+   "title": "The program draws the Summary PDF (A4) and the page images",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py build {run}",
+    "It refuses to draw until every content check passes. Look at the page images it lists (out/page-*.png) yourself."
+   ],
+   "check": "build_ok",
+   "proof": "the PDF exists in out/ and has not changed since it was built"
+  },
+  {
+   "id": "check",
+   "title": "Check before handing over (every line must be a green tick)",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/verify.py {run} pre",
+    "Every line must be a green tick. A red cross means fix the cause (usually: the Fact Find itself is wrong, so tell Paul) and rebuild."
+   ],
+   "check": "verify_pre",
+   "proof": "the checker prints no red cross"
+  },
+  {
+   "id": "deliver",
+   "title": "Send the PDF in the chat and save it into the client's 2. Fact Find folder",
+   "ref": [
+    "04-handover.md"
+   ],
+   "do": [
+    "1. Send the PDF in the chat as a file.",
+    "2. Save the same file into the client's `2. Fact Find` folder (the folder the PDF was found in) ON THE COMPUTER: copy the PDF to /mnt/user-data/outputs/, then device_commit_files with files=[{\"devicePath\": \"C:\\Users\\Paul\\liferisk.co.za\\<the client's 2. Fact Find folder>\\<the Summary file name>\", \"stagedPath\": \"/mnt/user-data/outputs/<the Summary file name>\"}] (no force). OneDrive uploads it by itself. Do NOT upload through Microsoft 365.",
+    "3. Prove the save with the computer's own eyes: device_list_dir on that folder (the file's name and size) and device_bash: sha256sum \"$HOME/mnt/liferisk.co.za/<the path>\" && stat -c %s \"$HOME/mnt/liferisk.co.za/<the same path>\". The program compares that fingerprint and size with the PDF it built.",
+    "4. Record: python3 {scripts}/run.py receipt {run} pdf.sent yes",
+    "          python3 {scripts}/run.py receipt {run} pdf.saved_folder \"<the full folder path>\"",
+    "          python3 {scripts}/run.py receipt {run} pdf.listed_bytes <the size shown in the listing>",
+    "          python3 {scripts}/run.py receipt {run} pdf.device_output \"<the whole output of the device_bash command in 3>\"",
+    "          python3 {scripts}/run.py receipt {run} images.looked yes   (only after you really looked at the page images)"
+   ],
+   "check": "deliver_ok",
+   "proof": "the five receipts are recorded and the computer's fingerprint of the saved Summary equals the PDF built here"
+  },
+  {
+   "id": "final",
+   "title": "The final check and the SHORT AUDIT for Paul",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/run.py done {run} final",
+    "Put the short audit it prints in your reply exactly as it is: one line per check with a green tick or a red cross, one closing line for what is only attested. Nothing longer.",
+    "Any red cross means the job is not finished: say so."
+   ],
+   "check": "verify_final",
+   "proof": "the final checker prints no red cross"
+  }
+ ]
 }
