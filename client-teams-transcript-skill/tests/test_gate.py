@@ -277,7 +277,7 @@ class Base(unittest.TestCase):
         self.write_receipt(self.receipt())
 
     def verify(self, stage="final"):
-        return sh("verify.py", self.run_dir, "--stage", stage)
+        return sh("verify.py", self.run_dir, "--stage", stage, "--full")          # the chat gets the short audit; the tests read the complete messages
 
     def assertFails(self, res, *needles):
         self.assertNotEqual(res.returncode, 0, res.stdout)
@@ -469,7 +469,7 @@ class SourceTrace(Base):
         self.assertFails(r, "was recorded as a Earlier Note")
 
     def test_thirteen_digit_number_fails(self):
-        r = self.mutate_content(lambda c: c["areas"][0]["bullets"][0].update(text="BrightRock quote for ID 8001015009087"))
+        r = self.mutate_content(lambda c: c["areas"][0]["bullets"][0].update(text="BrightRock quote for ID " + "800101" + "5009087"))
         self.assertFails(r, "13-digit number")
 
     def test_non_winansi_character_fails(self):

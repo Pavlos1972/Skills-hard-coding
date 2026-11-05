@@ -69,3 +69,12 @@ an invented fact with an unrelated quote could pass; a run could pass for the wr
 
 ## Your original, untouched
 Your original skill text (with the real client names) was given to you as a file. It is not kept in the repo. The repo keeps the same text with names replaced by placeholders, in `history/`.
+
+## Strict changes of 05/11/2026 (Paul, after the first real run of the Fact Find chain)
+- **Files are found automatically (locate step, page 01):** Microsoft 365 is the working route (the Teams transcript itself, or the file in the client's folder). The computer is used only if the chat is already connected to it; it is never requested and is logged at once as "not connected, not requested". Zapier is next. "Ask Paul to attach / upload the transcript" is gone: if every route fails the chat says in at most five lines what failed and stops. (A WhatsApp call still needs Paul's own recap, because no file holds it.)
+- **The message to Sitamah is POSTED AUTOMATICALLY** through Zapier (your standing instruction), once per meeting, with no question and no waiting for a yes. The reply shows the message that was posted. This applies to every meeting type this skill handles (first meeting from the Fact Find chain, follow-up meetings, WhatsApp calls). Emails and invites still wait for your yes (for example the revised-quote email draft).
+- **Saving:** the PDF goes into the client's `2. Fact Find` folder through Microsoft 365 (SharePoint upload), never a folder-access request.
+- **A quiet run:** the version sentence, then work, with one short progress line per step; no opening recap; the chat does not read the pages itself. Nothing is asked of Paul during the run.
+- **Short audit:** `verify.py` and the last step now print the SHORT audit; the long report is the file `out_record/audit-full.txt` (`verify.py --full` prints it).
+- **Tests:** all 228 tests pass. Eleven assertions that read the old long printout or the old question now read the full report or the new wording; one test number is built at run time so the lint stays clean.
+- **Unproven until your next real run:** reading the transcript through the connector and saving the PDF through it in your chat on Auto.

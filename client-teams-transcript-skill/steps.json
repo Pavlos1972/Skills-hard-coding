@@ -13,13 +13,13 @@
         "01-access-and-locate.md"
       ],
       "do": [
-        "Find the transcript for this client and the meeting date Paul gave. Try the three routes IN THIS ORDER and record EVERY attempt, failures too:",
-        "  1  device: the local drive / OneDrive through the device bridge (device_stage_files)",
-        "  2  m365: the Microsoft 365 connector (SharePoint/OneDrive search, or the Teams transcript itself)",
-        "  3  zapier: the Zapier Office 365 tools",
+        "Find the transcript for this client and the meeting date Paul gave YOURSELF, AUTOMATICALLY, through Microsoft 365 (the Teams transcript itself, or the file in the client's folder): never ask Paul for permission, to click Allow, or to attach, upload or drag a file, and never call a tool that opens a permission or folder-access box. Record EVERY attempt, failures too:",
+        "  1  device: the computer, ONLY if this chat is already connected to it. Do NOT request the connection. Not connected: log it at once (python3 {scripts}/run.py access {run} --need transcript --route device --tool none --result fail --detail \"not connected; not requested\") and go on.",
+        "  2  m365: the Microsoft 365 connector (SharePoint/OneDrive search and read, or the Teams transcript itself): the working route. Read the transcript through the connector and save what it returns as text into the run folder.",
+        "  3  zapier: the Zapier Office 365 tools, when Microsoft 365 failed.",
         "Record each try: python3 {scripts}/run.py access {run} --need transcript --route device|m365|zapier --tool <tool you used> --result ok|fail --detail \"<what happened>\"",
-        "If Paul attached the file, use --route user. If another skill passed it in, use --route passed. Either with --result ok.",
-        "You may say a file cannot be reached ONLY after all three routes failed and are logged. Then record the question with: python3 {scripts}/run.py ask {run} --need <what you need> --question \"<what you need from Paul>\" --searched \"<where you looked>\" . It prints the exact words to give Paul. Never just say 'I cannot access your files'.",
+        "If another skill passed it in (for example ff-population-transcript), use --route passed --result ok.",
+        "If a route fails, go on to the next at once and say nothing to Paul. If every route failed and is logged, your reply is at most five lines: what failed and the log of the tries. Never ask Paul to attach or upload anything.",
         "For a WhatsApp call there is no transcript file: ask Paul for his recap, notes or recording, confirm the exact date and TIME of the call, and log it with --route user."
       ],
       "proof": "the access log has an ok entry for 'transcript'",
@@ -197,7 +197,7 @@
       "title": "Show the Planner note as a copy-ready page",
       "ref": [],
       "do": [
-        "Do NOT end your reply here and do not ask Paul anything yet: Paul is asked ONCE, at the last step, about all three outputs together (the Planner page, the PDF and the message to Sitamah). Record this step and go straight on with `run.py next`. ",
+        "Do NOT end your reply here and do not ask Paul anything yet: nothing is asked of Paul (the reply at the end holds the outputs, the message that was posted and the short audit). Record this step and go straight on with `run.py next`. ",
         "Publish {run}/out/planner_note.html as a private page with the Artifact tool (file_path = that file, do not retype it). Tell Paul in one sentence what the page is. After any correction, rebuild and republish the same page.",
         "If the page tool is unavailable: say so, show {run}/out/planner_note.txt as formatted chat text (never in a code block), and state that this is the fallback.",
         "Record it: python3 {scripts}/run.py receipt {run} --set planner_page.mode=artifact --set planner_page.url=<the link returned>",
@@ -215,11 +215,11 @@
       "title": "Send, save and check the PDF",
       "ref": [],
       "do": [
-        "Do NOT end your reply here and do not ask Paul anything yet: Paul is asked ONCE, at the last step, about all three outputs together (the Planner page, the PDF and the message to Sitamah). Record this step and go straight on with `run.py next`. ",
+        "Do NOT end your reply here and do not ask Paul anything yet: nothing is asked of Paul (the reply at the end holds the outputs, the message that was posted and the short audit). Record this step and go straight on with `run.py next`. ",
         "1. If the folder /mnt/user-data/outputs exists, copy the PDF there first so it can be presented: cp \"{run}/out/<the PDF file>\" /mnt/user-data/outputs/ . Then send it in the chat for Paul to download (present_files / SendUserFile).",
-        "2. Save the same file into the client's 2. Fact Find folder with device_commit_files (route order as always).",
+        "2. Save the same file into the client's 2. Fact Find folder through the Microsoft 365 connector (SharePoint upload; no permission step; the computer only if this chat is already connected).",
         "3. List the folder back and confirm the new file's exact name, size and time.",
-        "Record it: python3 {scripts}/run.py receipt {run} --set pdf_sent_in_chat=true --set saved.tool=device_commit_files --set saved.folder=\"<folder>\" --set saved.filename=\"<exact file name>\" --set saved.tool_result=\"<tool result>\" --set saved.folder_listing_check=\"<the listing line showing the file>\""
+        "Record it: python3 {scripts}/run.py receipt {run} --set pdf_sent_in_chat=true --set saved.tool=<the tool you used, for example sharepoint_upload_file> --set saved.folder=\"<folder>\" --set saved.filename=\"<exact file name>\" --set saved.tool_result=\"<tool result>\" --set saved.folder_listing_check=\"<the listing line showing the file>\""
       ],
       "proof": "PDF sent, saved and listed back, with the real tool output recorded",
       "check": "receipt_pdf"
@@ -235,7 +235,7 @@
         "06c-handoffs.md"
       ],
       "do": [
-        "Do NOT end your reply here and do not ask Paul anything yet: Paul is asked ONCE, at the last step, about all three outputs together (the Planner page, the PDF and the message to Sitamah). Record this step and go straight on with `run.py next`. ",
+        "Do NOT end your reply here and do not ask Paul anything yet: nothing is asked of Paul (the reply at the end holds the outputs, the message that was posted and the short audit). Record this step and go straight on with `run.py next`. ",
         "If applications differ from the meeting (the Applications section), call complete-applications-skill in Correction / Sync mode. If anything is unclear, ask Paul BEFORE any change.",
         "If an owner or life assured changed, prepare the revised-quote email as a DRAFT and show Paul. Never send without his yes. Record what you showed: --set revised_quote_draft=\"shown to Paul: <what, when>\"",
         "Record: python3 {scripts}/run.py receipt {run} --set applications_handoff=\"complete-applications-skill called: <result>\"   (or \"n/a: <reason>\")",
@@ -251,14 +251,14 @@
         "first",
         "whatsapp"
       ],
-      "title": "Show Paul everything and ask once; send the message to Sitamah only with his yes",
+      "title": "Post the message to Sitamah automatically and show everything",
       "ref": [
         "07-teams-message.md"
       ],
       "do": [
         "{teams_message_block}",
-        "NOW WRITE YOUR REPLY TO PAUL. It holds all three outputs together: (1) the link to the Planner page, (2) the PDF, sent in the chat, (3) the exact message to Sitamah shown above, with the one-line check of why the follow-up sentence is in or out. End the reply with ONE question: \"Shall I post this message to Sitamah in Teams?\". Paul approves the page, the PDF and the message together. Then wait for his answer. Never end a reply without the message in it.",
-        "After his answer: if he says yes, send it exactly as shown, through Zapier only. Never send without his yes. Never twice for the same meeting. A correction does not trigger a resend unless Paul asks. Then record the result (sent, already_sent, declined or failed) with the receipt command shown above, including Paul's own words."
+        "NOW WRITE YOUR REPLY TO PAUL. It holds all three outputs together: (1) the link to the Planner page, (2) the PDF, sent in the chat, (3) the exact message to Sitamah that you posted, with the one-line check of why the follow-up sentence is in or out, then the short audit. There is NO closing question. Never end a reply without the message in it.",
+        "POST it now, exactly as shown, through Zapier only (Paul's standing instruction: post automatically; no question, no waiting for a yes). Never twice for the same meeting. A correction does not trigger a resend unless Paul asks. Then record the result (sent, already_sent, declined or failed) with the receipt command shown above; for sent, teams.approved_by_paul = \"standing instruction: post automatically\"."
       ],
       "proof": "teams.status recorded as sent, declined or failed, with its evidence",
       "check": "receipt_teams"
@@ -274,7 +274,7 @@
       "ref": [],
       "do": [
         "Run: python3 {scripts}/verify.py {run}",
-        "Your reply to Paul MUST contain its whole printout, unedited, including 'WHAT PAUL SHOULD GLANCE AT' and the DELIVERY LINE. If RESULT says FAIL you may not say the job is finished: say what failed and fix it first.",
+        "Your reply to Paul contains the SHORT AUDIT it prints, unedited (a line per group with ✅ or ❌, the closing 'Only attested' line, RESULT, WHAT PAUL SHOULD GLANCE AT and the DELIVERY LINE). The full report is the file out_record/audit-full.txt: never paste it into the chat. If RESULT says FAIL you may not say the job is finished: say what failed and fix it first.",
         "Then close the run: python3 {scripts}/run.py done {run} final",
         "After ANY correction from Paul: edit content.json, run build.py again (it re-opens the hand-over steps), redo them for every output that changed, and run verify.py again. A correction re-opens the whole task."
       ],

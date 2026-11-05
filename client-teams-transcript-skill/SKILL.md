@@ -15,21 +15,23 @@ description: "Summarize a client's Teams meeting transcript (or WhatsApp call) i
 | 4 | When something goes wrong | What to do instead of improvising |
 | 5 | Where the detail lives | The pages the program shows at each step |
 
-**Last updated: 2026-11-02 15:55 (Athens time)**
+**Last updated: 2026-11-05 11:37 (Athens time)**
 
 **Recent changes** (last 5, one line each; full history in the repo `history/` folder)
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-11-05 11:37 | Strict changes after the first real run: files found automatically through Microsoft 365 (no permission step), the Sitamah message posted automatically, a quiet run, the short audit as the program's own printout |
 | 2026-11-02 15:55 | The follow-up appointment is now an action for Sitamah at every meeting where one was agreed (the program no longer refuses it and fails an agreed appointment with no such action); the first-meeting message to Sitamah is made by this skill only (Paul, 02/11/2026) |
 | 2026-10-29 17:53 | Action points are put in order (earliest deadline first, then logical), what is not relevant is left out and listed, and the skill asks Paul in one message when it is not sure |
 | 2026-10-29 17:22 | Dated notes taken out of the live pages (the dates stay in the history files) |
 | 2026-10-29 17:21 | Planner note is now short (one-liners and actions for now), PDF limited to 4 bullets per area and two pages, actions sorted now/later, message to Sitamah shown with the outputs (Paul's answers after his first real-case trial) |
-| 2026-10-29 13:38 | Every run now begins by saying which version it is (read from this stamp), the final checklist repeats it, and the date can only move when the skill's files really change |
 
 ## Run it
 
 This skill is a program that walks you through the job one step at a time. You do not work from memory of this page. Everything below is shown again, at the right moment, by the program.
+
+**A quiet run, and nothing is asked of Paul (Paul's rule).** Start your reply with the one version sentence the program gives you, then work. You may show ONE short progress line per step (for example "Step 4 of 14: reading the transcript, first pass"). Never write an opening recap of this skill, its rules, the files found or the information read; do not read the reference pages yourself (the program shows each page at its step). Never ask Paul for permission, to click Allow, to attach, upload or drag a file, or to say "go": find the files yourself through Microsoft 365. The reply at the end is the outputs, the message that was posted and the SHORT audit.
 
 1. Find this skill's folder (the "Base directory" shown when the skill loaded; it contains `scripts/run.py`). If you are unsure: `find /mnt /root /home /opt /tmp -path '*client-teams-transcript-skill/scripts/run.py' 2>/dev/null | head -1`
 2. Choose a new run folder, for example `/tmp/wr-run-<Surname>-<DDMMYY>`, and start: `python3 <skill folder>/scripts/run.py start <run folder> --type followup --client "First Surname" --date DD/MM/YYYY` (use `first` for a Fact Find / first appointment, `whatsapp` for a WhatsApp call). The client and the meeting date are taken exactly from Paul's message; the program checks every later file against them. The program's first lines give you one sentence to say to Paul before anything else: which version of this skill is running. It comes from the Last updated line above, so it moves with every update.
@@ -43,16 +45,16 @@ Never rewrite, shorten or "improve" the programs during a run, and never replace
 
 - The **Planner note** as a copy-ready page with a Copy note button (every meeting type): short, one-line bullets per area and only the actions for now.
 - The **PDF**: Follow-Up Appointment Summary Notes, or WhatsApp Call Summary, two pages at most. Sent in the chat, saved into the client's `2. Fact Find` folder, and listed back. Not for a first/Fact Find meeting.
-- The **message to Sitamah** in Teams ("Teams Appointment Completed" or, for a WhatsApp call, "WhatsApp Call Completed"), shown to Paul in the same reply as the page and the PDF (one question, one yes for all three) and sent through Zapier only after his yes.
-- The final printout saying `RESULT: PASS`. No PASS in your reply means the job is not finished: say so.
+- The **message to Sitamah** in Teams ("Teams Appointment Completed" or, for a WhatsApp call, "WhatsApp Call Completed"), POSTED AUTOMATICALLY through Zapier (Paul's standing instruction: no question) and shown in the same reply as the page and the PDF.
+- The short audit saying `RESULT: PASS`. No PASS in your reply means the job is not finished: say so.
 
 ## Standing rules
 
 1. Source first, never invent: every fact and every action traces to the transcript or a named document, and the program checks the quote.
 2. Read the whole transcript twice, in order, before anything is drafted. The program enforces it.
-3. Client information comes from the client's file first; use the access routes in order (local drive, Microsoft 365, Zapier) and log each try. Ask Paul only after all three failed.
+3. Client information comes from the client's file first, found automatically through Microsoft 365 (then Zapier; the computer only if already connected, never requested). Log each try. Never ask Paul for permission, to click Allow, or to attach, upload or drag a file.
 4. Every action point is for Sitamah. Paul is never the owner of an action.
-5. Nothing is sent for Paul without his yes: emails and Teams messages are drafts until he approves.
+5. Emails and invites are drafts until Paul says yes. The one exception is the message to Sitamah in Teams, which Paul made automatic: posted through Zapier, once per meeting.
 6. Never write ID, account or tax numbers.
 7. After any correction from Paul, re-open the whole task: fix it in `content.json`, rebuild, redo the hand-over of every output that changed, run the final check again.
 8. If a rule cannot be met, stop and say exactly which one and why. Never hand over partial work as complete.

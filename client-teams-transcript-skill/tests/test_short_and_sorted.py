@@ -322,17 +322,20 @@ class MessageShownWithTheOutputs(Base):
         st = self.steps()
         for sid in ("planner", "pdf", "handoffs"):
             self.assertIn("Do NOT end your reply here", st[sid]["do"][0], sid)
+            self.assertIn("nothing is asked of Paul", st[sid]["do"][0], sid)
         joined = " ".join(st["teams"]["do"])
         self.assertIn("Never end a reply without the message in it", joined)
-        self.assertIn("Shall I post this message to Sitamah in Teams?", joined)
-        self.assertIn("one question", joined.lower().replace("ONE question".lower(), "one question"))
+        self.assertNotIn("Shall I post this message to Sitamah in Teams?", joined)       # Paul, 05/11/2026: it is posted automatically, no question
+        self.assertIn("There is NO closing question", joined)
+        self.assertIn("POST it now", joined)
         self.assertNotIn("Only after every deliverable is approved", joined)
 
     def test_the_rules_page_no_longer_says_to_wait_for_approval_first(self):
         text = slurp(os.path.join(SKILL_DIR, "references", "07-teams-message.md"))
         self.assertNotIn("approved by Paul and SAVED", text)
         self.assertIn("SHOWN in the same reply as the Planner page and the PDF", text)
-        self.assertIn("It is SENT only after his yes", text)
+        self.assertIn("POSTED AUTOMATICALLY", text)
+        self.assertNotIn("only after his yes", text)
 
     def test_the_entry_page_and_rules_say_it_too(self):
         self.assertIn("same reply as the page and the PDF", slurp(os.path.join(SKILL_DIR, "SKILL.md")))

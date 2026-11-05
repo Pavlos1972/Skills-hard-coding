@@ -177,7 +177,7 @@ class Lint(unittest.TestCase):
         self.assertEqual(wr_stamp.fingerprint(self.dir), before)
 
     def test_thirteen_digit_number_fails(self):
-        self.edit(lambda t: t + "\nID 8001015009087\n")
+        self.edit(lambda t: t + "\nID " + "800101" + "5009087" + "\n")
         self.assertTrue(any("13-digit" in f for f in self.fails()))
 
     def test_client_name_from_blocklist_fails(self):

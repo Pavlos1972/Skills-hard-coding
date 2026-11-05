@@ -1,5 +1,5 @@
 {
- "stamp": "2026-11-02 15:55",
- "fingerprint": "c9095f5b329f6b0853d13f43b74e7c8933d82d6300ae7a7ff0e84267e21bdc8c",
- "change": "The follow-up appointment is now an action for Sitamah at every meeting where one was agreed (the program no longer refuses it and fails an agreed appointment with no such action); the first-meeting message to Sitamah is made by this skill only (Paul, 02/11/2026)"
+ "stamp": "2026-11-05 11:37",
+ "fingerprint": "a1e141bcecfe2e1a656647f36b30612880a5256c50326dc28d628855a696f803",
+ "change": "Strict changes after the first real run: files found automatically through Microsoft 365 (no permission step), the Sitamah message posted automatically, a quiet run, the short audit as the program's own printout"
 }

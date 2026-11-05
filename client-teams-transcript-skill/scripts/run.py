@@ -97,7 +97,7 @@ def teams_block(run):
                 "\nThen run `python3 %s/run.py next %s` again." % (SCRIPTS, run))
     lines = ["BEFORE SENDING: if this meeting's message was already sent by ff-population-transcript or fact-find-summary in this chat, "
              "record teams.status=already_sent with teams.already_sent_evidence (which skill, when, message id) and do NOT send again.", "",
-             "THE MESSAGE TO SITAMAH, exactly this (show it to Paul in your reply with the page and the PDF; send it ONLY after his yes):", "  " + msg, "",
+             "THE MESSAGE TO SITAMAH, exactly this (POST it NOW through Zapier: Paul's standing instruction, no question; show it in your reply with the page and the PDF):", "  " + msg, "",
              "WHY THE FOLLOW-UP SENTENCE IS %s: %s" % (
                  "IN" if content["next_appointment"].get("agreed") else "OUT", content["next_appointment"].get("check", "")),
              "", "THE ZAPIER ROUTE (hard-coded, use exactly this):"]
@@ -306,7 +306,7 @@ def ck_verify(stage):
     def check(run, rj):
         R, st, ledger, content = verify.run_checks(run, stage)
         if stage == "final":
-            verify.report(R, st, ledger, content, stage, run)   # the whole printout goes into the transcript
+            verify.report_short(R, st, ledger, content, stage, run)   # the SHORT audit goes into the chat; the full report is out_record/audit-full.txt
         return [m for lvl, _, m in R.rows if lvl == "FAIL"][:15]
     return check
 
@@ -494,10 +494,10 @@ def cmd_access(a):
     failed = {e["route"] for e in es if e["result"] == "fail"}
     untried = [r for r in w.ROUTES if r not in failed]
     if untried:
-        print("logged failure. NEXT ROUTE TO TRY for '%s': %s (%s). You may not give up before all three are logged."
+        print("logged failure. NEXT ROUTE TO TRY for '%s': %s (%s). Go on to it at once; do not ask Paul anything."
               % (a.need, untried[0], w.ROUTE_NAMES[untried[0]]))
     else:
-        print("logged failure. All three routes have now failed for '%s'. Record the question for Paul with: run.py ask" % a.need)
+        print("logged failure. All three routes have now failed for '%s'. Say so in at most five lines (the log of the tries) and stop. Never ask Paul to attach or upload anything." % a.need)
 
 
 def cmd_source(a):

@@ -2,6 +2,7 @@
 
 *These rules come before everything else in this skill. They apply from the first message to the last, not just at the start. If anything below seems to conflict with these rules, these rules win.*
 
+0. **A quiet run, and nothing is asked of Paul (Paul's rule).** Start your reply with the one version sentence the program gives you, then work. You may show ONE short progress line per step (for example "Step 4 of 14: reading the transcript, first pass"). Never write an opening recap of this skill, its rules, the files found or the information read; do not read the reference pages yourself (the program shows each page at its step). Never ask Paul for permission, to click Allow, to attach, upload or drag a file, or to say "go": find the files yourself through Microsoft 365. The reply at the end is the outputs, the message that was posted and the SHORT audit.
 1. **The program drives the job; do not work from memory.** Run `python3 {scripts}/run.py next {run}` to see the current step, and `python3 {scripts}/run.py status {run}` after any long chat or compression to see where the job is up to. Each step shows its own rules when it is needed. Never work from a summary of the rules or from memory of them.
 2. **Source first - never invent.** Write only what is in the source material (transcript, quote, document, file) or in a named document this skill tells you to use. If a line is unclear, garbled or ambiguous, do not turn it into a fact: flag it to the user. "It seems implied", "it is usual" and "it would make sense" are not sources.
 3. **Read before you write.** Read the source material completely and carefully - at least as many times as this skill requires - before drafting anything. Searching for keywords is not reading.
@@ -22,8 +23,8 @@ The names Step 1b, Step 4c, Step 6 and so on in these pages are the rule names f
 
 1. The **Planner note** as a copy-ready page (Artifact, with a Copy note button). Every meeting type.
 2. The **PDF**: Follow-Up Appointment Summary Notes (Teams follow-up) or WhatsApp Call Summary. Sent in the chat, saved into the client's `2. Fact Find` folder, and the saved file listed back. Not for a first/Fact Find meeting (that meeting's PDF is the Fact Find Summary, made by `fact-find-summary`).
-3. The **message to Sitamah** in Teams ("Teams Appointment Completed", or "WhatsApp Call Completed" for a WhatsApp call), shown to Paul in the same reply as the Planner page and the PDF (one reply, one question, so he approves all three together) and sent through Zapier only after his yes.
-4. The checks: both reads, the source trace, the mandatory questions, and the final `verify.py` printout, pasted unedited into the reply.
+3. The **message to Sitamah** in Teams ("Teams Appointment Completed", or "WhatsApp Call Completed" for a WhatsApp call), POSTED AUTOMATICALLY through Zapier (Paul's standing instruction: no question, no waiting for a yes) once the page, the PDF and the hand-offs are produced and saved, and shown in the same reply as the Planner page and the PDF.
+4. The checks: both reads, the source trace, the mandatory questions, and the SHORT audit the final `verify.py` prints (the full report is the file `out_record/audit-full.txt`).
 
 After ANY correction, repeat the build and every hand-over for each output that changed, then run `verify.py` again.
 
