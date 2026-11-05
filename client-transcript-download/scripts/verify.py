@@ -81,7 +81,7 @@ def run_checks(run, stage):
     sp = source_path(run, rj)
     have = bool(sp) and os.path.exists(sp)
     R.add(have and os.path.getsize(sp) == src.get("size") and w.sha256_file(sp) == src.get("sha256"),
-          "Transcript received through %s (%s bytes), fingerprint recorded" % (src.get("route"), src.get("size")) if have else "The transcript has not been brought into the run folder (run.py source)")
+          "Transcript received through %s (%s bytes), fingerprint recorded%s" % (src.get("route"), src.get("size"), "; copy size equals the connector's" if src.get("size_checked") else "") if have else "The transcript has not been brought into the run folder (run.py source)")
     # C. the transcript itself, read by the program
     R.group = "transcript"
     a = None
@@ -125,8 +125,13 @@ def _final_checks(R, run, rj, client):
     R.group = "save"
     slog = log_of(run, "save")
     prob = order_problem(slog, w.SAVE_ROUTES) if slog else "no save try is recorded"
+    asked = [e for e in slog if e.get("route") == "device" and e.get("result") == "failed" and "not connected" not in (e.get("note") or "").lower()]
+    if asked and not prob:
+        prob = "the computer try failed for a reason other than 'not connected; not requested' (a connection may have been requested, which is never allowed): %r" % asked[0].get("note")
     sfound = [e for e in slog if e.get("result") == "found"]
-    R.add(not prob and bool(sfound), "Save routes tried in order and logged (%s)" % (", ".join("%s %s" % (e["route"], e["result"]) for e in slog) or "none"), prob)
+    sok = not prob and bool(sfound)
+    R.add(sok, "Save routes tried in order and logged (%s)" % (", ".join("%s %s" % (e["route"], e["result"]) for e in slog) or "none") if sok else
+          "Save routes problem: %s" % (prob or "no save try found the folder"), prob)
     rc = w.load_opt(os.path.join(run, w.RECEIPT), {})
     name = w.output_name(client["first"], client["surname"], rj["date"])
     out = os.path.join(run, w.OUT, name or "")
@@ -147,8 +152,8 @@ def _final_checks(R, run, rj, client):
     fp = rj.get("program_fingerprint") == w.program_fingerprint()
     R.add(done == STEP_IDS[:-1] and fp, "Every step done in order (%d of %d) and the programs did not change during the run" % (len(done), len(STEP_IDS) - 1)
           if done == STEP_IDS[:-1] and fp else "Steps done: %s%s" % (", ".join(done) or "none", "; the programs changed during the run" if not fp else ""))
-    R.attested += ["the clicking in Chrome and what was seen on screen (if the Chrome route was used)", "the folder save and its listing (typed by Claude)",
-                   "that the original download stays in Downloads for Paul to delete (Chrome route only)"]
+    R.attested += ["what was seen in Chrome, and that text read from the Teams page is word for word (if the Chrome route was used)", "the folder save and its listing (typed by Claude)",
+                   "that a downloaded original stays in Downloads for Paul to delete (only if the computer was already connected)"]
 
 
 def next_line(rj):

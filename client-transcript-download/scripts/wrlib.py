@@ -20,7 +20,7 @@ SOURCE = "source"                       # the received transcript, kept with its
 OUT = "out"
 
 FETCH_ROUTES = ("m365", "zapier", "chrome")      # how the transcript is fetched (Paul, 03/11/2026: connector first, Chrome as the fallback)
-SAVE_ROUTES = ("device", "m365", "zapier")       # how it is saved into the client's folder (S4)
+SAVE_ROUTES = ("device", "m365", "zapier")       # how it is saved into the client's folder: the computer only if already connected (logged at once as not connected), then Microsoft 365, then Zapier (S4)
 PURPOSES = {"fetch": FETCH_ROUTES, "save": SAVE_ROUTES}
 TOLERANCE_S = 120                                # the last time stamp may fall this far short of the stated length (Paul, 03/11/2026)
 JUMP_S = 600                                     # no gap longer than this between two time stamps

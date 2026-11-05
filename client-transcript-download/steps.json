@@ -7,7 +7,7 @@
    "ref": [],
    "do": [
     "Work out which meeting: Paul's message gives the client and the meeting date (DD/MM/YYYY). If it does not, take the most recent completed client meeting on his calendar (`outlook_calendar_search` through the Microsoft 365 connector).",
-    "Find its title, start time and length (the calendar entry, the Teams recap, or ask Paul). Then record it:",
+    "Find its title, start time and length from the calendar entry or the Teams recap (both through the Microsoft 365 connector). Ask Paul ONLY if neither holds them. Then record it:",
     "  python3 {scripts}/run.py meeting {run} --title \"the meeting title\" --started \"DD/MM/YYYY, HH:MM\" --length \"1h 36m 2s\" --via m365|zapier|chrome|paul",
     "The program refuses it unless all three are readable, and warns when the date is not the one Paul asked for. If it warns, stop and check with Paul."
    ],
@@ -17,15 +17,17 @@
   {
    "id": "fetch",
    "title": "Fetch the transcript (Microsoft 365, then Zapier, then Chrome; every try logged)",
-   "ref": ["01-fetch-routes.md"],
+   "ref": [
+    "01-fetch-routes.md"
+   ],
    "do": [
-    "Try the routes IN THIS ORDER and record EVERY try, failures too (stop after 2 or 3 attempts on a route, then go to the next):",
-    "  1  m365: the Microsoft 365 connector (it holds the transcript permission)",
+    "Find the transcript YOURSELF, AUTOMATICALLY: never ask Paul for permission, to click Allow, or to attach, upload or drag a file, and never call a tool that opens a permission or folder-access box. Try the routes IN THIS ORDER and record EVERY try, failures too (stop after 2 or 3 attempts on a route, then go to the next at once):",
+    "  1  m365: the Microsoft 365 connector (it holds the transcript permission): the first route",
     "  2  zapier: the Zapier Microsoft Teams tools",
-    "  3  chrome: Claude in Chrome (the route that has always worked)",
+    "  3  chrome: Claude in Chrome (the route that has always worked). It never needs the computer: if this chat is not already connected to it, read the transcript text from the Teams page instead of downloading a file (the page below says how).",
     "Record each try: python3 {scripts}/run.py access {run} --purpose fetch --route m365|zapier|chrome --result failed|found --note \"what you did and what came back\"",
-    "When a route gives you the transcript as a file (.docx, .vtt or text), bring a copy into the run folder: python3 {scripts}/run.py source {run} --file <the local file> --route <the route>",
-    "If all three fail, tell Paul exactly what happened (for example transcription was not started in the meeting). Do not invent or rebuild a transcript."
+    "When a route gives you the transcript (a .docx, .vtt or text file, or text you write into a file exactly as received), bring a copy into the run folder: python3 {scripts}/run.py source {run} --file <the local file> --route <the route> [--source-size <the size in bytes the connector reported>]. When you give the size, the program compares the two to the byte and refuses a copy of a different size.",
+    "If a route fails, go on to the next one at once and say nothing to Paul. If all three fail, your reply is at most five lines: what failed (for example transcription was not started in the meeting) and the log of the tries. Do not invent or rebuild a transcript."
    ],
    "check": "fetch_ok",
    "proof": "the fetch tries are logged in order, one of them found the file, and run.py source brought it into the run folder"
@@ -55,13 +57,20 @@
   },
   {
    "id": "save",
-   "title": "Save a COPY into the client's 2. Fact Find folder and list it",
-   "ref": ["02-save.md"],
+   "title": "Save a COPY into the client's 2. Fact Find folder and list it (automatically)",
+   "ref": [
+    "02-save.md"
+   ],
    "do": [
-    "Follow the rules below. Record every try to find or reach the folder: python3 {scripts}/run.py access {run} --purpose save --route device|m365|zapier --result failed|found --note \"...\"",
+    "Save the file the program built, as a COPY, into the client's own `2. Fact Find` folder YOURSELF, AUTOMATICALLY: never ask Paul for permission or to attach, upload or drag anything, and never call a tool that opens a permission or folder-access box. Record EVERY try, failures too:",
+    "  1  device: the computer, ONLY if this chat is already connected to it. Do NOT request the connection. Not connected: log it at once (python3 {scripts}/run.py access {run} --purpose save --route device --result failed --note \"not connected; not requested\") and go on.",
+    "  2  m365: the Microsoft 365 connector (SharePoint / OneDrive): the working route. Find the client's folder, LIST it, upload the built file, then LIST it again and read the size it shows.",
+    "  3  zapier: the Zapier Office 365 tools, when Microsoft 365 failed.",
+    "Record each try: python3 {scripts}/run.py access {run} --purpose save --route device|m365|zapier --result failed|found --note \"...\"",
     "Then record: python3 {scripts}/run.py receipt {run} save.folder \"<the full folder path>\"",
     "              python3 {scripts}/run.py receipt {run} save.already_existed no     (yes means STOP and tell Paul)",
-    "              python3 {scripts}/run.py receipt {run} save.listed_bytes <the size shown when you listed the folder>"
+    "              python3 {scripts}/run.py receipt {run} save.listed_bytes <the size shown when you listed the folder>",
+    "If every route fails, your reply is at most five lines: what failed and the log of the tries."
    ],
    "check": "save_ok",
    "proof": "the save tries are logged and the three receipts are recorded"
@@ -69,10 +78,12 @@
   {
    "id": "final",
    "title": "The final check and the SHORT AUDIT for Paul",
-   "ref": ["03-handover.md"],
+   "ref": [
+    "03-handover.md"
+   ],
    "do": [
     "Run: python3 {scripts}/run.py done {run} final",
-    "Put the short audit it prints in your reply exactly as it is: one line per check with a green tick or a red cross, one line for what is only attested, one line for the next skill. Add one plain sentence: the client folder and file name saved and, if the Chrome route was used, that the original is still in Downloads for Paul to delete.",
+    "Put the short audit it prints in your reply exactly as it is: one line per check with a green tick or a red cross, one line for what is only attested, one line for the next skill. Add one plain sentence: the client folder and file name saved and, only if a downloaded original exists in Paul's Downloads folder, that it is still there for him to delete. Ask Paul nothing.",
     "Any red cross means the job is not finished: say so."
    ],
    "check": "verify_final",

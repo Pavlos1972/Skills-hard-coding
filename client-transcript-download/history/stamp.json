@@ -1,5 +1,5 @@
 {
- "stamp": "2026-11-03 11:25",
- "fingerprint": "be988cc80e6c70df5572822d4a217417090f09831cffadefa0c3331549ec5388",
- "change": "Added the rule that a correction re-opens the task, the rule-by-rule records and the list for Paul"
+ "stamp": "2026-11-05 12:36",
+ "fingerprint": "725bf0354566cfa3da90f3406615920b22ed07d4d1bd30825df03ca2019f254e",
+ "change": "Strict changes: files found and saved automatically through Microsoft 365, the computer only if already connected, no permission step, quiet run, size check"
 }

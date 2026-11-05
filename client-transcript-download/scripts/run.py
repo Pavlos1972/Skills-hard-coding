@@ -5,7 +5,7 @@
   run.py next | status | preflight <run>
   run.py meeting <run> --title TEXT --started "DD/MM/YYYY, HH:MM" --length "1h 36m 2s" --via m365|zapier|chrome|paul
   run.py access <run> --purpose fetch|save --route ROUTE --result found|failed [--note TEXT]
-  run.py source <run> --file FILE --route m365|zapier|chrome      bring the received transcript into the run folder
+  run.py source <run> --file FILE --route m365|zapier|chrome [--source-size BYTES]      bring the received transcript into the run folder
   run.py check <run>       read the transcript and check header, length and gaps
   run.py name <run>        build the derived-name .docx
   run.py receipt <run> KEY VALUE
@@ -122,7 +122,7 @@ def ck_save(run, rj):
     rc = w.load_opt(p(run, w.RECEIPT), {})
     out = ["run.py receipt %s <value>" % k for k in ("save.folder", "save.listed_bytes", "save.already_existed") if not rc.get(k)]
     if not any(e.get("purpose") == "save" for e in w.load_opt(p(run, w.ACCESS), [])):
-        out.append("record every save try: run.py access --purpose save --route device|m365|zapier --result found|failed")
+        out.append("record every save try, the computer first (not connected: log it at once as failed, \"not connected; not requested\"): run.py access --purpose save --route device|m365|zapier --result found|failed")
     return out
 
 
@@ -265,12 +265,14 @@ def cmd_source(a):
     log = [e for e in w.load_opt(p(a.run, w.ACCESS), []) if e.get("purpose") == "fetch"]
     if not any(e["route"] == a.route and e["result"] == "found" for e in log):
         w.die("REFUSED: record the fetch try first: run.py access %s --purpose fetch --route %s --result found" % (a.run, a.route))
+    if a.source_size is not None and os.path.getsize(a.file) != a.source_size:
+        w.die("REFUSED: the copy is %d bytes but the connector reports %d. Fetch the transcript again and save it whole. Do NOT ask Paul for anything." % (os.path.getsize(a.file), a.source_size))
     ext = ".docx" if tr.read_file(a.file)[0] == "docx" else (".vtt" if tr.read_file(a.file)[0] == "vtt" else ".txt")
     for old in os.listdir(a.run):
         if old.startswith(w.SOURCE + "."):
             os.remove(p(a.run, old))
     shutil.copyfile(a.file, p(a.run, w.SOURCE + ext))
-    rj["source"] = {"route": a.route, "name": os.path.basename(a.file), "file": w.SOURCE + ext, "size": os.path.getsize(a.file), "sha256": w.sha256_file(a.file)}
+    rj["source"] = {"route": a.route, "name": os.path.basename(a.file), "file": w.SOURCE + ext, "size": os.path.getsize(a.file), "sha256": w.sha256_file(a.file), "size_checked": a.source_size is not None}
     save_run(a.run, rj)
     print("transcript brought into the run folder: %s (%d bytes, %s) via %s" % (rj["source"]["name"], rj["source"]["size"], ext, a.route))
 
@@ -356,6 +358,7 @@ def main():
     x.add_argument("run")
     x.add_argument("--file", required=True)
     x.add_argument("--route", required=True, choices=w.FETCH_ROUTES)
+    x.add_argument("--source-size", dest="source_size", type=int, help="the size in bytes the connector reported for the transcript")
     x.set_defaults(fn=cmd_source)
     x = sub.add_parser("receipt")
     x.add_argument("run")

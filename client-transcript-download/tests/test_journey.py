@@ -6,7 +6,10 @@ transcript (tests/fixtures/transcript_invented.txt, turned into a .docx and a We
   2. a Chrome-style job (Microsoft 365 and Zapier tried and failed first, then a Teams .docx) ends with a short audit of green ticks;
   3. a cut-off transcript is caught with a red cross and is never saved as complete;
   4. a file edited by hand after the build is caught by the final checker;
-  5. a connector-style job (WebVTT text) is turned into a correct .docx and also passes.
+  5. a connector-style job (WebVTT text) is turned into a correct .docx and also passes, with the connector's size checked to the byte
+     (a wrong size is refused);
+  6. the computer is never requested: a save run whose computer try failed for any reason other than "not connected; not requested"
+     is caught by the final checker (strict rules: no permission step).
 """
 import os
 import re
@@ -53,10 +56,11 @@ class Journey(unittest.TestCase):
         run("run.py", "done", R, "identify")
         return R
 
-    def finish(self, R, route_log, src):
+    def finish(self, R, route_log, src, size=None, device_note="not connected; not requested"):
         for r, res in route_log:
             run("run.py", "access", R, "--purpose", "fetch", "--route", r, "--result", res, "--note", "test")
-        run("run.py", "source", R, "--file", src, "--route", route_log[-1][0])
+        extra = ["--source-size", str(size)] if size is not None else []
+        run("run.py", "source", R, "--file", src, "--route", route_log[-1][0], *extra)
         run("run.py", "done", R, "fetch")
         run("run.py", "check", R)
         run("run.py", "done", R, "check")
@@ -64,10 +68,16 @@ class Journey(unittest.TestCase):
         run("run.py", "done", R, "name")
         out = os.path.join(R, "out", NAME)
         self.assertTrue(os.path.exists(out), "the file was not built under its derived name")
-        run("run.py", "access", R, "--purpose", "save", "--route", "device", "--result", "found", "--note", "test")
+        run("run.py", "access", R, "--purpose", "save", "--route", "device", "--result", "failed", "--note", device_note)
+        run("run.py", "access", R, "--purpose", "save", "--route", "m365", "--result", "found", "--note", "listed after the upload")
         for k, v in (("save.folder", FOLDER), ("save.already_existed", "no"), ("save.listed_bytes", str(os.path.getsize(out)))):
             run("run.py", "receipt", R, k, v)
         run("run.py", "done", R, "save")
+        if "not connected" not in device_note:
+            bad = run("run.py", "done", R, "final", expect=3)
+            self.assertIn("RESULT: FAIL", bad)
+            self.assertIn("other than 'not connected; not requested'", bad)
+            return out
         final = run("run.py", "done", R, "final")
         self.assertIn("RESULT: PASS", final)
         audit = final[final.index("AUDIT"):].strip().splitlines()
@@ -111,10 +121,17 @@ class Journey(unittest.TestCase):
         with open(vtt, "w", encoding="utf-8") as f:
             f.write(to_vtt(lines))
         R3 = self.start(d, "run3")
-        out3 = self.finish(R3, [("m365", "found")], vtt)
+        run("run.py", "access", R3, "--purpose", "fetch", "--route", "m365", "--result", "found", "--note", "test")
+        refused = subprocess.run([sys.executable, os.path.join(SCRIPTS, "run.py"), "source", R3, "--file", vtt, "--route", "m365", "--source-size", str(os.path.getsize(vtt) + 1)], capture_output=True, text=True, encoding="utf-8")
+        self.assertNotEqual(refused.returncode, 0, "a copy of a different size must be refused")
+        self.assertIn("REFUSED: the copy is", refused.stdout + refused.stderr)
+        out3 = self.finish(R3, [("m365", "found")], vtt, size=os.path.getsize(vtt))
         kind, l3 = tr.read_file(out3)
         self.assertEqual(kind, "docx")
         self.assertTrue(l3[0].startswith("Meeting title: Fact Find - Pat Samplecase"))
+        # 6. a computer try that failed for another reason than "not connected" is caught (the connection must never be requested)
+        R4 = self.start(d, "run4")
+        self.finish(R4, [("m365", "found")], docx, device_note="permission box appeared, folder access denied")
 
 
 if __name__ == "__main__":

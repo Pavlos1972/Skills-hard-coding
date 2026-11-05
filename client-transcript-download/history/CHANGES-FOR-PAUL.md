@@ -19,7 +19,7 @@ The copied generic rules, the "propose skills" rule, the "Chrome only" rule (Chr
 ## What stayed the same
 Teams is for reading the recap and transcript only (no posting, deleting or settings), nothing is ever deleted, the file is copied and never moved or overwritten, the original download stays for you to delete, never touch another broker's folder, and the Chrome steps themselves (kept in `references/01-fetch-routes.md`).
 
-A program (`tools/inventory.py`) went through all 105 rules of the old text: **24 are still there word for word, 37 are reworded (each with a written reason), 44 were dropped on purpose (each with a written reason), and none was lost without a record.** The records are in `history/changes.json` and `history/decisions.json`; the full list is `history/INVENTORY-REPORT.md`.
+A program (`tools/inventory.py`) went through all 105 rules of the old text: **17 are still there word for word, 44 are reworded (each with a written reason), 44 were dropped on purpose (each with a written reason), and none was lost without a record** (checked again after the strict changes of 05/11/2026; before them it was 24, 37 and 44). The records are in `history/changes.json` and `history/decisions.json`; the full list is `history/INVENTORY-REPORT.md`.
 
 ## Your yes/no list (anything I was not sure about)
 1. **The 10-minute gap rule** is my reading of the old "no gaps". **Right? Yes / No.**
@@ -30,3 +30,14 @@ A program (`tools/inventory.py`) went through all 105 rules of the old text: **2
 - **The real Teams .docx layout was not seen.** The test uses an invented transcript in the layout the other skills already read (a header with title, start and duration, then `H:MM:SS Speaker` lines). If a real file differs, the check will say what it could not read, and the reader is fixed once.
 - **The clicking in Chrome cannot be proven by a program.** It stays attested, together with the folder save and listing as typed by Claude.
 - **I could not run it inside your chat.** Only one test was run, as agreed: one end-to-end run on invented data (five parts, ending in a pass, a cut-off transcript caught, a hand-edited file caught, and a connector-style text file turned into a correct .docx).
+
+## Strict changes, 05/11/2026 (your corrections after the first real run of the Fact Find chain)
+This skill was still built the old way: it asked the computer for folder access and could end by asking you to do something. Changed:
+- **Nothing is ever asked of you to reach a file.** No permission box, no folder-access request, no "attach/upload/drag the transcript". The chat finds and saves everything itself.
+- **Saving into the client's `2. Fact Find` folder:** the computer only if the chat is already connected to it (never requested; if it is not, that is logged at once as "not connected; not requested"), then **Microsoft 365** (find the folder, list it, upload, list again and compare the size), then Zapier. The checker turns red if the computer try failed for any other reason, because that would mean a connection was requested.
+- **Chrome route (third route for the transcript):** it no longer asks for folder access to your Downloads. If the chat is not already connected to the computer it reads the transcript text from the Teams page instead of downloading a file; the program writes the .docx from that text and checks the header, the length and the gaps itself.
+- **Meeting length:** taken from the calendar or the Teams recap; you are asked only if neither holds it.
+- **Size check:** when the connector reports the file's size, the program compares it to the byte and refuses a copy of a different size.
+- **Quiet run:** the version sentence, one short progress line per step, then the short audit and one plain sentence. No long opening message, no analysis of what was read. If every route fails the reply is at most five lines.
+
+**Only attested, not proven (unchanged by this correction):** that the Microsoft 365 connector can fetch a Teams transcript and upload to the client's folder (only folder listing is proven), that text read from the Teams page is word for word what Teams shows (the program checks the length and the gaps, not every word), and the Zapier route. The first real run decides.
