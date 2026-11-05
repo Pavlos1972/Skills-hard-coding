@@ -34,16 +34,17 @@ class Journey(Chat):
         self.assertNotIn("PROVEN BY THE PROGRAM", out)          # the long report is a file, never the chat
         self.assertNotIn("DELIVERY GATE", out)
         self.assertLess(len(out.split("EVERY STEP IS DONE")[-1]), 6500)
-        full = open(os.path.join(self.run_dir, "out_record", "audit-full.txt"), encoding="utf-8").read()
+        with open(os.path.join(self.run_dir, "out_record", "audit-full.txt"), encoding="utf-8") as fh:
+            full = fh.read()
         self.assertIn("PROVEN BY THE PROGRAM", full)
         self.assertIn("ONLY ATTESTED BY CLAUDE", full)
         # the hand-over was proven against a REAL Teams run driven on the same invented call (A4), not just a folder that was started
         teams_run = os.path.join(self.tmp, "teams-run")
         self.assertTrue(os.path.exists(os.path.join(teams_run, "out", "teams_message.txt")))
         self.assertTrue(os.path.exists(os.path.join(teams_run, "out", "planner_note.html")))
-        self.assertIn("has every step before its message step done", out)
-        self.assertIn("verify.py --skip-teams, in the Teams skill folder the chat named) printed RESULT: PASS", out)
-        self.assertIn("Teams program fingerprint", out)                       # N4: the fingerprint of the named Teams folder is printed for Paul to compare
+        self.assertIn("has every step before its message step done", full)          # the long report is the file; the chat gets the short audit
+        self.assertIn("verify.py --skip-teams, in the Teams skill folder the chat named) printed RESULT: PASS", full)
+        self.assertIn("Teams program fingerprint", full)                      # N4: the fingerprint of the named Teams folder is printed for Paul to compare
         self.assertIn("program fingerprint", out)                            # N9
         st = jload(self.p("state.json"))
         pdf = os.path.join(self.p("out"), st["build"]["pdf"])

@@ -645,7 +645,7 @@ class Fingerprint(Chat):
         r = self.run_in(skill, "done", self.run_dir, "locate")
         self.assertEqual(r.returncode, 3)
         self.assertIn("changed while this run was in progress", r.stdout + r.stderr)
-        v = subprocess.run([sys.executable, os.path.join(skill, "scripts", "verify.py"), self.run_dir], capture_output=True, text=True, env=dict(os.environ))
+        v = subprocess.run([sys.executable, os.path.join(skill, "scripts", "verify.py"), self.run_dir, "--full"], capture_output=True, text=True, env=dict(os.environ))
         self.assertTrue(any("CHANGED while this run was in progress" in ln for ln in fails(v)), fails(v))
 
     def test_a13_a_changed_layout_or_rule_page_is_a_change_too(self):
@@ -936,7 +936,10 @@ class Wording(Staged):
     STAGE = "handoffs"
 
     def test_a16_the_printout_separates_proven_from_attested_and_names_the_text_only_rules(self):
-        out = self.s_final().stdout
+        short = self.s_final().stdout                  # the chat gets the short audit; the complete report is the file
+        self.assertIn("RESULT: PASS", short)
+        with open(os.path.join(self.run_dir, "out_record", "audit-full.txt"), encoding="utf-8") as fh:
+            out = fh.read()
         self.assertIn("RESULT: PASS", out)
         self.assertIn("PROVEN BY THE PROGRAM", out)
         self.assertIn("ONLY ATTESTED BY CLAUDE", out)

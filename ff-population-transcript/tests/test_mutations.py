@@ -43,7 +43,7 @@ class Mutations(unittest.TestCase):
         return sh("verify.py", self.run_dir, *extra)
 
     def caught(self, text, *extra):
-        out = self.verify(*extra)
+        out = self.verify(*extra, "--full")          # the chat gets the short audit; the tests read the complete messages
         self.assertEqual(out.returncode, 1, "NOT CAUGHT:\n" + out.stdout[-2500:])
         self.assertIn(text, out.stdout)
         self.assertIn("NOT COMPLETE", out.stdout)
