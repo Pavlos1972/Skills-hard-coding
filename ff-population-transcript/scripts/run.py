@@ -238,7 +238,7 @@ def cmd_start(a):
     save_run(a.run, rj)
     for name in (w.SOURCES, w.ACCESS, w.QUESTIONS):
         w.save_json(p(a.run, name), [])
-    w.save_json(p(a.run, w.LEDGER), {"entries": [], "scan_reviewed": []})
+    w.save_ledger(a.run, {"entries": [], "scan_reviewed": []})
     w.save_json(p(a.run, w.RECEIPT), {})
     w.save_json(p(a.run, w.OVERLAY), {})
     w.save_json(p(a.run, w.CLAIMS), {})
@@ -284,6 +284,9 @@ def fails_of(R, prefixes=None):
 def ck_locate(run, rj):
     acc = load_list(run, w.ACCESS)
     errs = []
+    comp = rj.get("computer") or {}
+    if not comp.get("found") and len(str(comp.get("paul_go_on") or "").strip()) < 3:
+        errs.append(w.COMPUTER_STOP + " (run.py computer %s; if Paul says to go on without the computer: run.py computer %s --paul-go-on \"<his words>\")" % (run, run))
     if not any(e.get("need") == "transcript" and e.get("result") == "ok" for e in acc):
         errs.append("no successful access entry for 'transcript' (run.py access ... --need transcript ... --result ok)")
     form = [e for e in acc if e.get("need") == "form"]
@@ -505,24 +508,80 @@ def cmd_done(a):
 
 
 # ------------------------------------------------------------------ logs
+def cmd_computer(a):
+    """The program itself looks for the client's OneDrive folder mounted into this chat. Nothing is requested and nobody is asked."""
+    rj = load_run(a.run)
+    comp = rj.get("computer") or {}
+    if a.paul_go_on:
+        if comp.get("found") is not False:
+            w.die("REFUSED: going on without the computer is only possible after the program looked and did not find it (run.py computer %s)." % a.run)
+        if len(a.paul_go_on.strip()) < 3:
+            w.die("REFUSED: record Paul's own words (at least 3 characters).")
+        comp["paul_go_on"] = a.paul_go_on.strip()
+        rj["computer"] = comp
+        save_run(a.run, rj)
+        print("recorded Paul's words (%r): the run goes on WITHOUT the computer. Microsoft 365 then serves small text files only, each copy proved by its size; "
+              "a PDF cannot be read that way, so the form's saved PDF will be recorded as missing and the checker will say so." % comp["paul_go_on"])
+        return
+    root = w.find_computer_root()
+    rj["computer"] = {"found": bool(root), "root": root, "t": w.now(), "paul_go_on": comp.get("paul_go_on")}
+    save_run(a.run, rj)
+    if root:
+        print("COMPUTER CONNECTED: the client's OneDrive folder is at %s. Read every client file from there as real bytes and save the finished PDF there (page 01 and page 10)." % root)
+        return
+    print(w.COMPUTER_STOP)
+    print("\nYour whole reply is those words, nothing more, and no question. When Paul says to go on, run: python3 %s/run.py computer %s" % (SCRIPTS, a.run))
+    sys.exit(6)
+
+
 def cmd_access(a):
+    rj = load_run(a.run)
     log = load_list(a.run, w.ACCESS)
     detail = a.detail or ""
     result = a.result
-    if a.file or a.source_size is not None:
-        # a file copied from Microsoft 365 into the run folder: the copy must be as big as the connector said the file is
-        if not (a.file and a.source_size is not None):
-            w.die("REFUSED: give --file (the copy you saved) together with --source-size (the size in bytes the connector reported).")
+    verified, got, sha = False, None, None
+    if a.need == "formpdf" and a.route in ("m365", "zapier") and a.result == "ok":
+        w.die("REFUSED: the form's saved PDF cannot be taken through %s: a PDF arrives there cut off, as text. Take it from the computer (--route device, with --original), "
+              "or use --route passed when another skill handed it over." % ("Microsoft 365" if a.route == "m365" else "Zapier"))
+    if a.route == "device" and a.result == "ok" and not (rj.get("computer") or {}).get("found"):
+        w.die("REFUSED: the program has not found the computer in this run (run.py computer %s). A try on the computer is logged only when the folder is really there." % a.run)
+    if a.file or a.source_size is not None or a.original:
+        # a file copied into the run folder must be PROVED: identical to its original on the computer, or as big as the connector said the file is
+        if not a.file:
+            w.die("REFUSED: give --file (the copy you saved in the run folder) together with --original (the computer) or --source-size (the connector's size).")
         if not os.path.isfile(a.file):
             w.die("MISSING: the copy %s" % a.file)
         got = os.path.getsize(a.file)
-        if got != a.source_size:
-            result = "fail"
-            detail = (detail + " ").lstrip() + "copy NOT complete: %d bytes saved, the connector reports %d" % (got, a.source_size)
-            print("logged as a FAIL: the copy is %d bytes but the connector reports %d. Read the file again through the connector and save it whole (a long text may need to be read in parts and joined); do NOT ask Paul for anything." % (got, a.source_size))
+        sha = w.sha256_file(a.file)
+        if a.original:
+            root = (rj.get("computer") or {}).get("root")
+            if a.route != "device":
+                w.die("REFUSED: --original is for the computer route (--route device).")
+            if not root or not w.under_root(a.original, root):
+                w.die("REFUSED: --original must be a file on the computer, inside %s." % root)
+            if not os.path.isfile(a.original):
+                w.die("MISSING: the original %s" % a.original)
+            if w.sha256_file(a.original) != sha:
+                result = "fail"
+                detail = (detail + " ").lstrip() + "copy NOT identical to the original on the computer (%d bytes saved, the original is %d)" % (got, os.path.getsize(a.original))
+                print("logged as a FAIL: the copy is not identical to the original on the computer. Copy it again with cp (not by reading and retyping it).")
+            else:
+                verified = True
+                detail = (detail + " ").lstrip() + "copy verified: identical to the original on the computer (%d bytes)" % got
+        elif a.source_size is not None:
+            if got != a.source_size:
+                result = "fail"
+                detail = (detail + " ").lstrip() + "copy NOT complete: %d bytes saved, the connector reports %d" % (got, a.source_size)
+                print("logged as a FAIL: the copy is %d bytes but the connector reports %d. A file that comes back cut off cannot be used: take it from the computer." % (got, a.source_size))
+            else:
+                verified = True
+                detail = (detail + " ").lstrip() + "copy verified: %d bytes = the connector's size" % got
         else:
-            detail = (detail + " ").lstrip() + "copy verified: %d bytes = the connector's size" % got
-    log.append({"t": w.now(), "need": a.need, "route": a.route, "tool": a.tool, "result": result, "detail": detail})
+            w.die("REFUSED: give --original (the computer) or --source-size (the connector's size in bytes) with --file.")
+    elif a.need in w.FILE_NEEDS and a.route in w.COPY_ROUTES and a.result == "ok":
+        w.die("REFUSED: a file taken from %s needs its proof, or the copy may be cut off: --file <your copy> with --original <the file on the computer> (computer) or "
+              "--source-size <the connector's size in bytes> (Microsoft 365, Zapier). Nobody is asked for anything." % a.route)
+    log.append({"t": w.now(), "need": a.need, "route": a.route, "tool": a.tool, "result": result, "detail": detail, "verified": verified, "bytes": got, "sha256": sha})
     w.save_json(p(a.run, w.ACCESS), log)
     if result != a.result:
         return
@@ -714,12 +773,16 @@ def cmd_formpdf(a):
         if set(w.ROUTES) - failed:
             w.die("REFUSED: the saved PDF may be called missing only after all three routes were tried and logged (run.py access --need formpdf ... --result fail). Not yet tried: %s" % [r_ for r_ in w.ROUTES if r_ not in failed])
     elif not any(e["result"] == "ok" for e in acc):
-        w.die("REFUSED: log how you got the form's saved PDF first (run.py access --need formpdf --route ... --result ok).")
+        w.die("REFUSED: log how you got the form's saved PDF first (run.py access --need formpdf --route device --result ok --file <copy> --original <the PDF on the computer>).")
+    else:
+        last = [e for e in acc if e["result"] == "ok"][-1]
+        if last.get("route") != "passed" and not (last.get("verified") and a.file and os.path.isfile(a.file) and last.get("sha256") == w.sha256_file(a.file)):
+            w.die("REFUSED: the PDF you gave is not the copy that was proved identical to the original on the computer. Log it with --file <this copy> --original <the PDF on the computer> first.")
     ffform.cmd_pdf(types.SimpleNamespace(run=a.run, file=a.file, none=a.none, paul_go_on=None))
 
 
 def cmd_pdfreview(a):
-    ffform.cmd_pdfreview(types.SimpleNamespace(run=a.run, key=a.key, result=a.result, quote=a.quote, pdf_value=a.pdf_value))
+    ffform.cmd_pdfreview(types.SimpleNamespace(run=a.run, key=a.key, result=a.result, quote=a.quote, pdf_value=a.pdf_value, reason=a.reason))
 
 
 # ------------------------------------------------------------------ several transcripts, ledger, lead, cross, claim
@@ -773,7 +836,7 @@ def cmd_continuity(a):
 
 def cmd_ledger(a):
     led = load_ledger(a.run)
-    save = lambda: w.save_json(p(a.run, w.LEDGER), led)  # noqa: E731
+    save = lambda: w.save_ledger(a.run, led)  # noqa: E731
     if a.action == "list":
         for e in led["entries"]:
             cov = ",".join(e.get("covered_by") or []) or ("EXCLUDED" if e.get("excluded") else "NOT COVERED")
@@ -1194,8 +1257,11 @@ def main():
     sp.add_argument("--tool", required=True)
     sp.add_argument("--result", required=True, choices=["ok", "fail"])
     sp.add_argument("--detail")
-    sp.add_argument("--file", help="the copy you saved in the run folder (a file taken from Microsoft 365)")
-    sp.add_argument("--source-size", dest="source_size", type=int, help="the size in bytes the connector reported for that file")
+    sp.add_argument("--file", help="the copy you saved in the run folder")
+    sp.add_argument("--source-size", dest="source_size", type=int, help="the size in bytes the connector reported for that file (Microsoft 365, Zapier)")
+    sp.add_argument("--original", help="the file on the computer that you copied (the program compares the two byte for byte)")
+    sp = add("computer", cmd_computer, "run")
+    sp.add_argument("--paul-go-on", dest="paul_go_on", help="Paul's own words, only after the computer was not found")
     sp = add("source", cmd_source, "run")
     sp.add_argument("--kind", required=True)
     sp.add_argument("--path")
@@ -1222,9 +1288,10 @@ def main():
     sp.add_argument("--paul-go-on", dest="paul_go_on", action="store_true", help="after the saved PDF did not match and Paul said (ask, then answer) to go on with the data file alone")
     sp = add("pdfreview", cmd_pdfreview, "run")
     sp.add_argument("--key", required=True)
-    sp.add_argument("--result", required=True, choices=["format_only", "disagree"])
+    sp.add_argument("--result", required=True, choices=["format_only", "disagree", "not_printed"])
     sp.add_argument("--quote", required=True)
     sp.add_argument("--pdf-value", dest="pdf_value")
+    sp.add_argument("--reason")
     sp = add("join", cmd_join, "run")
     sp.add_argument("parts", nargs="+")
     sp = add("continuity", cmd_continuity, "run")

@@ -241,6 +241,22 @@ class Mutations(unittest.TestCase):
         self.edit_content(lambda c: self.row(c, "sti_broker").update(flags=[{"text": parked}]))
         self.caught("text from the form's parking list, summaries or drafted action list (never a source) is printed")
 
+    def test_an_amount_only_the_forms_pdf_holds_must_be_printed_or_reviewed(self):
+        # the form works some figures out (the Risk Calculation): they are in the PDF but in no value of the data file. A checker that did not look would miss them.
+        import ffform
+        txt = slurp(self.p("form_pdf.txt")) + "\nRisk Calculation: Total household income needed R 6 200.00\n"
+        spit(self.p("form_pdf.txt"), txt)
+        fp = jload(self.p("form_pdf.json"))
+        fp["pdf_only"] = ffform.pdf_only_amounts(jload(self.p("form_read.json")), txt)
+        self.assertEqual(len(fp["pdf_only"]), 1)
+        jdump(self.p("form_pdf.json"), fp)
+        self.caught("is in no data-file value and is neither printed in the document nor reviewed")
+        fp["reviews"]["pdf-only:" + fp["pdf_only"][0]] = {"result": "not_printed", "quote": "Total household income needed R 6 200.00", "reason": "the layout has no row for this figure"}
+        jdump(self.p("form_pdf.json"), fp)
+        out = self.verify("--full")
+        self.assertNotIn("neither printed in the document nor reviewed", out.stdout)
+        self.assertIn("which the document does not print", out.stdout)
+
     def test_the_forms_own_drafted_action_text_printed_in_the_document(self):
         drafted = jload(self.p("form_source.json"))["f"]["pa_actions"]["v"]
         self.edit_content(lambda c: self.row(c, "occ")["bullets"].append(drafted))

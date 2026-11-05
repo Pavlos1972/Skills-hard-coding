@@ -400,12 +400,22 @@ def check_sources(run, R, lines=None, content=None):
         by_need.setdefault(e["need"], []).append(e)
     if "transcript" not in by_need or not any(e["result"] == "ok" for e in by_need["transcript"]):
         fail("the transcript has no successful access entry (run.py access --need transcript ... --result ok)")
-    _ver = [e for e in access if isinstance(e, dict) and e.get("result") == "ok" and "copy verified" in S(e.get("detail"))]
-    _cop = [e for e in access if isinstance(e, dict) and e.get("result") == "ok" and e.get("route") in ("m365", "zapier")]
-    if _ver:
-        R.add("PASS", g, "%d file copy/copies made through Microsoft 365 match the connector's size to the byte" % len(_ver))
-    if len(_cop) > len(_ver):
-        R.add("ATTEST", g, "%d file(s) were copied through Microsoft 365 with no size to compare, so each copy is exact only as far as the program's own checks go" % (len(_cop) - len(_ver)))
+    comp = rj.get("computer") or {}
+    if not comp.get("found") and len(S(comp.get("paul_go_on")).strip()) < 3:
+        fail("the computer was not found at the start and Paul did not say to go on without it: the run should have stopped (run.py computer). " + w.COMPUTER_STOP)
+    elif comp.get("found"):
+        R.add("PASS", g, "the computer is connected: the client files are read from, and the PDF saved to, %s" % comp.get("root"))
+    else:
+        R.add("WARN", g, "the run went on WITHOUT the computer on Paul's word (%r): large files could not be read, and the form's PDF could not be used" % S(comp.get("paul_go_on"))[:60])
+    _cop = [e for e in access if isinstance(e, dict) and e.get("result") == "ok" and e.get("route") in w.COPY_ROUTES and e.get("need") in w.FILE_NEEDS]
+    for e in _cop:
+        if not e.get("verified"):
+            fail("'%s' was taken from %s with no proof that the copy is whole (--original on the computer, or --source-size from the connector): a cut-off copy cannot be told from a whole one" % (e.get("need"), e.get("route")))
+        if e.get("need") == "formpdf" and e.get("route") in ("m365", "zapier"):
+            fail("the form's saved PDF was taken through %s: a PDF arrives there cut off, as text. It must come from the computer" % e.get("route"))
+    if _cop and all(e.get("verified") for e in _cop):
+        n_dev = len([e for e in _cop if e.get("route") == "device"])
+        R.add("PASS", g, "%d file copies proved whole: %d identical to their originals on the computer, %d as big as the connector's size" % (len(_cop), n_dev, len(_cop) - n_dev))
     mode = rj.get("form_mode")
     asked = {q.get("need"): q for q in questions}
     if mode == "form":
@@ -596,6 +606,30 @@ def check_form(run, R, lines, content):
             checked, missing = ffform.pdf_check(fr, ptxt)
             if json.dumps(missing, sort_keys=True) != json.dumps(fp.get("not_found"), sort_keys=True):
                 fail("form_pdf.json is not what the program finds when it checks the data file against the PDF text (edited by hand?)")
+            _fe = [e for e in load(os.path.join(run, w.ACCESS), []) if isinstance(e, dict) and e.get("need") == "formpdf" and e.get("result") == "ok"]
+            if not _fe or (_fe[-1].get("route") != "passed" and not (_fe[-1].get("verified") and _fe[-1].get("sha256") == fp.get("sha256"))):
+                fail("the PDF the program read is not the copy that was proved identical to the original on the computer (access log, need 'formpdf')")
+            if not fp.get("bytes") or not fp.get("pages"):
+                fail("form_pdf.json does not record the PDF's size and page count: read the whole PDF again with run.py formpdf")
+            only = ffform.pdf_only_amounts(fr, ptxt)
+            if json.dumps(only) != json.dumps(fp.get("pdf_only")):
+                fail("form_pdf.json is not what the program finds when it looks for amounts only the PDF holds (edited by hand?)")
+            if only and isinstance(content, dict) and content.get("sections"):
+                printed_amts = set()
+                for _, _, r_ in iter_rows(content):
+                    printed_amts |= ffform.rand_amounts(row_text(r_))
+                    printed_amts |= {x for x in (w.parse_money(S(b_)) for b_ in r_.get("bullets") or []) if x is not None}
+                left_ = []
+                for amt in only:
+                    rv_ = (fp.get("reviews") or {}).get("pdf-only:" + amt)
+                    if w.parse_money(amt) in printed_amts:
+                        continue
+                    if rv_ and rv_.get("result") == "not_printed" and len(S(rv_.get("reason")).strip()) >= 10 and w.norm(S(rv_.get("quote"))) in w.norm(ptxt) and w.digits(amt.split(".")[0]) in w.digits(S(rv_.get("quote"))):
+                        R.add("WARN", g, "the form's PDF shows R %s, which the document does not print (Paul's glance list): %s" % (amt, S(rv_["reason"])[:80]))
+                        continue
+                    left_.append(amt)
+                if left_:
+                    fail("the form's PDF shows %s that is in no data-file value and is neither printed in the document nor reviewed: place it (the Risk Calculation rows above all) or record why not (run.py pdfreview --key pdf-only:<amount> --result not_printed --quote ... --reason ...)" % ", ".join("R " + x for x in left_[:8]))
             nt = w.norm(ptxt)
             for pr_ in ffform.pdf_identity_problems(fr, ptxt):
                 fail("the form's saved PDF is not this client's: " + pr_)
@@ -2128,6 +2162,11 @@ def run_checks(run, stage, skip=()):
     guarded(R, "F", "programs unchanged", check_programs_unchanged, run, R)
     lines = w.read_lines(run)
     ledger = load(os.path.join(run, w.LEDGER), None)
+    if os.path.exists(os.path.join(run, w.LEDGER)):
+        lock_p = os.path.join(run, w.LEDGER_LOCK)
+        lock_ok = os.path.exists(lock_p) and open(lock_p, encoding="utf-8").read().strip() == w.sha256_file(os.path.join(run, w.LEDGER))
+        if not lock_ok:
+            R.add("FAIL", "F", "ledger.json was changed outside the program (its lock does not match): entries are added and settled only with run.py ledger; start the pass again rather than edit the file")
     content = load(os.path.join(run, w.CONTENT), None)
     ov = load(os.path.join(run, w.OVERLAY), {})
     cross = load(os.path.join(run, w.CROSS), [])

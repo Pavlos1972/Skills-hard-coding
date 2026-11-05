@@ -108,6 +108,7 @@ class Chat(unittest.TestCase):
 
     form_json = None          # override to change the form
     pdf_drop = ()
+    pdf_extra = ()            # extra lines the form's PDF shows (amounts the form works out itself)
     TRANSCRIPT_EDIT = None    # a function text -> text, to play the journey on a changed call
 
     def setUp(self):
@@ -118,7 +119,12 @@ class Chat(unittest.TestCase):
         self.pdf_path = os.path.join(self.tmp, "Fact Find (Audio to Text) - 05.11.2026 - Pat Samplecase.pdf")
         self.form = self.form_json() if callable(self.form_json) else H.pat_form()
         jdump(self.form_path, self.form)
-        make_form_pdf(self.pdf_path, self.form, drop=self.pdf_drop)
+        make_form_pdf(self.pdf_path, self.form, drop=self.pdf_drop, extra_lines=self.pdf_extra)
+        # the computer as this chat sees it: the client's OneDrive folder mounted into the chat (the program finds it itself; here WR_COMPUTER_ROOT points at it)
+        self.comp = os.path.join(self.tmp, "computer")
+        self.comp_folder = os.path.join(self.comp, "Company - Paul", "New Business", "Samplecase, Pat", "2. Fact Find")
+        os.makedirs(self.comp_folder)
+        ENV["WR_COMPUTER_ROOT"] = self.comp
         self.transcript = FIXTURE
         if self.TRANSCRIPT_EDIT:                    # a changed copy of the invented call (for tests that add lines to it)
             self.transcript = os.path.join(self.tmp, "transcript_edited.txt")
@@ -128,12 +134,24 @@ class Chat(unittest.TestCase):
     def p(self, *a):
         return os.path.join(self.run_dir, *a)
 
+    def prove_pdf(self, args):
+        """A test that gives the program its own PDF first logs it the way the chat must: a copy proved identical to its original on the computer."""
+        if len(args) >= 3 and args[0] == "formpdf" and isinstance(args[2], str) and os.path.isfile(args[2]):
+            run, path = args[1], args[2]
+            self.ensure_computer(run)
+            orig = os.path.join(self.comp_dir_for(run), "orig-" + os.path.basename(path))
+            shutil.copyfile(path, orig)
+            r = drv("access", run, "--need", "formpdf", "--route", "device", "--tool", "cp", "--result", "ok", "--file", path, "--original", orig)
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+
     def ok(self, *args):
+        self.prove_pdf(args)
         r = drv(*args)
         self.assertEqual(r.returncode, 0, "run.py %s\n%s%s" % (" ".join(map(str, args)), r.stdout, r.stderr))
         return r
 
     def refused(self, *args, text=None):
+        self.prove_pdf(args)
         r = drv(*args)
         self.assertNotEqual(r.returncode, 0, "expected a refusal:\n%s%s" % (r.stdout, r.stderr))
         if text:
@@ -152,8 +170,56 @@ class Chat(unittest.TestCase):
                 return i
         raise AssertionError("fixture text not found: " + text)
 
+    def ensure_comp(self):
+        """The computer's folder for this test (some test classes build their own setUp)."""
+        if not getattr(self, "comp_folder", None):
+            base = getattr(self, "tmp", None) or tempfile.mkdtemp(prefix="wrff-")
+            self.comp = os.path.join(base, "computer")
+            self.comp_folder = os.path.join(self.comp, "Company - Paul", "New Business", "Samplecase, Pat", "2. Fact Find")
+            os.makedirs(self.comp_folder, exist_ok=True)
+        ENV["WR_COMPUTER_ROOT"] = self.comp
+
+    def comp_dir_for(self, run):
+        """The client's folder on the computer for THIS run: inside the root the run recorded when the program found the computer."""
+        self.ensure_computer(run)
+        root = jload(os.path.join(run, "run.json"))["computer"]["root"]
+        d = os.path.join(root, "Company - Paul", "New Business", "Samplecase, Pat", "2. Fact Find")
+        os.makedirs(d, exist_ok=True)
+        return d
+
+    def copy_for(self, need):
+        """The copy of the file this need is about, as the chat would have it in the run folder."""
+        if need == "form":
+            return self.form_path
+        if need == "formpdf":
+            return self.pdf_path
+        if need == "transcript":
+            return self.transcript
+        path = os.path.join(self.tmp, "%s-copy.txt" % need.replace(" ", "_"))
+        if not os.path.exists(path):
+            spit(path, OVERVIEW if need == "Overview" else "A document of this client (invented): %s" % need)
+        return path
+
+    def proof_args(self, run, need, route):
+        """What the program now demands for a file taken from the computer (--original) or from Microsoft 365 / Zapier (--source-size)."""
+        copy = self.copy_for(need)
+        if route == "device":
+            orig = os.path.join(self.comp_dir_for(run), os.path.basename(copy))
+            if not os.path.exists(orig):
+                shutil.copyfile(copy, orig)
+            return ["--file", copy, "--original", orig]
+        return ["--file", copy, "--source-size", str(os.path.getsize(copy))]
+
+    def ensure_computer(self, run):
+        self.ensure_comp()
+        if not jload(os.path.join(run, "run.json")).get("computer"):
+            r = drv("computer", run)
+            self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+
     def access(self, need, route="device", result="ok", tool="device_stage_files", detail=""):
-        self.ok("access", self.run_dir, "--need", need, "--route", route, "--tool", tool, "--result", result, "--detail", detail)
+        self.ensure_computer(self.run_dir)
+        extra = self.proof_args(self.run_dir, need, route) if (result == "ok" and need in ("form", "formpdf", "transcript", "Overview") and route in ("device", "m365", "zapier")) else []
+        self.ok("access", self.run_dir, "--need", need, "--route", route, "--tool", tool, "--result", result, "--detail", detail, *extra)
 
     # ---- the journey, one step at a time (each does exactly what the step's text says)
     def s_start(self):

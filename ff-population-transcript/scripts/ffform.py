@@ -335,11 +335,30 @@ TRIVIAL = {"yes", "no", "y", "n", "true", "false", "none", "nil", "n a", "na"}
 AMOUNT_RX = re.compile(r"(?<![\d.,])R?\s?\d{1,3}(?:[ ,]\d{3})+(?:[.,]\d{1,2})?(?![\d])|(?<![\d.,])R?\s?\d+(?:[.,]\d{1,2})?(?![\d])")
 
 
+def pdf_file_problems(path):
+    """A PDF is real bytes, whole: it starts with %PDF- and ends with %%EOF. A text copy or a cut-off copy (what Microsoft 365 returns) is never accepted."""
+    if path.lower().endswith(".txt"):
+        return ["a text copy of the PDF is never accepted: Microsoft 365 returns a PDF cut off and as text. Take the PDF itself from the computer"]
+    try:
+        size = os.path.getsize(path)
+        with open(path, "rb") as fh:
+            head = fh.read(8)
+            fh.seek(max(0, size - 2048))
+            tail = fh.read()
+    except OSError as e:
+        return ["the PDF cannot be opened (%s)" % e]
+    out = []
+    if not head.startswith(b"%PDF-"):
+        out.append("it does not start like a PDF file (it may be text)")
+    if b"%%EOF" not in tail:
+        out.append("it does not end like a whole PDF file (cut off? %d bytes)" % size)
+    return out
+
+
 def pdf_text(path):
     import subprocess
-    if path.lower().endswith(".txt"):          # a text copy of the saved PDF made from the Microsoft 365 connector's text
-        with open(path, encoding="utf-8", errors="replace") as fh:
-            return fh.read()
+    if path.lower().endswith(".txt"):
+        w.die("STOP: a text copy of the form's saved PDF is never accepted. Take the PDF itself from the computer (run.py access --need formpdf --route device --file <copy> --original <the PDF on the computer>).", 4)
     try:
         r = subprocess.run(["pdftotext", "-layout", path, "-"], capture_output=True, text=True)
     except OSError:
@@ -361,6 +380,38 @@ def pdf_amounts(text):
         if d is not None:
             out.add(d)
     return out
+
+
+RAND_RX = re.compile(r"(?<![A-Za-z\d])R\s?\d{1,3}(?:[ ,]\d{3})+(?:[.,]\d{1,2})?(?!\d)|(?<![A-Za-z\d])R\s?\d+(?:[.,]\d{1,2})?(?!\d)")
+
+
+def rand_amounts(text):
+    """Every amount written with an R in this text, as exact non-zero Decimals."""
+    out = set()
+    for m in RAND_RX.finditer(text or ""):
+        d = w.parse_money(m.group(0))
+        if d is not None and d != 0:
+            out.add(d)
+    return out
+
+
+def pdf_only_amounts(form, text):
+    """The amounts the form's PDF shows (written with an R) that are in NO value of the data file: the form computes them (for example the Risk Calculation),
+    so only the PDF holds them. Each one must end up in the document or be reviewed (a missed one is a missed fact)."""
+    have = set()
+    for c in form["fields"].values():
+        have |= rand_amounts(c["v"])
+        d = w.parse_money(c["v"]) if c["populated"] else None
+        if d is not None:
+            have.add(d)
+    for rows in form["lists"].values():
+        for r in rows:
+            for v in r["d"].values():
+                have |= rand_amounts(v)
+                d = w.parse_money(v) if v else None
+                if d is not None:
+                    have.add(d)
+    return sorted("%s" % x for x in rand_amounts(text) if x not in have)
 
 
 def value_in_pdf(value, text, ntext=None, ctext=None, amounts=None, money=False):
@@ -441,6 +492,9 @@ def cmd_pdf(a):
         return
     if not a.file or not os.path.exists(a.file):
         w.die("REFUSED: give the form's saved PDF (or --none \"reason\" after all three routes were tried).")
+    bad = pdf_file_problems(a.file)
+    if bad:
+        w.die("STOP: this is not the whole PDF: %s. Nothing was recorded. Take the PDF from the computer (it must be identical to the original there); if the computer is not connected the run should have stopped at the start." % "; ".join(bad), 4)
     text = pdf_text(a.file)
     if not text.strip():
         w.die("STOP: the form's saved PDF has no extractable text. Tell Paul; render it and read it by eye (not machine-checked).", 4)
@@ -456,11 +510,16 @@ def cmd_pdf(a):
         sys.exit(5)
     with open(os.path.join(a.run, "form_pdf.txt"), "w", encoding="utf-8") as f:
         f.write(text)
-    rec.update(file=os.path.basename(a.file), sha256=w.sha256_file(a.file), checked=checked, not_found=missing)
+    only = pdf_only_amounts(form, text)
+    rec.update(file=os.path.basename(a.file), sha256=w.sha256_file(a.file), bytes=os.path.getsize(a.file), pages=text.count("\f") or 1, checked=checked, not_found=missing, pdf_only=only)
     w.save_json(os.path.join(a.run, w.FORMPDF), rec)
     print("FORM PDF READ  %s: %d populated values of the data file checked against its text; %d not found in the PDF." % (rec["file"], checked, len(missing)))
     for m in missing:
         print("  NOT IN THE PDF: %s (%s) = %r" % (m["label"], m["key"], m["value"]))
+    print("WHOLE PDF READ: %d bytes, %d page(s)." % (rec["bytes"], rec["pages"]))
+    if only:
+        print("AMOUNTS ONLY THE PDF HOLDS (the form works them out; they are in no value of the data file): %s. Each must appear in the document (the Risk Calculation rows above all) or be recorded with: "
+              "`run.py pdfreview <run> --key pdf-only:<amount> --result not_printed --quote \"<the PDF's words around it>\" --reason \"<why it has no place>\"`." % ", ".join("R %s" % x for x in only))
     if missing:
         print("\nFor each one, look at the PDF and record what it shows: `run.py pdfreview <run> --key K --result format_only|disagree --quote \"<words from the PDF>\" [--pdf-value V]`. "
               "A disagreement is flagged with both values (the data file's value is the one used).")
@@ -469,6 +528,20 @@ def cmd_pdf(a):
 def cmd_pdfreview(a):
     path = os.path.join(a.run, w.FORMPDF)
     rec = w.load_json(path, "form_pdf.json (run `run.py formpdf` first)")
+    if a.key.startswith("pdf-only:"):
+        amt = a.key.split(":", 1)[1]
+        if amt not in (rec.get("pdf_only") or []):
+            w.die("REFUSED: %s is not one of the amounts only the PDF holds (%s)." % (a.key, ", ".join(rec.get("pdf_only") or []) or "none"))
+        if a.result != "not_printed" or len((a.reason or "").strip()) < 10:
+            w.die("REFUSED: an amount only the PDF holds is either printed in the document (the checker finds it itself) or recorded with --result not_printed, a --quote from the PDF and a --reason (at least 10 characters).")
+        with open(os.path.join(a.run, "form_pdf.txt"), encoding="utf-8") as f:
+            qtext = f.read()
+        if w.norm(a.quote) not in w.norm(qtext) or w.digits(amt.split(".")[0]) not in w.digits(a.quote):
+            w.die("REFUSED: the quote must be the PDF's own words and hold the amount's digits (%s)." % amt)
+        rec.setdefault("reviews", {})[a.key] = {"result": "not_printed", "quote": a.quote, "reason": a.reason.strip()}
+        w.save_json(path, rec)
+        print("recorded %s: %s. Still to settle: %s" % (a.key, a.reason.strip()[:60], [x for x in rec["pdf_only"] if "pdf-only:" + x not in rec["reviews"]] or "nothing printed-or-reviewed is left (the checker also looks for printed ones)"))
+        return
     if a.key not in {m["key"] for m in rec["not_found"]}:
         w.die("REFUSED: %s is not one of the values the program could not find in the PDF." % a.key)
     with open(os.path.join(a.run, "form_pdf.txt"), encoding="utf-8") as f:
@@ -512,9 +585,10 @@ def main():
     p = sub.add_parser("pdfreview")
     p.add_argument("run")
     p.add_argument("--key", required=True)
-    p.add_argument("--result", required=True, choices=["format_only", "disagree"])
+    p.add_argument("--result", required=True, choices=["format_only", "disagree", "not_printed"])
     p.add_argument("--quote", required=True)
     p.add_argument("--pdf-value", dest="pdf_value")
+    p.add_argument("--reason")
     p.set_defaults(fn=cmd_pdfreview)
     a = ap.parse_args()
     if getattr(a, "run", None):

@@ -547,5 +547,7 @@ class Modes(Chat):
         self.assertIn("none found", r.stdout)
 
     def access_to(self, run, need):
-        r = drv("access", run, "--need", need, "--route", "device", "--tool", "device_stage_files", "--result", "ok")
+        self.ensure_computer(run)
+        extra = self.proof_args(run, need, "device") if need in ("form", "formpdf", "transcript", "Overview") else []
+        r = drv("access", run, "--need", need, "--route", "device", "--tool", "device_stage_files", "--result", "ok", *extra)
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)

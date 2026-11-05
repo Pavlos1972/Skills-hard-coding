@@ -34,12 +34,12 @@ PARTS = "parts.json"
 OUT = "out"
 DOCS = "docs"
 
-# Access routes (SKILL-STANDARDS.md S4). The order the LOG keeps is device, m365, zapier, but the computer is only CHECKED
-# (log it at once as a fail, "not connected, not requested", when this chat is not already connected): it is never requested and no permission box is
-# ever opened. Microsoft 365 is the working route; nothing here ever asks Paul for anything.
+# Access routes (SKILL-STANDARDS.md S4). The COMPUTER comes first: the client's OneDrive folder, mounted into this chat, gives every file as real bytes
+# and takes the finished PDF without any size limit. The program finds that folder itself (find_computer_root); the chat never requests the connection.
+# Microsoft 365 returns files cut off and as text, so it is only a fallback for small text files, every copy proved by its size.
 ROUTES = ("device", "m365", "zapier")
 ROUTE_NAMES = {
-    "device": "the computer, only if this chat is ALREADY connected to it (checked, never requested)",
+    "device": "the computer: the client's OneDrive folder mounted into this chat (real bytes, no size limit)",
     "m365": "Microsoft 365 connector (SharePoint/OneDrive, Outlook, Teams transcripts)",
     "zapier": "Zapier (Office 365 and Teams tools)",
 }
@@ -49,6 +49,42 @@ ROUTE_NAMES = {
 SOURCE_KINDS = ["Overview", "Policy schedule", "Other document", "Correspondence", "Manual Fact Find"]
 REQUIRED_SOURCE_KINDS = ["Overview"]
 DOC_TYPES = SOURCE_KINDS + ["Paul (chat)"]
+FILE_NEEDS = ("form", "formpdf", "transcript") + tuple(SOURCE_KINDS)       # access entries for these are files: every copy must be proved
+COPY_ROUTES = ("device", "m365", "zapier")
+LEDGER_LOCK = "ledger.lock"
+COMPUTER_STOP = ("STOP. This chat is not connected to your computer, and the large client files (the form's PDF above all) cannot be read through Microsoft 365: "
+                 "it returns them cut off. Connect this chat to your computer (the folder liferisk.co.za, with Company - Paul inside it), then tell me to go on.")
+
+
+def find_computer_root():
+    """The folder of the computer's OneDrive as this chat sees it (the one that holds 'Company - Paul'), or None. WR_COMPUTER_ROOT overrides the search (tests)."""
+    env = os.environ.get("WR_COMPUTER_ROOT")
+    if env:
+        return os.path.realpath(env) if os.path.isdir(env) else None
+    for base in (os.path.expanduser("~/mnt"), "/mnt"):
+        if not os.path.isdir(base):
+            continue
+        for d, dirs, _files in os.walk(base):
+            if d[len(base):].count(os.sep) >= 3:
+                dirs[:] = []
+                continue
+            if "Company - Paul" in dirs or "Company - WR Clients" in dirs:
+                return os.path.realpath(d)
+            if os.path.basename(d) in ("Company - Paul", "Company - WR Clients"):
+                return os.path.realpath(os.path.dirname(d))
+    return None
+
+
+def under_root(path, root):
+    rp, rr = os.path.realpath(path), os.path.realpath(root)
+    return rp == rr or rp.startswith(rr.rstrip(os.sep) + os.sep)
+
+
+def save_ledger(run, led):
+    """The ledger is written only by the program; the lock file holds its fingerprint so a hand edit is seen by the checker."""
+    save_json(os.path.join(run, LEDGER), led)
+    with open(os.path.join(run, LEDGER_LOCK), "w", encoding="utf-8") as f:
+        f.write(sha256_file(os.path.join(run, LEDGER)) + "\n")
 
 # the word forms a quote request must carry (Paul, 15/10/2026: no default, ever)
 MODE_WORDS = ("new business", "servicing")

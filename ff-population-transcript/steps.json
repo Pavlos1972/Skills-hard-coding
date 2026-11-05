@@ -1,256 +1,256 @@
 {
-  "skill": "ff-population-transcript",
-  "steps": [
-    {
-      "id": "locate",
-      "title": "Find the client's folder and every source (three routes, in order, every try logged)",
-      "ref": [
-        "01-access-and-locate.md",
-        "03-two-spouses.md"
-      ],
-      "do": [
-        "Find, for this client and the meeting date Paul gave, in the client's `2. Fact Find` folder (and `1. Overview`): (1) the Fact Find FORM's data file (a .json; recognise it by what is inside it, `app` = `wr-fact-find`, not by its name), (2) the form's saved PDF, (3) the Teams transcript(s), (4) the latest Overview. Find them YOURSELF, AUTOMATICALLY, through Microsoft 365: never ask Paul for permission, never ask him to click Allow, attach, upload or drag a file, and never call a tool that opens a permission or folder-access box (Paul, 05/11/2026). Record EVERY attempt, failures too.",
-        "  1  device: the computer, ONLY if this chat is already connected to it. Do NOT request the connection. Not connected: log it at once (python3 {scripts}/run.py access {run} --need <need> --route device --tool none --result fail --detail \"not connected; not requested\") and go on.",
-        "  2  m365: the Microsoft 365 connector (SharePoint/OneDrive search and read). This is the working route: search the client's folders (`Company - Paul`, and `Company - WR Clients` > `Paul Kafentzis (Client Files)` only), READ each file through the connector and save what it returns into the run folder: the .json exactly as returned; the transcript as text; the form's saved PDF as its bytes if the connector gives them, otherwise as a text copy (.txt); the Overview as a text copy.",
-        "  3  zapier: the Zapier Office 365 tools, when Microsoft 365 failed for that file.",
-        "Record each try: python3 {scripts}/run.py access {run} --need form|formpdf|transcript|Overview --route device|m365|zapier --tool <tool you used> --result ok|fail --detail \"<what happened>\"  For a file you copied from Microsoft 365 add: --file <your saved copy> --source-size <the size in bytes the connector reported>: the program compares the two sizes to the byte and logs \"copy verified\" (a copy of the wrong size is logged as a fail: read the file again, in parts if it is long).",
-        "To tell which staged .json is the form's data file: python3 {scripts}/ffform.py identify <the candidate .json files>. OPEN every candidate before deciding; a name that does not match is never a reason to say a file is missing.",
-        "TWO SPOUSES: if this meeting was with a couple (one Teams call, both spouses), the job is run once per spouse (page 03 below). Start each spouse's own run folder with --spouse. If it is a single client, ignore page 03.",
-        "If another skill passed a file in, use --route passed (--result ok). You never ask Paul to attach anything.",
-        "IF THE FORM'S DATA FILE IS NOT FOUND AFTER ALL THREE ROUTES: STOP. Run `python3 {scripts}/run.py ask {run} --need form --searched \"<where you looked>\"`: it prints the exact question for Paul (use the filled-in Manual Fact Find PDF, or the transcript alone?). Ask him, wait, then record his own words with `run.py answer {run} --need form --said \"...\" --choice manual|transcript`. Never carry on without his answer, and never say 'I cannot access your files' without that log.",
-        "If a route fails, go on to the next one at once and say nothing to Paul. If every route failed for a file, your reply is at most five lines: what failed and the log of the tries. No request for permission or files."
-      ],
-      "proof": "the access log has an ok entry for 'transcript' and for 'form' (or all three routes failed for the form and Paul's answer is on record)",
-      "check": "locate_ok"
-    },
-    {
-      "id": "form",
-      "title": "Read the form's data file and its saved PDF with the program",
-      "ref": [
-        "02-form-file.md"
-      ],
-      "do": [
-        "If Paul chose the Manual Fact Find or the transcript alone, there is no data file to read: this step is already settled (run `done`).",
-        "Otherwise: python3 {scripts}/run.py form {run} <the form's data file>",
-        "  The program checks the schema (it must be 3.0: anything else STOPS with one line for Paul, nothing is saved), the client and the date, trims the texts, reads the statuses (confirmed / preset / empty; heard / verify in an older file), ignores the form's summaries, drafted actions, parking list and cost counters, and checks the company look-up text. Nothing is retyped by you.",
-        "Then the form's saved PDF: python3 {scripts}/run.py formpdf {run} <the PDF>   (or --none \"<reason>\" only after the three routes were tried for 'formpdf'). If it STOPS because the PDF is not this data file's (another client, another date, or more than a quarter of the values missing), find the right PDF; only if Paul says to go on with the data file alone: run.py ask {run} --need formpdf --kind knowledge ..., then run.py answer ..., then run.py formpdf {run} --paul-go-on (it is shown to Paul). It checks that every populated value of the data file is in the PDF's text. For each value it cannot find, look at the PDF and record: python3 {scripts}/run.py pdfreview {run} --key K --result format_only|disagree --quote \"<words from the PDF>\" [--pdf-value V]",
-        "{font_line}"
-      ],
-      "proof": "the form was read by the program (or its absence settled), and every value not found in the PDF was reviewed",
-      "check": "form_done"
-    },
-    {
-      "id": "prep",
-      "title": "Prepare the transcript and check it is complete",
-      "ref": [
-        "01-access-and-locate.md"
-      ],
-      "do": [
-        "One transcript: python3 {scripts}/tx.py prep <path to the transcript file> {run}",
-        "Several transcripts of one meeting (the call dropped and reconnected): python3 {scripts}/run.py join {run} <transcript 1> <transcript 2> ...  Then do the continuity check it prints at every join (`run.py continuity`), then python3 {scripts}/tx.py prep {run}/transcript_joined.txt {run}",
-        "If it prints STOP, tell Paul exactly what is missing and stop. If it says it could not read any timestamps, send Paul the first 15 lines of the file so the reader can be fixed. Use --force only if Paul says to carry on."
-      ],
-      "proof": "state.json exists and the transcript is complete (or forced on Paul's say-so)",
-      "check": "prep_done"
-    },
-    {
-      "id": "documents",
-      "title": "Read the Overview and the client's other documents",
-      "ref": [
-        "06-mapping-rules.md"
-      ],
-      "do": [
-        "Record every document you read, with a text copy so the program can check your quotes and figures: python3 {scripts}/run.py source {run} --kind Overview|\"Policy schedule\"|\"Other document\"|Correspondence --path \"<full path>\" --date YYYY-MM-DD --read yes --ref \"<short name>\" --text-file <text copy>   (pdftotext \"<file>\" /tmp/<name>.txt for a PDF).",
-        "The latest Overview in the client's `1. Overview` folder is REQUIRED: read it, or after searching on at least two routes (logged with run.py access --need Overview ... --result fail) record: run.py source {run} --kind Overview --none \"searched <where>, none found\". An Overview and a Policy schedule are accepted ONLY with a text copy (--text-file) that mentions the client (his surname or ID number): the program refuses a made-up document.",
-        "Read the client's other documents (policy schedules, payslips, benefit statements, servicing records, applications) whenever a field cannot be resolved otherwise, BEFORE marking anything unconfirmed. A policy number is taken only from a Policy schedule.",
-        "Use the access routes in order for every file. Ask Paul ONLY for what no file holds, with run.py ask."
-      ],
-      "proof": "the Overview is read, or has a recorded reason; every document is recorded with its path and date",
-      "check": "sources_ok"
-    },
-    {
-      "id": "pass1",
-      "title": "Pass 1: read everything, in order, and keep the ledger",
-      "ref": [
-        "12-reading-lock.md"
-      ],
-      "do": [
-        "Read every chunk in order. The program will not serve chunk 2 before chunk 1, and it will not serve the next chunk until this one has ledger entries or a reasoned acknowledgement.",
-        "{chunk_commands_pass1}",
-        "AFTER EACH CHUNK record what the call adds to the form's facts: a gap the call fills, a difference from the form, a contact detail, a quote request (insurer and New Business or Servicing), a next step or appointment, a change of mind:",
-        "  python3 {scripts}/run.py ledger {run} add --line <line number> --kind <kind> --quote \"<the exact words>\" [--speaker S] [--meaning \"<in your words>\"]   (an FNA, quote, shortfall, RGAR, EGAR or reduced-quote line is always kind quote_request; a request, decision, change or quote line can never be a plain fact or figure)",
-        "  Kinds: gap, difference, contact, quote_request, next_step, change, request (each must later be covered), fact, figure (may be excluded with a reason).",
-        "If a chunk really holds nothing to record, say so in your own words: python3 {scripts}/run.py ledger {run} ack --pass 1 --chunk <n> --reason \"<what the chunk contained and why nothing needs recording>\"",
-        "The program checks your quote against the transcript the moment you add it. A wrong quote is refused. When the recording labels both spouses with the same name, attribute each statement from its content (see the rules below)."
-      ],
-      "proof": "every chunk served in order, and ledger entries recorded",
-      "check": "pass1_done"
-    },
-    {
-      "id": "pass2",
-      "title": "Pass 2: read everything again",
-      "ref": [],
-      "do": [
-        "Read the WHOLE transcript a second time, chunk by chunk. Check every ledger entry against the actual words. Add anything Pass 1 missed (same ledger add command), above all in the closing minutes: the next appointment, a letter of authority, documents the client will send, every figure and name.",
-        "{chunk_commands_pass2}",
-        "After each chunk, add what you missed, or acknowledge it: python3 {scripts}/run.py ledger {run} ack --pass 2 --chunk <n> --reason \"checked every entry in this chunk against the words; <what you checked>\"",
-        "A keyword scan does not count as a read, and neither does re-reading only the parts that look important."
-      ],
-      "proof": "Pass 2 served every chunk in order",
-      "check": "pass2_done"
-    },
-    {
-      "id": "scan",
-      "title": "Keyword scan",
-      "ref": [],
-      "do": [
-        "Run: python3 {scripts}/tx.py scan {run}",
-        "EVERY line marked * (a decision, change or request word), and every other line with a request or quote word, needs a ledger entry of a kind that must be covered on the line or within 3 lines of it that shares a TOPIC word of 4 letters or more with it (not a request verb or filler such as send, email, ask, sign, need, please, would, could; a line with no such word at all: any entry within 3 lines), or a recorded review. HARD words: FNA, quote, shortfall, RGAR, EGAR, goal analysis, reduced, authority, payslip, appointment, next meeting, set up, follow up, credit life (also creditor life and life cover on the bond: Paul has a special rule for credit life). A line with a hard word can NOT be dismissed by a review at all: it must be an entry (a quote line, one with FNA, quote, shortfall, RGAR, EGAR, goal analysis or reduced, must be kind quote_request). If such a line really is not a request (for example \"as the quote said last year\"), ask Paul: python3 {scripts}/run.py ask {run} --need dismissals --about \"<the line numbers>\" --kind knowledge --question ... --searched ..., then run.py answer ... --said \"<his words>\"; the line is then shown on the glance list as dismissed on his recorded answer. The question text must name at least 4 of the words (4 letters or more) of EVERY line it names (put what the line says into the question, so he can see it; the program checks the words against the call); one answer can free at most 5 lines in all, and the glance list shows the full question and his words next to each line. SOFT words (the scan's own words such as send, email, tomorrow, and ask, request, sign, can you, could you, would you, please, I'd like, I will need, organise, arrange, book, prepare, run the numbers, come back to me, get back to me, send me, email me, let me know) may be dismissed: python3 {scripts}/run.py ledger {run} review --line <n> --reason \"<what that line says, in some of its own words, and why nothing needs recording>\"   (the program refuses a reason that holds no word of 4 letters or more from the line, one repeated character, or fewer than 3 different words; for a stretch: --from <a> --to <b>, at most 40 lines, and the reason must hold a word from every such line in it). A request line can NOT be recorded as a plain fact or figure, also when the entry is a line or two away, and an entry cannot be set aside as plain talk. If more than a quarter of the call, or more than 60% of these lines, are dismissed, the step is refused unless Paul says to go on (run.py ask --need dismissals --kind knowledge ..., then run.py answer). The glance list shows how every request line was handled and every line dismissed."
-      ],
-      "proof": "the scan has been run",
-      "check": "scan_done"
-    },
-    {
-      "id": "contact",
-      "title": "Contact details and lead source (Referral or D&R Marketing)",
-      "ref": [
-        "04-contact-and-lead.md"
-      ],
-      "do": [
-        "Search Outlook for a D&R Marketing appointment email for this client: first the folder `Leads - D&R Marketing` under `Business` in Paul's Inbox, then (if nothing is there) the whole mailbox. Log it: python3 {scripts}/run.py access {run} --need lead --route m365 --tool <the Outlook search tool> --result ok --detail \"<what you searched>\"",
-        "If an email is found, record it as a document (run.py source --kind Correspondence ... --ref <name> --text-file <its text>). Then, always: python3 {scripts}/run.py lead {run} --folder-result found|none --mailbox-result found|none|skipped [--received DD/MM/YYYY --ref <name> --quote \"<words from the email>\"]",
-        "The program writes Referral From itself (D&R Marketing lead - DD/MM/YYYY when an email was found; otherwise the form's value, the referrer named on the call, or 'Referral - referrer not stated (please confirm)'). Contact details missing from the form are looked for on the call, then in the client's documents (payslip, group risk statement, Overview): add them as overlay fills with their source. For a D&R lead, what the form or the call says always wins over the lead email."
-      ],
-      "proof": "the lead search is recorded (run.py lead)",
-      "check": "lead_done"
-    },
-    {
-      "id": "crosscheck",
-      "title": "Compare every populated form field with the call",
-      "ref": [
-        "06-mapping-rules.md"
-      ],
-      "do": [
-        "The program made {run}/crosscheck.json: every populated field and list row of the form, in the layout's order. Answer EVERY one, with `run.py cross`: it checks each quote against the transcript the moment you give it.",
-        "  same: the call agrees. Give the line and the exact words:   python3 {scripts}/run.py cross {run} --key fname --r same --line 12 --quote \"<exact words>\"",
-        "  differs: the call says something different. Give the line, the exact words and the call's own value; the program flags it with BOTH values (the form's value is the one used):   --key edu --r differs --line 20 --quote \"<exact words>\" --value \"<what the call says>\"",
-        "  not_on_call: the call does not mention it.",
-        "For a list row (a debt, a child, a policy) answer the row as same / not_on_call, and name the column for a difference (for example debts.0.bal).",
-        "Several answers at once: python3 {scripts}/run.py cross {run} --file answers.json  (a JSON object: key -> {r, line, quote, value, reviewed}). Then: python3 {scripts}/run.py cross {run} --rest not_on_call : the PROGRAM searches the call for each remaining field (its own search terms), records 'not on the call' only where it finds nothing, and LISTS the fields it found in the call: answer each of those yourself (same / differs with the exact words, or not_on_call with --reviewed \"<why those lines are not about this field>\": the reason must name at least one of the call lines the program found by number, hold a word of 4 letters or more from that line, and have at least 3 different words). A field with only its label words to search for is a weak search and always needs your reason. The checker repeats every search and counts the overrides on the glance list.",
-        "The company look-up text and the standing values are checked by the program; do not answer for them."
-      ],
-      "proof": "every populated field has an answer, every quote found",
-      "check": "cross_done"
-    },
-    {
-      "id": "joint",
-      "title": "Is this a joint meeting with a spouse?",
-      "ref": [
-        "03-two-spouses.md"
-      ],
-      "do": [
-        "Look at who spoke on the call. Is this a joint meeting with a spouse (both spouses on the call, or the call is about both)? Record the answer: python3 {scripts}/run.py joint {run} --answer yes|no --evidence \"<what shows it>\". The program refuses \"no\" when the form's spouse, or anyone other than Paul and the client, speaks on the call, unless you add --reason \"<who they are and why this is still not a joint meeting>\" (shown to Paul).",
-        "If yes, this run is for ONE spouse and the other spouse has their own run (started with --spouse and --spouse-run). Everything on the page below applies: only the common debts, the children and the joint policies are shared, every statement taken from the call needs an `attrib` line saying why it belongs to this spouse, and `run.py spouse` must find none of the other spouse's data in this document."
-      ],
-      "proof": "the joint-meeting question is answered and matches how the run was started",
-      "check": "joint_done"
-    },
-    {
-      "id": "content",
-      "title": "Settle every empty field, write overlay.json, compose content.json",
-      "ref": [
-        "07-quotes-abi-totals.md",
-        "05-layout.md"
-      ],
-      "do": [
-        "1. python3 {scripts}/run.py compose {run}  (it lists what is UNSETTLED), then python3 {scripts}/run.py claim {run} --all-empty : for every empty field it searches the call and the documents and records 'Not discussed' only where nothing is found. It lists the fields whose search finds something: fill them from what the call or a document says, or record why the lines do not answer it (--key K --as \"Not discussed\" --reviewed \"...\": the reason must name at least one of the call lines it found by number, hold a word of 4 letters or more from that line, and have at least 3 different words; every override is counted and named on the glance list). A debt detail is 'Requested' only after the form, the call, the Overview, other documents AND Outlook were checked, and only if the call does not mention it: when the search finds call lines, the same reason is needed as for an overriding 'Not discussed' (it names one of those lines by number and holds a word from it).",
-        "2. Write {run}/overlay.json: what the call and the documents ADD. THE VALID NAMES (anything else is refused with a message): {valid_ids} The form's own values are copied by the program, never by you. Shape (every entry has a unique `id` and its source `src`: a call line plus the exact words, or a recorded document with its --ref and the exact words):",
-        "   fills: [{id, key, value, src}]  a gap the form leaves (key is a form key, or list.index.column such as debts.0.cl). Not for a field the form already holds: that is a difference (step before). Identifiers read out on the call need \"confirmed\": true and the exact digits in the quote.",
-        "   rows_add: [{id, list, cells:{col: value}, src}]   notes: [{id, section, text, src}] (one short fact each, at most 6 per section)   flags: [{id, section, text, src}]",
-        "   diffs: [{id, key, other, label, src}]  a difference between the form and a DOCUMENT (the Overview, a benefit statement): shown with both values.   quotes: [{id, group, insurer, mode, src}] insurer and New Business or Servicing for a quote request the form does not fully state.",
-        "   policy_numbers: [{id, found, resolved, ref, quote}] (only from a Policy schedule)   abi_override: [{id, key, value, ask}] (only if Paul stated another ABI for this client; `ask` names the question recorded with run.py ask --kind knowledge --need <name> ... and run.py answer: the program writes Paul's words itself, words typed into the overlay are refused)   documents_to_request, next_steps: [{id, text, src}]   joint: [{id, list, index, with, src}]   lookup: {id, text, src, client_confirmed}   A source may also be {\"ask\": \"<need>\"}: Paul's recorded answer (run.py ask --kind knowledge --need <need> --about <the field keys, list names, quote groups or section ids the question is about: at most 10, each written in the question text as its id or its label> --question ... --searched ..., then run.py answer --need <need> --said \"<his words>\"). His answer can be used only for what the question was about, and a number in a value must be in his words.",
-        "   An FNA, Shortfall or Reduced quote needs the INSURER and New Business or Servicing, never a default. If neither the form nor the call says: STOP and ASK Paul \"Which insurer should the FNA, Shortfall or Reduced quote(s) be requested from, and is it New Business or Servicing?\" (run.py ask --kind knowledge ..., then run.py answer ...). The insurer and the basis must be in the words of the source you cite. If the call asks for a quote (a quote_request in the ledger) and the form's request field is empty, fill that field (fna_req etc.: Yes) with the call words so the quote row exists (src {\"ask\": \"<need>\"}, see above).",
-        "3. python3 {scripts}/run.py compose {run} again. Then link every ledger entry to what covers it: python3 {scripts}/run.py ledger {run} cover <ledger id> <item id> ... The program refuses a cover that cannot be right. contact: a fill or an answered field (or 'lead' for a referral line only); gap: a fill (a 'Not discussed' claim can never cover something the call did say); difference: an answered field that differs, a diffs entry or a note; quote_request: a quote row (quote.fna ...) or an answered/filled quote request field; next_step / request / change: a note, next step, document to request, fill or answered field. Every covering item must cite the call within 8 lines of the entry AND be about it: the field's own search words must be found in the entry's line (or the lines either side of it), or the item's own words (its value or text, never the field's label) must share a word of 4 letters or more with the entry's quote. A quote_request entry whose line names a product (FNA, shortfall, reduced quote, RGAR, EGAR) is covered only by the quote row or request field of THAT product (a shortfall row cannot cover an FNA line); a line that names TWO products (an FNA and a shortfall quote) needs a cover for EACH product from its own row or request field (the checker names the missing product), and a request field answered N/A or Not discussed covers nothing; 'Not discussed', 'N/A' and 'not on the call' are refused on a product's request, type or insurer field while the ledger records a quote request for that product. A credit-life line (credit life, creditor life, life cover on the bond) is covered only by a fill or an answered field of a credit-life field (cl_req, cl_lender, cl_bal, cl_life, or a debt's 'Credit life with lender'). The cover command prints STILL OPEN when a line still lacks a cover for something it names. (fact and figure entries may instead be excluded with a reason.)",
-        "4. Check: python3 {scripts}/verify.py {run} --stage pre   and fix every FAIL before moving on. Never edit content.json by hand: it is composed from the inputs and the checker compares them."
-      ],
-      "proof": "verify --stage pre passes",
-      "check": "verify_pre"
-    },
-    {
-      "id": "build",
-      "title": "Draw the PDF",
-      "ref": [
-        "09-format.md"
-      ],
-      "do": [
-        "Run: python3 {scripts}/build.py {run}",
-        "It draws the Fact Find Transcript PDF from content.json, renders every page to an image, and prints which font was really used. If it refuses, fix what it says. Never hand-write or edit the PDF, and never make a Word file."
-      ],
-      "proof": "the PDF built from the current content.json",
-      "check": "build_fresh"
-    },
-    {
-      "id": "check",
-      "title": "Look at the pages and check the judgment items",
-      "ref": [
-        "08-final-pass.md"
-      ],
-      "do": [
-        "1. Open every page image in {run}/out (page-1.png, page-2.png ...) and look at them: navy headings, light-blue label column, one fact per line, red flags readable, no heading alone at the bottom of a page, no row cut, no page numbers.",
-        "2. A second reader re-checks the key facts: give a subagent (Agent tool) ONLY the transcript, the form's file and the PDF text and ask it to find any wrong person, figure, date, status, invented value or missed difference. If the Agent tool is not available, say so.",
-        "3. Answer in one sentence each: was every 'Not discussed' re-checked against the form, the call, the Overview and the client's other documents; are independent requests worded as independent; is any prior-year figure shown as current; was every garbled line flagged and not turned into a fact; was the Overview compared; were the client's other documents checked.",
-        "Record: python3 {scripts}/run.py receipt {run} --set png_visual_check=\"<what you saw on each page>\" --set independent_check=\"subagent: <what it re-checked and found>\" --set judgment.not_discussed_rechecked=\"...\" --set judgment.independent_actions_parallel=\"...\" --set judgment.prior_year_current=\"...\" --set judgment.garbled_flagged=\"...\" --set judgment.overview_compared=\"...\" --set judgment.other_documents_checked=\"...\"",
-        "Fix anything found (overlay.json, then compose and build again) and check again."
-      ],
-      "proof": "the page images looked at, the independent re-check and the judgment items recorded",
-      "check": "receipt_check"
-    },
-    {
-      "id": "pdf",
-      "title": "Send, save and check the PDF",
-      "ref": [
-        "10-build-and-save.md"
-      ],
-      "do": [
-        "Do NOT end your reply here and do not ask Paul anything yet: Paul is asked ONCE, in the last reply, after the hand-overs. Record this step and go straight on.",
-        "1. If the folder /mnt/user-data/outputs exists, copy the PDF there first so it can be presented: cp \"{run}/out/<the PDF file>\" /mnt/user-data/outputs/ . Then send it in the chat for Paul to download (present_files / SendUserFile).",
-        "2. Save the same file into the client's own `2. Fact Find` folder through the Microsoft 365 connector (SharePoint upload; no permission step; the computer only if this chat is already connected). The folder must be under Company - Paul or Company - WR Clients\\Paul Kafentzis (Client Files), and the folder before `2. Fact Find` must be this client's own (Surname, First): the path must start (after the drive and liferisk.co.za) with one of those two roots, and the program refuses another client's or another broker's folder. A folder that is really spelled differently needs a sentence in saved.folder_spelling that names the surname (it is shown to Paul).",
-        "3. List the folder back and confirm the new file's exact name, size and time. The listed size must equal the local file's size: a write call that reports success is not proof. If it differs, wait briefly, commit again and list again.",
-        "Record it: python3 {scripts}/run.py receipt {run} --set pdf_sent_in_chat=true --set saved.tool=<the tool you used, for example sharepoint_upload_file> --set saved.folder=\"<folder>\" --set saved.filename=\"<exact file name>\" --set saved.tool_result=\"<tool result>\" --set saved.folder_listing_check=\"<the listing line showing the file>\" --set saved.listed_size=<bytes in the listing>"
-      ],
-      "proof": "PDF sent, saved and listed back; the listed size equals the local file",
-      "check": "receipt_pdf"
-    },
-    {
-      "id": "handoffs",
-      "title": "Hand over: the Summary, the Planner note and the message to Sitamah",
-      "ref": [
-        "11-handoffs.md",
-        "03-two-spouses.md"
-      ],
-      "do": [
-        "Do NOT end your reply here: nothing is asked of Paul (Paul, 05/11/2026).",
-        "1. The Fact Find Summary: run the `fact-find-summary` skill on the PDF you just saved. Confirm its Section 8 shows the same ABIs as this PDF (Life cover fractured: Life Cover (WOL) ABI 3% and Childcare ABI 5%; Permanent disability fractured: Household needs ABI 5% and Childcare ABI 5%, no Life Cover (WOL) line; Dread Disease ABI 3%).",
-        "2. The Planner note page and the message to Sitamah are made ONLY by `client-teams-transcript-skill`: run its driver for this meeting, `python3 <teams skill>/scripts/run.py start <teams run folder> --type first --client \"First Surname\" --date DD/MM/YYYY`, with the transcript passed in directly (`--route passed`), and drive it through every step up to (not including) its `teams` step, where it shows the message. Carry the form's next appointment (day, time) into that run as an AGREED follow-up appointment: setting it up is an action for Sitamah at every meeting. Do not write a Planner note or a message in this skill. The Teams skill folder you name is checked for plausibility (its step names, its size, the marks of its checker) and its fingerprint is printed for Paul to compare with the released one. The Teams run must have been made from THIS run's transcript. This checker runs the Teams program's own checker (verify.py --skip-teams) on that run and fails if it does not pass, if any step before `teams` is open, or if the next appointment is not carried.",
-        "3. Two spouses in one meeting: run `python3 {scripts}/run.py spouse {run}` and record its one-line result.",
-        "Record: python3 {scripts}/run.py receipt {run} --set summary.invoked=\"<what was run and its result>\" --set summary.abi_same=\"<what Section 8 shows>\" --set teams.run_folder=<the Teams run folder> --set teams.skill_dir=<the folder of client-teams-transcript-skill> --set teams.next_appointment_carried=\"<next appointment, day and time>\" [--set spouse.cross_check=\"<the result>\"]"
-      ],
-      "proof": "summary and teams hand-overs recorded; the Teams run exists for this client and date",
-      "check": "receipt_handoffs"
-    },
-    {
-      "id": "final",
-      "title": "Final check",
-      "ref": [],
-      "do": [
-        "Run: python3 {scripts}/verify.py {run}",
-        "Your reply to Paul contains the SHORT AUDIT it prints, unedited (a line per group with ✅ or ❌, the closing 'Only attested' line, RESULT, SOURCES USED, GLANCE AT and the DELIVERY LINE with the font actually used). The full report is the file out_record/audit-full.txt: never paste it into the chat. If RESULT says FAIL you may not say the job is finished: say what failed and fix it first.",
-        "Then POST the message to Sitamah NOW, automatically, through Zapier (Paul's standing instruction of 05/11/2026: no question, no waiting for a yes), once for this meeting (two spouses: once per spouse), and complete the Teams run's `teams` step as that skill's page says (status sent, with the Zapier result). Never post it twice for the same meeting; a correction does not post again unless Paul asks. If Zapier fails, say so in one line and show the message text. The reply holds: the Fact Find Transcript PDF, the Fact Find Summary PDF, the Planner note page, the message that was posted, and the short audit. There is NO closing question.",
-        "Then close the run: python3 {scripts}/run.py done {run} final",
-        "After ANY correction from Paul: edit overlay.json (or record the new answer), run compose, build and verify again; redo the hand-overs that changed. A correction re-opens the whole task."
-      ],
-      "proof": "verify.py prints RESULT: PASS",
-      "check": "verify_final"
-    }
-  ]
+ "skill": "ff-population-transcript",
+ "steps": [
+  {
+   "id": "locate",
+   "title": "Find the client's folder and every source (three routes, in order, every try logged)",
+   "ref": [
+    "01-access-and-locate.md",
+    "03-two-spouses.md"
+   ],
+   "do": [
+    "Find, for this client and the meeting date Paul gave, in the client's `2. Fact Find` folder (and `1. Overview`): (1) the Fact Find FORM's data file (a .json; recognise it by what is inside it, `app` = `wr-fact-find`, not by its name), (2) the form's saved PDF, (3) the Teams transcript(s), (4) the latest Overview. Find them YOURSELF: never ask Paul for permission, never ask him to click Allow, attach, upload or drag a file, and never call a tool that opens a permission or folder-access box. Record EVERY attempt, failures too.",
+    "FIRST, before anything else, run: python3 {scripts}/run.py computer {run}   It looks for the client's OneDrive folder on the computer, mounted into this chat. If it prints STOP, your WHOLE reply is that text, with no question and no analysis: Paul connects the computer and tells you to go on, and you run the same command again. (Only if Paul himself says to go on without the computer: run.py computer {run} --paul-go-on \"<his words>\"; then only small text files can be used and the form's PDF counts as missing.)",
+    "  1  device: the computer: the working route. Read every file from the computer as real bytes: find it in the mounted folder under `Company - Paul`, and `Company - WR Clients` > `Paul Kafentzis (Client Files)` only, copy it with cp into the run folder, and log it with its original: python3 {scripts}/run.py access {run} --need form|formpdf|transcript|Overview --route device --tool cp --result ok --file <your copy in the run folder> --original <the file on the computer>. The program compares the two byte for byte and logs \"copy verified\"; a copy that is not identical is logged as a fail.",
+    "  2  m365 and  3  zapier are fallbacks for SMALL TEXT files only (the form's .json, a transcript as text), used only when Paul has said to go on without the computer or a file is not on the computer. They return files cut off and a PDF as text, so the form's saved PDF is NEVER taken through them. Every such copy needs --file <your copy> --source-size <the size in bytes the connector reported>; the program compares the two to the byte and refuses a copy of a different size.",
+    "Record each try: python3 {scripts}/run.py access {run} --need form|formpdf|transcript|Overview --route device|m365|zapier --tool <tool you used> --result ok|fail --detail \"<what happened>\" [--file ... --original ...|--source-size ...]   A \"found\" without its proof is refused.",
+    "To tell which staged .json is the form's data file: python3 {scripts}/ffform.py identify <the candidate .json files>. OPEN every candidate before deciding; a name that does not match is never a reason to say a file is missing.",
+    "TWO SPOUSES: if this meeting was with a couple (one Teams call, both spouses), the job is run once per spouse (page 03 below). Start each spouse's own run folder with --spouse. If it is a single client, ignore page 03.",
+    "If another skill passed a file in, use --route passed (--result ok). You never ask Paul to attach anything.",
+    "IF THE FORM'S DATA FILE IS NOT FOUND AFTER ALL THREE ROUTES: STOP. Run `python3 {scripts}/run.py ask {run} --need form --searched \"<where you looked>\"`: it prints the exact question for Paul (use the filled-in Manual Fact Find PDF, or the transcript alone?). Ask him, wait, then record his own words with `run.py answer {run} --need form --said \"...\" --choice manual|transcript`. Never carry on without his answer, and never say 'I cannot access your files' without that log.",
+    "If a route fails, go on to the next one at once and say nothing to Paul. If every route failed for a file, your reply is at most five lines: what failed and the log of the tries. No request for permission or files."
+   ],
+   "proof": "the program found the computer (or Paul said to go on without it), the access log has a proved ok entry for 'transcript' and for 'form' (or all routes failed for the form and Paul's answer is on record)",
+   "check": "locate_ok"
+  },
+  {
+   "id": "form",
+   "title": "Read the form's data file and its saved PDF with the program",
+   "ref": [
+    "02-form-file.md"
+   ],
+   "do": [
+    "If Paul chose the Manual Fact Find or the transcript alone, there is no data file to read: this step is already settled (run `done`).",
+    "Otherwise: python3 {scripts}/run.py form {run} <the form's data file>",
+    "  The program checks the schema (it must be 3.0: anything else STOPS with one line for Paul, nothing is saved), the client and the date, trims the texts, reads the statuses (confirmed / preset / empty; heard / verify in an older file), ignores the form's summaries, drafted actions, parking list and cost counters, and checks the company look-up text. Nothing is retyped by you.",
+    "Then the form's saved PDF: python3 {scripts}/run.py formpdf {run} <the PDF: the real file, copied from the computer and logged with its original>   (or --none \"<reason>\" only after the three routes were tried for 'formpdf'). If it STOPS because the PDF is not this data file's (another client, another date, or more than a quarter of the values missing), find the right PDF; only if Paul says to go on with the data file alone: run.py ask {run} --need formpdf --kind knowledge ..., then run.py answer ..., then run.py formpdf {run} --paul-go-on (it is shown to Paul). It checks that every populated value of the data file is in the PDF's text. For each value it cannot find, look at the PDF and record: python3 {scripts}/run.py pdfreview {run} --key K --result format_only|disagree --quote \"<words from the PDF>\" [--pdf-value V] The program also reads the WHOLE PDF (every page) and lists any amount the PDF shows that is in no value of the data file (the form works some out, for example the Risk Calculation): each must be printed in the document or recorded with run.py pdfreview --key pdf-only:<amount> --result not_printed --quote ... --reason ... A text copy or a cut-off PDF is refused.",
+    "{font_line}"
+   ],
+   "proof": "the form was read by the program (or its absence settled), and every value not found in the PDF was reviewed",
+   "check": "form_done"
+  },
+  {
+   "id": "prep",
+   "title": "Prepare the transcript and check it is complete",
+   "ref": [
+    "01-access-and-locate.md"
+   ],
+   "do": [
+    "One transcript: python3 {scripts}/tx.py prep <path to the transcript file> {run}",
+    "Several transcripts of one meeting (the call dropped and reconnected): python3 {scripts}/run.py join {run} <transcript 1> <transcript 2> ...  Then do the continuity check it prints at every join (`run.py continuity`), then python3 {scripts}/tx.py prep {run}/transcript_joined.txt {run}",
+    "If it prints STOP, tell Paul exactly what is missing and stop. If it says it could not read any timestamps, send Paul the first 15 lines of the file so the reader can be fixed. Use --force only if Paul says to carry on."
+   ],
+   "proof": "state.json exists and the transcript is complete (or forced on Paul's say-so)",
+   "check": "prep_done"
+  },
+  {
+   "id": "documents",
+   "title": "Read the Overview and the client's other documents",
+   "ref": [
+    "06-mapping-rules.md"
+   ],
+   "do": [
+    "Record every document you read, with a text copy so the program can check your quotes and figures: python3 {scripts}/run.py source {run} --kind Overview|\"Policy schedule\"|\"Other document\"|Correspondence --path \"<full path>\" --date YYYY-MM-DD --read yes --ref \"<short name>\" --text-file <text copy>   (pdftotext \"<file>\" /tmp/<name>.txt for a PDF).",
+    "The latest Overview in the client's `1. Overview` folder is REQUIRED: read it, or after searching on at least two routes (logged with run.py access --need Overview ... --result fail) record: run.py source {run} --kind Overview --none \"searched <where>, none found\". An Overview and a Policy schedule are accepted ONLY with a text copy (--text-file) that mentions the client (his surname or ID number): the program refuses a made-up document.",
+    "Read the client's other documents (policy schedules, payslips, benefit statements, servicing records, applications) whenever a field cannot be resolved otherwise, BEFORE marking anything unconfirmed. A policy number is taken only from a Policy schedule.",
+    "Use the access routes in order for every file. Ask Paul ONLY for what no file holds, with run.py ask."
+   ],
+   "proof": "the Overview is read, or has a recorded reason; every document is recorded with its path and date",
+   "check": "sources_ok"
+  },
+  {
+   "id": "pass1",
+   "title": "Pass 1: read everything, in order, and keep the ledger",
+   "ref": [
+    "12-reading-lock.md"
+   ],
+   "do": [
+    "Read every chunk in order. The program will not serve chunk 2 before chunk 1, and it will not serve the next chunk until this one has ledger entries or a reasoned acknowledgement.",
+    "{chunk_commands_pass1}",
+    "AFTER EACH CHUNK record what the call adds to the form's facts: a gap the call fills, a difference from the form, a contact detail, a quote request (insurer and New Business or Servicing), a next step or appointment, a change of mind:",
+    "  python3 {scripts}/run.py ledger {run} add --line <line number> --kind <kind> --quote \"<the exact words>\" [--speaker S] [--meaning \"<in your words>\"]   (an FNA, quote, shortfall, RGAR, EGAR or reduced-quote line is always kind quote_request; a request, decision, change or quote line can never be a plain fact or figure)",
+    "  Kinds: gap, difference, contact, quote_request, next_step, change, request (each must later be covered), fact, figure (may be excluded with a reason).",
+    "If a chunk really holds nothing to record, say so in your own words: python3 {scripts}/run.py ledger {run} ack --pass 1 --chunk <n> --reason \"<what the chunk contained and why nothing needs recording>\"",
+    "The program checks your quote against the transcript the moment you add it. A wrong quote is refused. When the recording labels both spouses with the same name, attribute each statement from its content (see the rules below)."
+   ],
+   "proof": "every chunk served in order, and ledger entries recorded",
+   "check": "pass1_done"
+  },
+  {
+   "id": "pass2",
+   "title": "Pass 2: read everything again",
+   "ref": [],
+   "do": [
+    "Read the WHOLE transcript a second time, chunk by chunk. Check every ledger entry against the actual words. Add anything Pass 1 missed (same ledger add command), above all in the closing minutes: the next appointment, a letter of authority, documents the client will send, every figure and name.",
+    "{chunk_commands_pass2}",
+    "After each chunk, add what you missed, or acknowledge it: python3 {scripts}/run.py ledger {run} ack --pass 2 --chunk <n> --reason \"checked every entry in this chunk against the words; <what you checked>\"",
+    "A keyword scan does not count as a read, and neither does re-reading only the parts that look important."
+   ],
+   "proof": "Pass 2 served every chunk in order",
+   "check": "pass2_done"
+  },
+  {
+   "id": "scan",
+   "title": "Keyword scan",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/tx.py scan {run}",
+    "EVERY line marked * (a decision, change or request word), and every other line with a request or quote word, needs a ledger entry of a kind that must be covered on the line or within 3 lines of it that shares a TOPIC word of 4 letters or more with it (not a request verb or filler such as send, email, ask, sign, need, please, would, could; a line with no such word at all: any entry within 3 lines), or a recorded review. HARD words: FNA, quote, shortfall, RGAR, EGAR, goal analysis, reduced, authority, payslip, appointment, next meeting, set up, follow up, credit life (also creditor life and life cover on the bond: Paul has a special rule for credit life). A line with a hard word can NOT be dismissed by a review at all: it must be an entry (a quote line, one with FNA, quote, shortfall, RGAR, EGAR, goal analysis or reduced, must be kind quote_request). If such a line really is not a request (for example \"as the quote said last year\"), ask Paul: python3 {scripts}/run.py ask {run} --need dismissals --about \"<the line numbers>\" --kind knowledge --question ... --searched ..., then run.py answer ... --said \"<his words>\"; the line is then shown on the glance list as dismissed on his recorded answer. The question text must name at least 4 of the words (4 letters or more) of EVERY line it names (put what the line says into the question, so he can see it; the program checks the words against the call); one answer can free at most 5 lines in all, and the glance list shows the full question and his words next to each line. SOFT words (the scan's own words such as send, email, tomorrow, and ask, request, sign, can you, could you, would you, please, I'd like, I will need, organise, arrange, book, prepare, run the numbers, come back to me, get back to me, send me, email me, let me know) may be dismissed: python3 {scripts}/run.py ledger {run} review --line <n> --reason \"<what that line says, in some of its own words, and why nothing needs recording>\"   (the program refuses a reason that holds no word of 4 letters or more from the line, one repeated character, or fewer than 3 different words; for a stretch: --from <a> --to <b>, at most 40 lines, and the reason must hold a word from every such line in it). A request line can NOT be recorded as a plain fact or figure, also when the entry is a line or two away, and an entry cannot be set aside as plain talk. If more than a quarter of the call, or more than 60% of these lines, are dismissed, the step is refused unless Paul says to go on (run.py ask --need dismissals --kind knowledge ..., then run.py answer). The glance list shows how every request line was handled and every line dismissed."
+   ],
+   "proof": "the scan has been run",
+   "check": "scan_done"
+  },
+  {
+   "id": "contact",
+   "title": "Contact details and lead source (Referral or D&R Marketing)",
+   "ref": [
+    "04-contact-and-lead.md"
+   ],
+   "do": [
+    "Search Outlook for a D&R Marketing appointment email for this client: first the folder `Leads - D&R Marketing` under `Business` in Paul's Inbox, then (if nothing is there) the whole mailbox. Log it: python3 {scripts}/run.py access {run} --need lead --route m365 --tool <the Outlook search tool> --result ok --detail \"<what you searched>\"",
+    "If an email is found, record it as a document (run.py source --kind Correspondence ... --ref <name> --text-file <its text>). Then, always: python3 {scripts}/run.py lead {run} --folder-result found|none --mailbox-result found|none|skipped [--received DD/MM/YYYY --ref <name> --quote \"<words from the email>\"]",
+    "The program writes Referral From itself (D&R Marketing lead - DD/MM/YYYY when an email was found; otherwise the form's value, the referrer named on the call, or 'Referral - referrer not stated (please confirm)'). Contact details missing from the form are looked for on the call, then in the client's documents (payslip, group risk statement, Overview): add them as overlay fills with their source. For a D&R lead, what the form or the call says always wins over the lead email."
+   ],
+   "proof": "the lead search is recorded (run.py lead)",
+   "check": "lead_done"
+  },
+  {
+   "id": "crosscheck",
+   "title": "Compare every populated form field with the call",
+   "ref": [
+    "06-mapping-rules.md"
+   ],
+   "do": [
+    "The program made {run}/crosscheck.json: every populated field and list row of the form, in the layout's order. Answer EVERY one, with `run.py cross`: it checks each quote against the transcript the moment you give it.",
+    "  same: the call agrees. Give the line and the exact words:   python3 {scripts}/run.py cross {run} --key fname --r same --line 12 --quote \"<exact words>\"",
+    "  differs: the call says something different. Give the line, the exact words and the call's own value; the program flags it with BOTH values (the form's value is the one used):   --key edu --r differs --line 20 --quote \"<exact words>\" --value \"<what the call says>\"",
+    "  not_on_call: the call does not mention it.",
+    "For a list row (a debt, a child, a policy) answer the row as same / not_on_call, and name the column for a difference (for example debts.0.bal).",
+    "Several answers at once: python3 {scripts}/run.py cross {run} --file answers.json  (a JSON object: key -> {r, line, quote, value, reviewed}). Then: python3 {scripts}/run.py cross {run} --rest not_on_call : the PROGRAM searches the call for each remaining field (its own search terms), records 'not on the call' only where it finds nothing, and LISTS the fields it found in the call: answer each of those yourself (same / differs with the exact words, or not_on_call with --reviewed \"<why those lines are not about this field>\": the reason must name at least one of the call lines the program found by number, hold a word of 4 letters or more from that line, and have at least 3 different words). A field with only its label words to search for is a weak search and always needs your reason. The checker repeats every search and counts the overrides on the glance list.",
+    "The company look-up text and the standing values are checked by the program; do not answer for them."
+   ],
+   "proof": "every populated field has an answer, every quote found",
+   "check": "cross_done"
+  },
+  {
+   "id": "joint",
+   "title": "Is this a joint meeting with a spouse?",
+   "ref": [
+    "03-two-spouses.md"
+   ],
+   "do": [
+    "Look at who spoke on the call. Is this a joint meeting with a spouse (both spouses on the call, or the call is about both)? Record the answer: python3 {scripts}/run.py joint {run} --answer yes|no --evidence \"<what shows it>\". The program refuses \"no\" when the form's spouse, or anyone other than Paul and the client, speaks on the call, unless you add --reason \"<who they are and why this is still not a joint meeting>\" (shown to Paul).",
+    "If yes, this run is for ONE spouse and the other spouse has their own run (started with --spouse and --spouse-run). Everything on the page below applies: only the common debts, the children and the joint policies are shared, every statement taken from the call needs an `attrib` line saying why it belongs to this spouse, and `run.py spouse` must find none of the other spouse's data in this document."
+   ],
+   "proof": "the joint-meeting question is answered and matches how the run was started",
+   "check": "joint_done"
+  },
+  {
+   "id": "content",
+   "title": "Settle every empty field, write overlay.json, compose content.json",
+   "ref": [
+    "07-quotes-abi-totals.md",
+    "05-layout.md"
+   ],
+   "do": [
+    "1. python3 {scripts}/run.py compose {run}  (it lists what is UNSETTLED), then python3 {scripts}/run.py claim {run} --all-empty : for every empty field it searches the call and the documents and records 'Not discussed' only where nothing is found. It lists the fields whose search finds something: fill them from what the call or a document says, or record why the lines do not answer it (--key K --as \"Not discussed\" --reviewed \"...\": the reason must name at least one of the call lines it found by number, hold a word of 4 letters or more from that line, and have at least 3 different words; every override is counted and named on the glance list). A debt detail is 'Requested' only after the form, the call, the Overview, other documents AND Outlook were checked, and only if the call does not mention it: when the search finds call lines, the same reason is needed as for an overriding 'Not discussed' (it names one of those lines by number and holds a word from it).",
+    "2. Write {run}/overlay.json: what the call and the documents ADD. THE VALID NAMES (anything else is refused with a message): {valid_ids} The form's own values are copied by the program, never by you. Shape (every entry has a unique `id` and its source `src`: a call line plus the exact words, or a recorded document with its --ref and the exact words):",
+    "   fills: [{id, key, value, src}]  a gap the form leaves (key is a form key, or list.index.column such as debts.0.cl). Not for a field the form already holds: that is a difference (step before). Identifiers read out on the call need \"confirmed\": true and the exact digits in the quote.",
+    "   rows_add: [{id, list, cells:{col: value}, src}]   notes: [{id, section, text, src}] (one short fact each, at most 6 per section)   flags: [{id, section, text, src}]",
+    "   diffs: [{id, key, other, label, src}]  a difference between the form and a DOCUMENT (the Overview, a benefit statement): shown with both values.   quotes: [{id, group, insurer, mode, src}] insurer and New Business or Servicing for a quote request the form does not fully state.",
+    "   policy_numbers: [{id, found, resolved, ref, quote}] (only from a Policy schedule)   abi_override: [{id, key, value, ask}] (only if Paul stated another ABI for this client; `ask` names the question recorded with run.py ask --kind knowledge --need <name> ... and run.py answer: the program writes Paul's words itself, words typed into the overlay are refused)   documents_to_request, next_steps: [{id, text, src}]   joint: [{id, list, index, with, src}]   lookup: {id, text, src, client_confirmed}   A source may also be {\"ask\": \"<need>\"}: Paul's recorded answer (run.py ask --kind knowledge --need <need> --about <the field keys, list names, quote groups or section ids the question is about: at most 10, each written in the question text as its id or its label> --question ... --searched ..., then run.py answer --need <need> --said \"<his words>\"). His answer can be used only for what the question was about, and a number in a value must be in his words.",
+    "   An FNA, Shortfall or Reduced quote needs the INSURER and New Business or Servicing, never a default. If neither the form nor the call says: STOP and ASK Paul \"Which insurer should the FNA, Shortfall or Reduced quote(s) be requested from, and is it New Business or Servicing?\" (run.py ask --kind knowledge ..., then run.py answer ...). The insurer and the basis must be in the words of the source you cite. If the call asks for a quote (a quote_request in the ledger) and the form's request field is empty, fill that field (fna_req etc.: Yes) with the call words so the quote row exists (src {\"ask\": \"<need>\"}, see above).",
+    "3. python3 {scripts}/run.py compose {run} again. Then link every ledger entry to what covers it: python3 {scripts}/run.py ledger {run} cover <ledger id> <item id> ... The program refuses a cover that cannot be right. contact: a fill or an answered field (or 'lead' for a referral line only); gap: a fill (a 'Not discussed' claim can never cover something the call did say); difference: an answered field that differs, a diffs entry or a note; quote_request: a quote row (quote.fna ...) or an answered/filled quote request field; next_step / request / change: a note, next step, document to request, fill or answered field. Every covering item must cite the call within 8 lines of the entry AND be about it: the field's own search words must be found in the entry's line (or the lines either side of it), or the item's own words (its value or text, never the field's label) must share a word of 4 letters or more with the entry's quote. A quote_request entry whose line names a product (FNA, shortfall, reduced quote, RGAR, EGAR) is covered only by the quote row or request field of THAT product (a shortfall row cannot cover an FNA line); a line that names TWO products (an FNA and a shortfall quote) needs a cover for EACH product from its own row or request field (the checker names the missing product), and a request field answered N/A or Not discussed covers nothing; 'Not discussed', 'N/A' and 'not on the call' are refused on a product's request, type or insurer field while the ledger records a quote request for that product. A credit-life line (credit life, creditor life, life cover on the bond) is covered only by a fill or an answered field of a credit-life field (cl_req, cl_lender, cl_bal, cl_life, or a debt's 'Credit life with lender'). The cover command prints STILL OPEN when a line still lacks a cover for something it names. (fact and figure entries may instead be excluded with a reason.)",
+    "4. Check: python3 {scripts}/verify.py {run} --stage pre   and fix every FAIL before moving on. Never edit content.json by hand: it is composed from the inputs and the checker compares them."
+   ],
+   "proof": "verify --stage pre passes",
+   "check": "verify_pre"
+  },
+  {
+   "id": "build",
+   "title": "Draw the PDF",
+   "ref": [
+    "09-format.md"
+   ],
+   "do": [
+    "Run: python3 {scripts}/build.py {run}",
+    "It draws the Fact Find Transcript PDF from content.json, renders every page to an image, and prints which font was really used. If it refuses, fix what it says. Never hand-write or edit the PDF, and never make a Word file."
+   ],
+   "proof": "the PDF built from the current content.json",
+   "check": "build_fresh"
+  },
+  {
+   "id": "check",
+   "title": "Look at the pages and check the judgment items",
+   "ref": [
+    "08-final-pass.md"
+   ],
+   "do": [
+    "1. Open every page image in {run}/out (page-1.png, page-2.png ...) and look at them: navy headings, light-blue label column, one fact per line, red flags readable, no heading alone at the bottom of a page, no row cut, no page numbers.",
+    "2. A second reader re-checks the key facts: give a subagent (Agent tool) ONLY the transcript, the form's file and the PDF text and ask it to find any wrong person, figure, date, status, invented value or missed difference. If the Agent tool is not available, say so.",
+    "3. Answer in one sentence each: was every 'Not discussed' re-checked against the form, the call, the Overview and the client's other documents; are independent requests worded as independent; is any prior-year figure shown as current; was every garbled line flagged and not turned into a fact; was the Overview compared; were the client's other documents checked.",
+    "Record: python3 {scripts}/run.py receipt {run} --set png_visual_check=\"<what you saw on each page>\" --set independent_check=\"subagent: <what it re-checked and found>\" --set judgment.not_discussed_rechecked=\"...\" --set judgment.independent_actions_parallel=\"...\" --set judgment.prior_year_current=\"...\" --set judgment.garbled_flagged=\"...\" --set judgment.overview_compared=\"...\" --set judgment.other_documents_checked=\"...\"",
+    "Fix anything found (overlay.json, then compose and build again) and check again."
+   ],
+   "proof": "the page images looked at, the independent re-check and the judgment items recorded",
+   "check": "receipt_check"
+  },
+  {
+   "id": "pdf",
+   "title": "Send, save and check the PDF",
+   "ref": [
+    "10-build-and-save.md"
+   ],
+   "do": [
+    "Do NOT end your reply here and do not ask Paul anything yet: Paul is asked ONCE, in the last reply, after the hand-overs. Record this step and go straight on.",
+    "1. If the folder /mnt/user-data/outputs exists, copy the PDF there first so it can be presented: cp \"{run}/out/<the PDF file>\" /mnt/user-data/outputs/ . Then send it in the chat for Paul to download (present_files / SendUserFile).",
+    "2. Save the same file into the client's own `2. Fact Find` folder ON THE COMPUTER: cp -n \"{run}/out/<the PDF file>\" \"<the client's 2. Fact Find folder, in the mounted OneDrive folder>\" (OneDrive uploads it by itself). The folder must be under Company - Paul or Company - WR Clients\\Paul Kafentzis (Client Files), and the folder before `2. Fact Find` must be this client's own (Surname, First): the program refuses another client's or another broker's folder. A folder that is really spelled differently needs a sentence in saved.folder_spelling that names the surname (it is shown to Paul). Do NOT upload through Microsoft 365: a PDF has to travel as base64 inside one call, which is impractical above a few tens of KB.",
+    "3. List the folder back (ls -l) and confirm the new file's exact name and size. The listed size must equal the local file's size, and `cmp` must show the two files identical: a copy that reports success is not proof.",
+    "Record it: python3 {scripts}/run.py receipt {run} --set pdf_sent_in_chat=true --set saved.tool=<the tool you used, for example cp> --set saved.folder=\"<folder>\" --set saved.filename=\"<exact file name>\" --set saved.tool_result=\"<tool result>\" --set saved.folder_listing_check=\"<the listing line showing the file>\" --set saved.listed_size=<bytes in the listing>"
+   ],
+   "proof": "PDF sent, saved and listed back; the listed size equals the local file",
+   "check": "receipt_pdf"
+  },
+  {
+   "id": "handoffs",
+   "title": "Hand over: the Summary, the Planner note and the message to Sitamah",
+   "ref": [
+    "11-handoffs.md",
+    "03-two-spouses.md"
+   ],
+   "do": [
+    "Do NOT end your reply here: nothing is asked of Paul (Paul, 05/11/2026).",
+    "1. The Fact Find Summary: run the `fact-find-summary` skill on the PDF you just saved. Confirm its Section 8 shows the same ABIs as this PDF (Life cover fractured: Life Cover (WOL) ABI 3% and Childcare ABI 5%; Permanent disability fractured: Household needs ABI 5% and Childcare ABI 5%, no Life Cover (WOL) line; Dread Disease ABI 3%).",
+    "2. The Planner note page and the message to Sitamah are made ONLY by `client-teams-transcript-skill`: run its driver for this meeting, `python3 <teams skill>/scripts/run.py start <teams run folder> --type first --client \"First Surname\" --date DD/MM/YYYY`, with the transcript passed in directly (`--route passed`), and drive it through every step up to (not including) its `teams` step, where it shows the message. Carry the form's next appointment (day, time) into that run as an AGREED follow-up appointment: setting it up is an action for Sitamah at every meeting. Do not write a Planner note or a message in this skill. The Teams skill folder you name is checked for plausibility (its step names, its size, the marks of its checker) and its fingerprint is printed for Paul to compare with the released one. The Teams run must have been made from THIS run's transcript. This checker runs the Teams program's own checker (verify.py --skip-teams) on that run and fails if it does not pass, if any step before `teams` is open, or if the next appointment is not carried.",
+    "3. Two spouses in one meeting: run `python3 {scripts}/run.py spouse {run}` and record its one-line result.",
+    "Record: python3 {scripts}/run.py receipt {run} --set summary.invoked=\"<what was run and its result>\" --set summary.abi_same=\"<what Section 8 shows>\" --set teams.run_folder=<the Teams run folder> --set teams.skill_dir=<the folder of client-teams-transcript-skill> --set teams.next_appointment_carried=\"<next appointment, day and time>\" [--set spouse.cross_check=\"<the result>\"]"
+   ],
+   "proof": "summary and teams hand-overs recorded; the Teams run exists for this client and date",
+   "check": "receipt_handoffs"
+  },
+  {
+   "id": "final",
+   "title": "Final check",
+   "ref": [],
+   "do": [
+    "Run: python3 {scripts}/verify.py {run}",
+    "Your reply to Paul contains the SHORT AUDIT it prints, unedited (a line per group with ✅ or ❌, the closing 'Only attested' line, RESULT, SOURCES USED, GLANCE AT and the DELIVERY LINE with the font actually used). The full report is the file out_record/audit-full.txt: never paste it into the chat. If RESULT says FAIL you may not say the job is finished: say what failed and fix it first.",
+    "Then POST the message to Sitamah NOW, automatically, through Zapier (Paul's standing instruction of 05/11/2026: no question, no waiting for a yes), once for this meeting (two spouses: once per spouse), and complete the Teams run's `teams` step as that skill's page says (status sent, with the Zapier result). Never post it twice for the same meeting; a correction does not post again unless Paul asks. If Zapier fails, say so in one line and show the message text. The reply holds: the Fact Find Transcript PDF, the Fact Find Summary PDF, the Planner note page, the message that was posted, and the short audit. There is NO closing question.",
+    "Then close the run: python3 {scripts}/run.py done {run} final",
+    "After ANY correction from Paul: edit overlay.json (or record the new answer), run compose, build and verify again; redo the hand-overs that changed. A correction re-opens the whole task."
+   ],
+   "proof": "verify.py prints RESULT: PASS",
+   "check": "verify_final"
+  }
+ ]
 }
