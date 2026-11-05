@@ -4,6 +4,15 @@
 
 It sits on top of SKILL-STANDARDS.md (the standards S1 to S16) and SKILL-TEMPLATE.md (the 13 ingredients). If anything disagrees, SKILL-STANDARDS.md wins.
 
+## Corrections to this procedure (Paul, 05/11/2026, after the first real run of `ff-population-transcript`)
+These are mistakes of mine in this procedure and in the template. They are now corrected in Phase C items 4, 8, 9, 15, 16, Phase E item 6, the Always list, SKILL-TEMPLATE.md and SKILL-STANDARDS.md (S4, S10).
+1. **Computer first, with a permission step.** I copied "computer through the device bridge first, request folder access" into every skill. That raises a folder-access box that only Paul can click, and the run stops if he is away. Correct: Microsoft 365 first and automatic; the computer only if already connected; never request anything.
+2. **"Ask Paul to attach the file" as a last resort.** Removed everywhere in the procedure. Paul will not drag files into a chat. If every route fails, the chat says so in five lines and stops.
+3. **The first step was never proven in a real chat.** The tests used invented files on disk, so the step "get the files onto the machine where the program runs" was never tested. Now it is built on the Microsoft 365 route and checked by the upload chat (Phase E item 6), and the skill's first reply to Paul must need nothing from him.
+4. **Long printouts and long opening messages.** The two skills built before the short-audit rule still print the long checker output, and nothing told the chat to stay quiet. Now every skill ends in the SHORT audit, and the quiet-run rule (Phase C item 15) is in every skill's rules.
+5. **"One reply, one question" and "nothing is sent without Paul's yes"** were applied to the message to Sitamah as well. Paul has made that one automatic in the Fact Find chain. Every other message and email still waits for his yes until he says otherwise.
+**Skills built before this correction that still carry the old wording** (a later job, one skill at a time, only when Paul says): `ff-population-transcript` (being corrected now), `fact-find-summary`, `client-teams-transcript-skill` (live), `client-transcript-download`, `teams-meeting-setup-skill`, `astute-summary-report-skill`, `wr-roa-builder`, `life-policy-schedule-analyzer`. The other skills are checked when their turn comes.
+
 ## Before I start a skill
 1. Paul names the skill and says go. One skill at a time.
 2. I give the skill's full name and what it does in two lines.
@@ -38,17 +47,19 @@ It sits on top of SKILL-STANDARDS.md (the standards S1 to S16) and SKILL-TEMPLAT
 1. A short entry page: index, the "Last updated" line and standing rules, one line each.
 2. Detail moves into reference pages that the program shows at the right step.
 3. A step-by-step program that cannot skip a step and keeps its run state on disk.
-4. Access routes in order (computer or OneDrive, Microsoft 365, Zapier). Every try is logged. Client facts come from the client's file first, and Paul is asked last.
+4. Files are found AUTOMATICALLY, with no permission step and no help from Paul (Paul, 05/11/2026). The Microsoft 365 connector is the working route and is used first: the chat is on Auto and the connector is already approved. Zapier is the second route. The computer (the device bridge) is used ONLY if it is already connected; it is never requested, and no tool that opens a permission box or a folder-access request is ever called. Every try is still logged (a computer that is not connected is logged at once as a fail, "not connected, not requested"). A skill NEVER asks Paul to click Allow, to attach, upload or drag a file, or to say "go". Client facts come from the client's file first; Paul is asked only for what no file holds. If every route fails, the chat says in at most five lines what failed and which routes were tried, and stops.
 5. A reading lock wherever the skill reads long documents.
 6. Every output is built by program from one data file, with the same look every time.
 7. Every fact has a source. Nothing is invented.
-8. One checker prints PASS or FAIL. It separates what it proved from what was only attested. **The audit report posted in the chat after the skill has run is SHORT (Paul, 03/11/2026): one-liners in point form, each with a green tick (✅) or a red cross (❌). No long printout in the reply.** The program writes that short audit itself (one line per check) and keeps the full record on disk in the run folder. Anything only attested (not proven by the program) goes on ONE closing line, "Only attested (not proven): ...", so nothing is overclaimed.
-9. One reply, one question. Nothing is sent without Paul's yes. Teams messages go through Zapier only.
+8. One checker prints PASS or FAIL. It separates what it proved from what was only attested. **The audit report posted in the chat after the skill has run is SHORT (Paul, 03/11/2026): one-liners in point form, each with a green tick (✅) or a red cross (❌). No long printout in the reply.** The program writes that short audit itself (one line per check) and keeps the full record on disk in the run folder. Anything only attested (not proven by the program) goes on ONE closing line, "Only attested (not proven): ...", so nothing is overclaimed. **The program's own final printout IS this short audit in EVERY skill (Paul, 05/11/2026): the full detail goes to a file in the run folder, never to the chat.**
+9. One reply. Questions only for what no file holds (a missing fact, a choice only Paul can make). Nothing is sent without Paul's yes, EXCEPT what Paul has made automatic in writing: the message to Sitamah of the Fact Find chain is posted automatically through Zapier (Paul, 05/11/2026). Teams messages go through Zapier only. A skill never asks Paul for permission to read or save files (item 4).
 10. Each duplicated output is moved to its one owner skill, and the other skills point to it.
 11. House conventions: DD/MM/YYYY, R for money, Athens time, actions owned by Sitamah.
 12. No client data in the skill or the repo. Test data uses invented people only.
 13. The stamp is set by a program in Athens time and never typed. Every run says its version first.
 14. The old text is archived outside the zip.
+15. A quiet run (Paul, 05/11/2026): the chat starts with the one version sentence and then works. It may show ONE short progress line per step (for example "Step 3 of 16: preparing the transcript"). It never writes an opening recap of the skill, the rules, the files found or the information read, and it does not read the reference pages itself (the program shows each page at its step). The reply at the end is the outputs and the SHORT audit.
+16. **The first step must work with no human help, and it is proven before it is handed over (Paul, 05/11/2026):** the file-finding step is built on the Microsoft 365 route and tested in a real chat on Auto (the upload test chat's access check, Phase E item 6). A skill whose first step needs a click is not finished.
 
 ## Phase D: Prove (ONE test only)
 1. Lint (an automatic structure check): index, stamp, steps, no client names.
@@ -62,6 +73,7 @@ It sits on top of SKILL-STANDARDS.md (the standards S1 to S16) and SKILL-TEMPLAT
 3. Check the real folder name with Paul, then make the upload brief (`tools/make_upload_brief.py <zip> --folder "<path>"`). Paul's real folder for the Fact Find skill is `ff-population-transcript-skill`: do not guess.
 4. Send Paul the zip, the brief and a plain summary: what changed, what was removed, what is proven, what is only attested, and the open questions.
 5. Paul saves the zip and pastes the brief into the Chrome chat. It uploads the skill and runs a before-and-after test. Paul pastes its report back.
+6. **Access check (Paul, 05/11/2026):** the after-test also makes ONE read-only access check with no client data: through the Microsoft 365 connector only, on Auto, list the files in the folder `Company - Paul/Claude/Claude Skills - New` and say how many there are. Any permission box, folder-access request or refusal means the skill is not ready: it stays "uploaded (reported)" and I fix it before Paul's first real run.
 
 ## Phase F: Close out
 1. Record the result in the memory files: status, version, what changed and open questions.
@@ -77,6 +89,8 @@ It sits on top of SKILL-STANDARDS.md (the standards S1 to S16) and SKILL-TEMPLAT
 5. Side issues are written down and told to Paul. Do not chase them.
 6. **Audit reports in the chat are SHORT (Paul, 03/11/2026):** one-liners in point form, each with ✅ or ❌, one closing line for what is only attested. Never a long printout. This applies to every skill built under this Operation.
 7. Update the memory files after every phase, not only at the end.
+8. **Never a permission step (Paul, 05/11/2026).** No skill shows Paul a permission box or a folder-access request, asks him to attach, upload or drag a file, or asks "may I" / "go" for reading or saving files. The chat finds the files itself through Microsoft 365.
+9. **A quiet run (Paul, 05/11/2026).** One version sentence, then work; one short progress line per step is welcome; no opening recap, no analysis of files found or information read; the reply at the end is the outputs and the SHORT audit.
 
 ## Progress (update after every phase)
 
@@ -127,6 +141,7 @@ It sits on top of SKILL-STANDARDS.md (the standards S1 to S16) and SKILL-TEMPLAT
 9. **Paste the upload brief into the Chrome chat.** On 03/11/2026 the Chrome chat for `teams-meeting-setup-skill` found no brief in the folder (only the zip, the backup and the change list) and worked from Paul's request instead. It still did the right thing (one replace box naming only that skill, nothing deleted), but the brief is what pre-approves the replace box and sets the before/after test, so Paul pastes it.
 
 ## Running log
+- 05/11/2026: Paul's corrections to this procedure recorded and applied (see "Corrections to this procedure"): Microsoft 365 first and automatic, never a permission step, never ask Paul to attach files, the first step proven by the upload chat's access check, a quiet run, the SHORT audit as the program's own printout in every skill, and the Sitamah message of the Fact Find chain posted automatically. SKILL-TEMPLATE.md and SKILL-STANDARDS.md (S4, S10) changed to match. `ff-population-transcript` is corrected next.
 - 05/11/2026: first real run of `ff-population-transcript` (v33) stopped at the locate step: the chat could not stage the form's files and the transcript onto the machine where the programs run (needs Paul's folder-access click or attached files; the chat read all 14 pages first and wrote a long recap). Not a program bug; a gap in the skill's first step and in what I told Paul. Nothing changed. Three small fixes proposed to Paul, waiting for his yes (CHAT-NOTES item 20).
 - 04/11/2026: `prospect-review-funnel-at-knowledge` PHASE F: upload report recorded. Uploaded as v17 (reported by a Chrome chat that had the brief; v16 before; 27 files; 31 skills; ONE entry; test chat answered "Last updated: 2026-11-04 16:53 (Athens time)" and "Index"; the zip was staged from the computer, no manual file pick; nothing deleted). The old-skill backup matches v16. NOT confirmed live by Paul. Still open: the order of the documents, the four scripts, the four open items, the unstated owners and names, telling the AdviceTech chats to stop editing the skill. Asked Paul whether he is ready for the next skill.
 - 04/11/2026: `prospect-review-funnel-at-knowledge`: Paul agreed to all 5 new Yes/No questions (agree to all). Still open: which document is changed first (both old sentences kept), the owners and names of the unstated stages (left as not stated), the four scripts (not yet received), the four open items (none named closed). The AdviceTech chats must stop editing the live skill after the upload. No change to the skill: the zip and the brief stay valid. Waiting for the Chrome chat's upload report.

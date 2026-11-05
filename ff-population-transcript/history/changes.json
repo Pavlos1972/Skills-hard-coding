@@ -318,5 +318,17 @@
   "new": "Do not make the hand-overs final until the advisor confirms the Fact Find itself is correct: the program-driven job shows the PDF, the Summary hand-over, the Planner note page and the message to Sitamah in the same reply with ONE question, nothing is sent without his yes, and any correction re-opens the whole task.",
   "why": "One reply, one question (Paul, 29/10/2026 and 02/11/2026): the hand-overs are shown in the same reply as the PDF and nothing is sent without his yes. Listed for Paul's yes/no in history/CHANGES-FOR-PAUL.md (question 1).",
   "needs_paul": true
+ },
+ {
+  "old": "Every time this skill needs a client's document",
+  "why": "Access order changed by Paul 05/11/2026 (S4): Microsoft 365 first and automatic, Zapier second, the computer only if already connected and never requested; the 'ask Paul to attach' last resort is gone (the chat says in five lines what failed and stops)"
+ },
+ {
+  "old": "How to save it: write the finished PDF straight into",
+  "why": "Saving changed by Paul 05/11/2026: through the Microsoft 365 connector (SharePoint upload), never a folder-access request; correcting a source document is download, edit, upload back by the same route"
+ },
+ {
+  "old": "Correcting a source document already on file",
+  "why": "Same change: download, edit narrowly, upload back to the same path through the same route"
  }
 ]

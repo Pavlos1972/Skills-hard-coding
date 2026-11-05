@@ -21,13 +21,22 @@ class Journey(Chat):
         out = r.stdout
         print(out[-5000:])
         self.assertIn("RESULT: PASS", out)
-        self.assertIn("SOURCE REPORT", out)
-        self.assertIn("WHAT PAUL SHOULD GLANCE AT", out)
+        # the last step prints the SHORT audit (Paul, 05/11/2026): a line per group, one attested line, the sources, the glance list, the delivery line
+        self.assertIn("AUDIT", out)
+        self.assertIn("✅", out)
+        self.assertNotIn("❌ ", out.split("RESULT:")[0])
+        self.assertIn("Only attested (not proven)", out)
+        self.assertIn("SOURCES USED", out)
+        self.assertIn("GLANCE AT", out)
         self.assertIn("DELIVERY LINE", out)
         self.assertIn("EVERY STEP IS DONE", out)
         self.assertIn("FONT:", out)
-        self.assertIn("PROVEN BY THE PROGRAM", out)
-        self.assertIn("ONLY ATTESTED BY CLAUDE", out)
+        self.assertNotIn("PROVEN BY THE PROGRAM", out)          # the long report is a file, never the chat
+        self.assertNotIn("DELIVERY GATE", out)
+        self.assertLess(len(out.split("EVERY STEP IS DONE")[-1]), 6500)
+        full = open(os.path.join(self.run_dir, "out_record", "audit-full.txt"), encoding="utf-8").read()
+        self.assertIn("PROVEN BY THE PROGRAM", full)
+        self.assertIn("ONLY ATTESTED BY CLAUDE", full)
         # the hand-over was proven against a REAL Teams run driven on the same invented call (A4), not just a folder that was started
         teams_run = os.path.join(self.tmp, "teams-run")
         self.assertTrue(os.path.exists(os.path.join(teams_run, "out", "teams_message.txt")))

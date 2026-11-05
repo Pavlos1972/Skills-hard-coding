@@ -10,7 +10,7 @@ Stages (each includes the one before):
   final  + F the hand-over receipts and the step driver (default)
 
 Prints PASS / FAIL / WARN / ATTEST per item and a RESULT line; exit code 0 only on PASS. ATTEST rows are things only Claude can do
-(chat hand-over, saving through the device bridge, the other skills); they are recorded, not machine-proven, and are labelled so.
+(chat hand-over, saving through Microsoft 365, the other skills); they are recorded, not machine-proven, and are labelled so.
 A malformed file gives a FAIL line, never a crash.
 """
 import argparse
@@ -388,6 +388,12 @@ def check_sources(run, R, lines=None, content=None):
         by_need.setdefault(e["need"], []).append(e)
     if "transcript" not in by_need or not any(e["result"] == "ok" for e in by_need["transcript"]):
         fail("the transcript has no successful access entry (run.py access --need transcript ... --result ok)")
+    _ver = [e for e in access if isinstance(e, dict) and e.get("result") == "ok" and "copy verified" in S(e.get("detail"))]
+    _cop = [e for e in access if isinstance(e, dict) and e.get("result") == "ok" and e.get("route") in ("m365", "zapier")]
+    if _ver:
+        R.add("PASS", g, "%d file copy/copies made through Microsoft 365 match the connector's size to the byte" % len(_ver))
+    if len(_cop) > len(_ver):
+        R.add("ATTEST", g, "%d file(s) were copied through Microsoft 365 with no size to compare, so each copy is exact only as far as the program's own checks go" % (len(_cop) - len(_ver)))
     mode = rj.get("form_mode")
     asked = {q.get("need"): q for q in questions}
     if mode == "form":
@@ -2369,14 +2375,75 @@ def report(R, st, ledger, content, stage, run=None):
         print("\nNOT COMPLETE. You may not tell Paul this run is finished. Fix every FAIL above and re-run.")
 
 
+def _cut(text, n):
+    t = " ".join(str(text).split())
+    return t if len(t) <= n else t[:n - 1].rstrip() + "…"
+
+
+def report_short(R, st, ledger, content, stage, run=None):
+    """The SHORT AUDIT (Paul, 03/11/2026, again 05/11/2026): one line per group with a green tick or a red cross, one closing line for what is only attested.
+    The full report (report()) is written to <run>/out_record/audit-full.txt, never to the chat."""
+    import contextlib
+    import io
+    buf = io.StringIO()
+    with contextlib.redirect_stdout(buf):
+        report(R, st, ledger, content, stage, run)
+    try:
+        d = os.path.join(run or ".", "out_record")
+        os.makedirs(d, exist_ok=True)
+        with open(os.path.join(d, "audit-full.txt"), "w", encoding="utf-8") as fh:
+            fh.write(buf.getvalue())
+    except OSError:
+        pass
+    out = ["AUDIT   %s" % w.version_line()]
+    for g in GROUP_ORDER:
+        rows = [r for r in R.rows if r[1] == g]
+        if not rows:
+            continue
+        name = GROUP_NAMES[g].split(". ", 1)[-1]
+        bad = [r for r in rows if r[0] == "FAIL"]
+        if bad:
+            out.append("❌ %s: %s%s" % (name, _cut(bad[0][2], 170), (" (+%d more)" % (len(bad) - 1)) if len(bad) > 1 else ""))
+            continue
+        passes = [r for r in rows if r[0] == "PASS"]
+        warn = [r for r in rows if r[0] == "WARN"]
+        out.append("✅ %s (%d checks)%s" % (name, len(passes), ("; warning: " + _cut(warn[0][2], 120)) if warn else ""))
+    fails, warns = len(R.fails), sum(1 for r in R.rows if r[0] == "WARN")
+    ok = sum(1 for g in GROUP_ORDER if any(r[1] == g for r in R.rows) and not any(r[1] == g and r[0] == "FAIL" for r in R.rows))
+    out.append("Only attested (not proven): Paul's own words as the chat typed them; that the PDF was sent and saved (the listed size is compared by the program); that the Planner page was published and the message posted; "
+               "that the Teams skill folder and the text copies of documents are the real ones; that each judgment item was really looked at. Details: out_record/audit-full.txt.")
+    out.append("RESULT: %s   (%d ✅, %d ❌, %d warnings)" % ("PASS" if not fails else "FAIL", ok, len({r[1] for r in R.fails}), warns))
+    if not fails and stage == "final" and ledger and content:
+        out.append("")
+        out.append("SOURCES USED:")
+        out += ["  - " + _cut(ln, 200) for ln in source_report(run or ".", st, content)[:6]]
+        gl = summary_lines(run or ".", st, ledger, content)
+        out.append("GLANCE AT (the program counted these; it cannot judge them):")
+        out += ["  - " + _cut(ln, 230) for ln in gl[:6]]
+        if len(gl) > 6:
+            out.append("  - (%d more in out_record/audit-full.txt)" % (len(gl) - 6))
+        fnt = (st.get("build") or {}).get("font") or {}
+        n_src = sum(len(r.get("src") or []) for _, _, r in iter_rows(content))
+        out.append("DELIVERY LINE: %s; transcript read twice (%d lines, %d chunks); %d ledger entries; %d sources traced; FONT: %s; program fingerprint %s."
+                   % (w.version_short(), st["total_lines"], len(st["chunks"]), len(ledger["entries"]), n_src,
+                      "Aptos" if fnt.get("aptos") else "NOT Aptos: %s (a substitute)" % (fnt.get("family") or "?"), w.program_fingerprint()[:16]))
+    elif fails:
+        out.append("NOT COMPLETE. Say so, and say which line failed; fix every ❌ and run the check again.")
+    print("\n".join(out))
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("run")
     ap.add_argument("--stage", choices=["pre", "built", "final"], default="final")
+    ap.add_argument("--full", action="store_true", help="print the long report (it is always written to out_record/audit-full.txt)")
     a = ap.parse_args()
     run = os.path.abspath(a.run)
     R, st, ledger, content = run_checks(run, a.stage)
-    report(R, st, ledger, content, a.stage, run)
+    if a.full or a.stage != "final":
+        report(R, st, ledger, content, a.stage, run)
+    else:
+        report_short(R, st, ledger, content, a.stage, run)
     sys.exit(1 if R.fails else 0)
 
 

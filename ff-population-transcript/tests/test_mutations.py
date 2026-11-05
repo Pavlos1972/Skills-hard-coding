@@ -60,10 +60,16 @@ class Mutations(unittest.TestCase):
         out = self.verify()
         self.assertEqual(out.returncode, 0, out.stdout[-3000:])
         self.assertIn("RESULT: PASS", out.stdout)
-        self.assertIn("SOURCE REPORT", out.stdout)
-        self.assertIn("WHAT PAUL SHOULD GLANCE AT", out.stdout)
+        self.assertIn("SOURCES USED", out.stdout)          # the default printout is the SHORT audit (Paul, 05/11/2026)
+        self.assertIn("GLANCE AT", out.stdout)
         self.assertIn("DELIVERY LINE", out.stdout)
         self.assertIn("FONT:", out.stdout)
+        self.assertNotIn("PROVEN BY THE PROGRAM", out.stdout)
+        full = self.verify("--full")                        # the long report is still there on request
+        self.assertEqual(full.returncode, 0, full.stdout[-3000:])
+        self.assertIn("SOURCE REPORT", full.stdout)
+        self.assertIn("WHAT PAUL SHOULD GLANCE AT", full.stdout)
+        self.assertIn("PROVEN BY THE PROGRAM", full.stdout)
 
     def test_wrong_standing_abi(self):
         self.edit_content(lambda c: self.row(c, "lc_wol").update(bullets=["5%"]))

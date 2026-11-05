@@ -37,13 +37,13 @@ Claude says it did ("attested").
 | S1 | Follow every instruction strictly; nothing skipped, nothing swapped | Built for 1 skill |
 | S2 | Every skill carries a dated "Last updated" (Athens time), set by a program | BUILT (`tools/stamp_skill.py`, `tools/lint_skill.py`) |
 | S3 | Client information comes from the client's file first; ask Paul only as a last resort, with proof | Built for 1 skill |
-| S4 | Always use the access routes (local drive, Microsoft 365, Zapier); never say "I cannot access your files" without proof | Built for 1 skill (logged, enforced); untested on real files |
+| S4 | Find files automatically: Microsoft 365 first, then Zapier, the computer only if already connected; never a permission step; never ask Paul to attach a file; never say "I cannot access your files" without proof (changed 05/11/2026) | Rebuilt in ff-population-transcript 05/11/2026; the other skills are changed one at a time |
 | S5 | Instructions are clean, ordered and current; outdated text removed; the skill still works | BUILT (`tools/inventory.py`, `tools/lint_skill.py`) |
 | S6 | Every output (reports, Planner note, Teams note to Sitamah) is hard-coded and checked | Built for 1 skill (page, PDF, Teams message) |
 | S7 | Skills are changed only in Claude Code, so scripts and text stay together | BUILT (`tools/package_skill.py`) |
 | S8 | A run leaves its evidence on disk, so it survives a long or compressed chat | Built for 1 skill |
 | S9 | Nothing is invented: every fact traces to the transcript or a named document | Built for 1 skill |
-| S10 | Nothing is sent from Paul's accounts without his yes | Written |
+| S10 | Nothing is sent from Paul's accounts without his yes, except what Paul made automatic in writing: the message to Sitamah of the Fact Find chain (05/11/2026) | Written |
 | S11 | No client data in the repo or in skill text | BUILT (lint scans a private name list kept outside the repo) |
 | S12 | Every skill has tests on invented data; every real-life bug becomes a new test | Built for 1 skill |
 | S13 | Same house conventions everywhere (dates, Rand, names, wording) | Written |
@@ -98,37 +98,18 @@ Paul is asked only for something that is genuinely not in any of those places.
 
 **Status.** BUILT inside the Teams transcript skill (`run.py source`, `run.py ask`, group S of `verify.py`); to be lifted into a shared kit when the second skill is converted.
 
-### S4. Always use the access routes. Never say "I cannot access your files" without proof
-**Rule.** Claude **has** access to Paul's files and mail. It must use the routes below, in this order, every time:
+### S4. Find files automatically. Never say "I cannot access your files" without proof
+**Rule (changed by Paul, 05/11/2026).** Claude **has** access to Paul's files and mail, and it finds them **by itself, with no permission step and no help from Paul**. The chat is on Auto and the Microsoft 365 connector is approved. Routes, in this order:
 
 | Order | Route | Used for |
 |---|---|---|
-| 1 | Local drive through the device bridge (`device_stage_files`, `device_commit_files`), into OneDrive: `Company - Paul` and `Company - WR Clients\Paul Kafentzis (Client Files)` | Reading and saving client files |
-| 2 | Microsoft 365 connector: SharePoint/OneDrive files, Outlook mail and calendar, Teams meeting transcripts | Same files when the local drive is not reachable; all email; transcripts |
-| 3 | Zapier (Office 365 and Teams tools) | Anything the two routes above cannot do (for example, posting to Teams) |
+| 1 | Microsoft 365 connector: SharePoint/OneDrive files (read and save), Outlook mail and calendar, Teams meeting transcripts | Finding and reading client files, saving the finished files into the client's folder, all email, transcripts |
+| 2 | Zapier (Office 365 and Teams tools) | Anything the connector cannot do (for example, posting to Teams) |
+| 3 | The computer through the device bridge | **Only if it is already connected.** Never requested: no tool that opens a permission or folder-access box is ever called. A computer that is not connected is logged at once as a fail ("not connected, not requested"). |
 
-Only after **all three** were tried may Claude ask Paul. When it does, it says exactly what it tried and the
-exact error text of each attempt. "I cannot access your files" on its own is never acceptable.
-
-**How it is locked in.**
-- Every run keeps an `access_log.json`: route, tool, what was asked, result or error.
-- The checker fails if Claude asked Paul for a file, or reported a file missing, while any of the three routes is untried in the log.
-- The existing safety rule stays: never touch another broker's folder in `Company - WR Clients`.
-
-**What was checked on 2026-10-29 (Microsoft 365 connector, Paul's account).** Granted permissions include:
-read and write on all files (`Files.ReadWrite.All`), read on all SharePoint sites (`Sites.Read.All`),
-mail read/write/send, calendars, Teams chat read, **Teams meeting transcripts read
-(`OnlineMeetingTranscript.Read.All`)**, recordings and AI insights read.
-Two consequences (the first still to be tested on a real run):
-1. The connector may be able to fetch Teams transcripts directly, which could replace the browser-based `client-transcript-download` step.
-2. The connector's permission list has **no permission to send Teams chat messages**. This is already confirmed in real use: `ff-population-transcript` Step 8 records a 403 error on 09/10/2026 and says Zapier is the only working route for Teams messages.
-
-**What I cannot promise.** This Claude Code session cannot see Paul's laptop on its own. The device-bridge tools
-live in the chat where the skills run. A Claude Code session can attach a folder from Paul's computer through
-Remote Control, but that needs his computer on and set up, and has not been tested. The standard forces every
-route to be tried and logged. It cannot open a door that is genuinely locked.
-
-**Status.** BUILT inside the Teams transcript skill (`run.py access`, enforced by `verify.py` group S and `run.py ask`). The routes themselves are untested on real files: routes 1 to 3 are tried for real on the first real-case trial.
+Every try is logged. A skill **never** asks Paul to click Allow, attach, upload or drag a file, or say "go". If every route fails, the chat says in at most five lines what failed and which routes were tried, and stops; "I cannot access your files" on its own is never acceptable.
+**Why it changed.** The first real run of `ff-population-transcript` (05/11/2026) stopped at a folder-access box because the old order put the computer first and asked Paul to approve it.
+**Status.** Built into `ff-population-transcript` on 05/11/2026. The other skills carry the old wording until each is corrected, one at a time.
 
 ### S5. Instructions are clean, ordered and current. Outdated text is removed. The skill still works
 **Rule.** Each SKILL.md is short, in order, and states each rule once, plainly. It has an Index at the top.
@@ -208,7 +189,8 @@ A garbled line is never turned into a fact. Anything the client left with himsel
 ### S10. Nothing is sent without Paul's yes
 **Rule.** By default Claude prepares drafts (email, Teams message, invite) and shows them. It sends only after Paul says yes in that conversation.
 A skill may send on its own only if its own rules say so and Paul has approved that wording.
-**Status.** Written. To be copied into each skill's rules.
+**Approved exceptions.** (1) The message to Sitamah of the Fact Find chain (`ff-population-transcript` hands over to `fact-find-summary` and `client-teams-transcript-skill`) is posted automatically through Zapier once the PDFs are saved and the folder listing is checked, once per meeting, never again for a correction unless Paul asks (Paul, 05/11/2026: "post automatically"). Every other message, email and invite still waits for his yes.
+**Status.** Written. Copied into each skill's rules as it is corrected.
 
 ### S11. No client data in the repo or in skill text
 **Rule.** The repo holds scripts, tests and skill text only. Tests use invented people and figures.
@@ -360,6 +342,12 @@ Every run (one client, one meeting) keeps in its own run folder:
 **Still open**
 1. Which skill comes after the Teams transcript skill (Paul names it and says go; one skill at a time, S15)?
 2. (Closed 30/10/2026) The Teams transcript skill is LIVE: Paul uploaded the 17:53 build (v34), ran it on real meetings and confirmed.
+
+### Decisions by Paul, 05/11/2026 (after the first real run of ff-population-transcript)
+1. Files are found automatically through Microsoft 365: no permission step, no drag and drop, no "attach the file" (S4 changed).
+2. The message to Sitamah of the Fact Find chain is posted automatically (S10 exception).
+3. The chat may show short progress lines while it works; it must not write a long message at the start. The reply at the end is the outputs and the short audit.
+4. The Operation Skill Restructure procedure and the template were corrected for these points.
 
 ## 8. Known gaps found in the Teams transcript skill (to fix in its rewrite)
 

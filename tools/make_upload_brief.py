@@ -54,7 +54,8 @@ STEPS
 7. AFTER test. Open a new chat and type exactly the same question as in step 3.
    Correct answer: "%(stamp)s" and "%(first)s".
    If the answer is different, STOP and tell Paul. Do not undo anything.
-8. Report to Paul in plain, short words, as a before-and-after list: number of entries; version label; number of files; the two line counts from the replace box; the test answer before and after, quoted; what happened at the upload (any message word for word, whether folder access and staging were needed, whether Paul had to pick the file himself); anything unusual. Finish with: "Uploaded and tested. Not confirmed live until you confirm." Do not say it is live. Paul will confirm.
+7b. ACCESS check (read-only, no client data). In that same new chat, type exactly: Using only the Microsoft 365 connector, list the files in the folder Company - Paul/Claude/Claude Skills - New and tell me how many there are. Do not ask me for permission and do not open any file. Write down whether the chat did it by itself, or whether any permission box, folder-access request or refusal appeared (word for word). Paul's rule: a skill must never need a click from him to reach his files.
+8. Report to Paul in plain, short words, as a before-and-after list: number of entries; version label; number of files; the two line counts from the replace box; the test answer before and after, quoted; the result of the access check (7b); what happened at the upload (any message word for word, whether folder access and staging were needed, whether Paul had to pick the file himself); anything unusual. Finish with: "Uploaded and tested. Not confirmed live until you confirm." Do not say it is live. Paul will confirm.
 """
 
 

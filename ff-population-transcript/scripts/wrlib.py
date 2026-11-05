@@ -34,10 +34,12 @@ PARTS = "parts.json"
 OUT = "out"
 DOCS = "docs"
 
-# Access routes in the order they must be tried (SKILL-STANDARDS.md S4). The time of day never changes this (Paul, 02/11/2026).
+# Access routes (SKILL-STANDARDS.md S4). The order the LOG keeps is device, m365, zapier, but the computer is only CHECKED
+# (log it at once as a fail, "not connected, not requested", when this chat is not already connected): it is never requested and no permission box is
+# ever opened. Microsoft 365 is the working route; nothing here ever asks Paul for anything.
 ROUTES = ("device", "m365", "zapier")
 ROUTE_NAMES = {
-    "device": "local drive / OneDrive through the device bridge",
+    "device": "the computer, only if this chat is ALREADY connected to it (checked, never requested)",
     "m365": "Microsoft 365 connector (SharePoint/OneDrive, Outlook, Teams transcripts)",
     "zapier": "Zapier (Office 365 and Teams tools)",
 }

@@ -405,7 +405,7 @@ def ck_verify(stage):
     def check(run, rj):
         R, st, ledger, content = verify.run_checks(run, stage)
         if stage == "final":
-            verify.report(R, st, ledger, content, stage, run)
+            verify.report_short(R, st, ledger, content, stage, run)
         return [m for lvl, _, m in R.rows if lvl == "FAIL"][:15]
     return check
 
@@ -507,8 +507,25 @@ def cmd_done(a):
 # ------------------------------------------------------------------ logs
 def cmd_access(a):
     log = load_list(a.run, w.ACCESS)
-    log.append({"t": w.now(), "need": a.need, "route": a.route, "tool": a.tool, "result": a.result, "detail": a.detail or ""})
+    detail = a.detail or ""
+    result = a.result
+    if a.file or a.source_size is not None:
+        # a file copied from Microsoft 365 into the run folder: the copy must be as big as the connector said the file is
+        if not (a.file and a.source_size is not None):
+            w.die("REFUSED: give --file (the copy you saved) together with --source-size (the size in bytes the connector reported).")
+        if not os.path.isfile(a.file):
+            w.die("MISSING: the copy %s" % a.file)
+        got = os.path.getsize(a.file)
+        if got != a.source_size:
+            result = "fail"
+            detail = (detail + " ").lstrip() + "copy NOT complete: %d bytes saved, the connector reports %d" % (got, a.source_size)
+            print("logged as a FAIL: the copy is %d bytes but the connector reports %d. Read the file again through the connector and save it whole (a long text may need to be read in parts and joined); do NOT ask Paul for anything." % (got, a.source_size))
+        else:
+            detail = (detail + " ").lstrip() + "copy verified: %d bytes = the connector's size" % got
+    log.append({"t": w.now(), "need": a.need, "route": a.route, "tool": a.tool, "result": result, "detail": detail})
     w.save_json(p(a.run, w.ACCESS), log)
+    if result != a.result:
+        return
     es = [e for e in log if e["need"] == a.need]
     if any(e["result"] == "ok" for e in es):
         print("logged: '%s' obtained via %s." % (a.need, a.route))
@@ -1177,6 +1194,8 @@ def main():
     sp.add_argument("--tool", required=True)
     sp.add_argument("--result", required=True, choices=["ok", "fail"])
     sp.add_argument("--detail")
+    sp.add_argument("--file", help="the copy you saved in the run folder (a file taken from Microsoft 365)")
+    sp.add_argument("--source-size", dest="source_size", type=int, help="the size in bytes the connector reported for that file")
     sp = add("source", cmd_source, "run")
     sp.add_argument("--kind", required=True)
     sp.add_argument("--path")

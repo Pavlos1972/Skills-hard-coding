@@ -352,3 +352,14 @@ Every rule of the old skill is still there. A program (`tools/inventory.py`) wen
 - will_where: lawyer, safe, kept, held by, executor
 - work: office phone, direct line
 - years: years with, been there, been working, since 20
+
+## Strict changes of 05/11/2026 (Paul, after the first real run)
+Your words: the chat finds the files itself through Microsoft 365, never asks for permission, never asks you to attach or drag anything, does not write a long message at the start, ends with the reports and a short audit, and posts the Sitamah message automatically.
+- **Files (locate step, page 01):** Microsoft 365 is the working route, used automatically. The computer is used only if the chat is already connected to it; it is never requested, and a computer that is not connected is logged at once as "not connected, not requested". Zapier is next. The "ask Paul to attach the file" last resort is gone.
+- **Copies are checked:** a file copied from Microsoft 365 is logged with the size the connector reported, and the program refuses a copy of a different size. The form's saved PDF may be a text copy.
+- **Saving (page 10):** the finished PDF goes into the client's `2. Fact Find` folder through Microsoft 365 (SharePoint upload), with no folder-access request.
+- **A quiet run (rule 0 on page 00 and in SKILL.md):** the version sentence, then work, one short progress line per step; no opening recap; the chat does not read the pages itself.
+- **Short audit:** `verify.py` and the last step now print the SHORT audit (a line per group, one attested line, sources used, what to glance at, the delivery line). The long report is the file `out_record/audit-full.txt` (`verify.py --full` prints it).
+- **The message to Sitamah is posted automatically** through Zapier in the final step (once per meeting, no question). The Teams skill, run on its own, still asks until you tell me to change it.
+- **Not touched:** `fact-find-summary` and `client-teams-transcript-skill` (live) carry the same computer-first wording; they are changed one at a time when you say.
+- **Unproven until your next real run:** reading and saving through Microsoft 365 in your chat on Auto; a very large transcript or PDF can hit a size limit (the chat then says so in five lines).

@@ -1,6 +1,6 @@
 INVENTORY of the old skill: 568 sentences
-  kept (word for word or nearly): 391
-  reworded, with a recorded change: 68
+  kept (word for word or nearly): 373
+  reworded, with a recorded change: 86
   dropped, with a recorded decision: 109
   UNACCOUNTED: 0
 
@@ -28,7 +28,7 @@ REWORDED (each is covered by a recorded change):
     now: The Fact Find Summary, the Planner note and the message to Sitamah are made by the other two skills, once.
     why: Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.
 - old line 45: 2026-10-28 10:45 (Athens/Greece time)
-    now: 2026-11-03 06:12 (Athens time)
+    now: 2026-11-05 10:43 (Athens time)
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 51: 2026-10-28 10:45 | New source order (rule 11):
     now: Gather inputs (source order — rule 11)
@@ -49,7 +49,7 @@ REWORDED (each is covered by a recorded change):
     now: The old 21-page v2.0 layout and its field map (references/ff-field-map.md) are retired for new runs.
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 52: 2026-10-15 11:30 | New Step 1d for two spouses in one meeting (separate sets, nothing mixed except common debts and children);
-    now: Use each file only for its own spouse (plus the common debts and children).
+    now: For two spouses in one meeting start one run per spouse (--spouse "Other Surname" --spouse-run <their run folder>).
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 52: Summary Section 8 sub-headings fixed (no "Action Plan" wording);
     now: and the Summary's Section 8 shows the same.
@@ -58,7 +58,7 @@ REWORDED (each is covered by a recorded change):
     now: a save is proven only when the listed size equals the local file's (a new time with the old size means the copy lagged:
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 53: 2026-10-15 11:15 | ABI rule corrected:
-    now: 2026-11-03 06:12 | Fix round 5 after a confirmation review:
+    now: 2026-11-05 10:43 (Athens time)
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 53: Life Cover (Fractured) WOL ABI 3%, Childcare ABI 5%;
     now: Life Cover (WOL) ABI = 3% and Childcare ABI = 5%.
@@ -67,13 +67,13 @@ REWORDED (each is covered by a recorded change):
     now: the Permanent disability fractured block has NO Life Cover (WOL) ABI line, reads Household needs ABI 5% and Childcare ABI 5%;
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 54: 2026-10-15 10:55 | Quotes:
-    now: """'2026-10-29 13:18' -> '29/10/2026 13:18 (Athens time)' (house style, S13)."""
+    now: 2026-11-05 10:43 (Athens time)
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 54: If the insurer and New Business vs Servicing are not in the recording or the Fact Find, ask Paul.
     now: the insurer and New Business or Servicing, from the form or from what was said/Paul decided (never a default)."""
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 55: 2026-10-14 15:03 | Index added;
-    now: 2026-11-03 06:12 (Athens time)
+    now: 2026-11-05 10:43 (Athens time)
     why: Stamp and changelog row updated for this edit (the oldest row dropped so the last 5 stay).
 - old line 55: client names, policy numbers and beneficiary details in examples replaced with placeholders.
     now: Never assume Servicing because the client already holds a policy with that insurer, and never assume the insurer.
@@ -81,11 +81,50 @@ REWORDED (each is covered by a recorded change):
 - old line 61: Built in Word for layout control, delivered as a PDF — see Step 5.
     now: Drawn by a program and delivered as a PDF — see Step 5.
     why: S6/S16: the PDF is now drawn by scripts/build.py (reportlab) from content.json; no Word file is made.
+- old line 65: Every time this skill needs a client's document, or needs to save a newly produced deliverable into the client's folder, follow this exact order, every time, without asking first:
+    now: Every deliverable this skill produces is saved directly into the client's own folder — see Step 5a.
+    why: Access order changed by Paul 05/11/2026 (S4): Microsoft 365 first and automatic, Zapier second, the computer only if already connected and never requested; the 'ask Paul to attach' last resort is gone (the chat says in five lines what failed and stops)
+- old line 67: Local machine — always attempted first.
+    now: if [x for x in TEAMS_STEPS if x not in first]:
+    why: Paul, 02/11/2026 (decision 16c): the 8:45am laptop window is dropped.
+- old line 67: Connect via the device bridge to Paul's local machine and check both of these locations under liferisk.co.za for the client's folder (same [Business Segment]/[Surname], [First Name]/Fact Find structur
+    now: same [Business Segment]/[Surname], [First Name]/Fact Find structure) and use whichever has the file.
+    why: Paul, 02/11/2026 (decision 16c): the 8:45am laptop window is dropped.
+- old line 67: Company - Paul (used for New Business, but not limited to it) and Company - WR Clients → Paul Kafentzis (Client Files) (used for current/existing clients).
+    now: The folder must be under Company - Paul or Company - WR Clients\\Paul Kafentzis (Client Files), and the folder before 2.
+    why: Paul, 02/11/2026 (decision 16c): the 8:45am laptop window is dropped.
+- old line 67: A given client's material could sit under either — check both and use whichever one actually has the file.
+    now: same [Business Segment]/[Surname], [First Name]/Fact Find structure) and use whichever has the file.
+    why: Paul, 02/11/2026 (decision 16c): the 8:45am laptop window is dropped.
+- old line 67: This connection is expected to succeed and must be tried first, every time — never skip straight to asking Paul to attach something.
+    now: Files are found and saved AUTOMATICALLY, in this order, every time, without asking Paul anything (Paul's rule:
+    why: Paul, 02/11/2026 (decision 16c): the 8:45am laptop window is dropped.
+- old line 67: If this session has no live device-bridge connection to Paul's computer yet, request it before doing anything else that depends on client files.
+    now: print("\nSAY THIS TO PAUL FIRST, before anything else in your reply, in exactly these words:\n    %s.\n"
+    why: Paul, 02/11/2026 (decision 16c): the 8:45am laptop window is dropped.
 - old line 67: Paul's laptop is reachable ~8:45am on weekdays only;
     now: src names Paul's answer %r, which is not on record:
     why: Paul, 02/11/2026 (decision 16c): the 8:45am laptop window is dropped.
 - old line 67: if the bridge is down outside that window, say so plainly rather than treating it as a failure.
-    now: Step 5 already produced and verified that PDF — reuse it rather than converting the docx a second time.
+    now: If the file is locked/open, tell Paul plainly, ask him to close it, and retry - never report it as saved until the listing proves it.
+    why: Paul, 02/11/2026 (decision 16c): the 8:45am laptop window is dropped.
+- old line 68: SharePoint — only if the local machine genuinely can't be reached.
+    now: the computer only if already connected, never requested).
+    why: Paul, 02/11/2026 (decision 16c): the 8:45am laptop window is dropped.
+- old line 68: If, and only if, the device bridge cannot connect to Paul's computer this session, fall back to the identical two-location check via SharePoint.
+    now: "the computer, only if this chat is ALREADY connected to it (checked, never requested)",
+    why: Paul, 02/11/2026 (decision 16c): the 8:45am laptop window is dropped.
+- old line 68: This should be rare — treat a failed local connection as the exception, not the default path.
+    now: the field labels in that file are this skill's own, because the form's label file could not be read, and Paul checks them on a sample PDF.
+    why: Paul, 02/11/2026 (decision 16c): the 8:45am laptop window is dropped.
+- old line 68: Be aware this path requires embedding the file's content as base64 text in one message when saving, which has a real practical ceiling — a large PDF may need lossless compression first (e.g.
+    now: To SAVE a deliverable, the file's content goes in as base64 text, which has a practical ceiling:
+    why: Paul, 02/11/2026 (decision 16c): the 8:45am laptop window is dropped.
+- old line 68: qpdf --recompress-flate --object-streams=generate followed by gs -dPDFSETTINGS=/ebook).
+    now: a large PDF may need lossless compression first (qpdf --recompress-flate --object-streams=generate followed by gs -dPDFSETTINGS=/ebook);
+    why: Paul, 02/11/2026 (decision 16c): the 8:45am laptop window is dropped.
+- old line 69: Ask Paul to attach the file — last resort only.
+    now: only if Paul says to go on with the data file alone:
     why: Paul, 02/11/2026 (decision 16c): the 8:45am laptop window is dropped.
 - old line 69: Only once both the local machine and SharePoint have genuinely been tried and neither works does this skill ask Paul to upload the Audio to Text file, transcript or other source directly, or say plain
     now: Write only what is in the source material (the Fact Find (Audio to Text) file, the transcript, the Overview, a client document or file) or in a named document this skill tells you to use.
@@ -100,7 +139,7 @@ REWORDED (each is covered by a recorded change):
     now: The Audio to Text file — first and primary source.
     why: Paul, 02/11/2026 (decision 14): the new Fact Find form's data file is the first source (the name stays Audio to Text); statuses are confirmed/preset/empty (older files heard/verify).
 - old line 95: Locate it - by content as well as name.
-    now: Locate it - by content as well as name (python3 {scripts}/ffform.py identify <the candidate .json files> tells you which one is the form's data file).
+    now: identify by content, not only by name (rule 10).
     why: Paul, 02/11/2026 (decision 14): the new Fact Find form's data file is the first source (the name stays Audio to Text); statuses are confirmed/preset/empty (older files heard/verify).
 - old line 95: It is normally Fact Find (Audio to Text) - DD.MM.YYYY - [Name Surname].pdf plus a .json with the same name, in the client's 2.
     now: Fact Find (Audio to Text) - DD.MM.YYYY - [Name Surname].json plus the same name as .pdf, in the client's 2.
@@ -139,8 +178,11 @@ REWORDED (each is covered by a recorded change):
     now: If, and only if, no Audio to Text file exists for this meeting (both locations checked, the whole folder listed, every candidate opened) AND Paul chose the Manual Fact Find when the program asked him 
     why: Paul, 02/11/2026 (decision 16b): when the form's data file is missing the program STOPS and ASKS Paul (Manual Fact Find or transcript alone) and records his words.
 - old line 112: Two spouses in one meeting (Paul's rule, 15/10/2026)
-    now: Two spouses in one meeting:
+    now: Two spouses in one meeting
     why: The dated attribution after the heading is history (S2, S5); listed in history/dated-attributions-removed.txt.
+- old line 116: Two Fact Find Transcript PDFs, two Fact Find Summary PDFs, two Planner note Artifact pages (one per spouse) and two Teams messages (one per spouse, each only after Paul's yes).
+    now: Two Fact Find Transcript PDFs, two Fact Find Summary PDFs, two Planner note pages (one per spouse) and two Teams messages (one per spouse, each posted automatically).
+    why: Nothing changed: the sentence is in references/03-two-spouses.md word for word. The inventory tool's word-overlap search misses this five-word fragment (the same single miss showed in the 02/11/2026 rule-check).
 - old line 121: The Audio to Text file.
     now: The Audio to Text file is the base.
     why: Nothing changed: the sentence is in references/03-two-spouses.md word for word. The inventory tool's word-overlap search misses this five-word fragment (the same single miss showed in the 02/11/2026 rule-check).
@@ -172,22 +214,22 @@ REWORDED (each is covered by a recorded change):
     now: say what shows it (for example 'only Pat spoke, no spouse on the call' or 'Pat and Robin were both on the call'):
     why: The same rule, in the words of the program that now draws the PDF (reportlab, not Word); the checker proves it from the finished PDF.
 - old line 224: true on every table row.
-    now: # ---------------------------------------------------------------- search terms for 'Not discussed' / 'not on the call' (every claimable field has curated ones)
+    now: table, no row split across pages.
     why: The same rule, in the words of the program that now draws the PDF (reportlab, not Word); the checker proves it from the finished PDF.
 - old line 230: Use scripts/build_fact_find.js as the starting template for the styling helpers (it already implements all Step 4 conventions, including a fieldTable cell renderer that accepts either a single string 
     now: An Overview or a Policy schedule counts only with a text copy that names the client, and a number of six or more digits is printed only when a recorded document shows it.
     why: S6/S11/S16: the old script held a real client's data and was copied and edited by hand each run. It is replaced by a program that Claude never edits; the styling it carried (Aptos 12pt, navy headings, EAF1F8 label column, bullets, no page numbers) is built into scripts/build.py and scripts/layout.json.
 - old line 230: Replace its client-specific content with the sections of Step 2, in the Audio to Text file's order;
-    now: The form saves its Fact Find (Audio to Text) PDF and data file into the client's folder.
+    now: Attribute every statement from its content (who owns the policy, whose job, "my husband / my wife") and from the Audio to Text file(s), never from the label.
     why: S6/S11/S16: the old script held a real client's data and was copied and edited by hand each run. It is replaced by a program that Claude never edits; the styling it carried (Aptos 12pt, navy headings, EAF1F8 label column, bullets, no page numbers) is built into scripts/build.py and scripts/layout.json.
 - old line 230: don't rewrite the styling helpers or numbering config.
-    now: answer same or differs with the words, or give a reason:
+    now: return [], "--about for the dismissals question is the line numbers (for example 66 or 66-67), not %r" % t
     why: S6/S11/S16: the old script held a real client's data and was copied and edited by hand each run. It is replaced by a program that Claude never edits; the styling it carried (Aptos 12pt, navy headings, EAF1F8 label column, bullets, no page numbers) is built into scripts/build.py and scripts/layout.json.
 - old line 230: When populating any field that is itself a total, compute it from the same named component values used elsewhere in the document.
     now: When populating any field that is itself a total, compute it from the same named component values used elsewhere in the document (the program does this and the checker recomputes it).
     why: S6/S11/S16: the old script held a real client's data and was copied and edited by hand each run. It is replaced by a program that Claude never edits; the styling it carried (Aptos 12pt, navy headings, EAF1F8 label column, bullets, no page numbers) is built into scripts/build.py and scripts/layout.json.
 - old line 232: *The .docx built here is the internal working format only — it is never the delivered Fact Find Transcript.
-    now: Never tell the user something is done, saved, sent, visible or working until you have checked it yourself (open the file, list the folder, look at the screen).
+    now: it prints the exact question for Paul (use the filled-in Manual Fact Find PDF, or the transcript alone?).
     why: No Word step any more: the PDF is drawn directly, and the checker fails a Word file next to it.
 - old line 232: The file saved to the client's folder is a PDF.
     now: one file, a PDF only (never a Word file), saved into the client's 2.
@@ -201,6 +243,18 @@ REWORDED (each is covered by a recorded change):
 - old line 237: (b) every Audio to Text field that was populated with status heard, verify or preset, with what was done with it (kept, filled in from the transcript, flagged) - confirmed fields can be counted rather
     now: (b) every Audio to Text field that was populated with status preset (or heard or verify in an older file), with what was done with it (kept, filled in from the transcript, flagged) - confirmed fields 
     why: Paul, 02/11/2026 (decision 14): the new Fact Find form's data file is the first source (the name stays Audio to Text); statuses are confirmed/preset/empty (older files heard/verify).
+- old line 244: write the finished PDF straight into the client's 2.
+    now: upload the finished PDF into the client's 2.
+    why: Saving changed by Paul 05/11/2026: through the Microsoft 365 connector (SharePoint upload), never a folder-access request; correcting a source document is download, edit, upload back by the same route
+- old line 244: Fact Find folder using the device-bridge file tools.
+    now: Fact Find folder and listed back (the listed size must equal the local file's).
+    why: Saving changed by Paul 05/11/2026: through the Microsoft 365 connector (SharePoint upload), never a folder-access request; correcting a source document is download, edit, upload back by the same route
+- old line 244: Request folder access proactively if not already granted.
+    now: if not text(tm, "run_folder", "skill_dir", "next_appointment_carried", n=3):
+    why: Saving changed by Paul 05/11/2026: through the Microsoft 365 connector (SharePoint upload), never a folder-access request; correcting a source document is download, edit, upload back by the same route
+- old line 246: stage, edit narrowly, commit back to the exact same path.
+    now: download it, edit narrowly, upload it back to the exact same path through the same route.
+    why: Saving changed by Paul 05/11/2026: through the Microsoft 365 connector (SharePoint upload), never a folder-access request; correcting a source document is download, edit, upload back by the same route
 - old line 254: Do not proceed to Step 7 until the advisor confirms the Fact Find itself is correct.
     now: Do not make the hand-overs final until the advisor confirms the Fact Find itself is correct:
     why: One reply, one question (Paul, 29/10/2026 and 02/11/2026): the hand-overs are shown in the same reply as the PDF and nothing is sent without his yes. Listed for Paul's yes/no in history/CHANGES-FOR-PAUL.md (question 1).
@@ -208,7 +262,7 @@ REWORDED (each is covered by a recorded change):
     now: the Fact Find Summary (fact-find-summary), and the Planner note page and the message to Sitamah (client-teams-transcript-skill, started with --type first).
     why: Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.
 - old line 273: Only after all three are approved and saved, finish with Step 8 (the Teams message to Sitamah).
-    now: They are shown in the same reply with ONE question, "Shall I post this message to Sitamah in Teams?";
+    now: The Planner note page and the message to Sitamah are made ONLY by client-teams-transcript-skill:
     why: Paul, 02/11/2026: the Planner note and the Sitamah message are made once, by the Teams transcript program; this text now points there.
 
 

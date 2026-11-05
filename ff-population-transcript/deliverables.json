@@ -5,7 +5,7 @@
       "name": "Fact Find Transcript PDF",
       "file": "out/Fact Find Transcript - DD.MM.YY - (Name Surname).pdf",
       "produced_by": "scripts/build.py (from content.json, composed by scripts/compose.py)",
-      "handover": "sent in the chat; saved into the client's 2. Fact Find folder with device_commit_files; folder listed back and the listed size compared with the local file",
+      "handover": "sent in the chat; saved into the client's 2. Fact Find folder through the Microsoft 365 connector (SharePoint upload); folder listed back and the listed size compared with the local file",
       "checked_by": "verify.py group E (text identical to content.json, no page numbers, no stranded heading, no split row, font really embedded, one PDF only) and group F (saved receipt)",
       "step": "pdf"
     },

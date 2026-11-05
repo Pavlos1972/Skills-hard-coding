@@ -4,7 +4,7 @@
 
 When the meeting covered a couple (for example one Teams call with both spouses), treat them as two clients and run the whole chain twice, once per spouse:
 
-1. **Separate sets.** Two Fact Find Transcript PDFs, two Fact Find Summary PDFs, two Planner note pages (one per spouse) and two Teams messages (one per spouse, each only after Paul's yes). File names use each spouse's own name: `Fact Find Transcript - DD.MM.YY - ([Name Surname]).pdf`, and the same pattern for the Summary.
+1. **Separate sets.** Two Fact Find Transcript PDFs, two Fact Find Summary PDFs, two Planner note pages (one per spouse) and two Teams messages (one per spouse, each posted automatically). File names use each spouse's own name: `Fact Find Transcript - DD.MM.YY - ([Name Surname]).pdf`, and the same pattern for the Summary.
 2. **Each spouse's own folder.** Save each spouse's PDFs into that spouse's own `2. Fact Find` folder (both locations per Client File Access). Use the folder's real spelling, even where it differs from the spelling in the recording or the file names, and mention the difference to Paul in the hand-over. Never save one spouse's reports into the other's folder.
 3. **Never mix the spouses' information.** Occupation, income, policies, health, retirement, investments, medical aid, will and personal needs belong only to the spouse they were stated about. **Only two things are common to both and appear in both sets: the debts and the children / childcare** (every debt and every child, in full, in both).
 4. **Joint policies** (one policy covering both spouses) appear in both sets, labelled joint, with the other spouse named. A policy on one spouse alone appears only in that spouse's set.

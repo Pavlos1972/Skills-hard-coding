@@ -337,6 +337,9 @@ AMOUNT_RX = re.compile(r"(?<![\d.,])R?\s?\d{1,3}(?:[ ,]\d{3})+(?:[.,]\d{1,2})?(?
 
 def pdf_text(path):
     import subprocess
+    if path.lower().endswith(".txt"):          # a text copy of the saved PDF made from the Microsoft 365 connector's text
+        with open(path, encoding="utf-8", errors="replace") as fh:
+            return fh.read()
     try:
         r = subprocess.run(["pdftotext", "-layout", path, "-"], capture_output=True, text=True)
     except OSError:
