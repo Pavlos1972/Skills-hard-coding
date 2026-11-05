@@ -6,9 +6,9 @@ THE FACTS
 - Skill name: client-teams-transcript-skill
 - File: client-teams-transcript-skill-20261105-1137.zip (91,416 bytes, 21 files)
 - Where it is on Paul's Windows computer, in this folder:
-  C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New
+  C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New\client-teams-transcript-skill
   Full path of the file:
-  C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New\client-teams-transcript-skill-20261105-1137.zip
+  C:\Users\Paul\liferisk.co.za\Company - Paul\Claude\Claude Skills - New\client-teams-transcript-skill\client-teams-transcript-skill-20261105-1137.zip
 - What the NEW version says inside: the line "Last updated: 2026-11-05 11:37 (Athens time)", and its first section after the main title is called "Index".
 - Paul's account already has this skill (an older version). A zip with the same name REPLACES it: the account cannot hold two skills with one name. The older version is kept in the skill's version history (a dropdown on the skill's page, listing versions such as v32, v31 and so on). That history is the backup. Expect ONE entry before the upload and ONE entry after it.
 
