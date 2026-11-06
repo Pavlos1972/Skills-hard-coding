@@ -2,14 +2,14 @@
 
 Read this together with CLAUDE.md, SKILL-STANDARDS.md and SKILL-TEMPLATE.md. If this file and SKILL-STANDARDS.md disagree, SKILL-STANDARDS.md wins.
 
-## 0. The procedure: Operation Skill Restructure (Paul, 03/11/2026)
-The fixed list of what is done for every skill is in `OPERATION-SKILL-RESTRUCTURE.md` (approved by Paul: "Yes, save it"). Follow it strictly; keep its Progress table current. Next skill: Paul names it; `fact-find-summary` is the candidate (decision 20) but nothing is started on it under the Operation yet.
+## 0. The procedure: Operation Skill Restructure 2.0 (Paul, 06/11/2026)
+The fixed procedure is in `OPERATION-SKILL-RESTRUCTURE-2.0.md` (it replaced version 1.0, which Paul had deleted after the 1.0 rebuilds proved too rigid). Follow it strictly; keep its Progress table current. Everything in the numbered items below that describes the 1.0 rebuilds is history. FIRST skill under 2.0: `ff-population-transcript` (Phase 1 report done; waiting for Paul's go for Phase 2).
 
 ## 1. The goal (Paul's words, in plain form)
 Every one of Paul's claude.ai skills must be restructured so that **a program governs it**: the skill runs every step, every time, nothing skipped or swapped, and a checker proves the result. Measured against the 13-ingredient template (approved 02/11/2026). One skill at a time. Paul uploads the finished zip into his Skills; Claude Code cannot save into his Skills.
 
 ## 2. How Paul wants me to work (these are rules, not wishes)
-- **Re-read `OPERATION-SKILL-RESTRUCTURE.md` at the START of every skill, Phase A included** (Paul asked on 03/11/2026 whether I still do; I had skipped it before `rgar-skill` Phase A). Say so in the first reply of the skill.
+- **Re-read `OPERATION-SKILL-RESTRUCTURE-2.0.md` at the START of every skill, Phase 1 included** (Paul asked on 03/11/2026 whether I still do; I had skipped it before `rgar-skill` Phase A). Say so in the first reply of the skill.
 - **NO HELPERS (subagents).** Paul, 03/11/2026: "We cannot do what you did for every skill, you have eaten all my tokens. No more helpers." Never start a helper, an independent reviewer or a build agent unless Paul asks for one in his own words. Work in one pass, in this chat.
 - **No endless test rounds.** Paul, 03/11/2026: "we've done enough tests." One build, one lint, one full test run, one package. Do not start review-and-fix loops. Never say "last round" and then run another.
 - **Tokens are a budget.** Before any big or long job, say roughly how big it is and wait for Paul's yes. Prefer the packager (it runs the tests itself) over running the suite by hand as well.

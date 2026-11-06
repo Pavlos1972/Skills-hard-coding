@@ -37,7 +37,7 @@ Claude says it did ("attested").
 | S1 | Follow every instruction strictly; nothing skipped, nothing swapped | Built for 1 skill |
 | S2 | Every skill carries a dated "Last updated" (Athens time), set by a program | BUILT (`tools/stamp_skill.py`, `tools/lint_skill.py`) |
 | S3 | Client information comes from the client's file first; ask Paul only as a last resort, with proof | Built for 1 skill |
-| S4 | Find files automatically: Microsoft 365 first, then Zapier, the computer only if already connected; never a permission step; never ask Paul to attach a file; never say "I cannot access your files" without proof (changed 05/11/2026) | Rebuilt in ff-population-transcript 05/11/2026; the other skills are changed one at a time |
+| S4 | Find files automatically the way the ORIGINAL skills did: the device bridge to Paul's computer first (list, stage, commit; request the folder once only if not connected; no shell commands, no fingerprints, no hard STOP), then Microsoft 365, then Zapier; never a permission gate; never ask Paul to attach a file; never say "I cannot access your files" without proof (changed 06/11/2026, Operation Skill Restructure 2.0; the 05/11/2026 wording is superseded) | Rebuilt in ff-population-transcript 05/11/2026; the other skills are changed one at a time |
 | S5 | Instructions are clean, ordered and current; outdated text removed; the skill still works | BUILT (`tools/inventory.py`, `tools/lint_skill.py`) |
 | S6 | Every output (reports, Planner note, Teams note to Sitamah) is hard-coded and checked | Built for 1 skill (page, PDF, Teams message) |
 | S7 | Skills are changed only in Claude Code, so scripts and text stay together | BUILT (`tools/package_skill.py`) |
@@ -335,7 +335,7 @@ Every run (one client, one meeting) keeps in its own run folder:
 
 21. **No helpers and no more test rounds (Paul, 03/11/2026).** After six fix-and-review rounds with helpers on `ff-population-transcript` Paul said: "we've done enough tests", "you have eaten all my tokens. No more helpers." Claude Code does NOT start helpers, subagents or independent reviewers unless Paul asks in his own words, and does not run review loops. One build, one lint, one full test run, one package per skill; say roughly how big a job is first. The finished `ff-population-transcript` (round 5, commit d434670) goes to packaging as it is; the unproven round 6 is set aside (commit d3cbb19). The real test is a run on a real client. See `CHAT-NOTES.md`.
 
-22. **Operation Skill Restructure (Paul, 03/11/2026).** The fixed procedure applied to every skill, one at a time: Phase A read and analyse (flaws, duplications, 13-ingredient score, Findings Report and yes/no list), Phase B plan (one route, Paul approves), Phase C build in one pass, Phase D prove with ONE test only (lint, rule-by-rule check, one end-to-end test on invented data), Phase E package and hand over, Phase F close out and ask Paul for the next skill. No helpers. Saved in `OPERATION-SKILL-RESTRUCTURE.md` (with a Progress table) and pointed to from CLAUDE.md.
+22. **Operation Skill Restructure (Paul, 03/11/2026), REPLACED by Operation Skill Restructure 2.0 (Paul, 06/11/2026).** Version 1.0 was deleted at Paul's request after its rebuilds proved too rigid (fingerprints, hard STOP, 16 gated steps, permission prompts). The new procedure is in `OPERATION-SKILL-RESTRUCTURE-2.0.md`: a program that forces every step of the ORIGINAL skill, the original cleaned of contradictions and bloat, and no permission requests. Four phases per skill: 1 read and report (change nothing), 2 build in one pass, 3 hand over, 4 first real run. The 1.0 text of this decision stays in the git history.
 
 23. **Short audit reports in the chat (Paul, 03/11/2026).** After a skill has run, the audit posted in the chat is SHORT: one-liners in point form, each with a green tick or a red cross, and one closing line for what is only attested. The program writes that short audit and keeps the full record on disk. Applies to every skill built under Operation Skill Restructure; the Teams and Fact Find Transcript skills (built earlier) keep their long printout until they are revisited.
 
@@ -414,6 +414,7 @@ Where: `Company - Paul > Claude > Fact Find Documents > WR Fact Find - ZIP > WR 
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-11-06 12:00 | Version 4.7: Operation Skill Restructure 2.0 replaces 1.0 (decision 22 rewritten); S4 access rule changed back to the original order (device bridge first, no shell commands, no fingerprints, no hard STOP) |
 | 2026-11-03 09:12 | Version 4.6: decision 22, Operation Skill Restructure approved and saved (OPERATION-SKILL-RESTRUCTURE.md) |
 | 2026-11-03 08:31 | Version 4.5: Teams skill v35 confirmed LIVE by Paul ("Yes, v35 is live") |
 | 2026-11-03 08:30 | Version 4.4: `ff-population-transcript` uploaded as v33 by a Chrome chat (reported); not confirmed live; the real upload subfolder is `ff-population-transcript-skill` |
