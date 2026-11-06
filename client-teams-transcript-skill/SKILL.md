@@ -15,17 +15,17 @@ description: "Summarize a client's Teams meeting transcript (or WhatsApp call) i
 | 4 | When something goes wrong | What to do instead of improvising |
 | 5 | Where the detail lives | The pages the program shows at each step |
 
-**Last updated: 2026-11-05 11:37 (Athens time)**
+**Last updated: 2026-11-06 09:20 (Athens time)**
 
 **Recent changes** (last 5, one line each; full history in the repo `history/` folder)
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-11-06 09:20 | Computer through the device tools: the chat connects once at step 1 (one STOP line if refused); the transcript and every client document are whole copies proved by the computer's own fingerprint, the program makes their text; Microsoft 365 and Zapier only for emails and the Teams transcript text; the PDF is saved on the computer and fingerprinted there |
 | 2026-11-05 11:37 | Strict changes after the first real run: files found automatically through Microsoft 365 (no permission step), the Sitamah message posted automatically, a quiet run, the short audit as the program's own printout |
 | 2026-11-02 15:55 | The follow-up appointment is now an action for Sitamah at every meeting where one was agreed (the program no longer refuses it and fails an agreed appointment with no such action); the first-meeting message to Sitamah is made by this skill only (Paul, 02/11/2026) |
 | 2026-10-29 17:53 | Action points are put in order (earliest deadline first, then logical), what is not relevant is left out and listed, and the skill asks Paul in one message when it is not sure |
 | 2026-10-29 17:22 | Dated notes taken out of the live pages (the dates stay in the history files) |
-| 2026-10-29 17:21 | Planner note is now short (one-liners and actions for now), PDF limited to 4 bullets per area and two pages, actions sorted now/later, message to Sitamah shown with the outputs (Paul's answers after his first real-case trial) |
 
 ## Run it
 

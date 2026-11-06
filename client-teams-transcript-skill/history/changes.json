@@ -414,5 +414,29 @@
   "new": "Not quotes, proposals or the what's-next email (another step sends those): Paul, 29/10/2026. Setting up the follow-up appointment IS an action for Sitamah at every meeting (Paul, 02/11/2026, reversing his 29/10/2026 removal): she books it, or sends the Teams meeting request.",
   "why": "Paul, 02/11/2026: he asks the client for a follow-up appointment in every meeting and Sitamah sets it up (books it for a physical appointment, or sends the Teams meeting request). This reverses the 29/10/2026 removal (answer 10). The program no longer refuses it and fails a run that has an agreed appointment and no such action.",
   "needs_paul": false
+ },
+ {
+  "file": "03-context-and-correspondence.md",
+  "kind": "reworded",
+  "old": "1. In every **current** transaction folder, list `Applications` and pick the real applications. List the folders on the client's own machine/OneDrive for the real state.\n2. Stage them and read the filled field values. Note each file's last-modified date against the meeting date.",
+  "new": "1. In every **current** transaction folder, list `Applications` (`device_list_dir` on the computer: the real state) and pick the real applications.\n2. Stage them (`device_stage_files`), record each with `run.py source --kind Application ... --file ... --device-output ...` and read the filled field values. Note each file's last-modified date against the meeting date.",
+  "why": "Paul, 06/11/2026: the client's documents are whole files on his computer, reached through the device tools (the chat connects once at step 1). Each copy is proved identical to the original by the computer's own fingerprint and the program makes the text itself; Microsoft 365 returns a PDF or Word file cut off, so it is not used for them.",
+  "needs_paul": false
+ },
+ {
+  "file": "03-context-and-correspondence.md",
+  "kind": "reworded",
+  "old": "Inside the client's folder, read in this order (all PDFs; render pages as images if text extraction is empty):",
+  "new": "Inside the client's folder on the computer, read in this order (all PDFs; render pages as images if text extraction is empty), and record each document with `run.py source --file <the staged copy> --device-output <the computer's fingerprint>` (the program proves the copy is the whole file and makes its text itself; a document is never taken through Microsoft 365 or Zapier):",
+  "why": "Paul, 06/11/2026: the client's documents are whole files on his computer, reached through the device tools (the chat connects once at step 1). Each copy is proved identical to the original by the computer's own fingerprint and the program makes the text itself; Microsoft 365 returns a PDF or Word file cut off, so it is not used for them.",
+  "needs_paul": false
+ },
+ {
+  "file": "06b-pdf-and-filenames.md",
+  "kind": "reworded",
+  "old": "- Save every time into the client's `2. Fact Find` folder via `device_commit_files`. Confirm the folder and file name to Paul in one line. If the file is locked/open, say so plainly and retry when he confirms; never silently skip.",
+  "new": "- Save every time into the client's `2. Fact Find` folder ON THE COMPUTER with `device_commit_files` (list the folder first; no force), then prove the save with the computer's own fingerprint of the saved file, compared by the program with the PDF it built. Never upload through Microsoft 365 or Zapier. Confirm the folder and file name to Paul in one line.",
+  "why": "Paul, 06/11/2026: the PDF is saved on the computer again (as in the original skill) and proved there by the computer's own fingerprint; the 05/11/2026 Microsoft 365 upload could not carry a large PDF.",
+  "needs_paul": false
  }
 ]
