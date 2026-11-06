@@ -15,12 +15,13 @@ description: "Downloads a client's Teams meeting transcript (Microsoft 365 conne
 | 4 | When something goes wrong | What to do instead of improvising |
 | 5 | Where the detail lives | The pages the program shows at each step |
 
-**Last updated: 2026-11-05 12:36 (Athens time)**
+**Last updated: 2026-11-06 08:49 (Athens time)**
 
 **Recent changes** (last 5, one line each; full history in the repo `history/` folder)
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-11-06 08:49 | Computer through the device tools: connect once at the start, the file saved with device_commit_files and fingerprinted on the computer, never through Microsoft 365 or Zapier |
 | 2026-11-05 12:36 | Strict changes: files found and saved automatically through Microsoft 365, the computer only if already connected, no permission step, quiet run, size check |
 | 2026-11-03 11:25 | Added the rule that a correction re-opens the task, the rule-by-rule records and the list for Paul |
 | 2026-11-03 11:24 | First program-driven version: a program fetches (Microsoft 365, Zapier, Chrome), checks the transcript is complete and saves a copy under a derived name; a checker prints a short audit with green ticks and red crosses |
@@ -47,13 +48,13 @@ Never rewrite, shorten or "improve" the programs during a run, and never type th
 ## Standing rules
 
 1. Save only what Teams gave you; never edit, summarise or complete a transcript.
-2. Fetch through the Microsoft 365 connector first, then Zapier, then Claude in Chrome; save through the computer only if this chat is already connected to it, then Microsoft 365, then Zapier; every try logged, all found automatically.
+2. Fetch through the Microsoft 365 connector first, then Zapier, then Claude in Chrome; the finished file is saved on the computer through the device tools (connected once at the start) and fingerprinted there, never through Microsoft 365 or Zapier; every try logged.
 3. Teams is for reading the recap and transcript only: do not post, delete, change settings or open other chats.
 4. The transcript is copied into the client folder, never moved and never overwritten; the original stays where it is.
 5. A transcript is complete only when its last time stamp is within 2 minutes of the meeting length and no gap between two time stamps is longer than 10 minutes.
 6. Never touch another broker's folder.
 7. Changes to this skill are made only in Claude Code and uploaded by Paul. Never say a change is live until he confirms.
-8. Never a permission step: no permission box, no folder-access request, never ask Paul to click, attach, upload or drag a file, and never call a tool that opens such a box.
+8. Nothing is asked of Paul except the ONE connection to his computer at the start (`device_request_folder_access` for `~/liferisk.co.za`): never to attach, upload or drag a file.
 9. A quiet run: the version sentence, one short progress line per step, then the SHORT AUDIT and one plain sentence. Never a long opening message or an analysis of what was read.
 
 ## When something goes wrong

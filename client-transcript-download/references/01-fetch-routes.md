@@ -6,7 +6,6 @@ Contents: the three routes for fetching, and the Chrome route in detail.
 3. **chrome - Claude in Chrome.** Paul's own instruction for reading Teams in the browser: it has always worked. It needs nothing from Paul. Steps:
    - Load the Chrome tools in one ToolSearch call, `tabs_context_mcp`, and open a **new tab** on Teams web (teams.microsoft.com, already signed in as Paul). If Chrome shows a prompt you cannot clear yourself, log the try as failed with the exact words and stop with the five-line reply: never ask Paul to click it.
    - Open the meeting (Calendar or the meeting chat) and go to its Recap / Transcript tab. Confirm the meeting title and date match before reading.
-   - **If this chat is ALREADY connected to the computer** (never request the connection): Download > Download as .docx, wait for the download to finish, find the newest .docx matching the meeting title in Paul's Downloads folder with the computer's shell, and make a local copy of it for `run.py source`. The original stays in Downloads.
    - **If it is not connected** (the usual case): read the transcript text from the Transcript tab with the page-text tool, scrolling until the last time stamp is shown. Write it into a local text file exactly as shown: every `H:MM:SS Speaker` line and the words under it, nothing added, nothing left out. Give that file to `run.py source`. The program writes the .docx from it and checks the header, the length and the gaps itself.
    - Close the Chrome tab when done.
 

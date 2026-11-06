@@ -3,16 +3,17 @@
  "steps": [
   {
    "id": "identify",
-   "title": "Identify the client's meeting (title, date and length)",
+   "title": "Connect to the computer, then identify the client's meeting (title, date and length)",
    "ref": [],
    "do": [
+    "FIRST, before anything else, connect to the computer with the device tools (they are deferred: load them with ToolSearch, query select:mcp__remote-devices__get_device_info,mcp__remote-devices__device_request_folder_access,mcp__remote-devices__device_list_dir,mcp__remote-devices__device_bash,mcp__remote-devices__device_commit_files). (a) get_device_info: if the folder liferisk.co.za is not in connectedFolders, call device_request_folder_access for ~/liferisk.co.za. That one request is the ONLY thing Paul is ever asked to click, and you say nothing else to him. (b) device_list_dir on the client's `2. Fact Find` folder (under Company - Paul, or Company - WR Clients > Paul Kafentzis (Client Files)). (c) Record it: python3 {scripts}/run.py computer {run} --device \"<deviceName>\" --folder \"<the folder the access was granted for>\" --listing \"<the file names you saw>\"   If the request is refused or the device tools do not exist in this chat: python3 {scripts}/run.py computer {run} --none \"<what happened>\". It prints the STOP; your WHOLE reply is that text, with no question and no analysis. The connection is needed because the transcript is saved on the computer.",
     "Work out which meeting: Paul's message gives the client and the meeting date (DD/MM/YYYY). If it does not, take the most recent completed client meeting on his calendar (`outlook_calendar_search` through the Microsoft 365 connector).",
     "Find its title, start time and length from the calendar entry or the Teams recap (both through the Microsoft 365 connector). Ask Paul ONLY if neither holds them. Then record it:",
     "  python3 {scripts}/run.py meeting {run} --title \"the meeting title\" --started \"DD/MM/YYYY, HH:MM\" --length \"1h 36m 2s\" --via m365|zapier|chrome|paul",
     "The program refuses it unless all three are readable, and warns when the date is not the one Paul asked for. If it warns, stop and check with Paul."
    ],
    "check": "identify_ok",
-   "proof": "the meeting is recorded and its date equals the date Paul gave"
+   "proof": "the computer is connected and recorded, the meeting is recorded and its date equals the date Paul gave"
   },
   {
    "id": "fetch",
@@ -57,23 +58,24 @@
   },
   {
    "id": "save",
-   "title": "Save a COPY into the client's 2. Fact Find folder and list it (automatically)",
+   "title": "Save a COPY into the client's 2. Fact Find folder on the computer and prove it",
    "ref": [
     "02-save.md"
    ],
    "do": [
-    "Save the file the program built, as a COPY, into the client's own `2. Fact Find` folder YOURSELF, AUTOMATICALLY: never ask Paul for permission or to attach, upload or drag anything, and never call a tool that opens a permission or folder-access box. Record EVERY try, failures too:",
-    "  1  device: the computer, ONLY if this chat is already connected to it. Do NOT request the connection. Not connected: log it at once (python3 {scripts}/run.py access {run} --purpose save --route device --result failed --note \"not connected; not requested\") and go on.",
-    "  2  m365: the Microsoft 365 connector (SharePoint / OneDrive): the working route. Find the client's folder, LIST it, upload the built file, then LIST it again and read the size it shows.",
-    "  3  zapier: the Zapier Office 365 tools, when Microsoft 365 failed.",
-    "Record each try: python3 {scripts}/run.py access {run} --purpose save --route device|m365|zapier --result failed|found --note \"...\"",
-    "Then record: python3 {scripts}/run.py receipt {run} save.folder \"<the full folder path>\"",
-    "              python3 {scripts}/run.py receipt {run} save.already_existed no     (yes means STOP and tell Paul)",
-    "              python3 {scripts}/run.py receipt {run} save.listed_bytes <the size shown when you listed the folder>",
-    "If every route fails, your reply is at most five lines: what failed and the log of the tries."
+    "Save the file the program built, as a COPY, into the client's own `2. Fact Find` folder ON THE COMPUTER, YOURSELF: never ask Paul for anything. Never upload through Microsoft 365 or Zapier.",
+    "1. device_list_dir on that folder first: if a file with the built file's name is already there, do NOT overwrite it: record save.already_existed yes and tell Paul (five lines at most).",
+    "2. Copy the built file to /mnt/user-data/outputs/, then device_commit_files with files=[{\"devicePath\": \"C:\\Users\\Paul\\liferisk.co.za\\<the client's 2. Fact Find folder>\\<the built file name>\", \"stagedPath\": \"/mnt/user-data/outputs/<the built file name>\"}] (no force). OneDrive uploads it by itself.",
+    "3. Prove the save with the computer's own eyes: device_list_dir on the folder (the file's name and size) and device_bash: sha256sum \"$HOME/mnt/liferisk.co.za/<the path>\" && stat -c %s \"$HOME/mnt/liferisk.co.za/<the same path>\".",
+    "4. Record: python3 {scripts}/run.py access {run} --purpose save --route device --result found --note \"device_commit_files\"",
+    "          python3 {scripts}/run.py receipt {run} save.folder \"<the full folder path>\"",
+    "          python3 {scripts}/run.py receipt {run} save.already_existed no     (yes means STOP and tell Paul)",
+    "          python3 {scripts}/run.py receipt {run} save.listed_bytes <the size shown when you listed the folder>",
+    "          python3 {scripts}/run.py receipt {run} save.device_output \"<the whole output of the device_bash command in 3>\"",
+    "If every try fails, your reply is at most five lines: what failed and the log of the tries."
    ],
    "check": "save_ok",
-   "proof": "the save tries are logged and the three receipts are recorded"
+   "proof": "the save try is logged and the four receipts are recorded; the computer's fingerprint of the saved file equals the built file"
   },
   {
    "id": "final",

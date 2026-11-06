@@ -123,15 +123,12 @@ def run_checks(run, stage):
 
 def _final_checks(R, run, rj, client):
     R.group = "save"
+    comp = rj.get("computer") or {}
     slog = log_of(run, "save")
-    prob = order_problem(slog, w.SAVE_ROUTES) if slog else "no save try is recorded"
-    asked = [e for e in slog if e.get("route") == "device" and e.get("result") == "failed" and "not connected" not in (e.get("note") or "").lower()]
-    if asked and not prob:
-        prob = "the computer try failed for a reason other than 'not connected; not requested' (a connection may have been requested, which is never allowed): %r" % asked[0].get("note")
-    sfound = [e for e in slog if e.get("result") == "found"]
-    sok = not prob and bool(sfound)
-    R.add(sok, "Save routes tried in order and logged (%s)" % (", ".join("%s %s" % (e["route"], e["result"]) for e in slog) or "none") if sok else
-          "Save routes problem: %s" % (prob or "no save try found the folder"), prob)
+    sfound = [e for e in slog if e.get("result") == "found" and e.get("route") == "device"]
+    R.add(bool(comp.get("found")) and bool(sfound),
+          "The computer is connected (%s) and the save was logged on it" % (comp.get("device") or comp.get("root") or "") if comp.get("found") and sfound else
+          "Save problem: %s" % ("no computer connection is recorded (run.py computer)" if not comp.get("found") else "no save try on the computer is logged"))
     rc = w.load_opt(os.path.join(run, w.RECEIPT), {})
     name = w.output_name(client["first"], client["surname"], rj["date"])
     out = os.path.join(run, w.OUT, name or "")
@@ -142,6 +139,14 @@ def _final_checks(R, run, rj, client):
     root_ok = ("company - paul" in parts[:5]) or ("company - wr clients" in parts[:5] and "paul kafentzis (client files)" in parts[:7])
     folder_ok = bool(parts) and parts[-1] == "2. fact find" and len(parts) > 1 and w.norm(want) == w.norm(parts[-2]) and root_ok
     size_ok = size is not None and str(rc.get("save.listed_bytes")) == str(size)
+    if comp.get("mode") == "bridge":
+        dsha, dsize, why = w.parse_device_output(str(rc.get("save.device_output") or ""), name or "")
+        if why:
+            R.add(False, "The computer's own fingerprint of the saved file is missing or wrong: " + why)
+        elif size is not None:
+            same = dsha == w.sha256_file(out) and dsize == size
+            R.add(same, "The file saved on the computer is identical to the one built here (fingerprint and size from the computer)" if same else
+                  "The file saved on the computer is NOT the one built here (computer: %d bytes, %s...; built: %d bytes, %s...)" % (dsize, dsha[:12], size, w.sha256_file(out)[:12]))
     fresh = rc.get("save.already_existed") == "no"
     ok = folder_ok and size_ok and fresh
     R.add(ok, "Saved as a COPY in the client's own 2. Fact Find folder, nothing overwritten; listed size equals the local file (%s bytes)" % size if ok else
@@ -152,8 +157,8 @@ def _final_checks(R, run, rj, client):
     fp = rj.get("program_fingerprint") == w.program_fingerprint()
     R.add(done == STEP_IDS[:-1] and fp, "Every step done in order (%d of %d) and the programs did not change during the run" % (len(done), len(STEP_IDS) - 1)
           if done == STEP_IDS[:-1] and fp else "Steps done: %s%s" % (", ".join(done) or "none", "; the programs changed during the run" if not fp else ""))
-    R.attested += ["what was seen in Chrome, and that text read from the Teams page is word for word (if the Chrome route was used)", "the folder save and its listing (typed by Claude)",
-                   "that a downloaded original stays in Downloads for Paul to delete (only if the computer was already connected)"]
+    R.attested += ["what was seen in Chrome, and that text read from the Teams page is word for word (if the Chrome route was used)",
+                   "that the fingerprint pasted from the computer's shell is really the computer's (a file that differs is caught)", "the folder listing (typed by Claude)"]
 
 
 def next_line(rj):

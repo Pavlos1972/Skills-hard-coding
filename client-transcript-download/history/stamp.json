@@ -1,5 +1,5 @@
 {
- "stamp": "2026-11-05 12:36",
- "fingerprint": "725bf0354566cfa3da90f3406615920b22ed07d4d1bd30825df03ca2019f254e",
- "change": "Strict changes: files found and saved automatically through Microsoft 365, the computer only if already connected, no permission step, quiet run, size check"
+ "stamp": "2026-11-06 08:49",
+ "fingerprint": "c67f31ea3333c3a7227cee690d75dea84a3e861019f2653f1ddd7f4b379c3a07",
+ "change": "Computer through the device tools: connect once at the start, the file saved with device_commit_files and fingerprinted on the computer, never through Microsoft 365 or Zapier"
 }

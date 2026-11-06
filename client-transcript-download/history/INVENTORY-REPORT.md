@@ -1,6 +1,6 @@
 INVENTORY of the old skill: 105 sentences
-  kept (word for word or nearly): 17
-  reworded, with a recorded change: 44
+  kept (word for word or nearly): 16
+  reworded, with a recorded change: 45
   dropped, with a recorded decision: 44
   UNACCOUNTED: 0
 
@@ -10,34 +10,34 @@ REWORDED (each is covered by a recorded change):
     now: "When a route gives you the transcript (a .docx, .vtt or text file, or text you write into a file exactly as received), bring a copy into the run folder:
     why: Shortened to what applies to a download.
 - old line 21: If a line is unclear, garbled or ambiguous, do not turn it into a fact:
-    now: If the folder is not found or is ambiguous after both locations were searched, say so in the five-line reply.
+    now: If the folder is not found or is ambiguous after both locations were listed, say so in the five-line reply.
     why: Shortened to what applies to a download.
 - old line 21: flag it to the user.
-    now: The full record is written to out/audit-full.txt (--full prints it).
+    now: "pasted into the reply as it is:
     why: Shortened to what applies to a download.
 - old line 21: "It seems implied", "it is usual" and "it would make sense" are not sources.
-    now: if it is not connected, log it at once as failed with the note "not connected;
+    now: "the save try is logged and the four receipts are recorded;
     why: Shortened to what applies to a download.
 - old line 24: Deliver everything this skill lists, every time.
     now: which version of this skill is running.
     why: Shortened to what applies to a download.
 - old line 24: A run is not finished until every deliverable this skill names has been produced AND handed over exactly the way this skill specifies (shown in chat, sent as a file in the chat, saved to the named fol
-    now: (w.skill_stamp() is not None, "the skill has a Last updated stamp (%s)" % (w.stamp_display(w.skill_stamp()) or "none"))]
+    now: if this chat is not already connected to it, read the transcript text from the Teams page instead of downloading a file (the page below says how).",
     why: Shortened to what applies to a download.
 - old line 24: Before you reply, list each deliverable and confirm each was handed over.
-    now: print("\nSAY THIS TO PAUL FIRST, before anything else in your reply, in exactly these words:\n    %s.\n" % w.version_line())
+    now: your WHOLE reply is that text, with no question and no analysis.
     why: Shortened to what applies to a download.
 - old line 25: When the user corrects anything:
-    now: # ---------------------------------------------------------------- writing a plain .docx (from a .vtt, when the connector gives text)
+    now: \"/mnt/user-data/outputs/<the built file name>\"}] (no force).
     why: Shortened to what applies to a download.
 - old line 25: (a) go back to the source and re-check that point and everything related to it;
-    now: "If a route fails, go on to the next one at once and say nothing to Paul.
+    now: 1 | Run it | The one command that starts the job and how every step works |
     why: Shortened to what applies to a download.
 - old line 25: (b) fix it everywhere it appears, in every deliverable;
     now: 1 | Run it | The one command that starts the job and how every step works |
     why: Shortened to what applies to a download.
 - old line 25: (c) re-run this skill's full checklist;
-    now: which version of this skill is running.
+    now: Find this skill's folder (the "Base directory" shown when the skill loaded;
     why: Shortened to what applies to a download.
 - old line 25: (d) re-deliver every affected deliverable in full, as in rule 5.
     now: print("EVERY STEP IS DONE.\nPut this SHORT AUDIT in your reply, as it is (it is the whole report;
@@ -79,16 +79,16 @@ REWORDED (each is covered by a recorded change):
     now: """The one checker of the client-transcript-download skill.
     why: The eight steps are replaced by a program that shows one step at a time; the Python read of the .docx is replaced by the checker (2 minutes, 10-minute gap).
 - old line 56: It saves to Paul's Windows Downloads folder with a name like {Meeting title with / replaced by _}.docx.
-    now: The program writes text as a .docx with a header made from the meeting record.
+    now: the client folder and file name saved and, only if a downloaded original exists in Paul's Downloads folder, that it is still there for him to delete.
     why: The eight steps are replaced by a program that shows one step at a time; the Python read of the .docx is replaced by the checker (2 minutes, 10-minute gap).
 - old line 56: Wait for the download to finish.
     now: Teams is for reading the recap and transcript only:
     why: The eight steps are replaced by a program that shows one step at a time; the Python read of the .docx is replaced by the checker (2 minutes, 10-minute gap).
 - old line 57: Grant Downloads access on the device:
-    now: If it fails, stop after 2 or 3 attempts on a route and go on to the next at once.
+    now: SAVE_ROUTES = ("device",)                         # the finished file is saved ON THE COMPUTER (device tools) and fingerprinted there:
     why: The eight steps are replaced by a program that shows one step at a time; the Python read of the .docx is replaced by the checker (2 minutes, 10-minute gap).
 - old line 57: device_request_folder_access for C:\Users\Paul\Downloads if not already connected (the folder mounts as $HOME/mnt/Downloads).
-    now: The client's folder is reached through the computer ONLY if this chat is already connected to it (never request the connection:
+    now: get_device_info, then device_request_folder_access for ~/liferisk.co.za if it is not connected, then device_list_dir "
     why: The eight steps are replaced by a program that shows one step at a time; the Python read of the .docx is replaced by the checker (2 minutes, 10-minute gap).
 - old line 57: Find the file with device_bash (ls -lat $HOME/mnt/Downloads | head) - newest .docx matching the meeting title.
     now: The program writes text as a .docx with a header made from the meeting record.
@@ -97,22 +97,25 @@ REWORDED (each is covered by a recorded change):
     now: Find the client's folder under liferisk.co.za, in both locations:
     why: The eight steps are replaced by a program that shows one step at a time; the Python read of the .docx is replaced by the checker (2 minutes, 10-minute gap).
 - old line 58: If the folder is not found or is ambiguous, ask Paul.
-    now: If the folder is not found or is ambiguous after both locations were searched, say so in the five-line reply.
+    now: If the folder is not found or is ambiguous after both locations were listed, say so in the five-line reply.
     why: The eight steps are replaced by a program that shows one step at a time; the Python read of the .docx is replaced by the checker (2 minutes, 10-minute gap).
 - old line 59: Copy (not move) with cp -n into that 2.
-    now: "Save a COPY into the client's 2.
+    now: "copied (never moved, never overwritten) into the client's 2.
     why: The eight steps are replaced by a program that shows one step at a time; the Python read of the .docx is replaced by the checker (2 minutes, 10-minute gap).
 - old line 59: Fact Find folder, using the name:
-    now: Fact Find folder YOURSELF, AUTOMATICALLY:
+    now: Fact Find folder ON THE COMPUTER, YOURSELF:
     why: The eight steps are replaced by a program that shows one step at a time; the Python read of the .docx is replaced by the checker (2 minutes, 10-minute gap).
 - old line 61: Teams meeting transcript - 05.10.26 - (First Last).docx.
-    now: Teams meeting transcript - DD.MM.YY - (First Surname).docx"""
+    now: Teams meeting transcript - DD.MM.YY - (First Surname).docx.
+    why: The eight steps are replaced by a program that shows one step at a time; the Python read of the .docx is replaced by the checker (2 minutes, 10-minute gap).
+- old line 61: If a file with that name already exists, do not overwrite - tell Paul.
+    now: if a file with that name is already there, do not overwrite it:
     why: The eight steps are replaced by a program that shows one step at a time; the Python read of the .docx is replaced by the checker (2 minutes, 10-minute gap).
 - old line 62: Verify with a short python read of the .docx (word/document.xml):
     now: root = ET.fromstring(z.read("word/document.xml"))
     why: The eight steps are replaced by a program that shows one step at a time; the Python read of the .docx is replaced by the checker (2 minutes, 10-minute gap).
 - old line 62: header shows the meeting title/date and length (e.g.
-    now: "Identify the client's meeting (title, date and length)",
+    now: The header (meeting title, date, length) is read from the file;
     why: The eight steps are replaced by a program that shows one step at a time; the Python read of the .docx is replaced by the checker (2 minutes, 10-minute gap).
 - old line 62: 1h 36m 2s) and the last timestamp is near the end of that length;
     now: TOLERANCE_S = 120                                # the last time stamp may fall this far short of the stated length (Paul, 03/11/2026)
@@ -121,7 +124,7 @@ REWORDED (each is covered by a recorded change):
     now: "If it prints a red cross, tell Paul exactly what it says and what is missing.
     why: The eight steps are replaced by a program that shows one step at a time; the Python read of the .docx is replaced by the checker (2 minutes, 10-minute gap).
 - old line 63: Tell Paul in one or two sentences:
-    now: Use after a client meeting or when Paul asks to save a transcript."
+    now: if "Company - Paul" in dirs or "Company - WR Clients" in dirs:
     why: The eight steps are replaced by a program that shows one step at a time; the Python read of the .docx is replaced by the checker (2 minutes, 10-minute gap).
 - old line 63: the client folder and file name saved, that the transcript is complete (length), and that the original copy is still in Downloads for him to delete.
     now: the client folder and file name saved and, only if a downloaded original exists in Paul's Downloads folder, that it is still there for him to delete.

@@ -20,8 +20,10 @@ SOURCE = "source"                       # the received transcript, kept with its
 OUT = "out"
 
 FETCH_ROUTES = ("m365", "zapier", "chrome")      # how the transcript is fetched (Paul, 03/11/2026: connector first, Chrome as the fallback)
-SAVE_ROUTES = ("device", "m365", "zapier")       # how it is saved into the client's folder: the computer only if already connected (logged at once as not connected), then Microsoft 365, then Zapier (S4)
+SAVE_ROUTES = ("device",)                         # the finished file is saved ON THE COMPUTER (device tools) and fingerprinted there: Microsoft 365 and Zapier would have to carry it as base64 in one call
 PURPOSES = {"fetch": FETCH_ROUTES, "save": SAVE_ROUTES}
+COMPUTER_STOP = ("STOP. I could not connect this chat to your computer (the connection was refused or did not go through), so the transcript cannot be saved into the client's 2. Fact Find folder. "
+                 "Please allow the connection to the folder liferisk.co.za, then tell me to go on.")
 TOLERANCE_S = 120                                # the last time stamp may fall this far short of the stated length (Paul, 03/11/2026)
 JUMP_S = 600                                     # no gap longer than this between two time stamps
 
@@ -166,3 +168,40 @@ def output_name(first, surname, meeting_date):
 def fmt_hms(sec):
     sec = int(sec)
     return "%d:%02d:%02d" % (sec // 3600, sec % 3600 // 60, sec % 60)
+
+
+def find_computer_root():
+    """The folder of the computer's OneDrive when it is mounted into THIS machine (a test, or a chat running on the computer), or None. WR_COMPUTER_ROOT overrides the search."""
+    env = os.environ.get("WR_COMPUTER_ROOT")
+    if env:
+        return os.path.realpath(env) if os.path.isdir(env) else None
+    for base in (os.path.expanduser("~/mnt"), "/mnt"):
+        if not os.path.isdir(base):
+            continue
+        for d, dirs, _files in os.walk(base):
+            if d[len(base):].count(os.sep) >= 3:
+                dirs[:] = []
+                continue
+            if "Company - Paul" in dirs or "Company - WR Clients" in dirs:
+                return os.path.realpath(d)
+            if os.path.basename(d) in ("Company - Paul", "Company - WR Clients"):
+                return os.path.realpath(os.path.dirname(d))
+    return None
+
+
+def parse_device_output(text, name):
+    """The output of `sha256sum FILE` and `stat -c %s FILE` run ON THE COMPUTER (device_bash), pasted whole: (sha256, size, None), or (None, None, what is wrong).
+    The file name in the sha256sum line must be the saved file's own name, so a hash of another file cannot be passed off."""
+    sha, size = None, None
+    for ln in (text or "").splitlines():
+        m = re.match(r"^\s*([0-9a-fA-F]{64})\s+[*]?(.+?)\s*$", ln)
+        if m:
+            base = os.path.basename(m.group(2).replace("\\", "/"))
+            if base != name:
+                return None, None, "the sha256sum line names %r, not %r" % (base, name)
+            sha = m.group(1).lower()
+        elif re.fullmatch(r"\s*\d+\s*", ln):
+            size = int(ln)
+    if not sha or size is None:
+        return None, None, "paste the whole output of: sha256sum \"<file>\" && stat -c %%s \"<file>\" (run with device_bash on the computer): a 64-character fingerprint with the file's name, and its size on its own line"
+    return sha, size, None

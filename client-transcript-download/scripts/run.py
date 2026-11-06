@@ -99,7 +99,10 @@ def _bad(run, *groups):
 
 
 def ck_identify(run, rj):
-    return _bad(run, "meeting")[0]
+    out = []
+    if not (rj.get("computer") or {}).get("found"):
+        out.append(w.COMPUTER_STOP + " (record the connection: run.py computer %s --device ... --folder ... --listing ..., or run.py computer %s --none \"<what happened>\")" % (run, run))
+    return out + _bad(run, "meeting")[0]
 
 
 def ck_fetch(run, rj):
@@ -120,9 +123,18 @@ def ck_name(run, rj):
 
 def ck_save(run, rj):
     rc = w.load_opt(p(run, w.RECEIPT), {})
-    out = ["run.py receipt %s <value>" % k for k in ("save.folder", "save.listed_bytes", "save.already_existed") if not rc.get(k)]
-    if not any(e.get("purpose") == "save" for e in w.load_opt(p(run, w.ACCESS), [])):
-        out.append("record every save try, the computer first (not connected: log it at once as failed, \"not connected; not requested\"): run.py access --purpose save --route device|m365|zapier --result found|failed")
+    bridge = (rj.get("computer") or {}).get("mode") == "bridge"
+    out = ["run.py receipt %s <value>" % k for k in ("save.folder", "save.listed_bytes", "save.already_existed") + (("save.device_output",) if bridge else ()) if not rc.get(k)]
+    if not any(e.get("purpose") == "save" and e.get("result") == "found" for e in w.load_opt(p(run, w.ACCESS), [])):
+        out.append("record the save: run.py access --purpose save --route device --result found --note \"<what you did>\"")
+    name = w.output_name(rj["client"]["first"], rj["client"]["surname"], rj["date"])
+    outp = p(run, os.path.join(w.OUT, name or "-"))
+    if bridge and rc.get("save.device_output") and os.path.exists(outp):
+        dsha, dsize, why = w.parse_device_output(str(rc["save.device_output"]), name)
+        if why:
+            out.append("save.device_output: " + why)
+        elif dsha != w.sha256_file(outp) or dsize != os.path.getsize(outp):
+            out.append("the file saved on the computer is not the file built here (computer: %d bytes, %s...; built: %d bytes, %s...): commit it again and fingerprint it again" % (dsize, dsha[:12], os.path.getsize(outp), w.sha256_file(outp)[:12]))
     return out
 
 
@@ -246,11 +258,48 @@ def cmd_meeting(a):
         print("WARNING: that is %s but Paul asked for %s. Stop and check with Paul before going on." % (rec["date"], rj["date"]))
 
 
+def cmd_computer(a):
+    """Records how this chat reaches the client's OneDrive folder on the computer. In a cloud chat the computer is a separate machine reached through the device tools
+    (the chat connects, lists the client's folder and records it here); where the folder is mounted into this machine (a test) the program finds it itself."""
+    rj = load_run(a.run)
+    if a.none:
+        if len(a.none.strip()) < 8:
+            w.die("REFUSED: say what happened to the connection (at least 8 characters).")
+        rj["computer"] = {"found": False, "t": w.now(), "detail": a.none.strip()}
+        save_run(a.run, rj)
+        print(w.COMPUTER_STOP)
+        print("\nYour whole reply is those words, nothing more, and no question. When Paul says to go on, connect again and run: python3 %s/run.py computer %s --device ... --folder ... --listing ..." % (SCRIPTS, a.run))
+        sys.exit(6)
+    if a.device or a.folder or a.listing:
+        if not (a.device and a.folder and a.listing):
+            w.die("REFUSED: give --device (the computer's name), --folder (the folder the connection was granted for) and --listing (the file names device_list_dir showed in the client's folder).")
+        if "liferisk.co.za" not in a.folder.lower().replace("/", "\\"):
+            w.die("REFUSED: the connected folder must be the client files' root, liferisk.co.za (it was %r)." % a.folder)
+        if len(a.listing.strip()) < 20:
+            w.die("REFUSED: --listing must be what device_list_dir showed in the client's folder (the file names), not a summary.")
+        rj["computer"] = {"found": True, "mode": "bridge", "device": a.device.strip(), "folder": a.folder.strip(), "listing": a.listing.strip()[:2000], "t": w.now()}
+        save_run(a.run, rj)
+        print("COMPUTER CONNECTED through the device tools (%s, folder %s). The built file is saved there as page 02 says." % (a.device.strip(), a.folder.strip()))
+        return
+    root = w.find_computer_root()
+    if root:
+        rj["computer"] = {"found": True, "mode": "mount", "root": root, "t": w.now()}
+        save_run(a.run, rj)
+        print("COMPUTER FOUND: the client's OneDrive folder is mounted at %s." % root)
+        return
+    print("No connection is recorded yet. Connect with the device tools (page 02: get_device_info, then device_request_folder_access for ~/liferisk.co.za if it is not connected, then device_list_dir "
+          "on the client's folder) and record it: python3 %s/run.py computer %s --device <name> --folder <granted folder> --listing \"<the file names>\"   "
+          "If the connection is refused or cannot be made: python3 %s/run.py computer %s --none \"<what happened>\"" % (SCRIPTS, a.run, SCRIPTS, a.run))
+    sys.exit(6)
+
+
 def cmd_access(a):
     rj = load_run(a.run)
     guard(rj)
     if a.route not in w.PURPOSES[a.purpose]:
-        w.die("REFUSED: for --purpose %s the routes are %s" % (a.purpose, ", ".join(w.PURPOSES[a.purpose])))
+        w.die("REFUSED: for --purpose %s the routes are %s%s" % (a.purpose, ", ".join(w.PURPOSES[a.purpose]), " (the file is saved on the computer, never through Microsoft 365 or Zapier)" if a.purpose == "save" else ""))
+    if a.purpose == "save" and a.result == "found" and not (rj.get("computer") or {}).get("found"):
+        w.die("REFUSED: no computer connection is recorded in this run (run.py computer %s)." % a.run)
     log = w.load_opt(p(a.run, w.ACCESS), [])
     log.append({"purpose": a.purpose, "route": a.route, "result": a.result, "note": a.note or "", "t": w.now()})
     w.save_json(p(a.run, w.ACCESS), log)
@@ -354,6 +403,13 @@ def main():
     x.add_argument("--result", required=True, choices=("found", "failed"))
     x.add_argument("--note")
     x.set_defaults(fn=cmd_access)
+    x = sub.add_parser("computer")
+    x.add_argument("run")
+    x.add_argument("--device", help="the computer's name (get_device_info)")
+    x.add_argument("--folder", help="the folder the connection was granted for (for example C:\\Users\\Paul\\liferisk.co.za)")
+    x.add_argument("--listing", help="the file names device_list_dir showed in the client's folder")
+    x.add_argument("--none", help="what happened, when the connection was refused or could not be made (prints the STOP)")
+    x.set_defaults(fn=cmd_computer)
     x = sub.add_parser("source")
     x.add_argument("run")
     x.add_argument("--file", required=True)
