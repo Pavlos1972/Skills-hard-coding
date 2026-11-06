@@ -74,6 +74,8 @@ def run_checks(run, finishing=False):
         add("PASS", "A", "the form's PDF %s was read whole (%d page(s))" % (pdf.get("file"), pdf.get("pages", 0)))
     else:
         add("WARN", "A", "the form's PDF was not used (%s): the data file alone was the source" % (pdf.get("why") or "not given"))
+    if files.get("copied"):
+        add("WARN", "A", "typed out by the chat from text, not exact copies of the files (not byte-checked): %s" % files["copied"])
     if files.get("overview"):
         add("PASS", "A", "the latest Overview was registered as a reference")
     else:

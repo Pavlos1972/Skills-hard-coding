@@ -5,8 +5,8 @@
   tx.py chunk  <run_dir> <pass 1|2> <n>
   tx.py status <run_dir>
 
-prep    converts each file (a .docx is read with pandoc), checks each is complete (the last time stamp against the stated length, no
-        gaps), joins several files of one meeting (a call that dropped and came back) and plans the chunks.
+prep    converts each file (a .docx is read by this program itself, no other tool needed), checks each is complete (the last time stamp
+        against the stated length, no gaps), joins several files of one meeting (a call that dropped and came back) and plans the chunks.
 chunk   prints one numbered chunk and logs the read. Chunks are served in order; Pass 2 is refused until Pass 1 has served every chunk.
 status  what has been read and what is next.
 
@@ -17,6 +17,8 @@ import os
 import re
 import subprocess
 import sys
+import zipfile
+import xml.etree.ElementTree as ET
 
 import wrlib as w
 
@@ -47,8 +49,35 @@ def fmt(sec):
     return "%d:%02d:%02d" % (sec // 3600, sec % 3600 // 60, sec % 60)
 
 
+W_NS = "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}"
+
+
+def read_docx(path):
+    """The text of a .docx, one line per paragraph, with the standard library only (no pandoc)."""
+    try:
+        with zipfile.ZipFile(path) as z:
+            root = ET.fromstring(z.read("word/document.xml"))
+    except (zipfile.BadZipFile, KeyError, ET.ParseError) as e:
+        w.die("STOP: %s could not be read as a Word file (%s). Tell Paul in one line." % (os.path.basename(path), e), 4)
+    lines = []
+    for para in root.iter(W_NS + "p"):
+        parts = []
+        for el in para.iter():
+            if el.tag == W_NS + "t":
+                parts.append(el.text or "")
+            elif el.tag == W_NS + "tab":
+                parts.append("\t")
+            elif el.tag in (W_NS + "br", W_NS + "cr"):
+                parts.append("\n")
+        lines.append("".join(parts))
+    return "\n".join(lines)
+
+
 def read_source(path):
-    if path.lower().endswith((".docx", ".doc", ".rtf", ".odt")):
+    low = path.lower()
+    if low.endswith(".docx") and zipfile.is_zipfile(path):        # a ".docx" that is really plain text is read as text below
+        return read_docx(path)
+    if low.endswith((".doc", ".rtf", ".odt")):
         try:
             r = subprocess.run(["pandoc", "-t", "plain", "--wrap=none", path], capture_output=True, text=True)
         except FileNotFoundError:

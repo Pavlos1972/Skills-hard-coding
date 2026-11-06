@@ -15,6 +15,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+import zipfile
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 SCRIPTS = os.environ.get("WR_SCRIPTS") or os.path.join(os.path.dirname(HERE), "scripts")
@@ -31,6 +32,16 @@ def sh(script, *args, env=None):
 def money_commas(v):
     m = re.fullmatch(r"R ([\d ]+)\.(\d\d)", v)
     return v if not m else "R" + format(int(m.group(1).replace(" ", "")), ",") + "." + m.group(2)
+
+
+def make_docx(path, text):
+    """An invented Teams transcript as a real .docx (one paragraph per line), made with the standard library only."""
+    from xml.sax.saxutils import escape
+    paras = "".join("<w:p/>" if not ln.strip() else '<w:p><w:r><w:t xml:space="preserve">%s</w:t></w:r></w:p>' % escape(ln) for ln in text.split("\n"))
+    doc = ('<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main"><w:body>%s</w:body></w:document>' % paras)
+    with zipfile.ZipFile(path, "w", zipfile.ZIP_DEFLATED) as z:
+        z.writestr("[Content_Types].xml", '<?xml version="1.0" encoding="UTF-8"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="xml" ContentType="application/xml"/></Types>')
+        z.writestr("word/document.xml", doc)
 
 
 def make_form_pdf(path, form, extra_lines=()):
@@ -69,13 +80,15 @@ class Journey(unittest.TestCase):
         self.run_dir = os.path.join(self.tmp, "run")
         self.form_path = os.path.join(self.tmp, "Fact Find (Audio to Text) - 05.11.2026 - Pat Samplecase.json")
         self.pdf_path = os.path.join(self.tmp, "Fact Find (Audio to Text) - 05.11.2026 - Pat Samplecase.pdf")
-        self.call_path = os.path.join(self.tmp, "Teams meeting transcript - 05.11.26 - Pat Samplecase.txt")
+        self.call_path = os.path.join(self.tmp, "Teams meeting transcript - 05.11.26 - Pat Samplecase.docx")
         self.overview_path = os.path.join(self.tmp, "WR Overview - Pat Samplecase.txt")
         form = household.pat_form()
         with open(self.form_path, "w", encoding="utf-8") as f:
             json.dump(form, f)
         make_form_pdf(self.pdf_path, form, extra_lines=["Direct Net Income (R p.m.)   R 36 111.11   Total Income   R 99 999.00"])
-        shutil.copyfile(os.path.join(HERE, "fixtures", "transcript_ff.txt"), self.call_path)
+        with open(os.path.join(HERE, "fixtures", "transcript_ff.txt"), encoding="utf-8") as f:
+            self.call_text = f.read()
+        make_docx(self.call_path, self.call_text)
         with open(self.overview_path, "w", encoding="utf-8") as f:
             f.write("WR Overview (invented): BrightRock life cover R 1 100.00 per month. Classic Smart plan.")
 
@@ -138,8 +151,11 @@ class Journey(unittest.TestCase):
         with open(other, "w", encoding="utf-8") as f:
             json.dump(bad, f)
         self.refused("run.py", "files", run, "--form", other, "--transcript", self.call_path, text="not the right form file")
-        self.ok("run.py", "files", run, "--form", self.form_path, "--formpdf", self.pdf_path, "--transcript", self.call_path, "--overview", self.overview_path)
+        self.ok("run.py", "files", run, "--form", self.form_path, "--formpdf", self.pdf_path, "--transcript", self.call_path, "--overview", self.overview_path,
+                "--copied", "Overview typed out from text")
         self.assertTrue(self.load("form_pdf.json")["used"])
+        with open(os.path.join(run, "transcript.txt"), encoding="utf-8") as f:                 # the Word file was read by the program itself (no pandoc)
+            self.assertEqual(f.read().rstrip("\n"), "\n".join(ln.rstrip() for ln in self.call_text.split("\n")).rstrip("\n"))
         self.assertTrue(self.load("state.json")["complete"])
         self.assertIn("STEP 'find' DONE", self.ok("run.py", "done", run, "find").stdout)
         # step 2: the program reads both form files and prints the list to act on
@@ -229,6 +245,8 @@ class Journey(unittest.TestCase):
         self.assertIn("RESULT: PASS", done)
         self.assertIn("ONE combined report", done)
         self.assertIn("DELIVERY LINE", done)
+        with open(os.path.join(run, "out_record", "audit-full.txt"), encoding="utf-8") as f:
+            self.assertIn("typed out by the chat", f.read())
         self.assertLessEqual(len(done.split("DELIVERY LINE")[0].splitlines()), 40)     # a SHORT audit, never a long printout
         self.assertTrue(os.path.exists(os.path.join(run, "out_record", "audit-full.txt")))
         # the programs must not be edited during a run: the run remembers their fingerprint and the audit checks it

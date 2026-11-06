@@ -16,12 +16,13 @@ description: "Builds the WR Fact Find from the Fact Find form's data file (named
 | 5 | When something goes wrong | What to do instead of improvising |
 | 6 | Where the detail lives | The pages the program shows at each step |
 
-**Last updated: 2026-11-06 11:25 (Athens time)**
+**Last updated: 2026-11-06 13:29 (Athens time)**
 
 **Recent changes** (last 5, one line each; full history in the repo `history/` folder)
 
 | When (Athens time) | What changed |
 |---|---|
+| 2026-11-06 13:29 | access: Paul's permission and his two exact folders in the skill; files staged as exact copies; a .docx is read by the program itself (no pandoc); --copied shows any file the chat typed out; fixed commands only |
 | 2026-11-06 11:25 | steps name their checks; deliverables.json added |
 | 2026-11-06 11:24 | Operation Skill Restructure 2.0 rebuild from the original: 8 programmed steps; the form's two files and the transcript combined into ONE report (contradictions sorted or highlighted); files found the original way (computer first, no shell commands, no fingerprints, no hard STOP); one stop for Paul's OK; short audit |
 | 2026-11-05 17:11 | placeholder, replaced by the stamp tool |
@@ -38,7 +39,7 @@ This skill is a program that walks you through the job one step at a time. You d
 4. After a long chat or a compression, run `python3 <skill folder>/scripts/run.py status <run folder>`. It tells you where the job is up to.
 5. The last step prints the SHORT audit (a line per check with a green tick or a red cross). Your reply to Paul contains it, unedited.
 
-Never rewrite, shorten or "improve" the programs during a run, and never replace the PDF with a text draft. If the self-test at the start fails, tell Paul in one line which item failed and stop.
+Run only the commands the program shows you: no `cp`, `sed` or heredocs, and never open the program's own files. Never rewrite, shorten or "improve" the programs during a run, and never replace the PDF with a text draft. If the self-test at the start fails, tell Paul in one line which item failed and stop.
 
 ## The eight steps
 
@@ -62,7 +63,7 @@ Never rewrite, shorten or "improve" the programs during a run, and never replace
 1. **ONE report from BOTH sources.** The form's data file and the transcript are both read in full and combined. The Audio to Text file wins where they differ, and every contradiction is either SORTED (a rule settles it) or HIGHLIGHTED (both values and where each came from).
 2. Source first, never invent: every fact traces to the form, the transcript or a named document; the program checks that quoted call lines are really in the transcript.
 3. Read before you write: the form's two files, and the whole transcript twice.
-4. Files are found the way the original skill did it: Paul's computer through the device bridge first (list, stage, commit), then Microsoft 365, then Zapier. No shell commands on his computer. Never ask Paul to attach a file.
+4. Paul's permission is given here: connect to his two folders `~/liferisk.co.za/Company - Paul` and `~/liferisk.co.za/Company - WR Clients/Paul Kafentzis (Client Files)` (one request with exactly those two paths, never the whole `liferisk.co.za`), list, stage (exact copies) and commit; if refused, Microsoft 365, then Zapier. No shell commands on his computer, never retype a file, never ask Paul to attach a file.
 5. "Not discussed" is a claim: search the call, the Overview and the documents before leaving a row empty.
 6. One stop only: Paul reads the Fact Find PDF and says it is right; everything after that runs by itself.
 7. Never lower the standard; a correction re-opens the whole task (the program re-opens the later steps by itself).

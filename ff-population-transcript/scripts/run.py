@@ -129,7 +129,7 @@ def preflight(run=None):
         add(True, "reportlab (draws the PDF)")
     except ImportError:
         add(False, "reportlab is not installed: the PDF cannot be built")
-    for tool, why, fatal in (("pdftotext", "reads the form's PDF", True), ("pdftoppm", "renders the page images", True), ("pandoc", "reads a .docx transcript", False)):
+    for tool, why, fatal in (("pdftotext", "reads the form's PDF", True), ("pdftoppm", "renders the page images", True)):
         add(shutil.which(tool) is not None, "%s (%s)" % (tool, why), fatal)
     add(w.stamp_display(w.skill_stamp()) is not None, "skill has a Last updated stamp (%s)" % w.version_short(), fatal=False)
     missing = [r for s in steps_file() for r in (s.get("ref") or []) if not os.path.exists(os.path.join(SKILL_DIR, "references", r))]
@@ -348,7 +348,7 @@ def cmd_files(a):
                 rec = rep
     w.save_json(p(a.run, w.FORMPDF), rec)
     rj["files"] = {"form": os.path.basename(a.form), "formpdf": os.path.basename(a.formpdf) if a.formpdf else None, "transcripts": [os.path.basename(t) for t in a.transcript],
-                   "overview": os.path.basename(a.overview) if a.overview else None, "missing": a.missing or ""}
+                   "overview": os.path.basename(a.overview) if a.overview else None, "missing": a.missing or "", "copied": (a.copied or "").strip()}
     save_run(a.run, rj)
     print("FORM: %s (schema %s, saved %s), %d populated fields." % (form["file"], form["schema"], form["modified"], sum(1 for c in form["fields"].values() if c["populated"])))
     print("FORM PDF: %s" % (("read whole (%d page(s))" % rec.get("pages", 0)) if rec.get("used") else "NOT USED: %s. The data file alone is the source; Paul is told in the audit." % rec["why"]))
@@ -637,6 +637,7 @@ def main():
     sp.add_argument("--transcript", action="append")
     sp.add_argument("--overview")
     sp.add_argument("--missing")
+    sp.add_argument("--copied")
     sp.add_argument("--force-incomplete", dest="force_incomplete")
     add("form", cmd_form, "run")
     sp = add("lead", cmd_lead, "run")

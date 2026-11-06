@@ -1,5 +1,5 @@
 {
- "stamp": "2026-11-06 11:25",
- "fingerprint": "56c9b270aa66e62dbbe2f37c89f3c6badfe421a6aeedafb980e62b33bb197149",
- "change": "steps name their checks; deliverables.json added"
+ "stamp": "2026-11-06 13:29",
+ "fingerprint": "b24aae0fe4df048be15fc1baae1fe6168e18ee16c94cec3525e8c4f8867823a4",
+ "change": "access: Paul's permission and his two exact folders in the skill; files staged as exact copies; a .docx is read by the program itself (no pandoc); --copied shows any file the chat typed out; fixed commands only"
 }

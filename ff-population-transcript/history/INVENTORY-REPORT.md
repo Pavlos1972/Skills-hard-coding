@@ -1,6 +1,6 @@
 INVENTORY of the old skill: 568 sentences
-  kept (word for word or nearly): 254
-  reworded, with a recorded change: 87
+  kept (word for word or nearly): 247
+  reworded, with a recorded change: 94
   dropped, with a recorded decision: 227
   UNACCOUNTED: 0
 
@@ -21,17 +21,38 @@ REWORDED (each is covered by a recorded change):
 - old line 63: ## Client File Access (standing rule — applies to every step below that reads or saves a client file)
     now: every step that reads or saves a client file)
     why: Paul, 02/11/2026: the 8:45am laptop window is dropped; the access order (computer, then Microsoft 365, then Zapier, then say plainly what was tried) is kept, as are the two locations and the rule never to touch another broker's folder. Asking Paul to attach a file is replaced by saying plainly what was tried (Paul, 05/11/2026).
+- old line 67: Local machine — always attempted first.
+    now: build the PDF first (run.py build).", 3)
+    why: Paul, 02/11/2026: the 8:45am laptop window is dropped; the access order (computer, then Microsoft 365, then Zapier, then say plainly what was tried) is kept, as are the two locations and the rule never to touch another broker's folder. Asking Paul to attach a file is replaced by saying plainly what was tried (Paul, 05/11/2026).
+- old line 67: Connect via the device bridge to Paul's local machine and check both of these locations under liferisk.co.za for the client's folder (same [Business Segment]/[Surname], [First Name]/Fact Find structur
+    now: Then list the client's folder ([Business Segment]/[Surname], [First Name]/2.
+    why: Paul, 02/11/2026: the 8:45am laptop window is dropped; the access order (computer, then Microsoft 365, then Zapier, then say plainly what was tried) is kept, as are the two locations and the rule never to touch another broker's folder. Asking Paul to attach a file is replaced by saying plainly what was tried (Paul, 05/11/2026).
+- old line 67: Company - Paul (used for New Business, but not limited to it) and Company - WR Clients → Paul Kafentzis (Client Files) (used for current/existing clients).
+    now: ~/liferisk.co.za/Company - WR Clients/Paul Kafentzis (Client Files) (used for current/existing clients).
+    why: Paul, 02/11/2026: the 8:45am laptop window is dropped; the access order (computer, then Microsoft 365, then Zapier, then say plainly what was tried) is kept, as are the two locations and the rule never to touch another broker's folder. Asking Paul to attach a file is replaced by saying plainly what was tried (Paul, 05/11/2026).
+- old line 67: A given client's material could sit under either — check both and use whichever one actually has the file.
+    now: self.glance.append("Date of birth %s was worked out from the ID number, but the ID's year could be 19%s or 20%s and no age was given:
+    why: Paul, 02/11/2026: the 8:45am laptop window is dropped; the access order (computer, then Microsoft 365, then Zapier, then say plainly what was tried) is kept, as are the two locations and the rule never to touch another broker's folder. Asking Paul to attach a file is replaced by saying plainly what was tried (Paul, 05/11/2026).
+- old line 67: This connection is expected to succeed and must be tried first, every time — never skip straight to asking Paul to attach something.
+    now: Never skip straight to asking Paul to attach something.
+    why: Paul, 02/11/2026: the 8:45am laptop window is dropped; the access order (computer, then Microsoft 365, then Zapier, then say plainly what was tried) is kept, as are the two locations and the rule never to touch another broker's folder. Asking Paul to attach a file is replaced by saying plainly what was tried (Paul, 05/11/2026).
+- old line 67: If this session has no live device-bridge connection to Paul's computer yet, request it before doing anything else that depends on client files.
+    now: The program's first lines give you one sentence to say to Paul before anything else:
+    why: Paul, 02/11/2026: the 8:45am laptop window is dropped; the access order (computer, then Microsoft 365, then Zapier, then say plainly what was tried) is kept, as are the two locations and the rule never to touch another broker's folder. Asking Paul to attach a file is replaced by saying plainly what was tried (Paul, 05/11/2026).
 - old line 67: Paul's laptop is reachable ~8:45am on weekdays only;
-    now: "the saved size equals the built PDF and Paul's OK is recorded",
+    now: Paul's permission is given here:
     why: Paul, 02/11/2026: the 8:45am laptop window is dropped; the access order (computer, then Microsoft 365, then Zapier, then say plainly what was tried) is kept, as are the two locations and the rule never to touch another broker's folder. Asking Paul to attach a file is replaced by saying plainly what was tried (Paul, 05/11/2026).
 - old line 67: if the bridge is down outside that window, say so plainly rather than treating it as a failure.
-    now: If the file is locked/open, tell Paul plainly, ask him to close it, and retry - never report it as saved until the listing proves it.
+    now: If there is no Overview, say so in the report and carry on.
     why: Paul, 02/11/2026: the 8:45am laptop window is dropped; the access order (computer, then Microsoft 365, then Zapier, then say plainly what was tried) is kept, as are the two locations and the rule never to touch another broker's folder. Asking Paul to attach a file is replaced by saying plainly what was tried (Paul, 05/11/2026).
 - old line 68: SharePoint — only if the local machine genuinely can't be reached.
-    now: SharePoint (the Microsoft 365 connector) - only if the local machine genuinely can't be reached.
+    now: SharePoint (the Microsoft 365 connector) - only if the computer was refused or cannot be reached (do not retry the request).
+    why: Paul, 02/11/2026: the 8:45am laptop window is dropped; the access order (computer, then Microsoft 365, then Zapier, then say plainly what was tried) is kept, as are the two locations and the rule never to touch another broker's folder. Asking Paul to attach a file is replaced by saying plainly what was tried (Paul, 05/11/2026).
+- old line 68: If, and only if, the device bridge cannot connect to Paul's computer this session, fall back to the identical two-location check via SharePoint.
+    now: If the file marks such a look-up confirmed, tell Paul in the hand-over message that the form's look-up should say "to verify", never "confirmed".
     why: Paul, 02/11/2026: the 8:45am laptop window is dropped; the access order (computer, then Microsoft 365, then Zapier, then say plainly what was tried) is kept, as are the two locations and the rule never to touch another broker's folder. Asking Paul to attach a file is replaced by saying plainly what was tried (Paul, 05/11/2026).
 - old line 68: This should be rare — treat a failed local connection as the exception, not the default path.
-    now: List the whole folder, treat every file that could plausibly be the thing you need (similar name, dated the meeting date, same client) as a candidate, and OPEN each one before deciding.
+    now: If the Audio to Text file shows a different dread disease figure, treat it as a deliberate entry and note the deviation and its source.
     why: Paul, 02/11/2026: the 8:45am laptop window is dropped; the access order (computer, then Microsoft 365, then Zapier, then say plainly what was tried) is kept, as are the two locations and the rule never to touch another broker's folder. Asking Paul to attach a file is replaced by saying plainly what was tried (Paul, 05/11/2026).
 - old line 68: Be aware this path requires embedding the file's content as base64 text in one message when saving, which has a real practical ceiling — a large PDF may need lossless compression first (e.g.
     now: Saving through it needs the file's content as base64 text in one message, which has a real practical ceiling:
@@ -49,7 +70,7 @@ REWORDED (each is covered by a recorded change):
     now: When a field can't be resolved from the Audio to Text file, the transcript or the Overview, check the client's other documents on file before marking it unconfirmed.
     why: Paul, 02/11/2026: the 8:45am laptop window is dropped; the access order (computer, then Microsoft 365, then Zapier, then say plainly what was tried) is kept, as are the two locations and the rule never to touch another broker's folder. Asking Paul to attach a file is replaced by saying plainly what was tried (Paul, 05/11/2026).
 - old line 76: That skill has its own rule for this exact case:
-    now: Open client-teams-transcript-skill and run its step driver for this meeting with --type first (a WhatsApp call:
+    now: "<the rule that settles it>" and it is SORTED (for example:
     why: Paul, 02/11/2026: the 8:45am laptop window is dropped; the access order (computer, then Microsoft 365, then Zapier, then say plainly what was tried) is kept, as are the two locations and the rule never to touch another broker's folder. Asking Paul to attach a file is replaced by saying plainly what was tried (Paul, 05/11/2026).
 - old line 76: it still produces the summary PDF, but the Planner note (now always produced via client-teams-transcript-skill's Output 1 structure and presented as its copy-ready Artifact page, per Step 7b below) ca
     now: If the form's files and the transcript are both missing after checking the client's folder, say so (step 1's --missing) - unless a completed FF already exists with no transcript (see Out of scope).
@@ -103,7 +124,7 @@ REWORDED (each is covered by a recorded change):
     now: every field sits under f as a value v with a status st (confirmed, preset or empty;
     why: Reworded for the new form (Paul, 02/11/2026): the form's data file first, the schema check, the parking list ignored, the look-up text checked; the rule is kept (references/02).
 - old line 96: confirmed, heard, verify, preset or empty;
-    now: STATUSES = ("confirmed", "preset", "empty", "heard", "verify")
+    now: heard, verify in an older file).
     why: Reworded for the new form (Paul, 02/11/2026): the form's data file first, the schema check, the parking list ignored, the look-up text checked; the rule is kept (references/02).
 - old line 96: repeating lists (risk policies, retirement funding, debts, children and so on) sit under l.
     now: files from the older form also use heard and verify), and the repeating lists (risk policies, retirement funding, debts, children and so on) sit under l as rows.
@@ -160,22 +181,22 @@ REWORDED (each is covered by a recorded change):
     now: these came from direct advisor feedback)
     why: Reworded: the program draws the PDF, so the build helper script and the Word step are gone; the save-and-list-back rule and the source report are kept (references/07).
 - old line 224: Only keepNext on headings and cantSplit:
-    now: The only overlap allowed is the common debts, the children and the joint policies.
+    now: self.flag(row, "Read out on the call and not yet confirmed:
     why: Reworded: the program draws the PDF, so the build helper script and the Word step are gone; the save-and-list-back rule and the source report are kept (references/07).
 - old line 224: true on every table row.
-    now: 1 | Run it | The one command that starts the job and how every step works |
+    now: "<the number on the policy schedule>", "ref":
     why: Reworded: the program draws the PDF, so the build helper script and the Word step are gone; the save-and-list-back rule and the source report are kept (references/07).
 - old line 228: Build, verify, and write the source report
     now: Show Paul the PDF and the source report in ONE reply and WAIT for his OK.
     why: Reworded: the program draws the PDF, so the build helper script and the Word step are gone; the save-and-list-back rule and the source report are kept (references/07).
 - old line 230: Use scripts/build_fact_find.js as the starting template for the styling helpers (it already implements all Step 4 conventions, including a fieldTable cell renderer that accepts either a single string 
-    now: if words_ and words_[-1].lower().strip(".,;:") in ("the", "a", "an", "and", "to", "of", "for", "with", "in", "on", "at", "by", "from", "is", "are", "was", "or", "that", "this") \
+    now: the Fact Find (Manual) PDF (Paul's filled-in copy of the template, whatever its file name).
     why: Reworded: the program draws the PDF, so the build helper script and the Word step are gone; the save-and-list-back rule and the source report are kept (references/07).
 - old line 230: Replace its client-specific content with the sections of Step 2, in the Audio to Text file's order;
     now: The form's value stays in the report either way (the Audio to Text file wins);
     why: Reworded: the program draws the PDF, so the build helper script and the Word step are gone; the save-and-list-back rule and the source report are kept (references/07).
 - old line 230: don't rewrite the styling helpers or numbering config.
-    now: Each one must end up in the document or be reviewed (a missed one is a missed fact)."""
+    now: The program's own numbering (STEP 3 of 8) is the only numbering of the steps.
     why: Reworded: the program draws the PDF, so the build helper script and the Word step are gone; the save-and-list-back rule and the source report are kept (references/07).
 - old line 230: When populating any field that is itself a total, compute it from the same named component values used elsewhere in the document.
     now: The Audio to Text file wins where they differ, and every contradiction is either SORTED (a rule settles it) or HIGHLIGHTED (both values and where each came from).
@@ -235,7 +256,7 @@ REWORDED (each is covered by a recorded change):
     now: The program shows one step at a time and will not show the next until the proof for this one is on file.
     why: Reworded: the program draws the PDF, so the build helper script and the Word step are gone; the save-and-list-back rule and the source report are kept (references/07).
 - old line 246: stage, edit narrowly, commit back to the exact same path.
-    now: list the folder, stage the files, commit the finished PDF.
+    now: STAGE the files you need (they arrive as exact copies) and, at the end, commit the finished PDF.
     why: Reworded: the program draws the PDF, so the build helper script and the Word step are gone; the save-and-list-back rule and the source report are kept (references/07).
 - old line 246: Never edit or overwrite the Fact Find (Audio to Text) PDF or JSON, or the Manual Fact Find - they are Paul's own records and are read-only for this skill.
     now: never edit or overwrite the Fact Find (Audio to Text) PDF or JSON, or the Manual Fact Find - they are Paul's own records.
@@ -247,7 +268,7 @@ REWORDED (each is covered by a recorded change):
     now: Do not write the Planner note or the message to Sitamah by hand in this skill.
     why: Reworded: the program draws the PDF, so the build helper script and the Word step are gone; the save-and-list-back rule and the source report are kept (references/07).
 - old line 248: Confirm the save, don't just attempt it.
-    now: Never save one spouse's reports into the other's folder.
+    now: confirm the number digit for digit")
     why: Reworded: the program draws the PDF, so the build helper script and the Word step are gone; the save-and-list-back rule and the source report are kept (references/07).
 - old line 252: contact details, template defaults, fields resolvable from other documents on file or from the Audio to Text file, a policy number resolved from the actual schedule, an FNA/Shortfall/Reduced quote wit
     now: contact details, template defaults, fields resolvable from other documents on file, a policy number resolved from the actual schedule, an FNA/Shortfall/Reduced quote with the wrong insurer or wrongly 
@@ -265,7 +286,7 @@ REWORDED (each is covered by a recorded change):
     now: The program reads the transcript, builds the short Planner note page (one-line bullets per planning area, only the actions for now, in order), checks it, and builds the message to Sitamah.
     why: Moved to client-teams-transcript-skill (Paul, 02/11/2026 and 06/11/2026): that skill makes the Planner note page and the message to Sitamah once, and posts the message automatically; this skill only hands over to it (references/08-chain.md).
 - old line 273: Only after all three are approved and saved, finish with Step 8 (the Teams message to Sitamah).
-    now: the Fact Find Summary (fact-find-summary), and the Planner note page and the message to Sitamah (client-teams-transcript-skill).
+    now: "Fact Find Summary, Planner note page and the message to Sitamah",
     why: Moved to client-teams-transcript-skill (Paul, 02/11/2026 and 06/11/2026): that skill makes the Planner note page and the message to Sitamah once, and posts the message automatically; this skill only hands over to it (references/08-chain.md).
 
 

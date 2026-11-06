@@ -5,7 +5,7 @@ This replaces "Operation Skill Restructure" 1.0, which Paul had deleted. Read th
 ## 1. The brief (Paul's own words, in plain form). That is ALL it is.
 1. **Chats do not always read a skill fully or do it the same way every time.** Fix that with a program the chat cannot ignore: if a skill has TEN steps, all TEN are done, in order, every time. That is the brief.
 2. **Look at the ORIGINAL skill, find the contradictions, remove them, remove the bloat, streamline it.** That is the brief.
-3. **No permission requests.** The original skill had full access to the client's files in OneDrive on Paul's computer, and he has the Microsoft 365 connector on. Every chat is on Auto. Nothing may ask him for anything.
+3. **No permission requests.** The original skill had full access to the client's files in OneDrive on Paul's computer, and he has the Microsoft 365 connector on. Every chat is on Auto. Nothing may ask him for anything. **Paul, 06/11/2026: the skill itself carries his permission for the two folders below, and this is built into every skill from now on.**
 
 Anything beyond these three is over-building. New features only when Paul asks for them in his own words.
 
@@ -16,6 +16,9 @@ Anything beyond these three is over-building. New features only when Paul asks f
 - I swung between two extremes (Microsoft 365 only, then computer with proofs) instead of putting back what already worked.
 - I rebuilt from scratch and wrote 6,000 lines of code and 370 tests where about 300 lines of text needed tidying and its steps forcing.
 - I ran long test and review rounds, which wasted Paul's tokens.
+- **First real run of the 2.0 build (v38, 06/11/2026): I built on an access route I had never tested in Paul's own chat.** The chat asked for the whole `~/liferisk.co.za`; the Auto-mode safety check refused it with no box shown to Paul; everything fell back to Microsoft 365 text, the chat retyped the form's JSON (not a faithful copy: 31,539 bytes on disk), re-cut the flat transcript by hand and skipped the PDF. I also told the chat to "not ask Paul for permission", which is the opposite of what that check wants to see.
+- **A program run as many separate shell commands asks for a click on each one** (6 "Allow once" boxes in steps 1 and 2 alone, part of them the chat's own improvised `cp`, `sed` and heredoc). Fewer, fixed commands are the only lever.
+- I gave a padded time estimate without saying what it was made of.
 
 ## 3. The skeleton every skill becomes
 - `SKILL.md`: a SHORT entry page (about 80 lines at most): name, description, Index, the program-stamped "Last updated" line, Recent changes, "Run it", the few standing rules, where the detail lives.
@@ -28,7 +31,7 @@ Anything beyond these three is over-building. New features only when Paul asks f
 - ONE test, on invented data.
 
 ## 4. The design rules
-1. **Access is the original's:** the device bridge first (get_device_info, request the folder once only if it is not connected, list, stage, commit), then the Microsoft 365 connector, then Zapier, then say plainly what is blocked. No shell commands on the laptop (`device_bash`), no fingerprints, no access log gates, no hard STOP, never "please attach the file". If a request is refused, the chat goes to the next route and carries on.
+1. **Access is the original's, with Paul's permission written into the skill (Paul, 06/11/2026; every skill that touches client files carries this paragraph).** Folder 1 = `~/liferisk.co.za/Company - Paul`; Folder 2 = `~/liferisk.co.za/Company - WR Clients/Paul Kafentzis (Client Files)` (his Explorer shows them as OneDrive > liferisk.co.za > ...). The chat calls `get_device_info`; if the two folders are not connected it calls `device_request_folder_access` ONCE with exactly those two paths and a plain reason; NEVER the whole `~/liferisk.co.za` (refused on the first real run; the two named folders were granted in the test) and never another broker's folder. Then list, stage (exact copies) and commit. If refused: no retry; the Microsoft 365 connector (PDF and Word files in page ranges), then Zapier, then say plainly what is blocked. No shell commands on the laptop (`device_bash`), no fingerprints, no access log gates, no hard STOP, never "please attach the file", never retype a file (a file typed out from text is told to the program and shown in the audit). If the safety check refuses again, Paul's start message carries his own words: "You may connect to these two folders on my computer: Company - Paul, and Company - WR Clients / Paul Kafentzis (Client Files), both under liferisk.co.za."
 2. **A proof is cheap, local and about the chat's own work:** a file exists, a chunk was served, a total adds up, a saved size matches the listing. Never a proof that needs Paul's machine or a new permission.
 3. **The program refuses only when a step was skipped, not when wording is imperfect.** Judgment stays as text. A refusal costs a whole chat round, so keep them few.
 4. **Each rule once.** Four copies of one rule drift apart.
@@ -38,12 +41,14 @@ Anything beyond these three is over-building. New features only when Paul asks f
 8. **Flexible:** if a file is not where expected, the chat tries the next route and goes on. STOP only when the job truly cannot be done, with one short line.
 9. **No client data in the repo.** Tests use invented people only.
 10. **Never say "live" before Paul confirms.** A reported upload is "uploaded (reported)".
+11. **Commands:** the chat runs only the commands the program prints (`python3 .../run.py <step>`): no `cp`, `sed`, heredocs, no opening the program's own files. Keep the number of commands per run small. Permission boxes are counted on every real run and any box on a read is a failure to fix.
 
 ## 5. The procedure for each skill
 **Phase 1: Read and report (change NOTHING).**
 1. Name the skill and say what it does in two lines.
 2. Read the ORIGINAL in full (the version before any 1.0 changes; Paul confirms which one), plus the inputs it works on (for a new input such as a new form, read a real example with Paul's say-so).
-3. Report to Paul as ONE plain-English table: left column the problem, right column the solution. It must show what is good (keep), what is not good (remove), the contradictions, the bloat, how the skill reaches its files (no permission gates), and the proposed steps with what the program makes sure at each.
+3. **Access test in Paul's own chat, in his usual Auto mode, on a harmless file (no client file opened): the exact tools, paths and results are written in the report. Never design on an access route that has not been tested there.**
+3a. Report to Paul as ONE plain-English table: left column the problem, right column the solution. It must show what is good (keep), what is not good (remove), the contradictions, the bloat, how the skill reaches its files (no permission gates), and the proposed steps with what the program makes sure at each.
 4. Explain it back to Paul and WAIT for his yes.
 
 **Phase 2: Build, in one pass (no helpers).**
@@ -53,7 +58,7 @@ Archive the original in `history/`; split it into `references/`; write `steps.js
 Package (`tools/package_skill.py`). Paul LOOKS at the real folder in Explorer and says its name (his screenshot decides, not memory). Make the brief (`tools/make_upload_brief.py <zip> --folder "<path>"`). Send the zip, the brief, the backup of the version uploaded now, and a short yes/no list. A chat with Claude in Chrome uploads it and reports. Record "uploaded (reported)". Test before and after as the brief says.
 
 **Phase 4: First real run.**
-Paul runs it on a real client. The chat reports how many approval prompts there were, how many minutes it took, and every refusal. Fix only the faults found. Paul says when it is live.
+Paul runs it on a real client. The chat reports every permission box (which tool, which step, and Paul's screenshots decide the count, because the chat cannot see his clicks), how many minutes it took, and every refusal. Fix only the faults found. A box on a read is a failure. Paul says when it is live.
 
 ## 6. Always
 - Simple words. One recommended route with its honest catch. Short answers. One question at a time.
@@ -67,7 +72,7 @@ Paul runs it on a real client. The chat reports how many approval prompts there 
 ## 7. Progress (update after every phase)
 | Skill | Base (the original) | 1 Report | 2 Build | 3 Hand over | 4 Real run |
 |---|---|---|---|---|---|
-| `ff-population-transcript` (FIRST, the model) | v32 (28/10/2026) plus Paul's 02/11 text decisions | done | done 06/11/2026 (packaged, 20 files, not uploaded) | done: uploaded as v38 on 06/11/2026 (reported by a Chrome chat; live copy equals the zip); NOT confirmed live | waiting for Paul's first real run (count the approval prompts and the minutes) |
+| `ff-population-transcript` (FIRST, the model) | v32 (28/10/2026) plus Paul's 02/11 text decisions | done | done 06/11/2026; v39 (13:29, 20 files) fixes the first real run | v38 uploaded (reported); **v39 packaged, brief made, NOT uploaded yet**; NOT confirmed live | first real run of v38 (Roquelle Damir, 06/11/2026) STOPPED by Paul at step 2: computer request refused (whole root asked), JSON retyped, transcript flat, PDF unused, 6+ "Allow once" boxes. v39 fixes these; next: Paul's second real run |
 | `fact-find-summary` | to be confirmed in its Phase 1 | not started | | | |
 | `client-teams-transcript-skill` | to be confirmed (v35 was confirmed live 03/11/2026) | not started | | | |
 | `client-transcript-download` | to be confirmed | not started | | | |
@@ -82,12 +87,15 @@ Not in scope unless Paul says: `paul-email-signature`, `advicetech-website-knowl
 ## 8. The first skill: `ff-population-transcript` (Paul's requirements, 06/11/2026)
 - It reads BOTH the "Fact Find (Audio to Text)" files (the form's data file and its PDF) AND the "Teams meeting transcript", analyses both, and makes ONE report: the "Fact Find Transcript - DD.MM.YY - (Name Surname)" PDF, saved into the client's `2. Fact Find` folder. The Summary, the Planner note and the Sitamah message come after it, from that one report.
 - Contradictions between the two are either SORTED (a clear rule settles it and says so in one line) or HIGHLIGHTED (both values quoted with where each came from). When no rule settles it, the form's value goes in the report and the difference is highlighted. Nothing is picked or dropped silently.
+- Paul's decision 06/11/2026: he first said not to read the JSON; after the explanation that the retyping (not the JSON) was the problem he said to go ahead and read it. BOTH files of the Audio to Text are read, as exact copies from his computer.
 - The form's file is already most of the Fact Find (about 270 fields, an 11-page PDF in the v3.0 layout with Paul's eight planning areas, totals worked out in the PDF only). The skill starts from it and applies the transcript's corrections. It reads the PDF as well as the data file. It does not rebuild the whole Fact Find.
 - Paul's 02/11 decisions stay: the form's file is the first source; Dread Disease ABI 3%; check the form's schema version every run; ignore the form's parking list; check the company look-up text and replace chatter from the transcript; the follow-up appointment is an action for Sitamah; the 8:45am laptop window is dropped.
 - Planned steps (8): find and stage the files; read the form (both files); read the transcript twice; contact details and lead source (D&R Outlook search); corrections list (each cites its transcript line, totals reconcile, standing values checked); build the PDF and look at it; save and list back; the Summary, Planner note (made by `client-teams-transcript-skill`) and the Sitamah message.
 - One stop only: Paul reads the Fact Find PDF; everything after it runs by itself. (Recommended by me; Paul has not objected.)
 
 ## 9. Running log (newest first)
+- 06/11/2026: `ff-population-transcript` v39 built (13:29) after Paul's first real run of v38 (Roquelle Damir): access test in his own chat PASSED with the two named folders and his words (`device_request_folder_access` granted both; the Damir `2. Fact Find` folder listed, five files, none opened); decision A (read the JSON and the PDF as exact copies). Changes: the skill carries Paul's permission and the two exact paths; a `.docx` is read by the program itself (no pandoc); `--copied` shows any file the chat typed out; fixed commands only. One test passed (source and unpacked zip), lint PASS, rule-by-rule 568 sentences: 247 kept, 94 reworded, 227 dropped, 0 unaccounted. Packaged `releases/ff-population-transcript-20261106-1329.zip` (20 files, 93,007 bytes), NOT uploaded. Not proven: the number of permission boxes, the real PDF through the program's reader.
+- 06/11/2026: first real run of `ff-population-transcript` v38 (Roquelle Damir) stopped by Paul at step 2 of 8: no PDF, no audit, nothing saved, nothing sent. Faults: see section 2.
 - 06/11/2026: `ff-population-transcript` UPLOADED as v38 on 06/11/2026 by a Chrome chat that had the brief (reported by that chat, pasted by Paul): before = v37, 24 files, 31 skills, ON, test answer "Last updated: 2026-11-05 17:11 (Athens time)" and "Index"; replace box "Current 78 lines - This file 75 lines" (it named exactly ff-population-transcript); after = v38, 20 files, still ONE entry, ON, "Last updated: 2026-11-06 11:25 (Athens time)" and "Index" (correct). The zip was staged from the computer, no refusal, Paul did not pick the file; access check 7b ran by itself, no permission box (count incomplete: 16 of 21 subfolders, the connector has no folder listing). The live copy equals the zip (all 20 files compared). NOT confirmed live by Paul. client-teams-transcript-skill-20261106-0920.zip stays NOT uploaded. Next: Phase 4, Paul's first real run.
 - 06/11/2026: `ff-population-transcript` Phase 3: folder `ff-population-transcript-skill` named by Paul and confirmed by the Microsoft 365 folder search (it held CHANGES-FOR-PAUL.md, the v36 zip, the v37 zip and the v36 backup); the live copy equals the v37 zip (24 files); brief made; zip, brief and CHANGES-FOR-PAUL sent. Waiting for the upload report.
 - 06/11/2026: `ff-population-transcript` Phase 2 DONE (06/11/2026 11:25): rebuilt from the ORIGINAL v32 plus Paul's 02/11 decisions, in one pass, no helpers: 8 programmed steps (find files the original way, read the form's two files, read the transcript twice, contact and lead source, combine into ONE report with contradictions SORTED or HIGHLIGHTED, build and look, save and list back with Paul's one OK, hand over to the Summary / Planner / Sitamah skills), a short audit, no shell commands on his laptop, no fingerprints, no hard STOP. Kept and trimmed from 1.0: the form reader, the combiner (compose.py), the PDF drawing and layout.json; new: run.py, verify.py, tx.py, 8 reference pages (SKILL.md 81 lines). ONE test (6 seconds) passed on the source and on the unpacked zip, lint PASS, rule-by-rule 568 sentences: 254 kept, 87 reworded, 227 dropped with a reason, 0 unaccounted. Packaged `releases/ff-population-transcript-20261106-1125.zip` (20 files, 91,967 bytes), NOT uploaded (v37, the heavy 1.0 build, is still the uploaded one). Next: Phase 3 (Paul LOOKS at the folder name; brief; zip, changes list and backup).
