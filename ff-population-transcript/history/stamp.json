@@ -1,5 +1,5 @@
 {
- "stamp": "2026-11-06 13:29",
- "fingerprint": "b24aae0fe4df048be15fc1baae1fe6168e18ee16c94cec3525e8c4f8867823a4",
- "change": "access: Paul's permission and his two exact folders in the skill; files staged as exact copies; a .docx is read by the program itself (no pandoc); --copied shows any file the chat typed out; fixed commands only"
+ "stamp": "2026-11-06 14:32",
+ "fingerprint": "ba9ab61ad0e2c01b5a723307822a1a7275c8aa7856064cef09db67dd3fa38d8f",
+ "change": "v40: transcript read once, every chunk checked by a line from its middle; form rows added (rental, spousal, maintenance, total income, disability household lines, instalment protector, priorities); overlay rules before writing; Edit tool for the overlay; form-PDF quote check tolerates column order; staged copy for the computer save"
 }

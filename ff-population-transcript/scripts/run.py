@@ -9,7 +9,7 @@
 
   run.py files   <run_dir> --form F [--formpdf P] --transcript T [--transcript T2] [--overview O] [--missing WHAT] [--force-incomplete WORDS]
   run.py form    <run_dir>            read both form files and print what to act on
-  tx.py chunk    <run_dir> <1|2> <n>  hand the transcript over, in order, twice
+  tx.py chunk    <run_dir> <n> [--seen "..."]  hand the transcript over once, in order, with a reading check on every chunk
   run.py lead    <run_dir> (--found --received DD/MM/YYYY --ref R --quote Q | --none WHAT | --unavailable WHAT)
   run.py combine <run_dir>            check overlay.json and make content.json (the ONE combined report)
   run.py build   <run_dir>            draw the Fact Find Transcript PDF and the page images
@@ -72,7 +72,7 @@ def chunk_commands(run):
     if not st:
         return "(the chunk commands appear once step 1 has prepared the transcript)"
     k = len(st["chunks"])
-    return ("Pass 1 then Pass 2: python3 %s/tx.py chunk %s 1 1   (%d chunks in all; each chunk prints the command for the next one; Pass 2 starts after Pass 1 is complete)" % (SCRIPTS, run, k))
+    return ("Read once, in order: python3 %s/tx.py chunk %s 1   (%d chunks; each chunk prints the next command. Every chunk ends with a READING CHECK: the next command needs the first 5 words of a line from the MIDDLE of the chunk you just read. The last command, chunk %d, closes the reading.)" % (SCRIPTS, run, k, k + 1))
 
 
 def expand(text, run):
@@ -233,13 +233,9 @@ def ck_read(run, rj):
     st = w.load_opt(p(run, w.STATE), None)
     if not st:
         return ["the transcript is not prepared"]
-    d1, d2 = tx.passes_done(st)
-    errs = []
-    if not d1:
-        errs.append("Pass 1 has not served every chunk (python3 %s/tx.py status %s)" % (SCRIPTS, run))
-    if not d2:
-        errs.append("Pass 2 has not served every chunk")
-    return errs
+    if not tx.read_done(st):
+        return ["the reading is not complete: serve every chunk in order, each with its reading check, and finish with the closing command (python3 %s/tx.py status %s shows where you are)" % (SCRIPTS, run)]
+    return []
 
 
 def ck_lead(run, rj):
@@ -427,6 +423,31 @@ def cmd_lead(a):
 
 
 # ------------------------------------------------------------------ step 5: combine
+def pdf_quote_ok(q, pt):
+    """A quote from the form's PDF: the exact text, or its words in the same order with other columns' words between them (a PDF prints columns line by line)."""
+    nq = w.norm(q)
+    if nq in pt:
+        return True
+    toks = nq.split()
+    if not toks:
+        return False
+    start = pt.find(toks[0])
+    tries = 0
+    while start >= 0 and tries < 300:
+        pos, ok = start + len(toks[0]), True
+        for t in toks[1:]:
+            i = pt.find(t, pos)
+            if i < 0 or i - pos > 250:
+                ok = False
+                break
+            pos = i + len(t)
+        if ok:
+            return True
+        start = pt.find(toks[0], start + 1)
+        tries += 1
+    return False
+
+
 def check_quotes(run, ov):
     """Every call quote in the overlay must really be in the transcript, and every form-PDF quote in the PDF's text. Documents (Overview and the like) are not machine-checked. Returns (errors, call_quotes, doc_sources)."""
     st = w.load_opt(p(run, w.STATE), None)
@@ -451,7 +472,7 @@ def check_quotes(run, ov):
                 elif w.norm(q) not in tr:
                     errs.append("overlay.%s %s: this quote is not in the transcript: %r (copy the exact words from the chunk you read)" % (name, it.get("id"), q[:70]))
             elif doc.lower() == "form pdf":
-                if q and pt and w.norm(q) not in pt:
+                if q and pt and not pdf_quote_ok(q, pt):
                     errs.append("overlay.%s %s: this quote is not in the form's PDF text: %r" % (name, it.get("id"), q[:70]))
             elif doc:
                 docs += 1
@@ -529,6 +550,17 @@ def cmd_build(a):
     f = info["font"]
     print("BUILT  %s   (%d page(s), %d bytes)" % (info["path"], info["pages"], info["pdf_size"]))
     print("  font used: %s%s" % (", ".join(f["ps_names"] or [f["family"]]), "" if f["aptos"] else "   <-- NOT Aptos (it was not found on this computer); say so to Paul"))
+    outdir = os.environ.get("WR_OUTPUTS_DIR") or "/mnt/user-data/outputs"
+    if os.path.isdir(outdir):
+        try:
+            staged = os.path.join(outdir, os.path.basename(info["path"]))
+            shutil.copyfile(info["path"], staged)
+            rj = load_run(a.run)
+            rj["build"]["staged"] = staged
+            save_run(a.run, rj)
+            print("  FOR THE SAVE: copied to %s : give exactly this as stagedPath to device_commit_files (it fails without a staged path under /mnt/user-data/outputs)" % staged)
+        except OSError as e:
+            print("  could not copy the PDF to %s (%s): copy it there yourself before the computer save" % (outdir, e))
     print("  page images: %s/out/page-*.png: LOOK at every page, then: python3 %s/run.py look %s --saw \"<what you saw>\"" % (a.run, SCRIPTS, a.run))
     if gone:
         print("  RE-OPENED because the PDF was rebuilt: steps %s." % ", ".join(gone))

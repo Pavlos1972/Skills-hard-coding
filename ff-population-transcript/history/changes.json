@@ -430,5 +430,13 @@
   "new": "the same rule, reworded on the new pages",
   "why": "Reworded: the program draws the PDF, so the build helper script and the Word step are gone; the save-and-list-back rule and the source report are kept (references/07).",
   "needs_paul": false
+ },
+ {
+  "file": "references/02-form-and-sources.md",
+  "kind": "reworded",
+  "old": "Read the whole transcript, start to finish, at least twice before drafting.",
+  "new": "Read the whole transcript, start to finish, once, completely and carefully, before drafting (Paul, 06/11/2026: once, but accurately; the program shows every chunk in full and checks that each was read).",
+  "why": "Paul's decision 06/11/2026 after the second real run: the transcript is read once, but accurately. The program now checks every chunk with a line from its middle instead of counting a second pass.",
+  "needs_paul": false
  }
 ]

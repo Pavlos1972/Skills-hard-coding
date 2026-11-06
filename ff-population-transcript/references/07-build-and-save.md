@@ -3,7 +3,7 @@
 ## Formatting conventions (the program draws exactly this; these came from direct advisor feedback)
 
 - **Font:** Aptos, 12pt, throughout the entire document.
-- **Every field value is point-form — this is a hard, universal rule across every output this skill chain produces, with no exceptions.** One fact per line/bullet — never run several facts together. Applies everywhere: field table cells, Notes, flags. **Named precedent:** [client A], 07.10.26 — the first draft packed multiple facts into single paragraph cells; Paul called it out as "cluttered".
+- **Every field value is point-form** (the rule is on the combine page, written once): one fact per line, in field table cells, Notes and flags.
 - **Prior-year information is shown only if it's genuinely still true today — never carried forward by default.** Where genuinely unclear, split into two explicit lines: `[year]: [old value]` then `[year]: [current value/status]`. **Named precedent:** [client A], 07.10.26.
 - **No page-number or "Page N" labels anywhere in the document.**
 - **No forced page breaks between sections.** A heading is kept with the first rows of its table, and a table row is never split across pages.
@@ -22,7 +22,7 @@ Open every page image and confirm: no orphaned headings, no split table rows, no
 **This step is not optional, is never skipped, and is never something Paul should have to ask for.** Presenting the PDF only in chat is not complete: the file must also land in the client's actual folder, every single time, per the Client File Access order (page 01).
 
 - **Why this exists:** on 14 September 2026 ([client E]), both PDFs were built, verified, and presented in chat - and then simply left there. Paul had to explicitly ask why they hadn't been saved. This must never happen again.
-- **How to save it:** write the finished PDF straight into the client's `2. Fact Find` folder using the device-bridge file tools. Request folder access proactively if not already granted. Present it in the chat too (copy it to `/mnt/user-data/outputs/` first when that folder exists, then `present_files` / `SendUserFile`).
+- **How to save it:** write the finished PDF straight into the client's `2. Fact Find` folder using the device-bridge file tools. Request folder access proactively if not already granted. `run.py build` copies the PDF to `/mnt/user-data/outputs/` (when that folder exists) and prints the exact `stagedPath` to give `device_commit_files`: the computer save fails without a staged path under that folder. Present it in the chat too (`present_files` / `SendUserFile`).
 - **Verify every save by reading the folder back.** After every save (and every overwrite), list the folder and confirm the file's size AND modified time are the new file's: the listed size must equal the size of the local file you sent (`run.py saved` compares them). A write call that reports success is not proof: if the old PDF is open on Paul's computer the write can be refused or the old copy can remain, and the staging copy can lag. If the size does not match, wait briefly and commit the file again, then list again. If the file is locked/open, tell Paul plainly, ask him to close it, and retry - never report it as saved until the listing proves it. **Named precedent:** [client B], 09.10.26 - an overwrite of the Fact Find Transcript PDF was reported saved, but the folder still held the old 10-page version.
 - **The form's files are read-only:** never edit or overwrite the Fact Find (Audio to Text) PDF or JSON, or the Manual Fact Find - they are Paul's own records.
 

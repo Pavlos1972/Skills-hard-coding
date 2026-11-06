@@ -2,6 +2,12 @@
 
 The Fact Find Transcript is ONE report made from BOTH sources: the form's data file and PDF, and the Teams transcript (with the Overview and the client's documents as reference). The program copies the form's values; you write only what the call and the documents ADD, in `{run}/overlay.json`. `run.py combine` checks it and makes `content.json`; run it as often as you like.
 
+## Rules for writing the overlay (the program checks them; read them BEFORE you write)
+- **Every note, flag and fill is point-form: ONE fact per entry. Never run several facts together in one note.** This is a hard, universal rule across every output this skill chain produces, with no exceptions. **Named precedent:** [client A], 07.10.26: the first draft packed multiple facts into single paragraph cells; Paul called it out as "cluttered".
+- Every entry needs an `id` and a `src` (a call line with the exact words, or a named document). `documents_to_request` and `next_steps` are lists of objects: `{"id": "n1", "text": "...", "src": [...]}`. A diff `key` must be a field of the form (the program lists the valid ones). A quote `group` must be one of the listed groups.
+- **Change `overlay.json` with the Edit or Write tool, never with a Python heredoc or any other shell command** (every such command asks Paul for a click). `run.py combine` lists up to 25 problems in ONE go: fix them all, then run it again.
+- A quote taken from the form's PDF (`{"doc": "form PDF", "quote": "..."}`) may have other columns' words between its words; keep the words in their order.
+
 ## What you write (every entry has an `id` and a `src`)
 A `src` is the call's exact words, `[{"line": 12, "quote": "the exact words"}]` (the program checks they are in the transcript), or a document, `[{"doc": "Overview", "quote": "..."}]` (not machine-checked: it is counted on the audit).
 

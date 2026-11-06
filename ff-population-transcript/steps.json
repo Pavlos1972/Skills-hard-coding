@@ -32,15 +32,15 @@
     },
     {
       "id": "read",
-      "title": "Read the transcript twice, in order",
+      "title": "Read the transcript once, accurately",
       "ref": [
         "02-form-and-sources.md"
       ],
       "do": [
         "{chunk_commands}",
-        "Read every chunk in order, then the WHOLE transcript again (Pass 2). The program hands the next chunk over only after the previous one. Searching for keywords is not reading. While you read, keep a list of what the call says that the form lacks, gets wrong or contradicts: you write it down in step 5."
+        "Read every chunk in FULL, in order. At the end of each chunk the program names a line from the MIDDLE of it: the next command needs the first 5 words of that line (--seen), so the chunk must really be read. Never cut a chunk short (no tail, head, grep or loops) and never skip one. The last command closes the reading. Searching for keywords is not reading. While you read, keep a list of what the call says that the form lacks, gets wrong or contradicts: you write it down in step 5."
       ],
-      "proof": "both passes served every chunk in order",
+      "proof": "every chunk was served in full and in order, and every reading check passed",
       "check": "read"
     },
     {

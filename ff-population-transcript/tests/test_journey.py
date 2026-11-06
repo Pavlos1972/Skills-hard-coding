@@ -82,6 +82,9 @@ class Journey(unittest.TestCase):
         self.pdf_path = os.path.join(self.tmp, "Fact Find (Audio to Text) - 05.11.2026 - Pat Samplecase.pdf")
         self.call_path = os.path.join(self.tmp, "Teams meeting transcript - 05.11.26 - Pat Samplecase.docx")
         self.overview_path = os.path.join(self.tmp, "WR Overview - Pat Samplecase.txt")
+        self.outputs = os.path.join(self.tmp, "outputs")
+        os.makedirs(self.outputs)
+        ENV["WR_OUTPUTS_DIR"] = self.outputs
         form = household.pat_form()
         with open(self.form_path, "w", encoding="utf-8") as f:
             json.dump(form, f)
@@ -165,15 +168,23 @@ class Journey(unittest.TestCase):
         self.assertIn("AMOUNTS ONLY THE PDF HOLDS", form_out)
         self.assertIn("99999.00", form_out.replace(" ", ""))
         self.ok("run.py", "done", run, "form")
-        # step 3: the transcript is handed over in order, twice
+        # step 3: the transcript is handed over ONCE, in order, and every chunk is checked by a line from its middle
         k = len(self.load("state.json")["chunks"])
         self.assertGreater(k, 1)
-        self.refused("tx.py", "chunk", run, 1, 2, text="read the chunks in order")
-        self.refused("tx.py", "chunk", run, 2, 1, text="Pass 2 starts only after Pass 1")
-        self.refused("run.py", "done", run, "read", text="Pass 1 has not served every chunk")
-        for p in (1, 2):
-            for n in range(1, k + 1):
-                self.ok("tx.py", "chunk", run, p, n)
+        self.refused("tx.py", "chunk", run, 2, text="read the chunks in order")
+        self.refused("run.py", "done", run, "read", text="the reading is not complete")
+        with open(os.path.join(run, "transcript.txt"), encoding="utf-8") as f:
+            tlines = f.read().split("\n")
+        prev = None
+        for n in range(1, k + 2):
+            if n == 2:                                                          # a chunk cannot be got without the check, nor with the wrong words (a tail -n 3 shortcut shows neither)
+                self.refused("tx.py", "chunk", run, 2, text="repeat the first 5 words of line %d" % prev)
+                self.refused("tx.py", "chunk", run, 2, "--seen", "these are not the words", text="not the first words of line %d" % prev)
+            args = ["chunk", run, n] + (["--seen", " ".join(tlines[prev - 1].split()[:5])] if prev else [])
+            out = self.ok("tx.py", *args).stdout
+            m = re.search(r"first 5 words of line (\d+)", out)
+            prev = int(m.group(1)) if m else None
+        self.assertIn("READING COMPLETE", out)
         self.ok("run.py", "done", run, "read")
         # step 4: contact details and the lead source
         self.ok("run.py", "lead", run, "--none", "searched Leads - D&R Marketing and the whole mailbox: no appointment email for this client")
@@ -194,6 +205,8 @@ class Journey(unittest.TestCase):
         self.assertEqual(c["report"]["highlighted"], 1)
         self.assertTrue(c["pdf_fields"], "the amounts only the PDF holds are printed under their own heading")
         rows = {r["id"]: r for s in c["sections"] for b in s["blocks"] for r in b["rows"]}
+        for key in ("tinc", "pd_hh", "pd_cc", "pd_dr", "ip_inst", "ip_inst_tot", "rent", "spinc", "maint", "focus"):
+            self.assertIn(key, rows, "the form row %s must be in the report" % key)
         self.assertEqual(rows["dd_abiv"]["bullets"], ["3%"])                  # the standing Dread Disease ABI
         self.assertEqual(rows["lc_wol"]["bullets"], ["3%"])                    # the form's preset 5% is replaced by the standing 3%
         self.assertTrue(any("Difference: the form says 3-year degree" in f["text"] for f in rows["edu"]["flags"]))
@@ -206,6 +219,9 @@ class Journey(unittest.TestCase):
         self.assertIn("BUILT", out)
         pdf = os.path.join(run, "out", "Fact Find Transcript - 05.11.26 - (Pat Samplecase).pdf")
         self.assertTrue(os.path.getsize(pdf) > 3000)
+        self.assertIn("FOR THE SAVE", out)                                    # the PDF is copied where the computer save needs it, and the exact path is printed
+        staged = os.path.join(self.outputs, os.path.basename(pdf))
+        self.assertEqual(os.path.getsize(staged), os.path.getsize(pdf))
         self.refused("run.py", "done", run, "build", text="were not looked at")
         self.refused("run.py", "look", run, "--saw", "ok", text="at least 20 characters")
         self.ok("run.py", "look", run, "--saw", "every page: navy headings, two-column tables, notes in point form, nothing cut off")
@@ -249,6 +265,13 @@ class Journey(unittest.TestCase):
             self.assertIn("typed out by the chat", f.read())
         self.assertLessEqual(len(done.split("DELIVERY LINE")[0].splitlines()), 40)     # a SHORT audit, never a long printout
         self.assertTrue(os.path.exists(os.path.join(run, "out_record", "audit-full.txt")))
+        # a quote from the form's PDF may have other columns' words between its words, in order; a reversed or invented one is refused
+        sys.path.insert(0, SCRIPTS)
+        import run as runmod
+        pt = "gross income r 20 000 00 client name pat childcare r 11 100 00 debts"
+        self.assertTrue(runmod.pdf_quote_ok("gross income r 20 000.00 childcare r 11 100.00", pt))
+        self.assertFalse(runmod.pdf_quote_ok("childcare gross income", pt))
+        self.assertFalse(runmod.pdf_quote_ok("gross income r 99 999.00", pt))
         # the programs must not be edited during a run: the run remembers their fingerprint and the audit checks it
         self.assertTrue(self.load("run.json")["program_fp"])
 

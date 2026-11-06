@@ -1,16 +1,18 @@
 #!/usr/bin/env python3
-"""Reading lock for the Teams transcript(s): the program hands the transcript over in order, twice.
+"""Reading lock for the Teams transcript(s): the program hands the transcript over once, in order, and checks that each chunk was really read.
 
   tx.py prep   <run_dir> <transcript file> [<more files of the same meeting>] [--force]
-  tx.py chunk  <run_dir> <pass 1|2> <n>
+  tx.py chunk  <run_dir> <n> [--seen "<first words of the check line>"]
   tx.py status <run_dir>
 
 prep    converts each file (a .docx is read by this program itself, no other tool needed), checks each is complete (the last time stamp
         against the stated length, no gaps), joins several files of one meeting (a call that dropped and came back) and plans the chunks.
-chunk   prints one numbered chunk and logs the read. Chunks are served in order; Pass 2 is refused until Pass 1 has served every chunk.
+chunk   prints one numbered chunk in full and logs the read. Chunks are served in order. At the end of each chunk the program names a line from the
+        MIDDLE of it; the next chunk is released only with --seen and the first words of that line. After the last chunk, `chunk <last+1> --seen ...`
+        closes the reading ("READING COMPLETE"). Paul, 06/11/2026: the transcript is read once, but accurately.
 status  what has been read and what is next.
 
-The log proves each chunk was put in front of Claude, in order, twice. It cannot prove the text was understood: the quote check
+The log proves each chunk was put in front of Claude, in full and in order, and that a line from the middle of it was seen. It cannot prove the text was understood: the quote check
 in `run.py compose` is what tests that a quoted fact is really in the transcript.
 """
 import os
@@ -180,54 +182,80 @@ def cmd_prep(run, paths, force=False):
     if not complete:
         print("\nSTOP. The transcript is not complete (above). Tell Paul in one line what is missing. Only if Paul says to carry on: add --force.")
         sys.exit(2)
-    print("\nNEXT: read Pass 1, chunk 1:  python3 %s chunk %s 1 1" % (os.path.abspath(__file__), run))
+    print("\nNEXT: read chunk 1 (the whole transcript, once, accurately):  python3 %s chunk %s 1" % (os.path.abspath(__file__), run))
 
 
 def load_state(run):
     return w.load_json(os.path.join(run, w.STATE), "state.json (the transcript has not been prepared yet)")
 
 
-def served(st, p):
-    return sorted({r["chunk"] for r in st["reads"] if r["pass"] == p})
+def served(st):
+    return sorted({r["chunk"] for r in st["reads"]})
 
 
-def passes_done(st):
-    k = len(st["chunks"])
-    return [served(st, p) == list(range(1, k + 1)) for p in (1, 2)]
+def read_done(st):
+    """True only when every chunk was served in order and every reading check passed (the closing `chunk <last+1>` command)."""
+    return bool(st.get("read_complete")) and served(st) == list(range(1, len(st["chunks"]) + 1))
 
 
-def cmd_chunk(run, p, n):
+def check_line(st, lines, n):
+    """A line from the middle of chunk n (at least 6 words, not a time-stamp line), the same every time for the same transcript."""
+    a, b = st["chunks"][n - 1]
+    span = b - a + 1
+    lo, hi = a + span // 4, b - span // 4
+    cand = [i for i in range(lo, hi + 1) if len(lines[i - 1].split()) >= 6 and ts_seconds(lines[i - 1]) is None]
+    if not cand:
+        cand = [i for i in range(a, b + 1) if len(lines[i - 1].split()) >= 3 and ts_seconds(lines[i - 1]) is None]
+    if not cand:
+        cand = [i for i in range(a, b + 1) if lines[i - 1].strip()] or [a]
+    h = int(w.sha256_text("%s:%d" % (st["sha256"], n))[:8], 16)
+    return cand[h % len(cand)]
+
+
+def first_words(line, k=5):
+    return w.norm(" ".join(line.split()[:k]))
+
+
+def cmd_chunk(run, n, seen=None):
     st = load_state(run)
     k = len(st["chunks"])
-    if p not in (1, 2) or not 1 <= n <= k:
-        w.die("REFUSED: pass must be 1 or 2 and chunk 1..%d." % k, 3)
-    if p == 2 and not passes_done(st)[0]:
-        w.die("REFUSED: Pass 2 starts only after Pass 1 has served every chunk (served so far: %s of %d)." % (served(st, 1) or "none", k), 3)
-    if n > 1 and (n - 1) not in served(st, p):
-        w.die("REFUSED: chunk %d of Pass %d has not been served yet: read the chunks in order." % (n - 1, p), 3)
-    a, b = st["chunks"][n - 1]
+    if not 1 <= n <= k + 1:
+        w.die("REFUSED: chunk must be 1..%d (chunk %d only closes the reading)." % (k, k + 1), 3)
     lines = w.read_lines(run)
     if w.sha256_text("\n".join(lines)) != st["sha256"]:
         w.die("REFUSED: transcript.txt changed after it was prepared.", 3)
-    print("PASS %d, CHUNK %d OF %d  (lines %d to %d of %d)\n" % (p, n, k, a, b, len(lines)))
+    if n > 1:
+        if (n - 1) not in served(st):
+            w.die("REFUSED: chunk %d has not been served yet: read the chunks in order." % (n - 1), 3)
+        ln = check_line(st, lines, n - 1)
+        want = first_words(lines[ln - 1])
+        got = w.norm(seen or "")
+        if not got:
+            w.die("REFUSED: to get chunk %d, repeat the first 5 words of line %d (chunk %d's reading check) with --seen \"...\" . Read the whole chunk; the check line is in the middle of it." % (n, ln, n - 1), 3)
+        if got != want and not (len(got.split()) >= 4 and want.startswith(got)):
+            w.die("REFUSED: those are not the first words of line %d. Look at line %d of chunk %d again (python3 %s chunk %s %d) and copy its first 5 words exactly." % (ln, ln, n - 1, os.path.abspath(__file__), run, n - 1), 3)
+        st.setdefault("checks", {})[str(n - 1)] = {"line": ln, "ok": True}
+    if n == k + 1:
+        st["read_complete"] = True
+        w.save_json(os.path.join(run, w.STATE), st)
+        print("READING COMPLETE: all %d chunks were served in order and every reading check passed. The transcript has been read once, in full." % k)
+        return
+    a, b = st["chunks"][n - 1]
+    print("CHUNK %d OF %d  (lines %d to %d of %d)\n" % (n, k, a, b, len(lines)))
     for i in range(a, b + 1):
         print("%d| %s" % (i, lines[i - 1]))
-    st["reads"].append({"pass": p, "chunk": n, "t": w.now()})
+    st["reads"].append({"chunk": n, "t": w.now()})
     w.save_json(os.path.join(run, w.STATE), st)
+    ln = check_line(st, lines, n)
     print()
-    if n < k:
-        print("NEXT: python3 %s chunk %s %d %d" % (os.path.abspath(__file__), run, p, n + 1))
-    elif p == 1:
-        print("PASS 1 COMPLETE (all %d chunks). Now read the WHOLE transcript again: Pass 2, chunk 1." % k)
-    else:
-        print("PASS 2 COMPLETE (all %d chunks). The transcript has been read twice, in order." % k)
+    print("READING CHECK: the next command needs --seen with the first 5 words of line %d (copy them exactly from this chunk)." % ln)
+    print("NEXT: python3 %s chunk %s %d --seen \"<first 5 words of line %d>\"%s" % (os.path.abspath(__file__), run, n + 1, ln, "   (this one closes the reading)" if n == k else ""))
 
 
 def cmd_status(run):
     st = load_state(run)
     k = len(st["chunks"])
-    d1, d2 = passes_done(st)
-    print("transcript: %d lines in %d chunks; Pass 1: %s; Pass 2: %s" % (st["total_lines"], k, "done" if d1 else "%d of %d" % (len(served(st, 1)), k), "done" if d2 else "%d of %d" % (len(served(st, 2)), k)))
+    print("transcript: %d lines in %d chunks; served %d of %d; reading %s" % (st["total_lines"], k, len(served(st)), k, "COMPLETE" if read_done(st) else "not complete"))
 
 
 def main():
@@ -236,8 +264,8 @@ def main():
         force = "--force" in a
         paths = [x for x in a[2:] if x != "--force"]
         cmd_prep(os.path.abspath(a[1]), paths, force)
-    elif len(a) == 4 and a[0] == "chunk" and a[2].isdigit() and a[3].isdigit():
-        cmd_chunk(os.path.abspath(a[1]), int(a[2]), int(a[3]))
+    elif len(a) in (3, 5) and a[0] == "chunk" and a[2].isdigit() and (len(a) == 3 or a[3] == "--seen"):
+        cmd_chunk(os.path.abspath(a[1]), int(a[2]), a[4] if len(a) == 5 else None)
     elif len(a) == 2 and a[0] == "status":
         cmd_status(os.path.abspath(a[1]))
     else:

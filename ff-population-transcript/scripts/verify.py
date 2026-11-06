@@ -14,7 +14,7 @@ import sys
 import tx
 import wrlib as w
 
-GROUPS = [("A", "Files"), ("B", "Form read"), ("C", "Transcript read twice"), ("D", "Contact details and lead source"), ("E", "ONE combined report"),
+GROUPS = [("A", "Files"), ("B", "Form read"), ("C", "Transcript read once, every chunk checked"), ("D", "Contact details and lead source"), ("E", "ONE combined report"),
           ("F", "Standing rules"), ("G", "PDF"), ("H", "Saved and approved"), ("I", "Summary, Planner note, Sitamah"), ("J", "Steps and program")]
 STEP_ORDER = ["find", "form", "read", "lead", "combine", "build", "save", "chain"]
 
@@ -94,12 +94,11 @@ def run_checks(run, finishing=False):
 
     # C transcript
     if st:
-        d1, d2 = tx.passes_done(st)
         k = len(st["chunks"])
-        if d1 and d2:
-            add("PASS", "C", "the transcript was handed over in order and read twice (Pass 1 and Pass 2, %d chunks each)" % k)
+        if tx.read_done(st):
+            add("PASS", "C", "the transcript was handed over once, in full and in order (%d chunks), and a line from the middle of every chunk was repeated back" % k)
         else:
-            add("FAIL", "C", "the transcript was not read twice in order (Pass 1 %s, Pass 2 %s)" % ("done" if d1 else "not done", "done" if d2 else "not done"))
+            add("FAIL", "C", "the transcript reading is not complete (%d of %d chunks served; the closing check is missing)" % (len(tx.served(st)), k))
     else:
         add("FAIL", "C", "no transcript state")
 
@@ -254,7 +253,7 @@ def report_short(run, finishing=False, full=False):
         else:
             nok += 1
             out.append("✅ %s (%d checks)%s" % (name, len([r for r in rs if r[0] == "PASS"]), ("; note: " + _cut(warn[0][2], 120)) if warn else ""))
-    out.append("Only attested (not proven): that the call was UNDERSTOOD (the program proves it was handed over twice and that quoted call lines are in it); the Overview and other documents quoted; "
+    out.append("Only attested (not proven): that the call was UNDERSTOOD (the program proves it was handed over once, in full, with a reading check on every chunk, and that quoted call lines are in it); the Overview and other documents quoted; "
                "that the PDF, the Summary, the Planner note and the Sitamah message really went where recorded (the saved size is compared); Paul's OK; the look at the page images. Full record: out_record/audit-full.txt")
     warns = sum(1 for r in rows if r[0] == "WARN")
     out.append("RESULT: %s   (%d ✅, %d ❌, %d warnings)" % ("PASS" if not nbad else "FAIL", nok, nbad, warns))
@@ -266,7 +265,7 @@ def report_short(run, finishing=False, full=False):
         if len(gl) > 6:
             out.append("  - (%d more in out_record/audit-full.txt)" % (len(gl) - 6))
         rep = content.get("report") or {}
-        out.append("DELIVERY LINE: %s; the form and the call combined in ONE report (%d contradictions: %d sorted, %d highlighted); transcript read twice (%d lines)." % (
+        out.append("DELIVERY LINE: %s; the form and the call combined in ONE report (%d contradictions: %d sorted, %d highlighted); transcript read once, every chunk checked (%d lines)." % (
             w.version_short(), len(rep.get("differences") or []), rep.get("sorted", 0), rep.get("highlighted", 0), (st or {}).get("total_lines", 0)))
     elif nbad:
         out.append("NOT COMPLETE. Say so, and say which line failed; fix every ❌ and run the check again.")
