@@ -1,41 +1,23 @@
-# Where the files are, and what to do when the form's file is missing
+# Client File Access (standing rule: every step that reads or saves a client file)
 
-Reads the client's **Fact Find (Audio to Text) file** (first and primary source), the **Teams meeting transcript(s)** (second, equally important source) and the client's **latest Overview** (reference), and builds the Wealth Revolution Client Fact Find as a completed document that follows the Audio to Text file's own layout (WR Fact Find v3.0), section by section, in its exact order. Drawn by a program and delivered as a PDF — see Step 5. **Every deliverable this skill produces is saved directly into the client's own folder — see Step 5a. This is not optional and Paul should never have to ask for it.**
+Every time this skill needs a client's document, or needs to save a newly produced deliverable into the client's folder, follow this exact order, every time, without asking first:
 
-## Client File Access (standing rule — applies to every step below that reads or saves a client file)
-
-Files are found and saved by YOU, the computer first, without asking Paul to do anything with a file:
-
-1. **The computer: the working route, and the first thing the run does.** In a cloud chat the computer is a separate machine reached through the device tools. Load them (ToolSearch, `select:mcp__remote-devices__get_device_info,...`), call `get_device_info`, and if `liferisk.co.za` is not in `connectedFolders` call `device_request_folder_access` for `~/liferisk.co.za`: that one request is the only click Paul is ever asked for. Then `device_list_dir` the client's folder and record it with `run.py computer`. If the request is refused or the tools do not exist, run `run.py computer --none "<what happened>"`: its STOP text is your whole reply. For each file: `device_bash` gives its fingerprint and size on the computer (`sha256sum` and `stat -c %s` at `$HOME/mnt/liferisk.co.za/...`), `device_stage_files` (Windows path, backslashes) puts a whole copy under `/mnt/user-data/uploads/liferisk.co.za/...`, and `run.py access --device-output` compares the two. No file is ever read cut off and there is no size limit.
-2. **Microsoft 365 (SharePoint / OneDrive): a fallback for SMALL TEXT files only** (the form's `.json`, a transcript as text), used when Paul has said to go on without the computer or a file is not on the computer. It returns files cut off and a PDF as text, so the form's saved PDF is NEVER taken through it. Every copy is logged with `--file` and `--source-size` and the program refuses a copy of a different size. Search the client's folder in BOTH locations under `liferisk.co.za` (`Company - Paul`, and `Company - WR Clients` → `Paul Kafentzis (Client Files)`) and use whichever has the file.
-3. **Zapier — the Office 365 and Teams tools.** The next route when Microsoft 365 fails for a file, and the route for whatever Microsoft 365 cannot do (posting to Teams).
-4. **Never ask Paul** for permission, to click Allow, to attach, upload or drag a file, or to say "go". If every route failed for a file, say in at most five lines what failed (the log of the tries) and stop. The only question this skill may put to Paul about files is the content question in "When the form's data file is missing" below.
+1. **Local machine - always attempted first.** Connect via the device bridge to Paul's local machine and check **both** of these locations under `liferisk.co.za` for the client's folder (same `[Business Segment]/[Surname], [First Name]/Fact Find` structure under each): `Company - Paul` (used for New Business, but not limited to it) and `Company - WR Clients` -> `Paul Kafentzis (Client Files)` (used for current/existing clients). A given client's material could sit under either - check both and use whichever one actually has the file. This connection is expected to succeed and must be tried first, every time - never skip straight to asking Paul to attach something. If this session has no live device-bridge connection to Paul's computer yet, request it before doing anything else that depends on client files. Use the file tools only: list the folder, stage the files, commit the finished PDF. Never run shell commands on his computer.
+2. **SharePoint (the Microsoft 365 connector) - only if the local machine genuinely can't be reached.** If, and only if, the device bridge cannot connect to Paul's computer this session (or a request was refused), fall back to the identical two-location check via SharePoint. A PDF read this way arrives cut off, as text, so do not trust it as the whole file. Saving through it needs the file's content as base64 text in one message, which has a real practical ceiling: a large PDF may need lossless compression first (for example `qpdf --recompress-flate --object-streams=generate` followed by `gs -dPDFSETTINGS=/ebook`). Always visually re-verify a compressed PDF before treating it as the deliverable.
+3. **Zapier (the Office 365 tools)** for what the connector cannot do.
+4. **Say plainly what is blocking - last resort only.** Only once all of these have genuinely been tried and none works, say in at most five lines what was tried and what failed. Never ask Paul to attach or upload a file, and never say "I cannot access your files" without that list.
 5. **Never touch another broker's folder.** `Company - WR Clients` holds a separate `(Client Files)` folder for every broker at the firm. `Paul Kafentzis (Client Files)` is the only one under `Company - WR Clients` this skill ever reads from or writes to. This restriction does not apply to `Company - Paul`, which is Paul's own folder.
 
-This applies to **locating the Audio to Text file, transcript and Overview** (Steps 1 and 1b below), to **checking the client's other documents for a field that can't otherwise be resolved** (Step 3 below), and to **saving every deliverable this skill chain produces** (Step 5a below) — same order, every time.
+This applies to locating the form's files, the transcript and the Overview (step 1), to checking the client's other documents for a field that can't otherwise be resolved (step 5), and to saving every deliverable this skill chain produces (step 7), same order, every time.
 
 ## Out of scope: no transcript, but a Fact Find already exists
 
-If the client already has a **completed** Fact Find document and there is **no accompanying meeting transcript** to populate from, this skill does not apply. Go straight to the `fact-find-summary` skill against the existing completed FF instead. That skill has its own rule for this exact case: it still produces the summary PDF, but the Planner note (always made by `client-teams-transcript-skill`'s program and presented as its copy-ready page, per Step 7b below) can't be produced with no transcript to summarize — say so explicitly rather than silently omitting it.
+If the client already has a **completed** Fact Find document and there is **no accompanying meeting transcript** to populate from, this skill does not apply. Go straight to the `fact-find-summary` skill against the existing completed FF instead.
 
-## Step 1: Gather inputs (source order — rule 11)
+## What to look for
 
-Gather in this order, per the Client File Access order above:
-
-1. **The Fact Find form's data file (named `Fact Find (Audio to Text)`)** — see Step 1b. This is the first and primary source.
-2. **The transcript(s)** — usually `.docx`, sometimes text despite the extension. The file is named `Teams meeting transcript - DD.MM.YY - (Client Name)_ Annual Review [year]` (or `... - FF`, or with another suffix) — search the client's `2. Fact Find` folder for the meeting date and client name; identify by content, not only by name (rule 10).
-3. **The client's latest Overview** in the `1. Overview` folder (see Step 1b). Reference only.
-4. **The Manual Fact Find — only if the Audio to Text file is absent** (see Step 1b).
-
-If the Audio to Text file and the transcript are both missing after checking the client's folder, ask for them — unless a completed FF already exists with no transcript (see Out of scope).
-
-- **Multiple transcripts for one meeting:** if the client's Teams call dropped and reconnected, there will be two (or more) transcript files for the same date. Read all of them and treat them as one continuous meeting.
-  - **Verify continuity before summarizing anything.** Check that the last exchange of transcript N and the opening exchange of transcript N+1 pick up the same topic/figure. If there's a real gap, flag it rather than silently filling it in.
-
-## When the form's data file is missing (Paul's rule: stop and ask)
-
-If the form's data file is not found on the computer, in Microsoft 365 or through Zapier (all three tried, in that order, each try logged), the program STOPS and ASKS Paul. It never carries on quietly. Run `run.py ask {run} --need form --searched "<where you looked>"`: it prints the exact question, "use the filled-in Manual Fact Find PDF as the first source, or work from the transcript alone?". Wait for Paul's answer, then record his own words: `run.py answer {run} --need form --said "<his words>" --choice manual|transcript`. From then on every value comes from that source (the Manual Fact Find, or the transcript alone), each with its source, and the final printout says so.
-
-## The form's saved PDF
-
-The form also saves a PDF of the same Fact Find (`Fact Find (Audio to Text) - DD.MM.YYYY - Name Surname.pdf`) in the client's `2. Fact Find` folder. It is a source too: `run.py formpdf` reads its text and checks that every populated value of the data file is in it. A value the program cannot find is reviewed by eye (`run.py pdfreview`); a real disagreement is flagged with both values and the data file's value is used.
+- **The form's files** in the client's `2. Fact Find` folder: `Fact Find (Audio to Text) - DD.MM.YYYY - Name Surname` as a `.json` and a `.pdf`.
+- **The transcript(s)**, usually `.docx`, sometimes text despite the extension: `Teams meeting transcript - DD.MM.YY - (Client Name)_ Annual Review [year]` (or `... - FF`, or another suffix). Search the client's `2. Fact Find` folder for the meeting date and client name; identify by content, not only by name.
+- **The client's latest Overview** in the `1. Overview` folder. Reference only.
+- **Multiple transcripts for one meeting:** if the client's Teams call dropped and reconnected, there will be two (or more) transcript files for the same date. Give all of them to `run.py files` (one `--transcript` each): the program joins them and checks each one. **Verify continuity before summarizing anything.** Check that the last exchange of transcript N and the opening exchange of transcript N+1 pick up the same topic/figure. If there's a real gap, flag it rather than silently filling it in.
+- If the form's files and the transcript are both missing after checking the client's folder, say so (step 1's `--missing`) - unless a completed FF already exists with no transcript (see Out of scope).

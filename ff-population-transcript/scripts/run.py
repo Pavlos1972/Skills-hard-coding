@@ -1,30 +1,23 @@
 #!/usr/bin/env python3
-"""Step driver for the ff-population-transcript skill (SKILL-STANDARDS.md S16).
+"""Step driver for the ff-population-transcript skill.
 
-  run.py start   <run_dir> --client "First Surname" --date DD/MM/YYYY [--spouse "First Surname" [--spouse-run DIR]]
+  run.py start   <run_dir> --client "First Surname" --date DD/MM/YYYY [--other-run <the other spouse's run folder>]
   run.py next    <run_dir>            show the current step again
-  run.py done    <run_dir> <step>     check the proof; only then move on
+  run.py done    <run_dir> <step>     check the proof; only then show the next step
   run.py status  <run_dir>            where the job is up to (also the recovery point after a long chat)
   run.py preflight                    the self-test on its own
 
-  run.py access  <run_dir> --need N --route device|m365|zapier|user|passed --tool T --result ok|fail [--detail D]
-  run.py ask     <run_dir> --need N [--question Q] --searched S [--kind file|knowledge]
-  run.py answer  <run_dir> --need N --said "Paul's own words" [--choice manual|transcript]
-  run.py form    <run_dir> <form data file> [--again]       read it with the program (schema, statuses, look-up check ...)
-  run.py formpdf <run_dir> <form saved PDF> | --none REASON  the form's saved PDF is a source too
-  run.py pdfreview <run_dir> --key K --result format_only|disagree --quote Q [--pdf-value V]
-  run.py source  <run_dir> --kind K (--path P --date YYYY-MM-DD --read yes [--ref NAME] [--text-file F] | --none REASON)
-  run.py join    <run_dir> <transcript 1> <transcript 2> ...   several transcripts of one meeting -> one file to prep
-  run.py continuity <run_dir> --between 1,2 --result ok|gap --detail D
-  run.py ledger  <run_dir> add --line N --kind K --quote Q [--speaker S] [--meaning M]
-  run.py ledger  <run_dir> cover <ledger id> <item id> [<item id> ...]  | exclude <id> <reason> | ack --pass 1|2 --chunk N --reason R
-  run.py ledger  <run_dir> review (--line N | --from A --to B) --reason R | list
-  run.py lead    <run_dir> --folder-result found|none --mailbox-result found|none|skipped [--received DD/MM/YYYY --ref NAME --quote Q]
-  run.py cross   <run_dir> (--file answers.json | --key K --r same|differs|not_on_call [--line N --quote Q --value V]) [--rest not_on_call --reviewed R]
-  run.py claim   <run_dir> (--all-empty | --key K --as "Not discussed"|Requested|N/A [--reviewed R] [--searched S] [--terms a,b])
-  run.py compose <run_dir>            write content.json from the form, the overlay and the recorded answers
-  run.py spouse  <run_dir>            search this document for the other spouse's data (two spouses in one meeting)
-  run.py receipt <run_dir> --set a.b=value [--set ...]
+  run.py files   <run_dir> --form F [--formpdf P] --transcript T [--transcript T2] [--overview O] [--missing WHAT] [--force-incomplete WORDS]
+  run.py form    <run_dir>            read both form files and print what to act on
+  tx.py chunk    <run_dir> <1|2> <n>  hand the transcript over, in order, twice
+  run.py lead    <run_dir> (--found --received DD/MM/YYYY --ref R --quote Q | --none WHAT | --unavailable WHAT)
+  run.py combine <run_dir>            check overlay.json and make content.json (the ONE combined report)
+  run.py build   <run_dir>            draw the Fact Find Transcript PDF and the page images
+  run.py look    <run_dir> --saw "what you saw on the pages"
+  run.py saved   <run_dir> --folder PATH --listed-size BYTES
+  run.py report  <run_dir>            the short source report for Paul
+  run.py ok      <run_dir> --paul-said "his words"
+  run.py chain   <run_dir> --summary S --planner P --sitamah M
 
 The program shows one step at a time and will not show the next until the proof for this one is on file.
 It is run as it is; it is never edited during a run.
@@ -36,7 +29,6 @@ import os
 import re
 import shutil
 import sys
-import types
 
 import build
 import compose
@@ -48,22 +40,16 @@ import wrlib as w
 SCRIPTS = os.path.dirname(os.path.abspath(__file__))
 SKILL_DIR = os.path.dirname(SCRIPTS)
 RULE = "-" * 78
-FORM_QUESTION = ("The Fact Find form's data file for %s was not found on any of the three routes (the computer, Microsoft 365, Zapier). "
-                 "Should I use the filled-in Manual Fact Find PDF as the first source, or work from the transcript alone?")
+STEP_IDS = verify.STEP_ORDER
 
 
 # ------------------------------------------------------------------ helpers
 def steps_file():
-    return w.load_json(os.path.join(SKILL_DIR, "steps.json"), "steps.json")
+    return w.load_json(os.path.join(SKILL_DIR, "steps.json"), "steps.json")["steps"]
 
 
 def p(run, name):
     return os.path.join(run, name)
-
-
-def load_list(run, name):
-    path = p(run, name)
-    return w.load_json(path) if os.path.exists(path) else []
 
 
 def load_run(run):
@@ -74,53 +60,60 @@ def save_run(run, rj):
     w.save_json(p(run, w.RUN), rj)
 
 
-def applicable(rj):
-    return steps_file()["steps"]
-
-
-def refs_of(step):
-    r = step.get("ref") or []
-    return [r] if isinstance(r, str) else r
-
-
 def read_ref(name):
     path = os.path.join(SKILL_DIR, "references", name)
     if not os.path.exists(path):
         return "(MISSING reference page %s: the skill package is broken; tell Paul)" % name
-    with open(path, encoding="utf-8") as f:
-        return f.read().rstrip()
+    return open(path, encoding="utf-8").read().rstrip()
 
 
-def chunk_commands(run, pass_no):
-    st = w.load_json(p(run, w.STATE)) if os.path.exists(p(run, w.STATE)) else None
-    k = len(st["chunks"]) if st else 0
-    if not k:
-        return "(chunk commands appear once `tx.py prep` has run)"
-    return ("  python3 %s/tx.py chunk %s %d 1     (%d chunks in all; each chunk prints the command for the next one, and the next is\n"
-            "  refused until this one has ledger entries or a reasoned acknowledgement)" % (SCRIPTS, run, pass_no, k))
-
-
-def font_line():
-    rec = build.pick_font()
-    if rec["family"] == "Aptos":
-        return "Font: Aptos was found and will be used."
-    return "Font: Aptos is NOT installed here; the PDF will be set in %s. Tell Paul in your reply (never say Aptos)." % rec["family"]
-
-
-def valid_ids_text():
-    v = compose.valid_ids(w.layout())
-    lists = "; ".join("%s (%s)" % (k, ", ".join(c) if c else "any column") for k, c in sorted(v["lists"].items()))
-    return ("section ids for notes/flags: %s. List names for rows_add/joint (and their columns): %s. Quote groups: %s. ABI keys: %s. Field keys for fills/diffs (or list.row.column such as debts.0.cl; rows count from 0): %s."
-            % (", ".join(v["sections"]), lists, ", ".join(v["groups"]), ", ".join(v["abi"]), ", ".join(v["keys"])))
+def chunk_commands(run):
+    st = w.load_opt(p(run, w.STATE), None)
+    if not st:
+        return "(the chunk commands appear once step 1 has prepared the transcript)"
+    k = len(st["chunks"])
+    return ("Pass 1 then Pass 2: python3 %s/tx.py chunk %s 1 1   (%d chunks in all; each chunk prints the command for the next one; Pass 2 starts after Pass 1 is complete)" % (SCRIPTS, run, k))
 
 
 def expand(text, run):
-    return (text.replace("{run}", run).replace("{scripts}", SCRIPTS).replace("{skill_dir}", SKILL_DIR)
-            .replace("{chunk_commands_pass1}", chunk_commands(run, 1)).replace("{chunk_commands_pass2}", chunk_commands(run, 2))
-            .replace("{font_line}", font_line()).replace("{valid_ids}", valid_ids_text()))
+    return text.replace("{run}", run).replace("{scripts}", SCRIPTS).replace("{skill_dir}", SKILL_DIR).replace("{chunk_commands}", chunk_commands(run))
 
 
-# ------------------------------------------------------------------ preflight (S16 self-test)
+def current_step(rj):
+    for s in steps_file():
+        if rj["steps"].get(s["id"], {}).get("state") != "done":
+            return s
+    return None
+
+
+def show_step(run, rj, step):
+    plist = steps_file()
+    n = [s["id"] for s in plist].index(step["id"]) + 1
+    print(RULE)
+    print("STEP %d of %d: %s        [%s]" % (n, len(plist), step["title"], step["id"]))
+    print(RULE)
+    for line in step["do"]:
+        print(expand(line, run))
+    for r in step.get("ref") or []:
+        print("\nRULES FOR THIS STEP (references/%s):\n" % r)
+        print(expand(read_ref(r), run))
+    print("\nPROOF NEEDED: %s" % step["proof"])
+    print("WHEN DONE RUN: python3 %s/run.py done %s %s" % (SCRIPTS, run, step["id"]))
+    later = [s["title"] for s in plist[n:]]
+    if later:
+        print("COMING LATER (titles only): " + " | ".join(later))
+    print(RULE)
+
+
+def reopen(run, rj, from_steps):
+    """A correction re-opens everything after it (Paul's rule): the steps and what was recorded for them."""
+    gone = [s for s in from_steps if (rj["steps"].get(s) or {}).get("state") == "done"]
+    for s in from_steps:
+        rj["steps"].pop(s, None)
+    return gone
+
+
+# ------------------------------------------------------------------ preflight
 def preflight(run=None):
     rows, ok = [], True
 
@@ -136,32 +129,11 @@ def preflight(run=None):
         add(True, "reportlab (draws the PDF)")
     except ImportError:
         add(False, "reportlab is not installed: the PDF cannot be built")
-    for tool, why, fatal in (("pdftotext", "reads the form's saved PDF and checks the PDF text", True), ("pdftoppm", "renders the page images", True),
-                             ("pdffonts", "proves which font is really inside the PDF", True), ("pandoc", "reads a .docx transcript", True)):
+    for tool, why, fatal in (("pdftotext", "reads the form's PDF", True), ("pdftoppm", "renders the page images", True), ("pandoc", "reads a .docx transcript", False)):
         add(shutil.which(tool) is not None, "%s (%s)" % (tool, why), fatal)
     add(w.stamp_display(w.skill_stamp()) is not None, "skill has a Last updated stamp (%s)" % w.version_short(), fatal=False)
-    try:
-        import zoneinfo
-        zoneinfo.ZoneInfo("Europe/Athens")
-        add(True, "Athens time zone (for the Last updated stamp)")
-    except Exception:
-        add(False, "Athens time zone data is missing (only needed when stamping a skill)", fatal=False)
-    missing = []
-    try:
-        for s in steps_file()["steps"]:
-            for r in refs_of(s):
-                if not os.path.exists(os.path.join(SKILL_DIR, "references", r)):
-                    missing.append(r)
-    except SystemExit:
-        missing.append("steps.json")
-    add(not missing, "skill package complete (steps.json and every reference page)" if not missing else "skill package is missing: %s" % sorted(set(missing)))
-    try:
-        lay = w.layout()
-        add(bool(lay["sections"]) and lay["schema"] == w.SCHEMA, "layout.json present (schema %s, %d sections)" % (lay["schema"], len(lay["sections"])))
-    except (SystemExit, KeyError):
-        add(False, "layout.json is missing or broken")
-    rec = build.pick_font()
-    add(rec["family"] == "Aptos", font_line(), fatal=False)
+    missing = [r for s in steps_file() for r in (s.get("ref") or []) if not os.path.exists(os.path.join(SKILL_DIR, "references", r))]
+    add(not missing and os.path.exists(os.path.join(SCRIPTS, "layout.json")), "skill package complete (steps, reference pages, layout)" if not missing else "missing: %s" % sorted(set(missing)))
     if run:
         try:
             os.makedirs(run, exist_ok=True)
@@ -180,72 +152,31 @@ def print_preflight(rows):
         print("  [%-4s] %s" % (lvl, msg))
 
 
-# ------------------------------------------------------------------ steps
-def show_step(run, rj, step):
-    plist = applicable(rj)
-    n = [s["id"] for s in plist].index(step["id"]) + 1
-    print(RULE)
-    print("STEP %d of %d: %s        [%s]" % (n, len(plist), step["title"], step["id"]))
-    print(RULE)
-    for line in step["do"]:
-        print(expand(line, run))
-    for r in refs_of(step):
-        print("\nRULES FOR THIS STEP (references/%s):\n" % r)
-        print(expand(read_ref(r), run))
-    print("\nPROOF NEEDED: %s" % step["proof"])
-    print("WHEN DONE RUN: python3 %s/run.py done %s %s" % (SCRIPTS, run, step["id"]))
-    later = [s["title"] for s in plist[n:]]
-    if later:
-        print("COMING LATER (titles only): " + " | ".join(later))
-    print(RULE)
-
-
-def current_step(rj):
-    for s in applicable(rj):
-        if rj["steps"].get(s["id"], {}).get("state") != "done":
-            return s
-    return None
-
-
+# ------------------------------------------------------------------ start, next, done, status
 def cmd_start(a):
-    parts = a.client.split()
-    first, surname = (a.first, a.surname) if (a.first and a.surname) else ((parts[0], " ".join(parts[1:])) if len(parts) >= 2 else (None, None))
-    if not first:
-        w.die('--client must be the first name and surname, for example --client "Pat Samplecase" (for several first names give --first "Pat Jo" --surname "Samplecase")')
-    if w.parse_date(a.date) is None:
-        w.die("--date must be a real date as DD/MM/YYYY (taken from Paul's message), got %r" % a.date)
-    if os.path.exists(p(a.run, w.RUN)):
-        old = w.load_json(p(a.run, w.RUN))
-        oc = old.get("client", {})
-        if not (w.same_person(first, surname, oc.get("first", ""), oc.get("surname", "")) and old.get("date") == a.date):
-            w.die("REFUSED: this run folder already belongs to %s %s, meeting date %s. Start the new job in a NEW run folder (you asked for %s %s, %s)."
-                  % (oc.get("first"), oc.get("surname"), old.get("date"), first, surname, a.date), 2)
     ok, rows = preflight(a.run)
     print_preflight(rows)
     if not ok:
-        print("\nSTOP. Tell Paul exactly which items failed above. Do NOT carry on, and do NOT replace the PDF or any other output with a text draft. Fix the environment first.")
+        print("\nSTOP. Tell Paul which items failed above in one line. Do not carry on and do not replace the PDF with a text draft.")
         sys.exit(4)
     if os.path.exists(p(a.run, w.RUN)):
-        print("\nThis run already exists (same client and date). Showing where it is up to (use `status` / `next`).")
+        print("\nThis run already exists. Showing where it is up to.")
         return cmd_next(a)
-    rj = {"skill": w.skill_name(), "meeting_type": "factfind", "created": w.now(), "skill_stamp": w.skill_stamp(), "steps": {},
-          "client": {"first": first, "surname": surname}, "date": a.date, "form_mode": "pending", "program_fingerprint": w.program_fingerprint()}
-    if len(parts) > 2 and not (a.first and a.surname):
-        print("NOTE: taking %r as the first name and %r as the surname. The form's name is compared as a whole, so a different split does not matter; to be exact use --first and --surname." % (first, surname))
-    if a.spouse:
-        sp = a.spouse.split()
-        rj["spouse"] = {"name": a.spouse, "first": sp[0], "surname": " ".join(sp[1:]), "run": os.path.abspath(a.spouse_run) if a.spouse_run else None}
+    parts = a.client.split()
+    if len(parts) < 2:
+        w.die('--client must be the first name and surname, for example --client "Sam Testcase"')
+    try:
+        dt.datetime.strptime(a.date, "%d/%m/%Y")
+    except ValueError:
+        w.die("--date must be a real date as DD/MM/YYYY (the meeting date from Paul's message), got %r" % a.date)
+    rj = {"skill": "ff-population-transcript", "created": w.now(), "skill_stamp": w.skill_stamp(), "program_fp": w.program_fingerprint(), "steps": {},
+          "client": {"first": parts[0], "surname": " ".join(parts[1:])}, "date": a.date}
+    if a.other_run:
+        rj["spouse"] = {"run": os.path.abspath(a.other_run)}
     save_run(a.run, rj)
-    for name in (w.SOURCES, w.ACCESS, w.QUESTIONS):
-        w.save_json(p(a.run, name), [])
-    w.save_ledger(a.run, {"entries": [], "scan_reviewed": []})
-    w.save_json(p(a.run, w.RECEIPT), {})
-    w.save_json(p(a.run, w.OVERLAY), {})
-    w.save_json(p(a.run, w.CLAIMS), {})
     print("\nSAY THIS TO PAUL FIRST, before anything else in your reply, in exactly these words:\n    %s.\n"
-          "(It comes from the skill's own Last updated stamp, so it changes with every update. The final printout repeats it.)" % w.version_line())
-    print("\nRUN STARTED  client: %s %s   meeting date: %s   skill version: %s%s"
-          % (rj["client"]["first"], rj["client"]["surname"], a.date, w.stamp_display(rj["skill_stamp"]) or "unstamped", ("   TWO SPOUSES: this run is for %s only" % a.client) if a.spouse else ""))
+          "(It comes from the skill's own Last updated stamp. The final audit repeats it.)" % w.version_line())
+    print("\nRUN STARTED  client: %s %s   meeting date: %s   version: %s" % (rj["client"]["first"], rj["client"]["surname"], a.date, w.stamp_display(rj["skill_stamp"]) or "unstamped"))
     print("Standing rules for the whole job:\n")
     print(expand(read_ref("00-rules.md"), a.run))
     print()
@@ -256,7 +187,7 @@ def cmd_next(a):
     rj = load_run(a.run)
     s = current_step(rj)
     if s is None:
-        print("Every step is done. Run: python3 %s/verify.py %s  and put its whole printout in your reply." % (SCRIPTS, a.run))
+        print("Every step is done. The short audit was printed when the last step was done; run `python3 %s/verify.py %s` to see it again." % (SCRIPTS, a.run))
         return
     show_step(a.run, rj, s)
 
@@ -264,1009 +195,419 @@ def cmd_next(a):
 def cmd_status(a):
     rj = load_run(a.run)
     cur = current_step(rj)
-    print("RUN %s   client: %s %s   skill version: %s   form: %s" % (a.run, rj["client"]["first"], rj["client"]["surname"], w.stamp_display(rj.get("skill_stamp")) or "unstamped", rj.get("form_mode")))
-    for s in applicable(rj):
+    print("RUN %s   client: %s %s   version: %s" % (a.run, rj["client"]["first"], rj["client"]["surname"], w.stamp_display(rj.get("skill_stamp")) or "unstamped"))
+    for s in steps_file():
         state = rj["steps"].get(s["id"], {}).get("state")
         mark = "DONE   " if state == "done" else ("NEXT ->" if cur and s["id"] == cur["id"] else "waiting")
-        print("  [%s] %-10s %s" % (mark, s["id"], s["title"]))
+        print("  [%s] %-8s %s" % (mark, s["id"], s["title"]))
     if cur:
         print("\nNEXT: python3 %s/run.py next %s" % (SCRIPTS, a.run))
 
 
-# ------------------------------------------------------------------ proofs
-def fails_of(R, prefixes=None):
-    out = [m for lvl, _, m in R.rows if lvl == "FAIL"]
-    if prefixes:
-        out = [m for m in out if any(m.startswith(x) or x in m for x in prefixes)]
-    return out
+def current_content(run, rj):
+    """content.json, if it is made from the current inputs."""
+    c = w.load_opt(p(run, w.CONTENT), None)
+    if c is None or (rj.get("combine") or {}).get("inputs_sha") != verify.inputs_sha(run):
+        return None
+    return c
 
 
-def ck_locate(run, rj):
-    acc = load_list(run, w.ACCESS)
+# ------------------------------------------------------------------ the proofs (cheap, local: was the step done?)
+def ck_find(run, rj):
     errs = []
-    comp = rj.get("computer") or {}
-    if not comp.get("found") and len(str(comp.get("paul_go_on") or "").strip()) < 3:
-        errs.append(w.COMPUTER_STOP + " (run.py computer %s; if Paul says to go on without the computer: run.py computer %s --paul-go-on \"<his words>\")" % (run, run))
-    if not any(e.get("need") == "transcript" and e.get("result") == "ok" for e in acc):
-        errs.append("no successful access entry for 'transcript' (run.py access ... --need transcript ... --result ok)")
-    form = [e for e in acc if e.get("need") == "form"]
-    if any(e["result"] == "ok" for e in form):
-        pass
-    else:
-        failed = {e["route"] for e in form if e["result"] == "fail"}
-        untried = [r_ for r_ in w.ROUTES if r_ not in failed]
-        if untried:
-            errs.append("the form's data file was not obtained and these routes were not tried and logged: %s (run.py access --need form ...). All three, in order, every time" % untried)
-        else:
-            q = next((q for q in load_list(run, w.QUESTIONS) if q.get("need") == "form"), None)
-            if not q:
-                errs.append("STOP: the form's data file is missing on all three routes. Ask Paul: run.py ask %s --need form --searched \"<where>\" (it prints the exact question), then wait for his answer" % run)
-            elif len(str(q.get("paul_said") or "").strip()) < 3 or q.get("choice") not in ("manual", "transcript"):
-                errs.append("STOP: Paul has not answered the question about the missing form file. Record his own words: run.py answer %s --need form --said \"...\" --choice manual|transcript" % run)
+    if not rj.get("files"):
+        errs.append("no files registered (run.py files ...)")
+    if not os.path.exists(p(run, w.FORM)):
+        errs.append("the form's data file was not read")
+    st = w.load_opt(p(run, w.STATE), None)
+    if not st or not st.get("complete"):
+        errs.append("the transcript is not prepared or not complete")
     return errs
 
 
 def ck_form(run, rj):
-    mode = rj.get("form_mode")
-    if mode in ("manual", "transcript"):
-        return []
-    if mode != "form" or not os.path.exists(p(run, w.FORM)):
-        return ["the form's data file has not been read by the program (run.py form %s <file>)" % run]
-    R = verify.Results()
-    lines = None
-    verify.check_form(run, R, lines or [], {})
-    return [m for m in fails_of(R) if "crosscheck" not in m and "never compared" not in m and "report" not in m and "Other fields" not in m and "printed" not in m and "look-up" not in m]
+    return [] if rj.get("form_report_shown") else ["run.py form has not been run (it reads both form files and prints your list)"]
 
 
-def ck_prep(run, rj):
-    path = p(run, w.STATE)
-    if not os.path.exists(path):
-        return ["tx.py prep has not been run"]
-    st = w.load_json(path)
-    errs = [] if st["complete"] else ["the transcript is incomplete: %s" % "; ".join(st["notes"])]
-    if os.path.exists(p(run, w.TRANSCRIPT)):
-        td = verify.transcript_date(w.read_lines(run))
-        want = w.parse_date(rj.get("date"))
-        if td and want and td != want:
-            errs.append("the transcript says the meeting started on %s but Paul's meeting date is %s: this is another meeting's transcript. STOP and tell Paul; find the right transcript" % (td.strftime("%d/%m/%Y"), rj["date"]))
-    return errs
-
-
-def ck_sources(run, rj):
-    R = verify.Results()
-    lines = w.read_lines(run) if os.path.exists(p(run, w.TRANSCRIPT)) else None
-    verify.check_sources(run, R, lines, None)
-    return fails_of(R)
-
-
-def _state(run):
-    return w.load_json(p(run, w.STATE), "state.json")
-
-
-def load_ledger(run):
-    path = p(run, w.LEDGER)
-    return w.load_json(path) if os.path.exists(path) else {"entries": [], "scan_reviewed": []}
-
-
-def unacked(run, pass_no):
-    st = _state(run)
-    led = load_ledger(run)
-    return [c for c in range(1, len(st["chunks"]) + 1) if not tx.chunk_acked(st, led, pass_no, c)]
-
-
-def ck_pass1(run, rj):
+def ck_read(run, rj):
+    st = w.load_opt(p(run, w.STATE), None)
+    if not st:
+        return ["the transcript is not prepared"]
+    d1, d2 = tx.passes_done(st)
     errs = []
-    if not tx.passes_done(_state(run))[0]:
-        errs.append("Pass 1 has not served every chunk (see `tx.py status %s`)" % run)
-    if not load_ledger(run).get("entries"):
-        errs.append("the ledger is empty: record what the call adds (gaps, differences, contact details, quote requests, next steps) with run.py ledger add")
-    if unacked(run, 1):
-        errs.append("Pass 1 chunks %s have no ledger entry or reasoned acknowledgement" % unacked(run, 1))
+    if not d1:
+        errs.append("Pass 1 has not served every chunk (python3 %s/tx.py status %s)" % (SCRIPTS, run))
+    if not d2:
+        errs.append("Pass 2 has not served every chunk")
     return errs
-
-
-def ck_pass2(run, rj):
-    errs = [] if tx.passes_done(_state(run))[1] else ["Pass 2 has not served every chunk (see `tx.py status %s`)" % run]
-    if unacked(run, 2):
-        errs.append("Pass 2 chunks %s have no ledger entry or reasoned acknowledgement" % unacked(run, 2))
-    return errs
-
-
-def ck_scan(run, rj):
-    st = _state(run)
-    if not st.get("scan"):
-        return ["the keyword scan has not been run (tx.py scan)"]
-    R = verify.Results()
-    verify.check_scan_resolution(run, st, w.read_lines(run), load_ledger(run), R)
-    return fails_of(R)
-
-
-def ck_joint(run, rj):
-    j = rj.get("joint") or {}
-    if j.get("answer") not in ("yes", "no"):
-        return ["the question is not answered: is this a joint meeting with a spouse? Look at who spoke on the call, then run.py joint %s --answer yes|no --evidence \"<what shows it>\"" % run]
-    return []
 
 
 def ck_lead(run, rj):
-    ld = w.load_opt(p(run, w.LEAD), {})
-    if not ld.get("searched"):
-        return ["the lead source was not searched (run.py lead): the Outlook search for a D&R Marketing appointment email is always made"]
-    return []
+    return [] if os.path.exists(p(run, w.LEAD)) else ["the lead source was not recorded (run.py lead ...)"]
 
 
-def ck_cross(run, rj):
-    if rj.get("form_mode") != "form":
-        return []
-    R = verify.Results()
-    lines = w.read_lines(run)
-    verify.check_form(run, R, lines, {})
-    return [m for m in fails_of(R) if m.startswith("crosscheck") or "never compared" in m or "does not list exactly" in m]
-
-
-def ck_verify(stage):
-    def check(run, rj):
-        R, st, ledger, content = verify.run_checks(run, stage)
-        if stage == "final":
-            verify.report_short(R, st, ledger, content, stage, run)
-        return [m for lvl, _, m in R.rows if lvl == "FAIL"][:15]
-    return check
+def ck_combine(run, rj):
+    c = current_content(run, rj)
+    if c is None:
+        return ["content.json is missing or out of date: run `run.py combine %s` again until it prints COMBINED" % run]
+    errs = []
+    if c.get("unsettled"):
+        errs.append("quote request(s) without a known insurer or basis: %s: ask Paul in one message, then add them to overlay.json `quotes`" % ", ".join(c["unsettled"][:6]))
+    return errs
 
 
 def ck_build(run, rj):
-    st = _state(run)
-    cp = p(run, w.CONTENT)
-    if not st.get("build") or not os.path.exists(cp):
-        return ["the PDF has not been built (build.py)"]
-    if st["build"]["content_sha"] != w.content_hash(w.load_json(cp)):
-        return ["content.json changed after the build: run build.py again"]
-    return []
+    c = current_content(run, rj)
+    b = rj.get("build")
+    errs = []
+    if not b or c is None or b.get("content_sha") != w.content_hash(c):
+        errs.append("the PDF is not built from the current report (run.py build)")
+    elif (rj.get("look") or {}).get("build_sha") != b.get("pdf_sha"):
+        errs.append("the page images of this build were not looked at (run.py look --saw ...)")
+    return errs
 
 
-def rc_get(run, dotted):
-    d = w.load_json(p(run, w.RECEIPT)) if os.path.exists(p(run, w.RECEIPT)) else {}
-    for k in dotted.split("."):
-        d = d.get(k) if isinstance(d, dict) else None
-    return d
+def ck_save(run, rj):
+    b, sv, ok = rj.get("build") or {}, rj.get("saved") or {}, rj.get("ok") or {}
+    errs = []
+    if sv.get("build_sha") != b.get("pdf_sha") or sv.get("size") != b.get("pdf_size"):
+        errs.append("the saved file is not recorded with a matching listed size (run.py saved ...)")
+    if ok.get("build_sha") != b.get("pdf_sha"):
+        errs.append("Paul's OK of this version is not recorded (run.py ok ...)")
+    return errs
 
 
-def ck_receipt(*keys, n=1):
-    def check(run, rj):
-        return ["receipt is missing '%s' (run.py receipt --set %s=...)" % (k, k) for k in keys if len(str(rc_get(run, k) or "").strip()) < n]
-    return check
-
-
-def ck_pdf_saved(run, rj):
-    bridge = (rj.get("computer") or {}).get("mode") == "bridge"
-    errs = ck_receipt("pdf_sent_in_chat", "saved.tool", "saved.folder", "saved.filename", "saved.tool_result", "saved.folder_listing_check", "saved.listed_size", *(("saved.device_output",) if bridge else ()))(run, rj)
+def ck_chain(run, rj):
+    ch = rj.get("chain") or {}
+    errs = ["run.py chain: --%s is missing" % k for k in ("summary", "planner", "sitamah") if not str(ch.get(k) or "").strip()]
     if errs:
         return errs
-    b = _state(run).get("build") or {}
-    if bridge:
-        dsha, dsize, why = w.parse_device_output(str(rc_get(run, "saved.device_output") or ""), str(b.get("pdf")))
-        if why:
-            errs.append("saved.device_output: " + why)
-        elif dsha != b.get("pdf_sha") or dsize != b.get("pdf_size"):
-            errs.append("the PDF on the computer is not the PDF built here (computer: %d bytes, %s...; built: %s bytes, %s...): commit it again and fingerprint it again" % (dsize, dsha[:12], b.get("pdf_size"), str(b.get("pdf_sha"))[:12]))
-    if str(rc_get(run, "saved.listed_size")).strip().replace(",", "") != str(b.get("pdf_size")):
-        errs.append("the folder listing shows %s bytes but the local PDF is %s bytes: the save is not proven (a new time with the old size means the copy lagged). Commit it again, list again, record the new listing" % (rc_get(run, "saved.listed_size"), b.get("pdf_size")))
-    if str(rc_get(run, "saved.filename")) != b.get("pdf"):
-        errs.append("saved.filename is %r but the PDF is %r" % (rc_get(run, "saved.filename"), b.get("pdf")))
-    fp_ = verify.save_folder_problem(rc_get(run, "saved.folder"), rj.get("client") or {}, str(rc_get(run, "saved.folder_spelling") or ""))
-    if fp_:
-        errs.append("saved.folder: " + fp_)
-    return errs
+    ok = verify.report_short(run, finishing=True)
+    return [] if ok else ["the audit above has a red cross: fix it first"]
 
 
-def ck_judgment(run, rj):
-    errs = ck_receipt("independent_check", n=10)(run, rj) + ck_receipt("png_visual_check", n=20)(run, rj)
-    for k in verify.JUDGMENT_KEYS:
-        errs += ck_receipt("judgment." + k, n=12)(run, rj)
-    return errs
-
-
-def ck_handoffs(run, rj):
-    errs = ck_receipt("summary.invoked", "summary.abi_same", n=12)(run, rj) + ck_receipt("teams.run_folder", "teams.skill_dir", "teams.next_appointment_carried", n=3)(run, rj)
-    if not errs:
-        tm = (w.load_opt(p(run, w.RECEIPT), {}).get("teams") or {})
-        msg = verify.check_teams_handoff(run, rj, w.load_opt(p(run, w.CONTENT), {}), tm)
-        if msg:
-            errs.append("Teams hand-over: " + msg)
-    if rj.get("spouse"):
-        errs += ck_receipt("spouse.cross_check", n=12)(run, rj)
-    return errs
-
-
-CHECKS = {
-    "locate_ok": ck_locate, "form_done": ck_form, "prep_done": ck_prep, "sources_ok": ck_sources, "pass1_done": ck_pass1, "pass2_done": ck_pass2,
-    "scan_done": ck_scan, "lead_done": ck_lead, "joint_done": ck_joint, "cross_done": ck_cross, "verify_pre": ck_verify("pre"), "build_fresh": ck_build, "receipt_check": ck_judgment,
-    "receipt_pdf": ck_pdf_saved,
-    "receipt_handoffs": ck_handoffs, "verify_final": ck_verify("final"),
-}
+CHECKS = {"find": ck_find, "form": ck_form, "read": ck_read, "lead": ck_lead, "combine": ck_combine, "build": ck_build, "save": ck_save, "chain": ck_chain}
 
 
 def cmd_done(a):
     rj = load_run(a.run)
-    if rj.get("program_fingerprint") and rj["program_fingerprint"] != w.program_fingerprint():
-        w.die("REFUSED: the skill's programs, layout, steps or rule pages changed while this run was in progress. The programs are run as they are, never edited during a run. Start the run again.", 3)
-    plist = applicable(rj)
-    ids = [s["id"] for s in plist]
+    ids = [s["id"] for s in steps_file()]
     if a.step not in ids:
-        w.die("'%s' is not a step of this run. Steps: %s" % (a.step, ", ".join(ids)))
+        w.die("'%s' is not a step. Steps: %s" % (a.step, ", ".join(ids)))
     cur = current_step(rj)
     if cur is None or ids.index(a.step) > ids.index(cur["id"]):
         w.die("REFUSED: finish step '%s' first. Steps are done in order, none skipped." % (cur["id"] if cur else "?"), 3)
-    step = plist[ids.index(a.step)]
-    fails = CHECKS[step["check"]](a.run, rj)
+    fails = CHECKS[a.step](a.run, rj)
     if fails:
         print("NOT DONE: step '%s' is missing its proof:" % a.step)
         for f in fails:
             print("  - " + f)
-        print("\nFix this, then run `done %s` again. You cannot move on until it passes." % a.step)
+        print("\nFix this, then run `done %s` again." % a.step)
         sys.exit(1)
+    rj = load_run(a.run)
     rj["steps"][a.step] = {"state": "done", "t": w.now()}
     save_run(a.run, rj)
     print("STEP '%s' DONE.\n" % a.step)
     nxt = current_step(rj)
     if nxt is None:
-        print("EVERY STEP IS DONE. The job is finished only when your reply contains the verify.py printout (it was shown above if the last step was `final`).")
+        print("EVERY STEP IS DONE. The job is finished only when your reply contains the audit printed above.")
         return
     show_step(a.run, rj, nxt)
 
 
-# ------------------------------------------------------------------ logs
-def cmd_computer(a):
-    """Records how this chat reaches the client's OneDrive folder on the computer. In a cloud chat the computer is a separate machine reached through the device tools
-    (the chat connects, lists the client's folder and records it here); where the folder is mounted into this machine (a test, or a chat running on the computer) the program finds it itself."""
+# ------------------------------------------------------------------ step 1: files
+def cmd_files(a):
     rj = load_run(a.run)
-    comp = rj.get("computer") or {}
-    if a.paul_go_on:
-        if comp.get("found") is not False:
-            w.die("REFUSED: going on without the computer is only possible after the connection was tried and recorded as not made (run.py computer %s --none \"<what happened>\")." % a.run)
-        if len(a.paul_go_on.strip()) < 3:
-            w.die("REFUSED: record Paul's own words (at least 3 characters).")
-        comp["paul_go_on"] = a.paul_go_on.strip()
-        rj["computer"] = comp
-        save_run(a.run, rj)
-        print("recorded Paul's words (%r): the run goes on WITHOUT the computer. Microsoft 365 then serves small text files only, each copy proved by its size; "
-              "a PDF cannot be read that way, so the form's saved PDF will be recorded as missing and the checker will say so." % comp["paul_go_on"])
-        return
-    if a.none:
-        if len(a.none.strip()) < 8:
-            w.die("REFUSED: say what happened to the connection (at least 8 characters).")
-        rj["computer"] = {"found": False, "t": w.now(), "detail": a.none.strip(), "paul_go_on": comp.get("paul_go_on")}
-        save_run(a.run, rj)
-        print(w.COMPUTER_STOP)
-        print("\nYour whole reply is those words, nothing more, and no question. When Paul says to go on, connect again and run: python3 %s/run.py computer %s --device ... --folder ... --listing ..." % (SCRIPTS, a.run))
-        sys.exit(6)
-    if a.device or a.folder or a.listing:
-        if not (a.device and a.folder and a.listing):
-            w.die("REFUSED: give --device (the computer's name), --folder (the folder the connection was granted for) and --listing (the file names device_list_dir showed in the client's folder).")
-        if "liferisk.co.za" not in a.folder.lower().replace("/", "\\"):
-            w.die("REFUSED: the connected folder must be the client files' root, liferisk.co.za (it was %r)." % a.folder)
-        if len(a.listing.strip()) < 20:
-            w.die("REFUSED: --listing must be what device_list_dir showed in the client's folder (the file names), not a summary.")
-        rj["computer"] = {"found": True, "mode": "bridge", "device": a.device.strip(), "folder": a.folder.strip(), "listing": a.listing.strip()[:2000], "t": w.now(), "paul_go_on": comp.get("paul_go_on")}
-        save_run(a.run, rj)
-        print("COMPUTER CONNECTED through the device tools (%s, folder %s). Read every client file as page 01 says: device_bash for its fingerprint, device_stage_files for the copy, then run.py access with --device-output." % (a.device.strip(), a.folder.strip()))
-        return
-    root = w.find_computer_root()
-    if root:
-        rj["computer"] = {"found": True, "mode": "mount", "root": root, "t": w.now(), "paul_go_on": comp.get("paul_go_on")}
-        save_run(a.run, rj)
-        print("COMPUTER FOUND: the client's OneDrive folder is mounted at %s. Copy each file with cp and log it with --original." % root)
-        return
-    print("No connection is recorded yet. Connect with the device tools (page 01: get_device_info, then device_request_folder_access for ~/liferisk.co.za if it is not connected, then device_list_dir "
-          "on the client's folder) and record it: python3 %s/run.py computer %s --device <name> --folder <granted folder> --listing \"<the file names>\"   "
-          "If the connection is refused or cannot be made: python3 %s/run.py computer %s --none \"<what happened>\"" % (SCRIPTS, a.run, SCRIPTS, a.run))
-    sys.exit(6)
-
-
-def cmd_access(a):
-    rj = load_run(a.run)
-    log = load_list(a.run, w.ACCESS)
-    detail = a.detail or ""
-    result = a.result
-    verified, got, sha = False, None, None
-    if a.need == "formpdf" and a.route in ("m365", "zapier") and a.result == "ok":
-        w.die("REFUSED: the form's saved PDF cannot be taken through %s: a PDF arrives there cut off, as text. Take it from the computer (--route device, with --original), "
-              "or use --route passed when another skill handed it over." % ("Microsoft 365" if a.route == "m365" else "Zapier"))
-    if a.route == "device" and a.result == "ok" and not (rj.get("computer") or {}).get("found"):
-        w.die("REFUSED: the program has not found the computer in this run (run.py computer %s). A try on the computer is logged only when the folder is really there." % a.run)
-    if a.device_output and a.original:
-        w.die("REFUSED: give --original (a mounted folder) or --device-output (the computer's own fingerprint), not both.")
-    if a.file or a.source_size is not None or a.original or a.device_output:
-        # a file copied into the run folder must be PROVED: identical to its original on the computer, or as big as the connector said the file is
-        if not a.file:
-            w.die("REFUSED: give --file (the copy you saved in the run folder) together with --original (the computer) or --source-size (the connector's size).")
-        if not os.path.isfile(a.file):
-            w.die("MISSING: the copy %s" % a.file)
-        got = os.path.getsize(a.file)
-        sha = w.sha256_file(a.file)
-        if a.original:
-            root = (rj.get("computer") or {}).get("root")
-            if a.route != "device":
-                w.die("REFUSED: --original is for the computer route (--route device).")
-            if not root or not w.under_root(a.original, root):
-                w.die("REFUSED: --original must be a file on the computer, inside %s." % root)
-            if not os.path.isfile(a.original):
-                w.die("MISSING: the original %s" % a.original)
-            if w.sha256_file(a.original) != sha:
-                result = "fail"
-                detail = (detail + " ").lstrip() + "copy NOT identical to the original on the computer (%d bytes saved, the original is %d)" % (got, os.path.getsize(a.original))
-                print("logged as a FAIL: the copy is not identical to the original on the computer. Copy it again with cp (not by reading and retyping it).")
-            else:
-                verified = True
-                detail = (detail + " ").lstrip() + "copy verified: identical to the original on the computer (%d bytes)" % got
-        elif a.device_output:
-            if a.route != "device":
-                w.die("REFUSED: --device-output is for the computer route (--route device).")
-            dsha, dsize, why = w.parse_device_output(a.device_output, os.path.basename(a.file))
-            if why:
-                w.die("REFUSED: " + why)
-            if dsha != sha or dsize != got:
-                result = "fail"
-                detail = (detail + " ").lstrip() + "copy NOT identical to the file on the computer (copy: %d bytes, %s...; the computer: %d bytes, %s...)" % (got, sha[:12], dsize, dsha[:12])
-                print("logged as a FAIL: the copy is not identical to the file on the computer. Stage it again (device_stage_files) and compare again.")
-            else:
-                verified = True
-                detail = (detail + " ").lstrip() + "copy verified: identical to the file on the computer (%d bytes, sha256 %s...)" % (got, sha[:12])
-        elif a.source_size is not None:
-            if got != a.source_size:
-                result = "fail"
-                detail = (detail + " ").lstrip() + "copy NOT complete: %d bytes saved, the connector reports %d" % (got, a.source_size)
-                print("logged as a FAIL: the copy is %d bytes but the connector reports %d. A file that comes back cut off cannot be used: take it from the computer." % (got, a.source_size))
-            else:
-                verified = True
-                detail = (detail + " ").lstrip() + "copy verified: %d bytes = the connector's size" % got
+    for path in [a.form, a.formpdf, a.overview] + list(a.transcript or []):
+        if path and not os.path.isfile(path):
+            w.die("MISSING: %s" % path)
+    if not a.form or not a.transcript:
+        w.die("give --form <the form's data file> and --transcript <the transcript file> (a missing optional file is told with --missing \"<where you looked>\")")
+    try:
+        form = ffform.read_form_into_run(a.form, a.run)
+    except ffform.FormError as e:
+        print(str(e))
+        sys.exit(4)
+    rec = {"file": form["file"], "used": False, "why": "not given"}
+    if a.formpdf:
+        bad = ffform.pdf_file_problems(a.formpdf)
+        text = None if bad else ffform.pdf_text(a.formpdf)
+        if bad:
+            rec["why"] = "not a whole PDF: " + "; ".join(bad)
+        elif not text or not text.strip():
+            rec["why"] = "no text could be read from it"
         else:
-            w.die("REFUSED: give --device-output (the computer's own fingerprint), --original (a mounted folder) or --source-size (the connector's size in bytes) with --file.")
-    elif a.need in w.FILE_NEEDS and a.route in w.COPY_ROUTES and a.result == "ok":
-        w.die("REFUSED: a file taken from %s needs its proof, or the copy may be cut off: --file <your copy> with --device-output <the output of sha256sum and stat run on the computer> (computer) or "
-              "--source-size <the connector's size in bytes> (Microsoft 365, Zapier). Nobody is asked for anything." % a.route)
-    log.append({"t": w.now(), "need": a.need, "route": a.route, "tool": a.tool, "result": result, "detail": detail, "verified": verified, "bytes": got, "sha256": sha})
-    w.save_json(p(a.run, w.ACCESS), log)
-    if result != a.result:
-        return
-    es = [e for e in log if e["need"] == a.need]
-    if any(e["result"] == "ok" for e in es):
-        print("logged: '%s' obtained via %s." % (a.need, a.route))
-        return
-    failed = {e["route"] for e in es if e["result"] == "fail"}
-    untried = [r_ for r_ in w.ROUTES if r_ not in failed]
-    if untried:
-        print("logged failure. NEXT ROUTE TO TRY for '%s': %s (%s). You may not give up before all three are logged." % (a.need, untried[0], w.ROUTE_NAMES[untried[0]]))
-    elif a.need == "form":
-        print("logged failure. All three routes have now failed for the form's data file. STOP and ASK Paul: run.py ask %s --need form --searched \"<where>\"" % a.run)
+            ident = ffform.pdf_identity_problems(form, text)
+            rep = ffform.pdf_report(form, text)
+            if ident or (rep["checked"] and len(rep["not_found"]) > 0.25 * rep["checked"]):
+                rec["why"] = "it does not look like the PDF of this data file (%s)" % ("; ".join(ident) or "%d of %d values are not in it" % (len(rep["not_found"]), rep["checked"]))
+            else:
+                with open(p(a.run, "form_pdf.txt"), "w", encoding="utf-8") as f:
+                    f.write(text)
+                rep.update(used=True, file=os.path.basename(a.formpdf), pages=text.count("\f") or 1, why="")
+                rec = rep
+    w.save_json(p(a.run, w.FORMPDF), rec)
+    rj["files"] = {"form": os.path.basename(a.form), "formpdf": os.path.basename(a.formpdf) if a.formpdf else None, "transcripts": [os.path.basename(t) for t in a.transcript],
+                   "overview": os.path.basename(a.overview) if a.overview else None, "missing": a.missing or ""}
+    save_run(a.run, rj)
+    print("FORM: %s (schema %s, saved %s), %d populated fields." % (form["file"], form["schema"], form["modified"], sum(1 for c in form["fields"].values() if c["populated"])))
+    print("FORM PDF: %s" % (("read whole (%d page(s))" % rec.get("pages", 0)) if rec.get("used") else "NOT USED: %s. The data file alone is the source; Paul is told in the audit." % rec["why"]))
+    if not a.overview:
+        print("OVERVIEW: none registered%s." % ((" (" + a.missing + ")") if a.missing else ""))
+    try:
+        tx.cmd_prep(a.run, list(a.transcript), bool(a.force_incomplete))
+    except SystemExit as e:
+        if e.code:
+            sys.exit(e.code)
+
+
+# ------------------------------------------------------------------ step 2: form
+def cmd_form(a):
+    rj = load_run(a.run)
+    form = w.load_json(p(a.run, w.FORM), "form_read.json (step 1: run.py files ...)")
+    pdf = w.load_opt(p(a.run, w.FORMPDF), {})
+    lay = w.layout()
+    labels = {r["key"]: r["label"] for s in lay["sections"] for g in s["groups"] for r in g.get("rows", []) if r.get("key")}
+    labels.update({r["key"]: r["label"] for r in lay["closing"]["rows"]})
+    stc = form["statuses"]
+    print("THE FORM  %s   schema %s   saved %s" % (form["file"], form["schema"], form["modified"]))
+    print("  populated fields: %d (%s); list rows: %d" % (sum(stc.values()), ", ".join("%s %d" % kv for kv in sorted(stc.items())), sum(len(v) for v in form["lists"].values())))
+    for k, v in sorted(form["ignored"].items()):
+        print("  not read: %-12s %s" % (k, v))
+    for st_ in ("preset", "heard", "verify"):
+        ks = [k for k, c in form["fields"].items() if c["populated"] and c["st"] == st_]
+        if ks:
+            print("\n  %s values (check each against the call; each goes into the report either way):" % st_.upper())
+            for k in ks:
+                print("    %-28s %s" % (labels.get(k, k)[:28], form["fields"][k]["v"][:70].replace("\n", " ")))
+    lk = form["lookup"]
+    if lk["verdict"] != "empty":
+        print("\n  COMPANY LOOK-UP TEXT: %s%s" % (lk["verdict"].upper().replace("_", " "), (" (" + "; ".join(lk["reasons"]) + ")") if lk["reasons"] else ""))
+    np_ = ffform.note_problems(form)
+    if np_:
+        print("\n  NOTES THAT NEED CLEANING (name the chatter lines in overlay `clean`; repeated lines are dropped by the program; a cut-off note is flagged):")
+        for n in np_:
+            print("    - " + n)
+    if pdf.get("used"):
+        print("\n  THE PDF: %d values of the data file were checked against it; %d not found in it." % (pdf["checked"], len(pdf["not_found"])))
+        for m in pdf["not_found"][:12]:
+            print("    NOT IN THE PDF: %s = %r" % (m["label"], m["value"]))
+        if pdf["pdf_only"]:
+            print("  AMOUNTS ONLY THE PDF HOLDS (the form works them out; the data file has them empty). They go into the report automatically under their own heading;")
+            print("  if one belongs in a row (for example a Risk Calculation line) add it as an overlay `fill` with the source {\"doc\": \"form PDF\", \"quote\": \"<the PDF's words>\"}:")
+            for amt in pdf["pdf_only"]:
+                print("    R %-12s  %s" % (amt, pdf["pdf_only_labels"].get(amt, "")))
     else:
-        print("logged failure. All three routes have now failed for '%s'. Record the question for Paul with: run.py ask" % a.need)
+        print("\n  THE PDF WAS NOT USED (%s): the data file alone is the source." % pdf.get("why"))
+    if form["unknown_fields"] or form["odd"] or form["top_unknown"]:
+        print("\n  Unusual: fields the layout does not know %s; odd entries %s; unknown top keys %s" % (form["unknown_fields"] or "none", form["odd"][:4] or "none", form["top_unknown"] or "none"))
+    rj["form_report_shown"] = True
+    save_run(a.run, rj)
+    print("\nNEXT: python3 %s/run.py done %s form" % (SCRIPTS, a.run))
 
 
-def cmd_source(a):
-    srcs = load_list(a.run, w.SOURCES)
-    if a.kind not in w.SOURCE_KINDS:
-        w.die("kind must be one of %s" % w.SOURCE_KINDS)
-    if a.none:
+# ------------------------------------------------------------------ step 4: lead
+def cmd_lead(a):
+    load_run(a.run)
+    if a.found:
+        d = w.parse_date(a.received)
+        if not d or not a.ref or not a.quote:
+            w.die("REFUSED: --found needs --received DD/MM/YYYY, --ref (the email subject) and --quote (the line that shows it).")
+        rec = {"searched": True, "found": True, "received": d.strftime("%d/%m/%Y"), "ref": a.ref, "quote": a.quote}
+    elif a.none:
         if len(a.none.strip()) < 8:
             w.die("REFUSED: say what you searched and where (at least 8 characters).")
-        tried = {e.get("route") for e in load_list(a.run, w.ACCESS) if e.get("need") == a.kind and e.get("result") == "fail"}
-        if a.kind in w.REQUIRED_SOURCE_KINDS and len(tried & set(w.ROUTES)) < 2:
-            w.die("REFUSED: you may say there is no %s on file only after searching on at least two routes (device, m365, zapier) and logging each: "
-                  "run.py access %s --need %s --route device --tool <tool> --result fail --detail \"nothing found in <where>\"." % (a.kind, a.run, a.kind))
-        srcs.append({"kind": a.kind, "none": a.none})
+        rec = {"searched": True, "found": False, "none": a.none.strip()}
+    elif a.unavailable:
+        rec = {"searched": False, "found": False, "unavailable": a.unavailable.strip()}
     else:
-        if not (a.path and a.date and a.read == "yes"):
-            w.die("REFUSED: a document needs --path, --date and --read yes (or use --none \"reason\").")
-        low = a.path.lower().replace("/", "\\")
-        if "company - wr clients" in low and "paul kafentzis (client files)" not in low:
-            w.die("REFUSED: that path is in another broker's folder. Only 'Paul Kafentzis (Client Files)' is ever read or written.")
-        if a.kind == "Manual Fact Find" and load_run(a.run).get("form_mode") != "manual":
-            w.die("REFUSED: the Manual Fact Find is read only when the form's data file is missing and Paul chose it (run.py answer ... --choice manual).")
-        ref = a.ref or re.sub(r"\.[A-Za-z0-9]{1,5}$", "", re.split(r"[\\/]", a.path.strip())[-1])
-        if any(verify.source_ref(e) == ref for e in srcs if e.get("read") == "yes"):
-            w.die("REFUSED: a document called %r is already recorded; give this one its own --ref." % ref)
-        if a.kind in ("Overview", "Policy schedule"):
-            if not a.text_file:
-                w.die("REFUSED: a %s is accepted only with a text copy (--text-file, for a PDF: pdftotext \"<file>\" /tmp/<name>.txt): without it nothing in it can be checked." % a.kind)
-            if not os.path.exists(a.text_file):
-                w.die("REFUSED: text file not found: %s" % a.text_file)
-            with open(a.text_file, encoding="utf-8", errors="replace") as fh_:
-                txt = fh_.read()
-            cl_ = load_run(a.run)["client"]
-            fr_ = w.load_opt(p(a.run, w.FORM), {})
-            idd = w.digits(((fr_.get("fields") or {}).get("idno") or {}).get("v", ""))
-            if not ((w.last_name_token(cl_["surname"]) in w.norm(txt)) or (len(idd) >= 10 and idd in w.digits(txt))):
-                w.die("REFUSED: the text of this %s does not mention the client (%s, or the ID number): it does not look like this client's document." % (a.kind, cl_["surname"]))
-        entry = {"kind": a.kind, "path": a.path, "date": a.date, "read": "yes", "ref": ref}
-        if a.text_file:
-            if not os.path.exists(a.text_file):
-                w.die("REFUSED: text file not found: %s" % a.text_file)
-            os.makedirs(os.path.join(a.run, w.DOCS), exist_ok=True)
-            shutil.copyfile(a.text_file, os.path.join(a.run, w.DOCS, ref + ".txt"))
-            entry["text"] = True
-        srcs.append(entry)
-    w.save_json(p(a.run, w.SOURCES), srcs)
-    print("recorded %s source (%d so far)%s." % (a.kind, len(srcs), "" if a.none or srcs[-1].get("text") else
-          ". NOTE: no --text-file given, so quotes and figures from this document cannot be machine-checked (Paul will be told)"))
-
-
-NO_ABOUT_NEEDS = ("lead", "dismissals", "formpdf", "date", "form", "joint")
-ABOUT_MAX = 10
-
-
-def about_problem(about, question, need, run=None):
-    """None when `--about` is a short list of real ids that the question itself names: at most 10 field keys, list names, quote groups or section ids, each written in the question as the id or its label
-    (so a chat cannot list every field and then use the answer for any of them). For the dismissals question the ids are line numbers."""
-    if len(about) > ABOUT_MAX:
-        return "--about names %d ids: at most %d (a question about everything is a question about nothing)" % (len(about), ABOUT_MAX)
-    if need == "dismissals":
-        if run is None or not os.path.exists(p(run, w.TRANSCRIPT)):
-            return "the transcript has not been prepared yet, so the lines of a dismissals question cannot be checked"
-        return verify.dismissal_problem(about, question, w.read_lines(run))[1]
-    lay = w.layout()
-    ok = compose.valid_ids(lay)
-    specs = verify._specs(lay)
-    qn = " %s " % w.norm(question or "")
-    for x in about:
-        label = ""
-        if x in ok["keys"]:
-            label = (specs.get(x) or {}).get("label", "")
-        elif x in ok["groups"]:
-            label = next((g["title"] for g in lay["quote_groups"] if g["id"] == x), "")
-        elif x in ok["sections"]:
-            label = next((s_["title"] for s_ in lay["sections"] if s_["id"] == x), "")
-        elif x in ok["lists"]:
-            g_ = specs.get("list:" + x) or {}
-            label = g_.get("sub") or g_.get("item") or x
-        elif x not in ("next_steps", "docs_to_request"):
-            return "%r is not a field key, list name, quote group or section id (see the valid names in the content step)" % x
-        words = [t for t in re.findall(r"[a-z0-9]+", w.norm(label)) if len(t) >= 3]
-        if " %s " % w.norm(x) in qn or (label and " %s " % w.norm(label) in qn) or (words and all((" %s " % t) in qn for t in words)):
-            continue
-        return "%r is not named in the question: write its id or its label (%s) in the question text, so the question really asks about it" % (x, label or x)
-    return None
-
-
-def cmd_ask(a):
-    log = load_list(a.run, w.ACCESS)
-    es = [e for e in log if e["need"] == a.need]
-    rj = load_run(a.run)
-    q = a.question
-    if a.need == "form" and not q:
-        q = FORM_QUESTION % ("%s %s" % (rj["client"]["first"], rj["client"]["surname"]))
-    if not q:
-        w.die("REFUSED: give the question (--question).")
-    if a.kind == "file" and a.need != "date":
-        if not es:
-            w.die("REFUSED: no access attempts are logged for '%s'. Try the routes first (run.py access)." % a.need)
-        if any(e["result"] == "ok" for e in es):
-            w.die("REFUSED: '%s' was obtained, so there is nothing to ask Paul." % a.need)
-        failed = {e["route"] for e in es if e["result"] == "fail"}
-        untried = [r_ for r_ in w.ROUTES if r_ not in failed]
-        if untried:
-            w.die("REFUSED: these routes have not been tried for '%s': %s. Never ask Paul before all three failed." % (a.need, untried))
-    if len(a.searched.strip()) < 8:
-        w.die("REFUSED: say what you already searched (at least 8 characters).")
-    qs = load_list(a.run, w.QUESTIONS)
-    about = [x.strip() for x in (a.about or "").split(",") if x.strip()]
-    ap_ = about_problem(about, q, a.need, a.run) if about else None
-    if ap_:
-        w.die("REFUSED: %s." % ap_)
-    if a.kind == "knowledge" and a.need not in NO_ABOUT_NEEDS and not about:
-        w.die("REFUSED: say what this question is about, so his answer can only be used for that: --about <field keys, list names, quote groups or section ids, separated by commas> (for example --about dd_abiv or --about fna).")
-    qs.append({"t": w.now(), "need": a.need, "question": q, "searched": a.searched, "kind": a.kind, "about": about})
-    w.save_json(p(a.run, w.QUESTIONS), qs)
-    print("RECORDED. Now STOP and ask Paul, in plain words, exactly this, and wait for his answer:\n")
-    print("  %s" % q)
-    print("  (I already looked in: %s)" % a.searched)
-    for e in es:
-        print("  - tried %s via %s: %s %s" % (w.ROUTE_NAMES.get(e["route"], e["route"]), e["tool"], e["result"], e.get("detail", "")))
-    print("\nWhen he has answered, record his own words: run.py answer %s --need %s --said \"...\"%s" % (a.run, a.need, " --choice manual|transcript" if a.need == "form" else ""))
-
-
-def cmd_answer(a):
-    qs = load_list(a.run, w.QUESTIONS)
-    mine = [q for q in qs if q.get("need") == a.need]
-    if not mine:
-        w.die("REFUSED: no question about '%s' was recorded (run.py ask)." % a.need)
-    if len(a.said.strip()) < 3:
-        w.die("REFUSED: record Paul's own words (at least 3 characters).")
-    if a.need == "form" and a.choice not in ("manual", "transcript"):
-        w.die("REFUSED: for the missing form file Paul chooses: --choice manual (the filled-in Manual Fact Find PDF) or --choice transcript (the transcript alone).")
-    mine[-1]["paul_said"] = a.said
-    if a.choice:
-        mine[-1]["choice"] = a.choice
-    w.save_json(p(a.run, w.QUESTIONS), qs)
-    if a.need == "form":
-        rj = load_run(a.run)
-        if any(e.get("result") == "ok" for e in load_list(a.run, w.ACCESS) if e.get("need") == "form"):
-            w.die("REFUSED: the form's data file was obtained, so there is nothing to decide.")
-        rj["form_mode"] = a.choice
-        save_run(a.run, rj)
-        w.save_json(p(a.run, w.CROSS), [])
-        print("recorded Paul's words. The form is treated as missing: every value now comes from %s, with its source." % ("the filled-in Manual Fact Find PDF (record it with run.py source --kind \"Manual Fact Find\")" if a.choice == "manual" else "the transcript alone"))
-    else:
-        print("recorded Paul's words for '%s'." % a.need)
-
-
-def cmd_form(a):
-    acc = [e for e in load_list(a.run, w.ACCESS) if e.get("need") == "form" and e.get("result") == "ok"]
-    if not acc:
-        w.die("REFUSED: log how you got the form's data file first (run.py access --need form --route ... --result ok).")
-    ffform.read_into_run(a.file, a.run, a.again)
-    rj = load_run(a.run)
-    rj["form_mode"] = "form"
-    save_run(a.run, rj)
-    print("\nNEXT: the form's saved PDF: run.py formpdf %s <the PDF>" % a.run)
-
-
-def cmd_formpdf(a):
-    rj = load_run(a.run)
-    if rj.get("form_mode") != "form":
-        w.die("REFUSED: read the form's data file first (run.py form).")
-    acc = [e for e in load_list(a.run, w.ACCESS) if e.get("need") == "formpdf"]
-    if a.paul_go_on:
-        q = next((q for q in reversed(load_list(a.run, w.QUESTIONS)) if q.get("need") == "formpdf" and len(str(q.get("paul_said") or "").strip()) >= 3), None)
-        if not q:
-            w.die("REFUSED: going on with the data file alone is Paul's decision. Ask him first: run.py ask %s --need formpdf --kind knowledge --question \"The saved PDF does not match the data file (<what the program said>). Go on with the data file alone, or find the right PDF?\" --searched \"<where you looked>\", then run.py answer %s --need formpdf --said \"<his words>\"." % (a.run, a.run))
-        ffform.cmd_pdf(types.SimpleNamespace(run=a.run, file=None, none=None, paul_go_on=str(q["paul_said"]).strip()))
-        return
-    if a.none:
-        failed = {e["route"] for e in acc if e["result"] == "fail"}
-        if set(w.ROUTES) - failed:
-            w.die("REFUSED: the saved PDF may be called missing only after all three routes were tried and logged (run.py access --need formpdf ... --result fail). Not yet tried: %s" % [r_ for r_ in w.ROUTES if r_ not in failed])
-    elif not any(e["result"] == "ok" for e in acc):
-        w.die("REFUSED: log how you got the form's saved PDF first (run.py access --need formpdf --route device --result ok --file <copy> --original <the PDF on the computer>).")
-    else:
-        last = [e for e in acc if e["result"] == "ok"][-1]
-        if last.get("route") != "passed" and not (last.get("verified") and a.file and os.path.isfile(a.file) and last.get("sha256") == w.sha256_file(a.file)):
-            w.die("REFUSED: the PDF you gave is not the copy that was proved identical to the original on the computer. Log it with --file <this copy> --original <the PDF on the computer> first.")
-    ffform.cmd_pdf(types.SimpleNamespace(run=a.run, file=a.file, none=a.none, paul_go_on=None))
-
-
-def cmd_pdfreview(a):
-    ffform.cmd_pdfreview(types.SimpleNamespace(run=a.run, key=a.key, result=a.result, quote=a.quote, pdf_value=a.pdf_value, reason=a.reason))
-
-
-# ------------------------------------------------------------------ several transcripts, ledger, lead, cross, claim
-def cmd_join(a):
-    if len(a.parts) < 2:
-        w.die("REFUSED: join needs at least two transcript files (one meeting whose call dropped and reconnected).")
-    out, info, n = [], [], len(a.parts)
-    for k, path in enumerate(a.parts, 1):
-        if not os.path.exists(path):
-            w.die("Source not found: " + path)
-        text = tx.read_source(path).replace("\r\n", "\n").replace("\r", "\n")
-        lines = [ln.rstrip() for ln in text.split("\n")]
-        while lines and not lines[-1]:
-            lines.pop()
-        out.append("===== TRANSCRIPT %d OF %d: %s =====" % (k, n, os.path.basename(path)))
-        start = len(out) + 1
-        out += lines
-        info.append({"name": os.path.basename(path), "sha256": w.sha256_text("\n".join(lines)), "lines": [start, len(out)], "head": lines[:4], "tail": lines[-4:]})
-    os.makedirs(a.run, exist_ok=True)
-    jp = p(a.run, "transcript_joined.txt")
-    with open(jp, "w", encoding="utf-8") as f:
-        f.write("\n".join(out))
-    w.save_json(p(a.run, w.PARTS), {"parts": info, "continuity": []})
-    print("JOINED %d transcripts into %s (a separator line marks each part)." % (n, jp))
-    for k in range(n - 1):
-        print("\nCONTINUITY CHECK %d/%d: the end of transcript %d and the start of transcript %d must pick up the same topic or figure." % (k + 1, k + 2, k + 1, k + 2))
-        print("  END OF %d:" % (k + 1))
-        for ln in info[k]["tail"]:
-            print("    | " + ln)
-        print("  START OF %d:" % (k + 2))
-        for ln in info[k + 1]["head"]:
-            print("    | " + ln)
-        print("  Record it: run.py continuity %s --between %d,%d --result ok|gap --detail \"<what picks up, or what is missing>\"" % (a.run, k + 1, k + 2))
-    print("\nNEXT: python3 %s/tx.py prep %s %s   (it checks every part on its own)" % (SCRIPTS, jp, a.run))
-
-
-def cmd_continuity(a):
-    pj = w.load_opt(p(a.run, w.PARTS), None)
-    if not pj:
-        w.die("REFUSED: there is no joined transcript in this run (run.py join).")
-    m = re.fullmatch(r"(\d+),(\d+)", a.between)
-    if not m or int(m.group(2)) != int(m.group(1)) + 1 or int(m.group(2)) > len(pj["parts"]):
-        w.die("REFUSED: --between must name two neighbouring transcripts, for example 1,2.")
-    if len(a.detail.strip()) < 20:
-        w.die("REFUSED: say in your own words what picks up (or what is missing): at least 20 characters.")
-    pj["continuity"] = [c for c in pj["continuity"] if tuple(c["between"]) != (int(m.group(1)), int(m.group(2)))]
-    pj["continuity"].append({"between": [int(m.group(1)), int(m.group(2))], "result": a.result, "detail": a.detail, "t": w.now()})
-    w.save_json(p(a.run, w.PARTS), pj)
-    print("continuity %s recorded: %s%s" % (a.between, a.result, "  (a real gap: Paul is told at the end)" if a.result == "gap" else ""))
-
-
-def cmd_ledger(a):
-    led = load_ledger(a.run)
-    save = lambda: w.save_ledger(a.run, led)  # noqa: E731
-    if a.action == "list":
-        for e in led["entries"]:
-            cov = ",".join(e.get("covered_by") or []) or ("EXCLUDED" if e.get("excluded") else "NOT COVERED")
-            print("%-5s line %-5s %-13s %-14s %s" % (e["id"], e["line"], e["kind"], cov, e["quote"][:70]))
-        print("%d entries, %d scan reviews" % (len(led["entries"]), len(led["scan_reviewed"])))
-        return
-    if a.action == "add":
-        if not os.path.exists(p(a.run, w.TRANSCRIPT)):
-            w.die("REFUSED: the transcript has not been prepared yet (tx.py prep).")
-        lines = w.read_lines(a.run)
-        if a.kind not in verify.LEDGER_KINDS:
-            w.die("kind must be one of %s" % verify.LEDGER_KINDS)
-        if not 1 <= a.line <= len(lines) or not verify.quote_ok(lines, a.line, a.quote):
-            w.die("REFUSED: that quote is not found at transcript line %d. Copy the exact words from the chunk you read." % a.line)
-        st = _state(a.run)
-        in_pass2 = any(r_["pass"] == 2 for r_ in st["reads"])
-        allowed_ = verify.paul_allowed_lines(a.run, lines)
-        rw = verify.request_word(verify.window_text(lines, a.line))
-        if a.kind in verify.KINDS_OPTIONAL and rw and a.line not in allowed_:
-            w.die("REFUSED: line %d (or a line next to it) holds the word '%s' (a request, decision, change or quote word), so it cannot be recorded as a plain '%s'. Record it as a gap, difference, contact, quote_request, next_step, change or request. "
-                  "If it truly needs nothing, dismiss it with: run.py ledger review --line %d --reason \"<a reason that quotes the words of that line>\" (a line with FNA, quote, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up, reduced or credit life can only be dismissed on Paul's recorded answer)." % (a.line, rw, a.kind, a.line))
-        qw = verify.quote_word(lines[a.line - 1])
-        if qw and a.kind != "quote_request" and a.line not in allowed_:
-            w.die("REFUSED: line %d holds the word '%s' (an FNA, quote, shortfall, RGAR, EGAR or reduced quote line), so the entry must be kind quote_request, not '%s'. If the line is not a request at all, ask Paul: run.py ask %s --need dismissals --about \"%d\" --kind knowledge --question ... --searched ..., then run.py answer." % (a.line, qw, a.kind, a.run, a.line))
-        e = {"id": "L%d" % (len(led["entries"]) + 1), "line": a.line, "kind": a.kind, "quote": a.quote, "pass": 2 if in_pass2 else 1, "covered_by": []}
-        if a.speaker:
-            e["speaker"] = a.speaker
-        if a.meaning:
-            e["meaning"] = a.meaning
-        led["entries"].append(e)
-        save()
-        print("%s added (%s, line %d, pass %d)%s" % (e["id"], a.kind, a.line, e["pass"], "  - must be covered by a fill, difference, note or answer" if a.kind in verify.KINDS_MUST_COVER else ""))
-        return
-    ent = {e["id"]: e for e in led["entries"]}
-    if a.action == "cover":
-        inp = compose.load_inputs(a.run)
-        try:
-            content = compose.compose(inp) if not compose.check_inputs(inp) else None
-        except Exception:
-            content = None
-        targets = verify.cover_targets(a.run, inp["overlay"], inp["cross"], inp["lead"], content)
-        if a.id not in ent:
-            w.die("no ledger entry %s" % a.id)
-        bad = [i for i in a.items if i not in targets]
-        if bad:
-            w.die("REFUSED: these items do not exist (overlay ids, answered cross-check keys, 'lead', 'claim:<key>', quote rows such as quote.fna): %s" % bad)
-        e_ = ent[a.id]
-        probs = [verify.cover_problem(e_["kind"], e_["line"], i, targets[i], e_["quote"], verify.window_text(w.read_lines(a.run), e_["line"])) for i in a.items]
-        if all(probs) and e_["kind"] in verify.KINDS_MUST_COVER:
-            w.die("REFUSED: %s" % "; ".join(probs))
-        ent[a.id]["covered_by"] = sorted(set(ent[a.id].get("covered_by") or []) | set(a.items))
-        save()
-        print("%s covered by %s" % (a.id, ent[a.id]["covered_by"]))
-        lines_c = w.read_lines(a.run)
-        must_c = [x for x in led["entries"] if x.get("kind") in verify.KINDS_MUST_COVER and isinstance(x.get("line"), int)]
-        for h_, gaps_ in verify.open_topics(lines_c, must_c, targets, ent[a.id]):
-            print("STILL OPEN: line %d (%r) names %s and is not covered for %s yet: cover it from each product's own quote row or request field (a credit-life line: a fill or an answer of a credit-life field)."
-                  % (h_, lines_c[h_ - 1].strip()[:60], " and ".join(n for n, _ in verify.line_topics(lines_c[h_ - 1])), " and ".join(gaps_)))
-    elif a.action == "exclude":
-        if a.id not in ent:
-            w.die("no ledger entry %s" % a.id)
-        if ent[a.id]["kind"] not in verify.KINDS_OPTIONAL:
-            w.die("REFUSED: a %s entry cannot be excluded: it must map to a fill, difference, note or answer." % ent[a.id]["kind"])
-        if w.reason_problem(a.reason, 8):
-            w.die("REFUSED: %s." % w.reason_problem(a.reason, 8))
-        lines_ = w.read_lines(a.run)
-        rw = verify.request_word(lines_[ent[a.id]["line"] - 1]) if 1 <= ent[a.id]["line"] <= len(lines_) else None
-        if rw:
-            w.die("REFUSED: line %d holds the word '%s' (a request, decision, change or quote word): it cannot be set aside as plain talk. Dismiss it with a review whose reason quotes its words (run.py ledger review --line %d --reason ...), or record it properly." % (ent[a.id]["line"], rw, ent[a.id]["line"]))
-        ent[a.id]["excluded"] = a.reason
-        save()
-        print("%s excluded: %s" % (a.id, a.reason))
-    elif a.action == "review":
-        if a.line is None and (a.frm is None or a.to is None):
-            w.die("REFUSED: give --line N or --from A --to B.")
-        span = 1 if a.line is not None else (a.to - a.frm + 1)
-        if span < 1 or span > 40:
-            w.die("REFUSED: one review may dismiss at most 40 lines (this one is %d). Dismiss each stretch of plain talk on its own, with its own reason." % span)
-        if any(w.norm(r_.get("reason", "")) == w.norm(a.reason) for r_ in led["scan_reviewed"]):
-            w.die("REFUSED: that reason was already used for another review. Say what is in THESE lines and why nothing needs recording.")
-        lines_ = w.read_lines(a.run)
-        rec = {"line": a.line, "reason": a.reason} if a.line is not None else {"from": a.frm, "to": a.to, "reason": a.reason}
-        prob = verify.review_problem(rec, lines_, verify.required_lines(lines_, _state(a.run)))
-        if prob:
-            w.die("REFUSED: %s." % prob)
-        lo, hi = (a.line, a.line) if a.line is not None else (a.frm, a.to)
-        hard_in = [i for i in sorted(verify.hard_lines(lines_)) if lo <= i <= hi and i not in verify.paul_allowed_lines(a.run, lines_)]
-        if hard_in:
-            w.die("REFUSED: line(s) %s hold a request word that cannot be dismissed (FNA, quote, shortfall, RGAR, EGAR, authority, payslip, appointment, next meeting, set up, follow up, reduced, credit life). Record each as a ledger entry (a quote line as quote_request). "
-                  "If a line really is not a request (for example 'as the quote said last year'), ask Paul: run.py ask %s --need dismissals --about \"%s\" --kind knowledge --question ... --searched ..., then run.py answer ... --said \"<his words>\"." % (hard_in[:8], a.run, ",".join(str(i) for i in hard_in[:8])))
-        led["scan_reviewed"].append(rec)
-        save()
-        print("scan hit(s) %s reviewed: %s" % (a.line if a.line is not None else "%d-%d" % (a.frm, a.to), a.reason))
-    elif a.action == "ack":
-        st = _state(a.run)
-        if a.pass_ not in (1, 2) or not 1 <= a.chunk <= len(st["chunks"]):
-            w.die("REFUSED: --pass must be 1 or 2 and --chunk 1..%d." % len(st["chunks"]))
-        if not any(r_["pass"] == a.pass_ and r_["chunk"] == a.chunk for r_ in st["reads"]):
-            w.die("REFUSED: chunk %d of Pass %d has not been read yet." % (a.chunk, a.pass_))
-        if len(a.reason.strip()) < 20:
-            w.die("REFUSED: say in your own words what this chunk contained and why it holds nothing to record (at least 20 characters).")
-        led.setdefault("chunk_acks", []).append({"pass": a.pass_, "chunk": a.chunk, "reason": a.reason, "t": w.now()})
-        save()
-        print("chunk %d of Pass %d acknowledged." % (a.chunk, a.pass_))
-
-
-def cmd_lead(a):
-    if "unavailable" in (a.folder_result, a.mailbox_result):
-        acc_all = load_list(a.run, w.ACCESS)
-        failed = {e["route"] for e in acc_all if e.get("need") == "lead" and e.get("result") == "fail"}
-        if set(w.ROUTES) - failed:
-            w.die("REFUSED: the Outlook search may be called unavailable only after all three routes were tried and logged as failed (run.py access --need lead ... --result fail). Not yet logged: %s" % [r_ for r_ in w.ROUTES if r_ not in failed])
-        q = next((q for q in load_list(a.run, w.QUESTIONS) if q.get("need") == "lead" and len(str(q.get("paul_said") or "").strip()) >= 3), None)
-        if not q:
-            w.die("REFUSED: STOP and ask Paul first: run.py ask %s --need lead --kind knowledge --question \"The Outlook search for a D&R Marketing email for this client could not be made on any route. Carry on without it, or wait?\" --searched \"<the errors>\", then run.py answer ... with his words." % a.run)
-        rec = {"searched": [{"where": "Outlook (Leads - D&R Marketing and the whole mailbox)", "result": "unavailable"}], "found": False, "unavailable": True, "paul_said": q["paul_said"], "t": w.now()}
-        w.save_json(p(a.run, w.LEAD), rec)
-        print("lead source recorded as NOT SEARCHED (Outlook unavailable on all three routes; Paul's words: %r). The Referral From value comes from the form or the call; Paul will see this on the glance list." % q["paul_said"])
-        return
-    acc = [e for e in load_list(a.run, w.ACCESS) if e.get("need") == "lead" and e.get("route") == "m365" and e.get("result") == "ok"]
-    if not acc:
-        w.die("REFUSED: log the Outlook search first: run.py access --need lead --route m365 --tool <the Outlook search tool> --result ok --detail \"<folder and query searched>\".")
-    searched = [{"where": "Inbox > Business > Leads - D&R Marketing", "result": a.folder_result}]
-    if a.folder_result == "none":
-        if a.mailbox_result == "skipped":
-            w.die("REFUSED: nothing was found in the Leads - D&R Marketing folder, so the whole mailbox must be searched too (the client's name + \"Appointment from D & R Marketing\").")
-        searched.append({"where": "whole mailbox", "result": a.mailbox_result})
-    found = "found" in (a.folder_result, a.mailbox_result)
-    rec = {"searched": searched, "found": found, "t": w.now()}
-    if found:
-        if not (a.received and w.parse_date(a.received) and a.ref and a.quote):
-            w.die("REFUSED: an email was found: give --received DD/MM/YYYY (the date it was received), --ref (the name you recorded it under with run.py source --kind Correspondence) and --quote (words from the email).")
-        srcs = [e for e in load_list(a.run, w.SOURCES) if e.get("read") == "yes" and verify.source_ref(e) == a.ref and e.get("kind") == "Correspondence"]
-        if not srcs:
-            w.die("REFUSED: record the email first: run.py source --kind Correspondence --path <where> --date <date> --read yes --ref %s --text-file <its text>." % a.ref)
-        txt = verify.doc_text(a.run, a.ref)
-        if txt is not None and w.norm(a.quote) not in w.norm(txt):
-            w.die("REFUSED: that quote is not in the email's text copy.")
-        rec.update(received=a.received, ref=a.ref, quote=a.quote)
+        w.die("give --found, --none or --unavailable")
     w.save_json(p(a.run, w.LEAD), rec)
-    print("lead source recorded: %s." % (("D&R Marketing lead - %s" % a.received) if found else "no D&R Marketing email found (the Referral From value comes from the form or the call)"))
+    print("lead recorded: %s" % json.dumps(rec)[:200])
 
 
-def search_for_item(run, lines, fr, lay, item):
-    """The call lines that mention this populated field (its curated terms, or the words of its row), and whether the terms were curated."""
-    rv = verify.row_values(fr, item["key"]) if item.get("row") else None
-    terms, curated = verify.field_terms(lay, item["key"], item.get("label", item["key"]), rv)
-    hits, _ = verify.search_terms(run, lines, terms)
-    return terms, curated, hits
-
-
-def cmd_cross(a):
-    path = p(a.run, w.CROSS)
-    items = w.load_json(path, "crosscheck.json (run `run.py form` first)")
-    if not items:
-        w.die("REFUSED: there is nothing to compare (no form data file in this run).")
-    by = {i["key"]: i for i in items}
-    lines = w.read_lines(a.run)
-    lay = w.layout()
-    answers = {}
-    if a.file:
-        answers = w.load_json(a.file, "the answers file")
-    elif a.key:
-        answers = {a.key: {"r": a.r, "line": a.line, "quote": a.quote, "value": a.value, "reviewed": a.reviewed}}
-    fr = w.load_opt(p(a.run, w.FORM), {})
-    for k, ans in answers.items():
-        if k not in by:
-            parts = k.split(".")
-            row = ".".join(parts[:2])
-            cellv = verify.form_value(fr, k) if len(parts) == 3 else None
-            if cellv is not None and row in by:                  # one cell of a list row: the place to record a difference
-                by[k] = {"key": k, "label": "%s: %s" % (by[row]["label"], parts[2]), "value": cellv, "status": by[row]["status"], "section": by[row]["section"], "answer": None, "cell": True}
-                items.append(by[k])
-            else:
-                w.die("REFUSED: %s is not one of the form's populated fields (see crosscheck.json)." % k)
-        r_ = ans.get("r")
-        if r_ not in ("same", "differs", "not_on_call"):
-            w.die("REFUSED: %s: r must be same, differs or not_on_call." % k)
-        if by[k].get("row") and r_ == "differs":
-            w.die("REFUSED: %s is a whole row: name the column (for example debts.0.bal) for a difference." % k)
-        if r_ in ("same", "differs"):
-            ln = ans.get("line")
-            if not isinstance(ln, int) or not 1 <= ln <= len(lines) or not verify.quote_ok(lines, ln, str(ans.get("quote") or ""), verify.ITEM_QUOTE_MIN):
-                w.die("REFUSED: %s: the quote is not found at transcript line %s. Copy the exact words (at least %d characters)." % (k, ln, verify.ITEM_QUOTE_MIN))
-        if r_ == "differs":
-            if not str(ans.get("value") or "").strip() or w.norm(str(ans["value"])) == w.norm(by[k]["value"]):
-                w.die("REFUSED: %s: 'differs' needs the call's own value, and it must differ from the form's (%r)." % (k, by[k]["value"]))
-        rec = {kk: vv for kk, vv in ans.items() if vv is not None and kk in ("r", "line", "quote", "value", "reviewed")}
-        if r_ == "not_on_call":
-            conf = verify.quote_request_conflict(lines, load_ledger(a.run), k)
-            if conf:
-                w.die("REFUSED: %s is 'not on the call' but %s." % (k, verify.conflict_text(k, conf, lines)))
-            terms, curated, hits = search_for_item(a.run, lines, fr, lay, by[k])
-            why = str(ans.get("reviewed") or "").strip()
-            if hits:
-                prob = w.reason_hit_problem(why, hits, lines)
-                if prob:
-                    w.die("REFUSED: %s is 'not on the call' but the call mentions it (searched %s: lines %s). Read them and answer same or differs with the exact words, or give --reviewed saying why those lines are not about this field: %s." % (k, terms[:4], hits[:8], prob))
-            if not curated and w.reason_problem(why):
-                w.die("REFUSED: %s: only its label words could be searched (a WEAK search). Give --reviewed saying what you checked for this field: %s." % (k, w.reason_problem(why)))
-            rec.update(searched=terms[:8], hits=len(hits), hit_lines=hits[:12], weak=not curated)
-        by[k]["answer"] = rec
-    if a.rest:
-        left_hits = []
-        n_auto = 0
-        for i in [i for i in items if not i.get("answer")]:
-            terms, curated, hits = search_for_item(a.run, lines, fr, lay, i)
-            if hits or not curated:
-                left_hits.append((i["key"], hits[:6], curated))
-            else:
-                i["answer"] = {"r": a.rest, "searched": terms[:8], "hits": 0, "weak": False}
-                n_auto += 1
-        print("%d field(s) were searched for in the call (their own search terms) and found nowhere: recorded as 'not on the call'." % n_auto)
-        if left_hits:
-            print("%d field(s) are LEFT for you because the call mentions them (or only their label words could be searched):" % len(left_hits))
-            for k_, h_, c_ in left_hits[:60]:
-                print("  - %s: %s" % (k_, ("call lines %s" % h_) if h_ else "weak search (label words only)"))
-            print("Answer each: same / differs with the exact words, or not_on_call with --reviewed \"<why those lines are not about this field>\".")
-    w.save_json(path, items)
-    todo = [i for i in items if not i.get("answer")]
-    print("recorded %d answer(s). %d of %d populated fields still need an answer%s" % (len(answers), len(todo), len(items), (": " + ", ".join(i["key"] for i in todo[:15])) if todo else "."))
-
-
-def default_terms(lay, key, label):
-    return verify.field_terms(lay, key, label)
-
-
-def cmd_claim(a):
-    path = p(a.run, w.CLAIMS)
-    claims = w.load_opt(path, {})
-    inp = compose.load_inputs(a.run)
-    lines = w.read_lines(a.run)
-    lay = inp["layout"]
-    content = compose.compose(inp)
-    rows = {r["id"]: r for _, _, r in verify.iter_rows(content)}
-    lead = w.load_opt(p(a.run, w.LEAD), {})
-    fr = inp["form"]
-
-    def record(key, word, terms, hits, docs, reviewed="", searched="", weak=False):
-        claims[key] = {"as": word, "terms": terms, "hits": hits, "docs": docs, "reviewed": reviewed, "searched": searched, "weak": weak, "t": w.now()}
-
-    if a.all_empty:
-        pending = [u for u in content["unsettled"] if not u.startswith("quote.")]
-        auto, need = [], []
-        for key in pending:
-            label = rows[key]["label"] if key in rows else key
-            if key in verify.CONTACT_KEYS and not lead.get("searched"):
-                need.append((key, label, "run.py lead first: contact details are called 'Not discussed' only after the lead-source search"))
+# ------------------------------------------------------------------ step 5: combine
+def check_quotes(run, ov):
+    """Every call quote in the overlay must really be in the transcript, and every form-PDF quote in the PDF's text. Documents (Overview and the like) are not machine-checked. Returns (errors, call_quotes, doc_sources)."""
+    st = w.load_opt(p(run, w.STATE), None)
+    tr = w.norm(" ".join(w.read_lines(run))) if st and os.path.exists(p(run, w.TRANSCRIPT)) else ""
+    pt = ""
+    if os.path.exists(p(run, "form_pdf.txt")):
+        pt = w.norm(open(p(run, "form_pdf.txt"), encoding="utf-8").read())
+    errs, calls, docs = [], 0, 0
+    items = [(n, it) for n in compose.OVERLAY_LISTS for it in ov.get(n) or [] if isinstance(it, dict)]
+    if isinstance(ov.get("lookup"), dict):
+        items.append(("lookup", ov["lookup"]))
+    for name, it in items:
+        for s in it.get("src") or []:
+            if not isinstance(s, dict):
                 continue
-            if key.startswith("debts.") and key.count(".") == 2:
-                need.append((key, label, "a debt detail: find it in the form, the call, the Overview, other documents or Outlook; if truly missing, and the call does not mention it: run.py claim --key %s --as Requested --searched \"<what was searched, the Outlook search included>\"" % key))
-                continue
-            terms, curated = verify.field_terms(lay, key, label)
-            hits, docs = verify.search_terms(a.run, lines, terms)
-            sib = verify.sibling_hits(lay, fr, key)
-            if not curated:
-                need.append((key, label, "WEAK search (only its label words): write a reason for this field: run.py claim --key %s --as \"Not discussed\" --reviewed \"...\"" % key))
-            elif hits or docs or sib:
-                need.append((key, label, "the search finds %s%s%s: read them" % (("call lines %s" % hits[:6]) if hits else "", (" documents " + str(docs)) if docs else "", ("; the form itself says " + "; ".join(sib[:3])) if sib else "")))
-            else:
-                record(key, "Not discussed", terms, [], [])
-                auto.append(key)
-        w.save_json(path, claims)
-        print("CLAIMS: %d field(s) recorded as 'Not discussed' because the search of the call and the documents (with the field's own search terms) found nothing: %s" % (len(auto), ", ".join(auto[:30])))
-        if need:
-            print("\n%d field(s) need your attention:" % len(need))
-            for key, label, why in need:
-                print("  - %s (%s): %s" % (key, label, why))
-            print("\nFill each from what the call or a document says (overlay `fills`, with its source), or, when the lines found do not answer it: "
-                  "run.py claim %s --key K --as \"Not discussed\" --reviewed \"<why those lines do not answer it>\"." % a.run)
-        return
-    if not (a.key and a.as_):
-        w.die("REFUSED: give --all-empty, or --key and --as.")
-    if a.key not in content["unsettled"] and a.key not in claims:
-        w.die("REFUSED: %s is not an empty, unsettled field of this document." % a.key)
-    label = rows[a.key]["label"] if a.key in rows else a.key
-    base, curated = verify.field_terms(lay, a.key, label)
-    terms = list(dict.fromkeys(base + ([t.strip() for t in a.terms.split(",") if t.strip()] if a.terms else [])))
-    hits, docs = verify.search_terms(a.run, lines, terms)
-    sib = verify.sibling_hits(lay, fr, a.key)
-    why = (a.reviewed or "").strip()
-    conf = verify.quote_request_conflict(lines, load_ledger(a.run), a.key)         # whatever the word (Not discussed, N/A, Requested): the call asked for it (round 5, G1)
-    if conf:
-        w.die("REFUSED: '%s' on %s: %s." % (a.as_, a.key, verify.conflict_text(a.key, conf, lines)))
-    if a.as_ == "Not discussed" and (hits or docs or sib):
-        prob = w.reason_hit_problem(why, hits, lines)
-        if prob:
-            w.die("REFUSED: the search finds %s%s%s. 'Not discussed' is a claim: read them, then fill the field, or give --reviewed saying why they do not answer it: %s." % (("call lines %s" % hits[:8]) if hits else "", (" documents " + str(docs)) if docs else "", ("; the form itself says " + "; ".join(sib[:3])) if sib else "", prob))
-    if a.as_ == "Not discussed" and not curated and w.reason_problem(why):
-        w.die("REFUSED: only this field's label words could be searched (a WEAK search): give --reviewed saying what you checked: %s." % w.reason_problem(why))
-    if a.as_ == "Requested" and (not a.key.startswith("debts.") or not lead.get("searched") or len(a.searched or "") < 20):
-        w.die("REFUSED: 'Requested' is for a debt detail only, and only after the form, the call, the Overview, other documents AND Outlook were checked: a recorded Outlook search (run.py lead) and what was searched (--searched, at least 20 characters) are needed.")
-    if a.as_ == "Requested" and hits:                                              # 'Requested' says nobody told us: the call must not mention the field (round 5, G2)
-        prob = w.reason_hit_problem(why, hits, lines)
-        if prob:
-            w.die("REFUSED: the call mentions this field (searched %s: call lines %s), so it was not 'Requested' from nobody. Read them and fill the field from what they say, or give --reviewed saying why those lines do not answer it: %s."
-                  % (terms[:3], hits[:8], prob))
-    if a.as_ == "N/A" and w.reason_problem(why):
-        w.die("REFUSED: 'N/A' needs the reason (--reviewed): %s." % w.reason_problem(why))
-    if a.as_ == "N/A" and hits and w.reason_hit_problem(why, hits, lines):          # 'N/A' is as much a claim of silence as 'Not discussed' (round 5)
-        w.die("REFUSED: the call mentions this field (searched %s: call lines %s), so 'N/A' cannot rest on silence. Read them and fill the field, or give --reviewed saying why those lines do not answer it: %s."
-              % (terms[:3], hits[:8], w.reason_hit_problem(why, hits, lines)))
-    if a.key in verify.CONTACT_KEYS and not lead.get("searched"):
-        w.die("REFUSED: contact details are called 'Not discussed' only after the lead-source search (run.py lead).")
-    record(a.key, a.as_, terms, hits, docs, why, a.searched or "", weak=not curated)
-    w.save_json(path, claims)
-    print("claim recorded: %s = %s%s (the checker searches again before it accepts it)" % (a.key, a.as_, "  [weak search]" if not curated else ""))
+            q = str(s.get("quote") or "").strip()
+            doc = str(s.get("doc") or "")
+            if "line" in s or (not doc and q):
+                calls += 1
+                if not q:
+                    errs.append("overlay.%s %s: a call source needs the exact words in `quote`" % (name, it.get("id")))
+                elif w.norm(q) not in tr:
+                    errs.append("overlay.%s %s: this quote is not in the transcript: %r (copy the exact words from the chunk you read)" % (name, it.get("id"), q[:70]))
+            elif doc.lower() == "form pdf":
+                if q and pt and w.norm(q) not in pt:
+                    errs.append("overlay.%s %s: this quote is not in the form's PDF text: %r" % (name, it.get("id"), q[:70]))
+            elif doc:
+                docs += 1
+    return errs, calls, docs
 
 
-def cmd_joint(a):
+def cmd_combine(a):
     rj = load_run(a.run)
-    if w.reason_problem(a.evidence):
-        w.die("REFUSED: say what shows it (for example 'only Pat spoke, no spouse on the call' or 'Pat and Robin were both on the call'): %s." % w.reason_problem(a.evidence))
-    if a.answer == "yes" and not rj.get("spouse"):
-        w.die("REFUSED: a joint meeting with a spouse needs one run per spouse. Start this job again with --spouse \"Other Surname\" --spouse-run <their run folder> (and a second run for the other spouse).")
-    if a.answer == "no" and rj.get("spouse"):
-        w.die("REFUSED: this run was started with --spouse, so it is for one spouse of a joint meeting. Answer yes, or start a new run without --spouse.")
-    if a.answer == "no" and os.path.exists(p(a.run, w.TRANSCRIPT)):
-        lines = w.read_lines(a.run)
-        others = verify.other_speakers(lines, rj.get("client") or {})
-        fr = w.load_opt(p(a.run, w.FORM), {})
-        spn = ((fr.get("fields") or {}).get("sp_name") or {}).get("v", "") if fr else ""
-        spouse_speaks = bool(spn) and any(w.last_name_token(spn) and w.last_name_token(spn) in w.norm(lab) for lab in others)
-        if (others or spouse_speaks) and w.reason_problem(a.reason or ""):
-            w.die("REFUSED: these people speak on the call as well as Paul and the client: %s (the form's spouse is %r). Answer yes (one run per spouse), or say who they are and why this is still not a joint meeting: run.py joint %s --answer no --evidence \"...\" --reason \"<who they are and why not>\" (the reason is shown to Paul)."
-                  % (", ".join("%s (line %s)" % (k, v[0]) for k, v in sorted(others.items())[:4]) or "none by name", spn, a.run))
-    rj["joint"] = {"answer": a.answer, "evidence": a.evidence, "t": w.now()}
-    if a.reason:
-        rj["joint"]["reason"] = a.reason
-    save_run(a.run, rj)
-    print("recorded: joint meeting with a spouse = %s (%s)%s" % (a.answer, a.evidence, ". Page 03 of the rules (two spouses) applies to every step from here." if a.answer == "yes" else "."))
-
-
-def cmd_compose(a):
-    inp = compose.load_inputs(a.run)
+    if not os.path.exists(p(a.run, w.FORM)):
+        w.die("step 1 first: run.py files ...")
+    ov_path = p(a.run, w.OVERLAY)
+    if not os.path.exists(ov_path):
+        w.save_json(ov_path, {})
+    try:
+        inp = compose.load_inputs(a.run)
+    except (ValueError, OSError) as e:
+        w.die("overlay.json could not be read (%s): it must be valid JSON" % e)
     errs = compose.check_inputs(inp)
-    if errs:
-        print("COMPOSE REFUSED. overlay.json has the wrong shape:")
-        for e in errs:
+    qerrs, calls, docs = check_quotes(a.run, inp["overlay"])
+    if errs or qerrs:
+        print("COMBINE REFUSED. overlay.json has problems (nothing was made):")
+        for e in (errs + qerrs)[:25]:
             print("  - " + e)
         sys.exit(1)
     content = compose.compose(inp)
-    w.save_json(p(a.run, w.CONTENT), json.loads(json.dumps(content, ensure_ascii=False)))
-    n = sum(len(b["rows"]) for s in content["sections"] for b in s["blocks"])
-    print("COMPOSED content.json: %d sections, %d rows, %d flags, %d unsettled" % (len(content["sections"]), n, sum(len(r["flags"]) for s in content["sections"] for b in s["blocks"] for r in b["rows"]), len(content["unsettled"])))
-    if content["unsettled"]:
-        print("  UNSETTLED (empty, and not N/A, not filled, not claimed): " + ", ".join(content["unsettled"][:40]))
-        print("  Settle them: run.py claim --all-empty (it searches the call and the documents), or add a fill to overlay.json with its source.")
-    for g in content["glance"]:
-        print("  glance: " + g)
-
-
-def cmd_spouse(a):
+    w.save_json(p(a.run, w.CONTENT), content)
     rj = load_run(a.run)
-    sp = rj.get("spouse") or {}
-    if not sp.get("run"):
-        w.die("REFUSED: this run was not started with --spouse and --spouse-run.")
-    mine = w.load_opt(p(a.run, w.CONTENT), None)
-    other = w.load_opt(p(sp["run"], w.CONTENT), None)
-    if not mine or not other:
-        w.die("REFUSED: both spouses' content.json must exist (run.py compose in each run) before the cross-check.")
-    over = verify.spouse_overlap(mine, other)
-    back = verify.spouse_overlap(other, mine)
-    res = "searched this document for the other spouse's ID, phone numbers, emails and policy numbers: %s; searched theirs for this spouse's: %s" % (("FOUND %s" % over) if over else "none found", ("FOUND %s" % back) if back else "none found")
-    print("SPOUSE CROSS-CHECK: " + res)
-    print("Only the common debts, the children and the joint policies may appear in both. Record the one-line result: run.py receipt %s --set spouse.cross_check=\"%s\"" % (a.run, res))
-    if over or back:
+    gone = []
+    if rj.get("combine") and rj["combine"].get("inputs_sha") != verify.inputs_sha(a.run):
+        gone = reopen(a.run, rj, ["build", "save", "chain"])
+        for k in ("build", "look", "saved", "ok", "chain"):
+            rj.pop(k, None)
+    rj["combine"] = {"inputs_sha": verify.inputs_sha(a.run), "call_quotes": calls, "doc_sources": docs, "t": w.now()}
+    save_run(a.run, rj)
+    rep = content["report"]
+    nrows = sum(len(b["rows"]) for s in content["sections"] for b in s["blocks"])
+    print("COMBINED content.json: %d sections, %d rows" % (len(content["sections"]), nrows))
+    print("  contradictions between the form and the call or documents: %d (%d SORTED by a rule, %d HIGHLIGHTED for Paul)" % (len(rep["differences"]), rep["sorted"], rep["highlighted"]))
+    for d in rep["differences"][:12]:
+        print("    - %s: form %s | %s %s | %s" % (d["label"], d["form"], d["where"], d["other"], ("SORTED: " + d["settled"]) if d.get("settled") else "HIGHLIGHTED"))
+    nd = rep["not_discussed"]
+    print("  rows still 'Not discussed': %d" % len(nd))
+    if nd:
+        print("    " + ", ".join("%s (%s)" % (lbl, rid) for rid, lbl in nd[:60]) + (" ..." if len(nd) > 60 else ""))
+        print("    Before you leave any of these, search the call, the Overview and the client's documents for it; fill what you find in overlay.json `fills`.")
+    if rep["cleaned"]:
+        print("  notes cleaned: %d" % len(rep["cleaned"]))
+    if content["unsettled"]:
+        print("  QUOTE REQUESTS WITHOUT INSURER OR BASIS: %s: ask Paul (one message), then add them under overlay `quotes`." % ", ".join(content["unsettled"]))
+    if content["overlay_unused"]:
+        print("  overlay entries that landed nowhere: %s" % ", ".join(content["overlay_unused"]))
+    if content["pdf_fields"]:
+        print("  amounts only the form's PDF holds, added under their own heading: %d" % len(content["pdf_fields"]))
+    for g in content["glance"][:8]:
+        print("  note: " + g[:200])
+    if gone:
+        print("  RE-OPENED because the report changed: steps %s. Redo them." % ", ".join(gone))
+    print("\nWhen nothing is left to settle: python3 %s/run.py done %s combine" % (SCRIPTS, a.run))
+
+
+# ------------------------------------------------------------------ step 6: build, look
+def cmd_build(a):
+    rj = load_run(a.run)
+    c = current_content(a.run, rj)
+    if c is None:
+        w.die("REFUSED: content.json is missing or out of date: run `run.py combine %s` first." % a.run, 3)
+    if not c.get("file_name"):
+        w.die("REFUSED: the client's name or the meeting date is missing, so the file name cannot be made.", 3)
+    info = build.build_run(a.run, c)
+    gone = reopen(a.run, rj, ["save", "chain"])
+    for k in ("look", "saved", "ok", "chain"):
+        rj.pop(k, None)
+    rj["build"] = {k: info[k] for k in ("pdf", "pdf_sha", "pdf_size", "pages", "headings", "font", "content_sha")}
+    save_run(a.run, rj)
+    f = info["font"]
+    print("BUILT  %s   (%d page(s), %d bytes)" % (info["path"], info["pages"], info["pdf_size"]))
+    print("  font used: %s%s" % (", ".join(f["ps_names"] or [f["family"]]), "" if f["aptos"] else "   <-- NOT Aptos (it was not found on this computer); say so to Paul"))
+    print("  page images: %s/out/page-*.png: LOOK at every page, then: python3 %s/run.py look %s --saw \"<what you saw>\"" % (a.run, SCRIPTS, a.run))
+    if gone:
+        print("  RE-OPENED because the PDF was rebuilt: steps %s." % ", ".join(gone))
+
+
+def cmd_look(a):
+    rj = load_run(a.run)
+    if not rj.get("build"):
+        w.die("REFUSED: build the PDF first (run.py build).", 3)
+    if len((a.saw or "").strip()) < 20:
+        w.die("REFUSED: say what you saw on the pages (at least 20 characters).")
+    rj["look"] = {"saw": a.saw.strip(), "build_sha": rj["build"]["pdf_sha"], "t": w.now()}
+    save_run(a.run, rj)
+    print("recorded: the page images of this build were looked at.")
+
+
+# ------------------------------------------------------------------ step 7: saved, report, ok
+def cmd_saved(a):
+    rj = load_run(a.run)
+    b = rj.get("build")
+    if not b:
+        w.die("REFUSED: build the PDF first.", 3)
+    if a.listed_size != b["pdf_size"]:
+        print("NOT THE SAME SIZE: the folder listing shows %d bytes but the built file is %d bytes. The file may be locked or the copy may lag: commit it again, wait a moment, list again, and record the new size. "
+              "Never report it as saved until the sizes are equal." % (a.listed_size, b["pdf_size"]))
         sys.exit(1)
+    rj["saved"] = {"folder": a.folder, "size": a.listed_size, "build_sha": b["pdf_sha"], "t": w.now()}
+    save_run(a.run, rj)
+    print("recorded: saved into %s, listed size %d bytes = the built file." % (a.folder, a.listed_size))
+    if "2. fact find" not in a.folder.lower():
+        print("NOTE: the folder path does not say '2. Fact Find': check it is the client's own folder.")
 
 
-def cmd_receipt(a):
-    path = p(a.run, w.RECEIPT)
-    rc = w.load_json(path) if os.path.exists(path) else {}
-    for kv in a.set:
-        if "=" not in kv:
-            w.die("--set needs key=value, got %r" % kv)
-        key, val = kv.split("=", 1)
-        v = True if val == "true" else (False if val == "false" else val)
-        d = rc
-        parts = key.split(".")
-        for k in parts[:-1]:
-            d = d.setdefault(k, {})
-        d[parts[-1]] = v
-        stp = rc.setdefault("_stamps", {})
-        stp[parts[0]] = (_state(a.run).get("build") or {}).get("content_sha", "none")
-    w.save_json(path, rc)
-    print("receipt updated (%d top-level fields)." % len(rc))
+def cmd_report(a):
+    rj = load_run(a.run)
+    c = current_content(a.run, rj)
+    if c is None:
+        w.die("combine first")
+    rep = c["report"]
+    f = rj.get("files") or {}
+    print("SOURCE REPORT (for the reply that presents the PDF)")
+    print("(a) Sources used: the form's data file %s%s; the Teams transcript(s) %s; the Overview: %s." % (
+        f.get("form"), (" and its PDF " + f["formpdf"]) if (w.load_opt(p(a.run, w.FORMPDF), {}) or {}).get("used") else " (its PDF was not used)",
+        ", ".join(f.get("transcripts") or []), f.get("overview") or ("none (" + (f.get("missing") or "no reason given") + ")")))
+    stc = rep.get("statuses") or {}
+    print("(b) The form's fields: %s. Preset values: %s." % (", ".join("%s %d" % kv for kv in sorted(stc.items())), "; ".join("%s: %s" % (x["label"], x["done"]) for x in rep["presets"][:20]) or "none"))
+    print("(c) Contradictions: %d (%d sorted, %d highlighted)." % (len(rep["differences"]), rep["sorted"], rep["highlighted"]))
+    for d in rep["differences"]:
+        print("    - %s: the form says %s; %s says %s. %s" % (d["label"], d["form"], d["where"], d["other"], ("SORTED: " + d["settled"]) if d.get("settled") else "HIGHLIGHTED: Paul decides."))
+    nd = rep["not_discussed"]
+    print("(d) Left 'Not discussed' after the search: %d%s; filled from the call or documents: %d." % (len(nd), (": " + ", ".join(lbl for _, lbl in nd[:25])) if nd else "", len(rep["filled"])))
+    if rep["cleaned"]:
+        print("(e) Notes cleaned: " + "; ".join("%s: %s (%s)" % (x["key"], x["line"][:40], x["why"]) for x in rep["cleaned"][:8]))
+    for g in c["glance"][:8]:
+        print("    glance: " + g[:220])
+
+
+def cmd_ok(a):
+    rj = load_run(a.run)
+    if not (rj.get("saved") and rj.get("build")):
+        w.die("REFUSED: save the PDF and list it back first (run.py saved).", 3)
+    if len((a.paul_said or "").strip()) < 2:
+        w.die("REFUSED: give Paul's own words.")
+    rj["ok"] = {"said": a.paul_said.strip(), "build_sha": rj["build"]["pdf_sha"], "t": w.now()}
+    save_run(a.run, rj)
+    print("recorded Paul's OK of this version of the Fact Find.")
+
+
+# ------------------------------------------------------------------ step 8: chain
+def cmd_chain(a):
+    rj = load_run(a.run)
+    if not (rj.get("ok") and rj["ok"].get("build_sha") == (rj.get("build") or {}).get("pdf_sha")):
+        w.die("REFUSED: Paul's OK of this version is not recorded yet (run.py ok).", 3)
+    for k in ("summary", "planner", "sitamah"):
+        if len((getattr(a, k) or "").strip()) < 3:
+            w.die("REFUSED: --%s is needed (what was made / where it went)." % k)
+    rj["chain"] = {"summary": a.summary.strip(), "planner": a.planner.strip(), "sitamah": a.sitamah.strip(), "t": w.now()}
+    save_run(a.run, rj)
+    print("recorded the three outputs. Now: python3 %s/run.py done %s chain  (it prints the short audit)" % (SCRIPTS, a.run))
 
 
 # ------------------------------------------------------------------ cli
@@ -1274,7 +615,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
 
-    def add(name, fn, *args, **kw):
+    def add(name, fn, *args):
         sp = sub.add_parser(name)
         for arg in args:
             sp.add_argument(arg)
@@ -1282,126 +623,43 @@ def main():
         return sp
 
     sp = add("start", cmd_start, "run")
-    sp.add_argument("--client", required=True, help='the client exactly as in Paul\'s message, "First Surname"')
-    sp.add_argument("--first", help="the first name(s), when there is more than one")
-    sp.add_argument("--surname", help="the surname, when it is more than one word")
-    sp.add_argument("--date", required=True, help="the meeting date from Paul's message, DD/MM/YYYY")
-    sp.add_argument("--spouse", help="two spouses in one meeting: the OTHER spouse, First Surname")
-    sp.add_argument("--spouse-run", dest="spouse_run", help="the other spouse's run folder")
+    sp.add_argument("--client", required=True)
+    sp.add_argument("--date", required=True)
+    sp.add_argument("--other-run", dest="other_run")
     add("next", cmd_next, "run")
     add("done", cmd_done, "run", "step")
     add("status", cmd_status, "run")
     sp = sub.add_parser("preflight")
     sp.set_defaults(fn=lambda a: (lambda r: (print_preflight(r[1]), sys.exit(0 if r[0] else 4)))(preflight()))
-
-    sp = add("access", cmd_access, "run")
-    sp.add_argument("--need", required=True)
-    sp.add_argument("--route", required=True, choices=list(verify.ALLOWED_ROUTES))
-    sp.add_argument("--tool", required=True)
-    sp.add_argument("--result", required=True, choices=["ok", "fail"])
-    sp.add_argument("--detail")
-    sp.add_argument("--file", help="the copy you saved in the run folder")
-    sp.add_argument("--source-size", dest="source_size", type=int, help="the size in bytes the connector reported for that file (Microsoft 365, Zapier)")
-    sp.add_argument("--original", help="a file in a folder mounted into this machine that you copied (the program compares the two byte for byte)")
-    sp.add_argument("--device-output", dest="device_output", help="the whole output of sha256sum and stat -c %%s for that file, run on the computer with device_bash")
-    sp = add("computer", cmd_computer, "run")
-    sp.add_argument("--device", help="the computer's name (get_device_info)")
-    sp.add_argument("--folder", help="the folder the connection was granted for (for example C:\\Users\\Paul\\liferisk.co.za)")
-    sp.add_argument("--listing", help="the file names device_list_dir showed in the client's folder")
-    sp.add_argument("--none", help="what happened, when the connection was refused or could not be made (prints the STOP)")
-    sp.add_argument("--paul-go-on", dest="paul_go_on", help="Paul's own words, only after the connection was recorded as not made")
-    sp = add("source", cmd_source, "run")
-    sp.add_argument("--kind", required=True)
-    sp.add_argument("--path")
-    sp.add_argument("--date")
-    sp.add_argument("--read", choices=["yes"])
-    sp.add_argument("--none")
-    sp.add_argument("--ref")
-    sp.add_argument("--text-file", dest="text_file")
-    sp = add("ask", cmd_ask, "run")
-    sp.add_argument("--need", required=True)
-    sp.add_argument("--question")
-    sp.add_argument("--searched", required=True)
-    sp.add_argument("--kind", choices=["file", "knowledge"], default="file")
-    sp.add_argument("--about", help="what the question is about (field keys, list names, quote groups or section ids, comma separated): his answer can be used only for those")
-    sp = add("answer", cmd_answer, "run")
-    sp.add_argument("--need", required=True)
-    sp.add_argument("--said", required=True)
-    sp.add_argument("--choice", choices=["manual", "transcript"])
-    sp = add("form", cmd_form, "run", "file")
-    sp.add_argument("--again", action="store_true")
-    sp = add("formpdf", cmd_formpdf, "run")
-    sp.add_argument("file", nargs="?")
-    sp.add_argument("--none")
-    sp.add_argument("--paul-go-on", dest="paul_go_on", action="store_true", help="after the saved PDF did not match and Paul said (ask, then answer) to go on with the data file alone")
-    sp = add("pdfreview", cmd_pdfreview, "run")
-    sp.add_argument("--key", required=True)
-    sp.add_argument("--result", required=True, choices=["format_only", "disagree", "not_printed"])
-    sp.add_argument("--quote", required=True)
-    sp.add_argument("--pdf-value", dest="pdf_value")
-    sp.add_argument("--reason")
-    sp = add("join", cmd_join, "run")
-    sp.add_argument("parts", nargs="+")
-    sp = add("continuity", cmd_continuity, "run")
-    sp.add_argument("--between", required=True)
-    sp.add_argument("--result", required=True, choices=["ok", "gap"])
-    sp.add_argument("--detail", required=True)
+    sp = add("files", cmd_files, "run")
+    sp.add_argument("--form")
+    sp.add_argument("--formpdf")
+    sp.add_argument("--transcript", action="append")
+    sp.add_argument("--overview")
+    sp.add_argument("--missing")
+    sp.add_argument("--force-incomplete", dest="force_incomplete")
+    add("form", cmd_form, "run")
     sp = add("lead", cmd_lead, "run")
-    sp.add_argument("--folder-result", dest="folder_result", required=True, choices=["found", "none", "unavailable"])
-    sp.add_argument("--mailbox-result", dest="mailbox_result", required=True, choices=["found", "none", "skipped", "unavailable"])
+    sp.add_argument("--found", action="store_true")
     sp.add_argument("--received")
     sp.add_argument("--ref")
     sp.add_argument("--quote")
-    sp = add("cross", cmd_cross, "run")
-    sp.add_argument("--file")
-    sp.add_argument("--key")
-    sp.add_argument("--r", choices=["same", "differs", "not_on_call"])
-    sp.add_argument("--line", type=int)
-    sp.add_argument("--quote")
-    sp.add_argument("--value")
-    sp.add_argument("--rest", choices=["not_on_call"])
-    sp.add_argument("--reviewed")
-    sp = add("claim", cmd_claim, "run")
-    sp.add_argument("--all-empty", dest="all_empty", action="store_true")
-    sp.add_argument("--key")
-    sp.add_argument("--as", dest="as_", choices=["Not discussed", "Requested", "N/A"])
-    sp.add_argument("--reviewed")
-    sp.add_argument("--searched")
-    sp.add_argument("--terms")
-    add("compose", cmd_compose, "run")
-    sp = add("joint", cmd_joint, "run")
-    sp.add_argument("--answer", required=True, choices=["yes", "no"])
-    sp.add_argument("--evidence", required=True)
-    sp.add_argument("--reason", help="when the answer is no although other people speak on the call: who they are and why this is not a joint meeting")
-    add("spouse", cmd_spouse, "run")
-    sp = add("receipt", cmd_receipt, "run")
-    sp.add_argument("--set", action="append", default=[])
-
-    sp = add("ledger", cmd_ledger, "run")
-    lsub = sp.add_subparsers(dest="action", required=True)
-    x = lsub.add_parser("add")
-    x.add_argument("--line", type=int, required=True)
-    x.add_argument("--kind", required=True)
-    x.add_argument("--quote", required=True)
-    x.add_argument("--speaker")
-    x.add_argument("--meaning")
-    x = lsub.add_parser("cover")
-    x.add_argument("id")
-    x.add_argument("items", nargs="+")
-    x = lsub.add_parser("exclude")
-    x.add_argument("id")
-    x.add_argument("reason")
-    x = lsub.add_parser("review")
-    x.add_argument("--line", type=int)
-    x.add_argument("--from", dest="frm", type=int)
-    x.add_argument("--to", type=int)
-    x.add_argument("--reason", required=True)
-    x = lsub.add_parser("ack")
-    x.add_argument("--pass", dest="pass_", type=int, required=True)
-    x.add_argument("--chunk", type=int, required=True)
-    x.add_argument("--reason", required=True)
-    lsub.add_parser("list")
-
+    sp.add_argument("--none")
+    sp.add_argument("--unavailable")
+    add("combine", cmd_combine, "run")
+    add("build", cmd_build, "run")
+    sp = add("look", cmd_look, "run")
+    sp.add_argument("--saw", required=True)
+    sp = add("saved", cmd_saved, "run")
+    sp.add_argument("--folder", required=True)
+    sp.add_argument("--listed-size", dest="listed_size", type=int, required=True)
+    add("report", cmd_report, "run")
+    sp = add("ok", cmd_ok, "run")
+    sp.add_argument("--paul-said", dest="paul_said", required=True)
+    sp = add("chain", cmd_chain, "run")
+    sp.add_argument("--summary", required=True)
+    sp.add_argument("--planner", required=True)
+    sp.add_argument("--sitamah", required=True)
     a = ap.parse_args()
     if getattr(a, "run", None):
         a.run = os.path.abspath(a.run)

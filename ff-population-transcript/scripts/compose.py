@@ -1,16 +1,10 @@
 #!/usr/bin/env python3
-"""Builds content.json (the one source for the PDF) from the form's data file, Claude's overlay and the standing rules.
+"""Combines the form's data file, what the call and the documents add (overlay.json) and the standing rules into content.json: the one source for the PDF.
 
-  compose.py <run_dir>          write content.json
-
-content.json is a pure function of: layout.json + form_read.json + overlay.json + crosscheck.json + claims.json + lead.json
-(+ run.json, sources.json and the other spouse's form when there is one). verify.py composes it again and compares, so a
-content.json edited by hand is caught. Every value carries its source (`src`); every difference carries both values.
-
-Claude writes the OVERLAY (what the call and the documents add: gap fills, notes, flags, quote insurers, policy numbers ...),
-never the form's values: those are copied by this program.
+content.json is a pure function of: layout.json + form_read.json + overlay.json + lead.json + form_pdf.json (+ run.json, and the other spouse's form when there is one).
+Every value carries its source (`src`); every difference carries both values. Claude writes the OVERLAY (gap fills, notes, flags, differences, quote insurers,
+policy numbers, notes to clean ...), never the form's values: those are copied by this program.
 """
-import argparse
 import os
 import re
 import sys
@@ -24,7 +18,7 @@ NO = {"no", "n", "false", "none", "0", "nil"}
 PENDING = "Pending – FNA"
 ABBREV = {"mr", "mrs", "ms", "dr", "prof", "st", "no", "pty", "ltd", "vs", "etc", "approx", "ca", "incl", "est", "tel", "cell", "nr", "ave", "rd"}
 OVERLAY_LISTS = ("fills", "rows_add", "notes", "flags", "diffs", "quotes", "policy_numbers", "abi_override", "documents_to_request",
-                 "next_steps", "joint", "asked_paul")
+                 "next_steps", "joint", "clean")
 SRC_LISTS = ("fills", "rows_add", "notes", "flags", "diffs", "quotes", "documents_to_request", "next_steps", "joint")
 KIND_ID = ("id",)
 
@@ -87,51 +81,9 @@ def valid_ids(lay, form=None):
 REQUIRED = {
     "fills": ("key", "value", "src"), "rows_add": ("list", "cells", "src"), "notes": ("section", "text", "src"), "flags": ("section", "text", "src"),
     "diffs": ("key", "other", "src"), "quotes": ("group", "insurer", "mode", "src"), "policy_numbers": ("found", "resolved", "ref", "quote"),
-    "abi_override": ("key", "value", "ask"), "documents_to_request": ("text", "src"), "next_steps": ("text", "src"), "joint": ("list", "index", "with", "src"),
+    "abi_override": ("key", "value", "paul_said"), "documents_to_request": ("text", "src"), "next_steps": ("text", "src"), "joint": ("list", "index", "with", "src"),
+    "clean": ("key", "drop", "reason"),
 }
-
-
-def paul_targets(name, it, lay_ids):
-    """What an overlay entry is about: the field, list, quote group or section it writes to (Paul's answer must have been asked about it)."""
-    t = set()
-    if it.get("key"):
-        k = str(it["key"])
-        t.add(k)
-        t.add(k.split(".")[0])
-    if name == "rows_add" and it.get("list"):
-        t.add(str(it["list"]))
-    if name == "quotes" and it.get("group"):
-        t.add(str(it["group"]))
-        for qg in w.layout()["quote_groups"]:
-            if qg["id"] == it.get("group"):
-                t |= {x for x in (qg.get("req"), qg.get("type"), qg.get("ins")) if x}
-    if name in ("notes", "flags") and it.get("section"):
-        t.add(str(it["section"]))
-    if name == "next_steps":
-        t.add("next_steps")
-        t.add("next")
-    if name == "documents_to_request":
-        t.add("docs_to_request")
-    return t
-
-
-def paul_source_problems(where, name, it, q, need, lay_ids):
-    """Paul's recorded answer may be used only for what the question was about, and a number it supplies must be in his words (the chat cannot answer its own question)."""
-    errs = []
-    about = {str(x).strip() for x in q.get("about") or [] if str(x).strip()}
-    targets = paul_targets(name, it, lay_ids)
-    if not about:
-        errs.append("%s: Paul's answer %r was recorded without saying what it is about (run.py ask ... --about <field keys, list names or section ids>): it cannot be used as a source" % (where, need))
-    elif targets and not (about & targets):
-        errs.append("%s: Paul's answer %r was asked about %s, but this entry is about %s: a question may be used only for what it asked" % (where, need, sorted(about), sorted(targets)))
-    words = str(q.get("paul_said") or "")
-    val = it.get("value") if isinstance(it.get("value"), str) else ""
-    nums = {t for t in re.findall(r"\d+(?:[.,]\d+)?", val)}
-    nums = {n.replace(",", ".").rstrip("0").rstrip(".") if "." in n.replace(",", ".") else n for n in nums}
-    missing = sorted(n for n in nums if n not in w.numbers_in(words))
-    if missing:
-        errs.append("%s: the value %r holds %s, which is not in Paul's recorded words %r: the value must be what he said" % (where, val, ", ".join(missing), words[:60]))
-    return errs
 
 
 def validate_overlay(ov, lay=None, form=None, questions=None):
@@ -141,21 +93,12 @@ def validate_overlay(ov, lay=None, form=None, questions=None):
         return ["overlay.json must be an object"]
     lay = lay or w.layout()
     ok = valid_ids(lay)
-    qmap = {}
-    for q in questions or []:
-        if isinstance(q, dict) and len(str(q.get("paul_said") or "").strip()) >= 3:
-            qmap[q.get("need")] = q                      # the latest answer of each question
-    paul = set(qmap)
     seen = set()
-    if ov.get("asked_paul"):
-        errs.append("overlay.asked_paul is no longer accepted: Paul's words must be recorded by the program (run.py ask --kind knowledge ..., then run.py answer ...) and referred to with \"ask\": \"<need>\"")
     nrows = {k: len((form or {}).get("lists", {}).get(k, [])) for k in ok["lists"]}
     for it in ov.get("rows_add") or []:
         if isinstance(it, dict) and it.get("list") in nrows:
             nrows[it["list"]] += 1
     for name in OVERLAY_LISTS:
-        if name == "asked_paul":
-            continue
         v = ov.get(name, [])
         if not isinstance(v, list) or not all(isinstance(i, dict) for i in v):
             errs.append("overlay.%s must be a list of objects" % name)
@@ -175,18 +118,13 @@ def validate_overlay(ov, lay=None, form=None, questions=None):
                 if val is None or (isinstance(val, (str, list, dict)) and not val):
                     errs.append("%s: needs `%s`" % (where, fld))
             if "src" in it and not (isinstance(it["src"], list) and it["src"] and all(isinstance(x, dict) for x in it["src"])):
-                errs.append("%s: `src` must be a non-empty list like [{\"line\": 12, \"quote\": \"exact words\"}]" % where)
-            for x in it.get("src") or []:
-                if isinstance(x, dict) and "ask" in x and x["ask"] not in paul:
-                    errs.append("%s: src names Paul's answer %r, which is not on record: run.py ask --kind knowledge --need %s ..., then run.py answer ... (recorded needs: %s)" % (where, x["ask"], x["ask"], sorted(paul) or "none"))
-                elif isinstance(x, dict) and "ask" in x:
-                    errs += paul_source_problems(where, name, it, qmap[x["ask"]], x["ask"], ok)
-            for fld in ("text", "value", "insurer", "mode", "other", "found", "resolved", "with"):
+                errs.append("%s: `src` must be a non-empty list like [{\"line\": 12, \"quote\": \"exact words\"}] or [{\"doc\": \"Overview\", \"quote\": \"...\"}]" % where)
+            for fld in ("text", "value", "insurer", "mode", "other", "found", "resolved", "with", "drop", "reason", "paul_said", "settled"):
                 if fld in it and not isinstance(it[fld], str):
                     errs.append("%s: `%s` must be text" % (where, fld))
             if name in ("notes", "flags") and it.get("section") not in ok["sections"] and it.get("section"):
                 errs.append("%s: section %r does not exist. Valid sections: %s" % (where, it.get("section"), ", ".join(ok["sections"])))
-            if name in ("fills", "diffs") and it.get("key"):
+            if name in ("fills", "diffs", "clean") and it.get("key"):
                 k = str(it["key"])
                 parts = k.split(".")
                 if len(parts) == 1:
@@ -212,12 +150,13 @@ def validate_overlay(ov, lay=None, form=None, questions=None):
                     errs.append("%s: quote group %r does not exist. Valid groups: %s" % (where, it.get("group"), ", ".join(ok["groups"])))
                 if it.get("mode") not in ("New Business", "Servicing"):
                     errs.append("%s: mode must be exactly New Business or Servicing" % where)
-            if name == "abi_override" and it.get("key") not in ok["abi"]:
-                errs.append("%s: %r has no standing ABI. Valid keys: %s" % (where, it.get("key"), ", ".join(ok["abi"])))
-            if name == "abi_override" and it.get("ask") not in paul:
-                errs.append("%s: Paul's answer %r is not on record (run.py ask --kind knowledge --need %s ..., then run.py answer)" % (where, it.get("ask"), it.get("ask")))
-            elif name == "abi_override" and isinstance(it.get("value"), str):
-                errs += paul_source_problems(where, name, it, qmap[it["ask"]], it["ask"], ok)
+            if name == "abi_override":
+                if it.get("key") not in ok["abi"]:
+                    errs.append("%s: %r has no standing ABI. Valid keys: %s" % (where, it.get("key"), ", ".join(ok["abi"])))
+                words = str(it.get("paul_said") or "").replace(",", ".")
+                nums = re.findall(r"\d+(?:[.,]\d+)?", str(it.get("value") or ""))
+                if any(n.replace(",", ".") not in words for n in nums):
+                    errs.append("%s: the value %r must be what Paul said (his words: %r)" % (where, it.get("value"), str(it.get("paul_said"))[:60]))
             if name == "joint":
                 if it.get("list") not in ok["lists"]:
                     errs.append("%s: list %r does not exist. Valid lists: %s" % (where, it.get("list"), ", ".join(sorted(ok["lists"]))))
@@ -258,11 +197,13 @@ class Ctx:
         self.run = inp.get("run") or {}
         self.form = inp.get("form") or {"fields": {}, "lists": {}, "presets": [], "unknown_fields": [], "unknown_lists": [], "unknown_cols": {}, "mode": "none"}
         self.ov = inp.get("overlay") or {}
-        self.cross = {i["key"]: i["answer"] for i in inp.get("cross") or [] if isinstance(i, dict) and isinstance(i.get("answer"), dict)}
-        self.claims = inp.get("claims") or {}
-        self.paul = {q.get("need"): str(q.get("paul_said")).strip() for q in inp.get("questions") or [] if isinstance(q, dict) and len(str(q.get("paul_said") or "").strip()) >= 3}
+        self.cross = {}
+        self.claims = {}
         self.used = set()
-        self.pdf_reviews = (inp.get("formpdf") or {}).get("reviews") or {}
+        self.pdf_reviews = {}
+        self.formpdf = inp.get("formpdf") or {}
+        self.cleans = [i for i in self.ov.get("clean") or [] if isinstance(i, dict) and i.get("key")]
+        self.flat = None
         self.lead = inp.get("lead") or {}
         self.common = inp.get("common")
         self.meeting = w.parse_date(self.run.get("date")) or w.parse_date(self.form.get("date")) or dt_today()
@@ -270,7 +211,7 @@ class Ctx:
         self.flags_all = []
         self.glance = []
         self.unsettled = []
-        self.report = {"differences": [], "not_discussed": [], "requested": [], "presets": [], "filled": [], "standing": [], "derived": []}
+        self.report = {"differences": [], "not_discussed": [], "requested": [], "presets": [], "filled": [], "standing": [], "derived": [], "cleaned": []}
         self.totals = {}
         self.rows_by_key = {}
         self.hidden = []
@@ -333,13 +274,7 @@ class Ctx:
 
     # ---- sources: an {"ask": need} reference becomes Paul's recorded words (written by the program, never typed into the overlay)
     def rs(self, it):
-        out = []
-        for x in (it.get("src") or []) if isinstance(it, dict) else []:
-            if isinstance(x, dict) and "ask" in x:
-                out.append({"paul": self.paul.get(x["ask"], ""), "need": x["ask"]})
-            else:
-                out.append(x)
-        return out
+        return [x for x in (it.get("src") or []) if isinstance(x, dict)] if isinstance(it, dict) else []
 
     def mark(self, it):
         if isinstance(it, dict) and it.get("id"):
@@ -351,11 +286,50 @@ class Ctx:
         self.flags_all.append((row["id"], kind, text))
 
     # ---- rows
+    def is_note_key(self, rid):
+        last = rid.split(".")[-1]
+        return last.startswith("n_") or last.endswith("notes") or last in ("d_desc", "h_notes", "notes")
+
+    def other_text(self, rid):
+        if self.flat is None:
+            self.flat = {k: w.norm(c["v"]) for k, c in self.form["fields"].items() if c.get("populated")}
+        return {k: v for k, v in self.flat.items() if k != rid}
+
+    def clean_note(self, rid, bullets):
+        """The form's notes: a line that only repeats another field is dropped (the fact stays there); a line Paul's overlay names under `clean` is dropped with its reason; a note cut off mid-sentence is flagged."""
+        out, dropped, cut = [], [], False
+        others = self.other_text(rid)
+        for b in bullets:
+            nb = w.norm(b)
+            hit = next((c for c in self.cleans if c.get("key") == rid and w.norm(c["drop"]) and w.norm(c["drop"]) in nb), None)
+            if hit:
+                self.mark(hit)
+                self.report["cleaned"].append({"key": rid, "line": b[:80], "why": hit["reason"]})
+                dropped.append(b)
+                continue
+            if len(b) >= 25 and any(nb in v for v in others.values()):
+                self.report["cleaned"].append({"key": rid, "line": b[:80], "why": "a line that only repeats another field of the form"})
+                dropped.append(b)
+                continue
+            out.append(b)
+        if out:
+            words_ = out[-1].split()
+            if words_ and words_[-1].lower().strip(".,;:") in ("the", "a", "an", "and", "to", "of", "for", "with", "in", "on", "at", "by", "from", "is", "are", "was", "or", "that", "this") \
+                    and not out[-1].rstrip().endswith((".", "!", "?", ")")):
+                cut = True
+        return out, cut, bool(dropped)
+
     def row(self, rid, label, bullets, src, status="", kind="text", style=""):
+        cut = False
+        if kind == "text" and not style and bullets and any(isinstance(x, dict) and "form" in x for x in src) and self.is_note_key(rid):
+            nb, cut, dropped = self.clean_note(rid, bullets)
+            bullets = nb or (["None recorded (the form's note held only lines that are not facts)"] if dropped else bullets)
         r = {"id": rid, "label": label, "bullets": bullets, "src": src, "status": status, "flags": [], "kind": kind}
         if style:
             r["style"] = style
         self.rows_by_key[rid] = r
+        if cut:
+            self.flag(r, "This note stops in the middle of a sentence in the form: the rest is not in the file.", "unclear", [{"form": rid}])
         return r
 
     def bullets_for(self, text, kind):
@@ -364,19 +338,11 @@ class Ctx:
         return facts(text)
 
     def settle(self, rid, label, kind, spec_terms=None, na=False):
-        """A field with no value anywhere: N/A by rule, a claim recorded by `run.py claim`, or UNSETTLED (the checker fails it)."""
+        """A field with no value anywhere: N/A by rule, or Not discussed (counted and listed for Paul, after the chat was shown the list and could fill it)."""
         if na:
             return self.row(rid, label, ["N/A"], [{"rule": "not_applicable"}], "na", kind)   # the gate question was answered No (or the person is single)
-        cl = self.claims.get(rid)
-        if cl:
-            word = cl.get("as", "")
-            if word == "Not discussed":
-                self.report["not_discussed"].append((rid, label))
-            elif word == "Requested":
-                self.report["requested"].append((rid, label))
-            return self.row(rid, label, [word], [{"claim": rid}], "claim", kind)
-        self.unsettled.append(rid)
-        return self.row(rid, label, ["UNSETTLED"], [], "unsettled", kind)
+        self.report["not_discussed"].append((rid, label))
+        return self.row(rid, label, ["Not discussed"], [{"rule": "not_discussed"}], "empty", kind)
 
     def apply_cross(self, row, key, form_value):
         pr = self.pdf_reviews.get(key)
@@ -399,10 +365,12 @@ class Ctx:
     def apply_diffs(self, row, key, form_value):
         for d in self.ov.get("diffs") or []:
             if isinstance(d, dict) and d.get("key") == key:
-                where = d.get("label") or "a document"
+                where = d.get("label") or "the call"
                 self.mark(d)
-                self.flag(row, "Difference: the form says %s; %s says %s." % (form_value, where, d.get("other")), "difference", self.rs(d))
-                self.report["differences"].append({"key": key, "label": row["label"], "form": form_value, "other": str(d.get("other")), "where": where})
+                settled = str(d.get("settled") or "").strip()
+                txt = "Difference: the form says %s; %s says %s." % (form_value, where, d.get("other"))
+                self.flag(row, txt + ((" Settled: %s." % settled.rstrip(".")) if settled else " Paul to decide."), "settled" if settled else "difference", self.rs(d))
+                self.report["differences"].append({"key": key, "label": row["label"], "form": form_value, "other": str(d.get("other")), "where": where, "settled": settled})
 
     def apply_rules(self, row, key):
         for rule in self.rules.get(key, []):
@@ -540,9 +508,9 @@ class Ctx:
         ov = self.abi_override.get(key)
         if ov:
             self.mark(ov)
-            words = self.paul.get(ov.get("ask"), "")
-            row = self.row(key, label, [str(ov["value"]).strip()], [{"paul": words, "need": ov.get("ask")}], "paul", kind)
-            self.flag(row, "Paul stated this ABI for this client: %s (the standing value is %s)." % (str(ov["value"]).strip(), std["value"]), "standing", [{"paul": words, "need": ov.get("ask")}])
+            words = str(ov.get("paul_said") or "")
+            row = self.row(key, label, [str(ov["value"]).strip()], [{"paul": words}], "paul", kind)
+            self.flag(row, "Paul stated this ABI for this client: %s (the standing value is %s)." % (str(ov["value"]).strip(), std["value"]), "standing", [{"paul": words}])
             self.report["standing"].append("%s: %s, as Paul stated" % (std["block"] + " / " + label, ov["value"]))
             self.glance.append("ABI changed on Paul's word: %s / %s = %s. His words, as Claude recorded them from the chat (attested, not proven by the program): \"%s\"" % (std["block"], label, ov["value"], words[:120]))
             return row
@@ -847,18 +815,19 @@ class Ctx:
         closing = {"title": self.lay["closing"]["title"], "rows": closing_rows + extra}
         self.policy_numbers([r for s in sections for b in s["blocks"] for r in b["rows"]] + closing["rows"])
         other = self.other_fields()
+        pdf_rows = self.pdf_rows(sections, closing, other)
         jr = (self.run.get("joint") or {})
         if jr.get("answer") == "no" and jr.get("reason"):
             self.glance.append("Recorded as NOT a joint meeting although other people speak on the call. The chat's reason (attested, not proven): \"%s\"" % str(jr["reason"])[:160])
         if self.lead.get("unavailable"):
-            self.glance.append("The Outlook search for a D&R Marketing appointment email could NOT be made on any of the three routes. Paul chose to carry on without it (his words, as recorded from the chat: \"%s\"). Referral From comes from the form or the call: check it." % str(self.lead.get("paul_said", ""))[:120])
+            self.glance.append("The Outlook search for a D&R Marketing appointment email could NOT be made (%s). Referral From comes from the form or the call: check it." % str(self.lead.get("unavailable"))[:120])
         content = {
             "skill": w.skill_name(), "client": {"first": self.form.get("client", {}).get("first") or (self.run.get("client") or {}).get("first", ""),
                                                   "surname": self.form.get("client", {}).get("surname") or (self.run.get("client") or {}).get("surname", "")},
             "meeting_date": self.form.get("date") or self.run.get("date", ""),
             "form": {"mode": self.form.get("mode", "form"), "file": self.form.get("file"), "sha256": self.form.get("sha256"), "schema": self.form.get("schema"),
                      "modified": self.form.get("modified")},
-            "sections": sections, "closing": closing, "other_fields": other, "unsettled": sorted(set(self.unsettled)),
+            "sections": sections, "closing": closing, "other_fields": other, "pdf_fields": pdf_rows, "unsettled": sorted(set(self.unsettled)),
             "spouse": self.run.get("spouse"), "common_used": self.common_used,
         }
         names = w.output_names(content["client"]["first"], content["client"]["surname"], content["meeting_date"])
@@ -901,6 +870,31 @@ class Ctx:
                         self.report["differences"].append({"key": r["id"], "label": r["label"], "form": found, "other": resolved, "where": "the policy schedule"})
             if hit:
                 self.mark(pn)
+
+    def pdf_rows(self, sections, closing, other):
+        """The amounts only the form's PDF holds (the form works them out): any that the report does not print yet are added under their own heading, with the PDF's own label, so none is lost."""
+        only = (self.formpdf or {}).get("pdf_only") or []
+        labels = (self.formpdf or {}).get("pdf_only_labels") or {}
+        if not only:
+            return []
+        printed = set()
+        every = [r for s_ in sections for b in s_["blocks"] for r in b["rows"]] + list(closing["rows"]) + list(other)
+        for r in every:
+            for x in r["bullets"]:
+                printed |= {Decimal(str(v)) for v in ffform.rand_amounts(x)}
+                d = w.parse_money(x)
+                if d is not None:
+                    printed.add(d)
+        rows = []
+        for amt in only:
+            if Decimal(amt) in printed:
+                continue
+            lbl = labels.get(amt) or "Worked out by the form"
+            rows.append(self.row("pdfonly." + amt, lbl, [w.fmt_money(Decimal(amt))], [{"doc": "form PDF", "quote": "%s %s" % (lbl, amt)}], "form_pdf", "money"))
+        if rows:
+            self.glance.append("The form's PDF holds %d amount(s) the form worked out and the data file does not hold: they are printed under 'Worked out by the form' with the PDF's own labels (%s)." % (
+                len(rows), ", ".join(r["label"] for r in rows[:6])))
+        return rows
 
     def other_fields(self):
         rows = []
@@ -945,6 +939,8 @@ class Ctx:
         r = dict(self.report)
         r["presets"] = pre
         r["statuses"] = self.form.get("statuses") or {}
+        r["sorted"] = sum(1 for d in self.report["differences"] if d.get("settled"))
+        r["highlighted"] = sum(1 for d in self.report["differences"] if not d.get("settled"))
         r["form_file"] = self.form.get("file")
         return r
 
@@ -966,11 +962,6 @@ class Ctx:
             g.append("Marked Requested (missing after the search): %s." % ", ".join(rq[:12]))
         if self.common_used:
             g.append("Taken from the other spouse's form because this form has none: %s." % ", ".join(self.common_used))
-        weak_claims = [k for k, c in (self.claims or {}).items() if isinstance(c, dict) and c.get("weak")]
-        weak_cross = [k for k, a in self.cross.items() if isinstance(a, dict) and a.get("weak")]
-        if weak_claims or weak_cross:
-            g.append("%d 'Not discussed' claim(s) and %d 'not on the call' answer(s) rest on a WEAK search (the field's label words only, no curated search terms): %s." % (
-                len(weak_claims), len(weak_cross), ", ".join((weak_claims + weak_cross)[:10])))
         if not self.lay.get("labels_checked"):
             g.append("The field labels were written by this skill (the form's own label file could not be read): check them on this PDF.")
         return list(dict.fromkeys(g))
@@ -999,40 +990,11 @@ def compose(inp):
 def load_inputs(run):
     j = lambda name, default: w.load_opt(os.path.join(run, name), default)  # noqa: E731
     rj = j(w.RUN, {})
-    form = j(w.FORM, None) or {"fields": {}, "lists": {}, "presets": [], "unknown_fields": [], "unknown_lists": [], "unknown_cols": {}, "mode": rj.get("form_mode", "none"),
+    form = j(w.FORM, None) or {"fields": {}, "lists": {}, "presets": [], "unknown_fields": [], "unknown_lists": [], "unknown_cols": {}, "mode": "none",
                                "client": rj.get("client", {}), "date": rj.get("date", ""), "lookup": {"verdict": "empty"}, "statuses": {}}
-    form.setdefault("mode", rj.get("form_mode", "form"))
+    form.setdefault("mode", "form")
     common = None
     sp = rj.get("spouse") or {}
     if sp.get("run") and os.path.exists(os.path.join(sp["run"], w.FORM)):
         common = w.load_json(os.path.join(sp["run"], w.FORM))
-    return {"layout": w.layout(), "run": rj, "form": form, "overlay": j(w.OVERLAY, {}), "cross": j(w.CROSS, []), "claims": j(w.CLAIMS, {}), "lead": j(w.LEAD, {}), "common": common, "formpdf": j(w.FORMPDF, {}), "questions": j(w.QUESTIONS, [])}
-
-
-def main():
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("run")
-    a = ap.parse_args()
-    run = os.path.abspath(a.run)
-    inp = load_inputs(run)
-    errs = check_inputs(inp)
-    if errs:
-        print("COMPOSE REFUSED. overlay.json has the wrong shape:")
-        for e in errs:
-            print("  - " + e)
-        sys.exit(1)
-    content = compose(inp)
-    w.save_json(os.path.join(run, w.CONTENT), content)
-    n = sum(len(b["rows"]) for s in content["sections"] for b in s["blocks"])
-    print("COMPOSED content.json: %d sections, %d rows, %d flags, %d unsettled" % (len(content["sections"]), n, sum(len(r["flags"]) for s in content["sections"] for b in s["blocks"] for r in b["rows"]), len(content["unsettled"])))
-    if content["unsettled"]:
-        print("  UNSETTLED (empty, and not N/A, not filled, not claimed): " + ", ".join(content["unsettled"][:40]))
-        print("  Settle them: run.py claim (searches the call and the documents), or add a fill to overlay.json with its source.")
-    if content["glance"]:
-        print("  WHAT PAUL SHOULD GLANCE AT SO FAR:")
-        for g in content["glance"]:
-            print("   - " + g)
-
-
-if __name__ == "__main__":
-    main()
+    return {"layout": w.layout(), "run": rj, "form": form, "overlay": j(w.OVERLAY, {}), "lead": j(w.LEAD, {}), "common": common, "formpdf": j(w.FORMPDF, {})}

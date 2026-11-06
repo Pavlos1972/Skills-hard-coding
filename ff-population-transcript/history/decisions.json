@@ -1,55 +1,75 @@
 [
  {
-  "from_prefix": "7b. Planner / AdviceTech note (via",
-  "to_prefix": "Named precedent: [client A], 07.10.26 (review) — Paul rejected the fixed 6-part",
-  "reason": "Replaced by the hand-over to the Teams transcript program (Paul, 02/11/2026). The old text pointed at an 'Output 1' section that no longer exists. Kept elsewhere: independent actions are separate lines and the FNA insurer and New Business or Servicing rule (Step 3); Sitamah-only actions, the copy-ready page and no code block (Teams skill rules); Debts/Childcare/Health left out unless notable (the eight areas rule).",
-  "needs_paul": false
- },
- {
-  "from_prefix": "Step 8: Notify Sitamah in Teams (Paul's rule, 09/10/2026",
-  "to_prefix": "Check and report: Zapier returns a message id",
-  "reason": "Moved to the Teams transcript skill (references/07-teams-message.md and its step texts): the message wording with (Review Client)/(Prospect), the 1st/2nd/3rd count, the follow-up sentence check, show your check, the Zapier-only route, the 403 on the Microsoft 365 connector, once per meeting and Paul's yes. This skill now says only when it is shown and sent.",
-  "needs_paul": false
- },
- {
-  "from_prefix": "UNIVERSAL OPERATING RULES - READ FIRST",
-  "reason": "Heading of the old rules block; the rules now live in references/00-rules.md and are shown by the program when a run starts.",
-  "needs_paul": false
- },
- {
-  "from_prefix": "Changelog — full history (including caught mistakes",
-  "reason": "Change history belongs in history/ (S2, S5): the archive copies of the old skill are kept there, and the skill keeps only its last 5 changes.",
-  "needs_paul": false
- },
- {
-  "from_prefix": "See claude/ff-population-transcript-changelog.md in the project",
-  "reason": "Points at the old changelog document; replaced by the history/ folder of the repo (S2, S5).",
-  "needs_paul": false
- },
- {
-  "from_prefix": "Whenever this SKILL.md is edited, add a new one-line row",
-  "reason": "The Last updated line and the changes table are now written by tools/stamp_skill.py (S2), never by hand.",
-  "needs_paul": false
- },
- {
-  "from_prefix": "1 | Universal operating rules (1-11) + Delivery gate",
-  "reason": "The old Index table is replaced by this skill's own Index in SKILL.md (S5); the pages it listed are the references/ pages.",
+  "from_prefix": "1 | Universal operating rules (1-11) + Delivery gate | Rules for every",
+  "reason": "The old index is replaced by the new entry page's index (SKILL.md).",
   "needs_paul": false,
-  "to_prefix": "13 | Step 8"
+  "to_prefix": "2 | Last updated + Changelog | Athens-time stamp, last changes, standi"
  },
  {
-  "from_prefix": "Re-load this skill before you start, and again after any compression",
-  "reason": "Rule 1 replaced: the program shows each step and `run.py status` recovers the position after a long chat (standards S8/S16). The new rule 1 is in references/00-rules.md.",
+  "from_prefix": "4 | Out of scope | Fact Find exists but no transcript: go to fact-find",
+  "reason": "The old index is replaced by the new entry page's index (SKILL.md).",
   "needs_paul": false
  },
  {
-  "from_prefix": "Changes to a skill: edit the existing skill, never create a new one",
-  "reason": "Rule 9 replaced by standard S7: skills with programs are changed only in Claude Code and uploaded as a zip (new rule 9 in references/00-rules.md).",
+  "from_prefix": "6 | Step 1c | Contact details and lead source (Referral or D&R Marketi",
+  "reason": "The old index is replaced by the new entry page's index (SKILL.md).",
+  "needs_paul": false,
+  "to_prefix": "13 | Step 8 | Notify Sitamah in Teams |"
+ },
+ {
+  "from_prefix": "## UNIVERSAL OPERATING RULES - READ FIRST, APPLY TO EVERY STEP OF THE ",
+  "reason": "The old heading is replaced: the rules now sit on references/00-rules.md, shown by the program when a run starts.",
   "needs_paul": false
  },
  {
-  "from_prefix": "Last updated: 2026-11-02 15:48",
-  "reason": "Replaced by the stamp the program sets (standards S2).",
+  "from_prefix": "Changes to a skill: edit the existing skill, never create a new one. U",
+  "reason": "Obsolete (Paul, 06/11/2026): skills are changed only in Claude Code and uploaded by Paul as a zip; the Update skill card is no longer used. The rule survives as rule 9 of references/00-rules.md.",
   "needs_paul": false
+ },
+ {
+  "from_prefix": "Last updated: 2026-10-28 10:45 (Athens/Greece time)",
+  "reason": "The Last updated line and the Recent changes table are kept by the stamp tool; the full history is in the repo's history/ folder (the old changelog pointed to a project document that no longer exists).",
+  "needs_paul": false,
+  "to_prefix": "Changelog — full history (including caught mistakes, false leads corre"
+ },
+ {
+  "from_prefix": "---|---|",
+  "reason": "The Last updated line and the Recent changes table are kept by the stamp tool; the full history is in the repo's history/ folder (the old changelog pointed to a project document that no longer exists).",
+  "needs_paul": false,
+  "to_prefix": "> Whenever this SKILL.md is edited, add a new one-line row at the top "
+ },
+ {
+  "from_prefix": "## Step 2: Follow the Audio to Text file's own layout (v3.0)",
+  "reason": "Replaced by scripts/layout.json: the program draws the 11 sections, with these labels and in this order, every time (Paul's decision 15, kept).",
+  "needs_paul": false,
+  "to_prefix": "Meeting logistics go in a final \"Next Steps & Next Meeting\" section af"
+ },
+ {
+  "from_prefix": "## Step 3a: Mandatory final re-verification pass — the whole transcrip",
+  "reason": "Step 3a (the 13-point re-check) is replaced by the program's own checks and the audit; each rule it re-checked stays once, where it applies (references/06-mapping-rules.md, 02, 03, 04).",
+  "needs_paul": false,
+  "to_prefix": "Overview cross-check — policies, numbers, premiums, cover amounts and "
+ },
+ {
+  "from_prefix": "This pass is in addition to, not a replacement for, the transcript-acc",
+  "reason": "Step 3a (the 13-point re-check) is replaced by the program's own checks and the audit; each rule it re-checked stays once, where it applies (references/06-mapping-rules.md, 02, 03, 04).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "7b. Planner / AdviceTech note (via client-teams-transcript-skill's Out",
+  "reason": "Moved to client-teams-transcript-skill (Paul, 02/11/2026 and 06/11/2026): that skill makes the Planner note page and the message to Sitamah once, and posts the message automatically; this skill only hands over to it (references/08-chain.md).",
+  "needs_paul": false
+ },
+ {
+  "from_prefix": "As of 07.10.26, the Fact Find/first-appointment Planner note is produc",
+  "reason": "Moved to client-teams-transcript-skill (Paul, 02/11/2026 and 06/11/2026): that skill makes the Planner note page and the message to Sitamah once, and posts the message automatically; this skill only hands over to it (references/08-chain.md).",
+  "needs_paul": false,
+  "to_prefix": "Named precedent: [client A], 07.10.26 (review) — Paul rejected the fix"
+ },
+ {
+  "from_prefix": "## Step 8: Notify Sitamah in Teams (Paul's rule, 09/10/2026 - every cl",
+  "reason": "Moved to client-teams-transcript-skill (Paul, 02/11/2026 and 06/11/2026): that skill makes the Planner note page and the message to Sitamah once, and posts the message automatically; this skill only hands over to it (references/08-chain.md).",
+  "needs_paul": false,
+  "to_prefix": "Check and report: Zapier returns a message id and sent time; report bo"
  }
 ]

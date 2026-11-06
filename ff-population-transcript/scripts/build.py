@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Builds the Fact Find Transcript PDF from content.json (reportlab) and renders every page to an image.
 
-  build.py <run_dir>
 
 The PDF is the only deliverable of this skill (never a Word file). It is drawn from content.json alone, so a correction made there
 reaches the PDF on rebuild. The look is the one Paul approved: navy section headings, smaller navy sub-headings, two-column field
@@ -9,7 +8,6 @@ tables with a bold light-blue label column, one fact per line, no page numbers, 
 table, no row split across pages. The font is Aptos when it can be found; otherwise a named substitute, and WHICH font was really
 used is recorded and printed (never claimed to be Aptos when it is not).
 """
-import argparse
 import glob
 import os
 import re
@@ -229,6 +227,9 @@ def build_pdf(content, path, lay=None, fontrec=None):
     if content.get("other_fields"):
         headings.append("Other fields from the form")
         story += block(Paragraph("Other fields from the form", head), content["other_fields"])
+    if content.get("pdf_fields"):
+        headings.append("Worked out by the form")
+        story += block(Paragraph("Worked out by the form (only its PDF holds these)", head), content["pdf_fields"])
 
     doc = SimpleDocTemplate(path, pagesize=A4, leftMargin=st["margin_cm"] * cm, rightMargin=st["margin_cm"] * cm, topMargin=st["margin_cm"] * cm,
                             bottomMargin=st["margin_cm"] * cm, title=(content.get("file_name") or "Fact Find Transcript").replace(".pdf", ""), author="Wealth Revolution",
@@ -245,17 +246,8 @@ def render_pngs(pdf, out):
         w.die("pdftoppm failed: " + r.stderr.strip())
 
 
-def main():
-    import verify
-    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("run")
-    a = ap.parse_args()
-    run = os.path.abspath(a.run)
-    R, st, ledger, content = verify.run_checks(run, "pre")
-    if R.fails:
-        verify.report(R, st, ledger, content, "pre", run)
-        print("\nBUILD REFUSED. The PDF is not drawn until the checks above pass.")
-        sys.exit(1)
+def build_run(run, content):
+    """Draw the PDF into <run>/out, render its pages to images, and return what was built."""
     out = os.path.join(run, w.OUT)
     os.makedirs(out, exist_ok=True)
     for old in glob.glob(os.path.join(out, "*.pdf")):
@@ -263,26 +255,6 @@ def main():
     pdf = os.path.join(out, content["file_name"])
     info = build_pdf(content, pdf)
     render_pngs(pdf, out)
-    pages = verify.pdf_pages(pdf) or []
-    st["build"] = {"t": w.now(), "content_sha": w.content_hash(content), "pdf": content["file_name"], "pdf_sha": w.sha256_file(pdf), "pdf_size": os.path.getsize(pdf),
-                   "pages": len(pages), "headings": info["headings"], "font": info["font"]}
-    w.save_json(os.path.join(run, w.STATE), st)
-    rjp = os.path.join(run, w.RUN)
-    if os.path.exists(rjp):                  # a rebuild re-opens every later step (Paul's rule: a correction re-opens the whole task)
-        rj = w.load_json(rjp)
-        later = ["check", "pdf", "handoffs", "final"]
-        again = [sid for sid in later if (rj.get("steps", {}).get(sid) or {}).get("state") == "done"]
-        for sid in later:
-            rj.get("steps", {}).pop(sid, None)
-        w.save_json(rjp, rj)
-        if again:
-            print("HAND-OVER RE-OPENED because the PDF was rebuilt: redo steps %s and record them again." % ", ".join(again))
-    f = info["font"]
-    print("BUILT from content.json (hash %s...)" % st["build"]["content_sha"][:10])
-    print("  PDF: %s   (%d page(s), %d bytes)" % (pdf, len(pages), st["build"]["pdf_size"]))
-    print("  FONT USED: %s%s" % (", ".join(f["ps_names"] or [f["family"]]), "" if f["aptos"] else "   <-- NOT Aptos (Aptos was not found on this computer); tell Paul"))
-    print("  Page images: %s" % ", ".join(sorted(os.path.basename(p) for p in glob.glob(os.path.join(out, "page*.png")))))
-
-
-if __name__ == "__main__":
-    main()
+    pages = len(glob.glob(os.path.join(out, "page*.png")))
+    return {"pdf": content["file_name"], "path": pdf, "pdf_sha": w.sha256_file(pdf), "pdf_size": os.path.getsize(pdf), "pages": pages,
+            "headings": info["headings"], "font": info["font"], "content_sha": w.content_hash(content)}

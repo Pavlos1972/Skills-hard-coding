@@ -1,6 +1,6 @@
 # Two spouses in one meeting
 
-## Step 1d: Two spouses in one meeting
+## Two spouses in one meeting
 
 When the meeting covered a couple (for example one Teams call with both spouses), treat them as two clients and run the whole chain twice, once per spouse:
 
@@ -15,4 +15,4 @@ When the meeting covered a couple (for example one Teams call with both spouses)
 9. **Cross-check before delivering.** Search each spouse's finished PDFs for the other spouse's income, policy numbers, premiums and personal facts. The only overlap allowed is the common debts, the children and the joint policies. Report the result in one line in the hand-over.
 10. **Actions.** Write each Planner note's actions for that spouse, and list a shared action (for example a Letter of Authority for each spouse) in both notes.
 
-**How the program holds this:** start one run per spouse (`run.py start ... --client "First Surname" --date DD/MM/YYYY --spouse "Other Surname" --spouse-run <the other run folder>`), each in its own run folder with its own outputs. The common debts and children are taken from the other spouse's form only when this spouse's own form has none. Before delivering, run `run.py spouse {run}`: it searches each document for the other spouse's ID, phone numbers, emails and policy numbers and fails when it finds any. In a spouse run every statement taken from the call needs an `attrib` line saying why it belongs to this spouse, from its content and never from the speaker label.
+**How to run it:** start one run per spouse, each in its own run folder with its own outputs, and give the second run `--other-run <the first run folder>`. The common debts and children are taken from the other spouse's form only when this spouse's own form has none. In every overlay entry of a spouse run, attribute each statement from its content, never from the speaker label.

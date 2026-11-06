@@ -17,92 +17,17 @@ SCRIPTS_DIR = os.path.dirname(os.path.abspath(__file__))
 # files inside a run folder
 TRANSCRIPT = "transcript.txt"
 STATE = "state.json"
-LEDGER = "ledger.json"
 CONTENT = "content.json"
-RECEIPT = "receipt.json"
-SOURCES = "sources.json"
-ACCESS = "access_log.json"
-QUESTIONS = "questions.json"
 RUN = "run.json"
 FORM = "form_read.json"
-CROSS = "crosscheck.json"
 OVERLAY = "overlay.json"
-CLAIMS = "claims.json"
 LEAD = "lead.json"
 FORMPDF = "form_pdf.json"
-PARTS = "parts.json"
 OUT = "out"
 DOCS = "docs"
 
-# Access routes (SKILL-STANDARDS.md S4). The COMPUTER comes first: the client's OneDrive folder, mounted into this chat, gives every file as real bytes
-# and takes the finished PDF without any size limit. The program finds that folder itself (find_computer_root); the chat never requests the connection.
-# Microsoft 365 returns files cut off and as text, so it is only a fallback for small text files, every copy proved by its size.
-ROUTES = ("device", "m365", "zapier")
-ROUTE_NAMES = {
-    "device": "the computer: the client's OneDrive folder mounted into this chat (real bytes, no size limit)",
-    "m365": "Microsoft 365 connector (SharePoint/OneDrive, Outlook, Teams transcripts)",
-    "zapier": "Zapier (Office 365 and Teams tools)",
-}
-
-# Kinds of client-file source. The form's data file and the transcript are recorded through the access log and the
-# form/prep steps; these are the documents read besides them.
-SOURCE_KINDS = ["Overview", "Policy schedule", "Other document", "Correspondence", "Manual Fact Find"]
-REQUIRED_SOURCE_KINDS = ["Overview"]
-DOC_TYPES = SOURCE_KINDS + ["Paul (chat)"]
-FILE_NEEDS = ("form", "formpdf", "transcript") + tuple(SOURCE_KINDS)       # access entries for these are files: every copy must be proved
-COPY_ROUTES = ("device", "m365", "zapier")
-LEDGER_LOCK = "ledger.lock"
-COMPUTER_STOP = ("STOP. I could not connect this chat to your computer (the connection was refused or did not go through), and the large client files (the form's PDF above all) "
-                 "cannot be read through Microsoft 365: it returns them cut off. Please allow the connection to the folder liferisk.co.za, then tell me to go on.")
-
-
-def find_computer_root():
-    """The folder of the computer's OneDrive as this chat sees it (the one that holds 'Company - Paul'), or None. WR_COMPUTER_ROOT overrides the search (tests)."""
-    env = os.environ.get("WR_COMPUTER_ROOT")
-    if env:
-        return os.path.realpath(env) if os.path.isdir(env) else None
-    for base in (os.path.expanduser("~/mnt"), "/mnt"):
-        if not os.path.isdir(base):
-            continue
-        for d, dirs, _files in os.walk(base):
-            if d[len(base):].count(os.sep) >= 3:
-                dirs[:] = []
-                continue
-            if "Company - Paul" in dirs or "Company - WR Clients" in dirs:
-                return os.path.realpath(d)
-            if os.path.basename(d) in ("Company - Paul", "Company - WR Clients"):
-                return os.path.realpath(os.path.dirname(d))
-    return None
-
-
-def parse_device_output(text, name):
-    """The output of `sha256sum FILE` and `stat -c %s FILE` run ON THE COMPUTER (device_bash), pasted whole: (sha256, size, None), or (None, None, what is wrong).
-    The file name in the sha256sum line must be the copy's own name, so a hash of another file cannot be passed off."""
-    sha, size = None, None
-    for ln in (text or "").splitlines():
-        m = re.match(r"^\s*([0-9a-fA-F]{64})\s+[*]?(.+?)\s*$", ln)
-        if m:
-            base = os.path.basename(m.group(2).replace("\\", "/"))
-            if base != name:
-                return None, None, "the sha256sum line names %r, not %r" % (base, name)
-            sha = m.group(1).lower()
-        elif re.fullmatch(r"\s*\d+\s*", ln):
-            size = int(ln)
-    if not sha or size is None:
-        return None, None, "paste the whole output of: sha256sum \"<file>\" && stat -c %%s \"<file>\" (run with device_bash on the computer): a 64-character fingerprint with the file's name, and its size on its own line"
-    return sha, size, None
-
-
-def under_root(path, root):
-    rp, rr = os.path.realpath(path), os.path.realpath(root)
-    return rp == rr or rp.startswith(rr.rstrip(os.sep) + os.sep)
-
-
-def save_ledger(run, led):
-    """The ledger is written only by the program; the lock file holds its fingerprint so a hand edit is seen by the checker."""
-    save_json(os.path.join(run, LEDGER), led)
-    with open(os.path.join(run, LEDGER_LOCK), "w", encoding="utf-8") as f:
-        f.write(sha256_file(os.path.join(run, LEDGER)) + "\n")
+# Kinds of document that can be named as a source besides the form and the transcript (an Overview, a policy schedule ...).
+DOC_TYPES = ["Overview", "Policy schedule", "Other document", "Correspondence", "Manual Fact Find", "form PDF", "Paul (chat)"]
 
 # the word forms a quote request must carry (Paul, 15/10/2026: no default, ever)
 MODE_WORDS = ("new business", "servicing")
@@ -366,35 +291,7 @@ def numbers_in(text):
     return out
 
 
-def reason_problem(reason, minchars=15):
-    """None when a written reason could really be one; otherwise the plain reason it is refused (too short, one word, one repeated character)."""
-    r = str(reason or "").strip()
-    if len(r) < minchars:
-        return "give a real reason (at least %d characters)" % minchars
-    letters = [c for c in r.lower() if not c.isspace()]
-    if letters and max(letters.count(c) for c in set(letters)) > 0.5 * len(letters):
-        return "that reason is mostly one repeated character: say what you found"
-    if len({x for x in re.findall(r"[a-z0-9]+", r.lower())}) < 3:
-        return "a reason needs at least three different words"
-    return None
-
-
-def reason_hit_problem(reason, hit_lines, lines):
-    """For a reason that overrides search hits: it must be a real reason, name at least one of the hit lines by number, and hold a content word from that line."""
-    p = reason_problem(reason)
-    if p or not hit_lines:
-        return p
-    r = str(reason)
-    cited = [h for h in hit_lines if isinstance(h, int) and re.search(r"(?<![\d])%d(?![\d])" % h, r)]
-    if not cited:
-        return "the search found call line(s) %s: name at least one of them by number in the reason, and say why it does not answer this" % list(hit_lines)[:8]
-    bare = re.sub(r"\d+", " ", r)
-    if not any(1 <= h <= len(lines) and shared_content_words(bare, lines[h - 1]) for h in cited):
-        return "the reason names line %s but holds no word (4 letters or more) from what that line says: quote its words" % cited[0]
-    return None
-
-
-FINGERPRINT_FILES = ("steps.json", "deliverables.json")
+FINGERPRINT_FILES = ("steps.json",)
 
 
 def program_fingerprint():

@@ -67,7 +67,7 @@ Paul runs it on a real client. The chat reports how many approval prompts there 
 ## 7. Progress (update after every phase)
 | Skill | Base (the original) | 1 Report | 2 Build | 3 Hand over | 4 Real run |
 |---|---|---|---|---|---|
-| `ff-population-transcript` (FIRST, the model) | v32 (28/10/2026) plus Paul's 02/11 text decisions | done, waiting for Paul's go | not started | not started | not started |
+| `ff-population-transcript` (FIRST, the model) | v32 (28/10/2026) plus Paul's 02/11 text decisions | done | done 06/11/2026 (packaged, 20 files, not uploaded) | waiting for Paul to name the folder | not started |
 | `fact-find-summary` | to be confirmed in its Phase 1 | not started | | | |
 | `client-teams-transcript-skill` | to be confirmed (v35 was confirmed live 03/11/2026) | not started | | | |
 | `client-transcript-download` | to be confirmed | not started | | | |
@@ -88,5 +88,6 @@ Not in scope unless Paul says: `paul-email-signature`, `advicetech-website-knowl
 - One stop only: Paul reads the Fact Find PDF; everything after it runs by itself. (Recommended by me; Paul has not objected.)
 
 ## 9. Running log (newest first)
+- 06/11/2026: `ff-population-transcript` Phase 2 DONE (06/11/2026 11:25): rebuilt from the ORIGINAL v32 plus Paul's 02/11 decisions, in one pass, no helpers: 8 programmed steps (find files the original way, read the form's two files, read the transcript twice, contact and lead source, combine into ONE report with contradictions SORTED or HIGHLIGHTED, build and look, save and list back with Paul's one OK, hand over to the Summary / Planner / Sitamah skills), a short audit, no shell commands on his laptop, no fingerprints, no hard STOP. Kept and trimmed from 1.0: the form reader, the combiner (compose.py), the PDF drawing and layout.json; new: run.py, verify.py, tx.py, 8 reference pages (SKILL.md 81 lines). ONE test (6 seconds) passed on the source and on the unpacked zip, lint PASS, rule-by-rule 568 sentences: 254 kept, 87 reworded, 227 dropped with a reason, 0 unaccounted. Packaged `releases/ff-population-transcript-20261106-1125.zip` (20 files, 91,967 bytes), NOT uploaded (v37, the heavy 1.0 build, is still the uploaded one). Next: Phase 3 (Paul LOOKS at the folder name; brief; zip, changes list and backup).
 - 06/11/2026: Operation Skill Restructure 2.0 written and 1.0 deleted at Paul's request (the old file stays in the repo's git history). Phase 1 report for `ff-population-transcript` done (original v32 read in full, the new form read through the real files of a real client, nothing kept in the repo); Paul explained back and said yes to the combined-report rule. Waiting for Paul's go to start Phase 2.
 - 06/11/2026: Paul stopped the work: the 1.0 `ff-population-transcript` (v37) needed many approvals and about 44 minutes without finishing. He asked for a report, then for the original to be the base.
