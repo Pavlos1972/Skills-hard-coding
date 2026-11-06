@@ -6,6 +6,7 @@ Each negative test starts from a run that passes the whole gate, breaks exactly 
 thing, and checks the gate FAILS with the expected message. All people and figures
 in the fixture are invented.
 """
+import hashlib
 import json
 import os
 import shutil
@@ -27,6 +28,7 @@ def slurp(path, mode="r"):
         return f.read()
 
 
+DOC_KINDS = ("Fact Find", "Fact Find Summary", "Earlier Note", "Overview", "Quote", "Application")
 SCRIPTS = os.environ.get("WR_SCRIPTS") or os.path.join(os.path.dirname(HERE), "scripts")
 FIXTURE = os.path.join(HERE, "fixtures", "transcript_sample.txt")
 ENV = dict(os.environ, WR_CHUNK_LINES="20")
@@ -204,15 +206,26 @@ class Base(unittest.TestCase):
         k = len(self.load("state.json")["chunks"]) if os.path.exists(self.p("state.json")) else 4
         return [{"pass": p, "chunk": c, "reason": "test: this chunk was read and checked in full", "t": "x"} for p in (1, 2) for c in range(1, k + 1)]
 
+    def doc_sha(self, ref):
+        return hashlib.sha256(DOCS[ref][1].encode("utf-8")).hexdigest()
+
     def sources(self):
         out = []
-        for ref, (kind, _) in DOCS.items():
-            out.append({"kind": kind, "path": "C:\\Clients\\Testcase, Sam\\" + ref + ".pdf", "date": "2026-10-01", "read": "yes", "ref": ref, "text": True})
+        for ref, (kind, text) in DOCS.items():
+            e = {"kind": kind, "path": "C:\\Clients\\Testcase, Sam\\" + ref + ".pdf", "date": "2026-10-01", "read": "yes", "ref": ref, "text": True}
+            if kind in DOC_KINDS:
+                e.update(via="device", sha256=self.doc_sha(ref), bytes=len(text), file=ref + ".pdf")
+            out.append(e)
         out.append({"kind": "Application", "none": "searched the Applications folder of both current transactions: none on file yet"})
         return out
 
     def access(self):
-        acc = [{"need": "transcript", "route": "device", "tool": "device_stage_files", "result": "ok", "detail": ""}]
+        st = self.load("state.json") if os.path.exists(self.p("state.json")) else {}
+        tsha = st.get("source_file_sha256") or hashlib.sha256(open(FIXTURE, "rb").read()).hexdigest()
+        acc = [{"need": "transcript", "route": "device", "tool": "device_stage_files", "result": "ok", "detail": "copy verified", "verified": True,
+                "bytes": 1, "sha256": tsha, "file": "Teams meeting transcript - 05.10.26 - (Sam Testcase).docx"}]
+        acc += [{"need": kind, "route": "device", "tool": "device_stage_files", "result": "ok", "detail": "copy verified", "verified": True,
+                 "bytes": len(text), "sha256": self.doc_sha(ref), "file": ref + ".pdf"} for ref, (kind, text) in DOCS.items() if kind in DOC_KINDS]
         acc += [{"need": "Application", "route": r, "tool": "t_" + r, "result": "fail", "detail": "nothing found"} for r in ("device", "m365")]
         return acc
 
@@ -220,11 +233,19 @@ class Base(unittest.TestCase):
         steps = json.loads(slurp(os.path.join(os.path.dirname(SCRIPTS), "steps.json")))["steps"]
         mine = [s["id"] for s in steps if mt in s["applies"] and s["id"] != "final"]
         return {"skill": "client-teams-transcript-skill", "meeting_type": mt, "client": {"first": "Sam", "surname": "Testcase"},
-                "date": "05/10/2026", "steps": {sid: {"state": "done"} for sid in (mine if done is None else done)}}
+                "date": "05/10/2026", "steps": {sid: {"state": "done"} for sid in (mine if done is None else done)},
+                "computer": {"found": True, "mode": "bridge", "device": "test-laptop", "folder": "~/liferisk.co.za", "listing": "Teams meeting transcript - 05.10.26 - (Sam Testcase).docx"}}
 
     def teams_text(self):
         p = self.p("out", "teams_message.txt")
         return slurp(p).strip() if os.path.exists(p) else ""
+
+    def device_print(self):
+        """What device_bash would print for the PDF saved on the computer: sha256sum and stat, for the PDF this run built."""
+        b = (self.load("state.json").get("build") or {}) if os.path.exists(self.p("state.json")) else {}
+        if not b.get("pdf_sha"):
+            return ""
+        return "%s  /home/paul/mnt/liferisk.co.za/Company - WR Clients/Testcase, Sam/2. Fact Find/%s\n%d\n" % (b["pdf_sha"], b["pdf"], b["pdf_size"])
 
     def receipt(self, name=None):
         name = name or "Follow-Up Appointment Summary Notes - 05.10.26 - (Testcase, Sam).pdf"
@@ -235,7 +256,7 @@ class Base(unittest.TestCase):
             "pdf_sent_in_chat": True,
             "saved": {"tool": "device_commit_files", "folder": "C:\\Clients\\Testcase, Sam\\2. Fact Find",
                       "filename": name, "tool_result": "committed 1 file",
-                      "folder_listing_check": "Listing of 2. Fact Find: Fact Find - Testcase.pdf; %s" % name},
+                      "folder_listing_check": "Listing of 2. Fact Find: Fact Find - Testcase.pdf; %s" % name, "device_output": self.device_print()},
             "png_visual_check": "Page 1: navy title, grey subtitle, bold navy headings, bulleted points; page 2 matches.",
             "applications_handoff": "n/a: no applications exist for this client",
             "independent_check": "subagent: re-read the transcript against the outputs; every figure, name and status matched",

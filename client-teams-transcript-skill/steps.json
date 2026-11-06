@@ -8,21 +8,23 @@
         "first",
         "whatsapp"
       ],
-      "title": "Get the transcript",
+      "title": "Connect to the computer and get the transcript",
       "ref": [
         "01-access-and-locate.md"
       ],
       "do": [
-        "Find the transcript for this client and the meeting date Paul gave YOURSELF, AUTOMATICALLY, through Microsoft 365 (the Teams transcript itself, or the file in the client's folder): never ask Paul for permission, to click Allow, or to attach, upload or drag a file, and never call a tool that opens a permission or folder-access box. Record EVERY attempt, failures too:",
-        "  1  device: the computer, ONLY if this chat is already connected to it. Do NOT request the connection. Not connected: log it at once (python3 {scripts}/run.py access {run} --need transcript --route device --tool none --result fail --detail \"not connected; not requested\") and go on.",
-        "  2  m365: the Microsoft 365 connector (SharePoint/OneDrive search and read, or the Teams transcript itself): the working route. Read the transcript through the connector and save what it returns as text into the run folder.",
-        "  3  zapier: the Zapier Office 365 tools, when Microsoft 365 failed.",
-        "Record each try: python3 {scripts}/run.py access {run} --need transcript --route device|m365|zapier --tool <tool you used> --result ok|fail --detail \"<what happened>\"",
+        "Find the transcript for this client and the meeting date Paul gave YOURSELF: never ask Paul for permission, to attach, upload or drag a file.",
+        "FIRST, before anything else, connect to the computer with the device tools (they are deferred: load them with ToolSearch, query select:mcp__remote-devices__get_device_info,mcp__remote-devices__device_request_folder_access,mcp__remote-devices__device_list_dir,mcp__remote-devices__device_bash,mcp__remote-devices__device_stage_files,mcp__remote-devices__device_commit_files). (a) get_device_info: if the folder liferisk.co.za is not in connectedFolders, call device_request_folder_access for ~/liferisk.co.za. That one request is the ONLY thing Paul is ever asked to click, and you say nothing else to him. (b) device_list_dir on the client's `2. Fact Find` folder (under Company - Paul, or Company - WR Clients > Paul Kafentzis (Client Files); use whichever holds the client; never another broker's folder). (c) Record it: python3 {scripts}/run.py computer {run} --device \"<deviceName>\" --folder \"<the folder the access was granted for>\" --listing \"<the file names you saw>\"   If the request is refused or the device tools do not exist in this chat: python3 {scripts}/run.py computer {run} --none \"<what happened>\". It prints the STOP; your WHOLE reply is that text, with no question and no analysis. This skill always needs the connection: the client's documents are whole files on the computer, and the finished PDF is saved there.",
+        "THEN the transcript. Record EVERY attempt, failures too:",
+        "  1  device: the file `Teams meeting transcript - DD.MM.YY - ...` in the client's `2. Fact Find` folder. (i) device_bash: sha256sum \"$HOME/mnt/liferisk.co.za/<path>\" && stat -c %s \"$HOME/mnt/liferisk.co.za/<path>\"   (ii) device_stage_files with paths=[\"C:\\Users\\Paul\\liferisk.co.za\\<path, with backslashes>\"]: a whole, read-only copy lands under /mnt/user-data/uploads/liferisk.co.za/<path>   (iii) python3 {scripts}/run.py access {run} --need transcript --route device --tool device_stage_files --result ok --file \"<the staged copy>\" --device-output \"<the whole output of (i)>\"   The program fingerprints the copy itself and compares it with the computer's: a copy that differs is logged as a fail. Then `tx.py prep` is run on THAT copy.",
+        "  2  m365: when the file is not in the folder, the Teams transcript itself through the Microsoft 365 connector (read it and save the text into the run folder). It arrives as text and can be cut off, so `tx.py prep` must say it is complete.",
+        "  3  zapier: the Zapier Office 365 and Teams tools, when Microsoft 365 failed.",
+        "Record each failed try: python3 {scripts}/run.py access {run} --need transcript --route device|m365|zapier --tool <tool you used> --result fail --detail \"<what happened>\"   and a Microsoft 365 or Zapier success: --result ok.",
         "If another skill passed it in (for example ff-population-transcript), use --route passed --result ok.",
         "If a route fails, go on to the next at once and say nothing to Paul. If every route failed and is logged, your reply is at most five lines: what failed and the log of the tries. Never ask Paul to attach or upload anything.",
         "For a WhatsApp call there is no transcript file: ask Paul for his recap, notes or recording, confirm the exact date and TIME of the call, and log it with --route user."
       ],
-      "proof": "the access log has an ok entry for 'transcript'",
+      "proof": "the computer is connected and the access log has an ok entry for 'transcript'",
       "check": "access_transcript"
     },
     {
@@ -55,14 +57,15 @@
         "03-context-and-correspondence.md"
       ],
       "do": [
-        "Read, from the client's own file, everything below, and record each document you read:",
-        "  python3 {scripts}/run.py source {run} --kind <kind> --path \"<full path>\" --date YYYY-MM-DD --read yes --ref \"<short name>\" --text-file <text copy>",
-        "  Make a text copy of each document so the program can check your quotes and figures later: for a PDF run pdftotext \"<file>\" /tmp/<short name>.txt ; for an email or a page, save its text to a file. A document with no text copy is flagged to Paul at the end.",
-        "  Kinds: Fact Find, Fact Find Summary, Earlier Note (every earlier Follow-Up Notes / WhatsApp summary), Overview (the latest), Quote (every Comparative Quotes folder of a current transaction), Application (every current transaction), Correspondence (Outlook, current transactions only).",
-        "If a kind has nothing on file, search it on at least two routes, log each search (run.py access --need <kind> --route device|m365|zapier --tool <tool> --result fail --detail \"nothing found in <where>\"), and only then: python3 {scripts}/run.py source {run} --kind <kind> --none \"searched <where>, none found\"",
-        "Use the access routes in order (device, m365, zapier) for every file and log failures with run.py access. Ask Paul ONLY for what no file holds, with run.py ask."
+        "Read, from the client's own file, everything below, and record each document you read. EVERY client document is a whole file on the computer:",
+        "  (i) device_bash: sha256sum \"$HOME/mnt/liferisk.co.za/<path>\" && stat -c %s \"$HOME/mnt/liferisk.co.za/<path>\"   (ii) device_stage_files with paths=[\"C:\\Users\\Paul\\liferisk.co.za\\<path, with backslashes>\"]   (several files can be staged in one call)",
+        "  (iii) python3 {scripts}/run.py source {run} --kind <kind> --path \"<the full path>\" --date YYYY-MM-DD --read yes --ref \"<short name>\" --file \"<the staged copy>\" --device-output \"<the whole output of (i)>\"",
+        "  The program fingerprints the copy itself and compares it with the computer's, and makes the text of the document itself from that whole copy (so quotes and figures can be checked later). A copy that differs is refused and logged. A PDF or Word file is NEVER taken through Microsoft 365 or Zapier: it arrives there cut off, as text. A scan that holds no text is flagged to Paul at the end.",
+        "  Kinds: Fact Find, Fact Find Summary, Earlier Note (every earlier Follow-Up Notes / WhatsApp summary), Overview (the latest), Quote (every Comparative Quotes folder of a current transaction), Application (every current transaction), and Correspondence (Outlook, current transactions only: read it through the Microsoft 365 connector, save the text of each email to a file and record it with --text-file <that file>, with no --file).",
+        "If a kind has nothing on file, search it on at least two routes (device_list_dir on the computer, then the Microsoft 365 search), log each search (run.py access --need <kind> --route device|m365|zapier --tool <tool> --result fail --detail \"nothing found in <where>\"), and only then: python3 {scripts}/run.py source {run} --kind <kind> --none \"searched <where>, none found\"",
+        "Ask Paul ONLY for what no file holds, with run.py ask."
       ],
-      "proof": "every kind of client-file source is read, or has a recorded reason",
+      "proof": "every kind of client-file source is read from the computer with its proof, or has a recorded reason",
       "check": "sources_ok"
     },
     {
@@ -216,12 +219,12 @@
       "ref": [],
       "do": [
         "Do NOT end your reply here and do not ask Paul anything yet: nothing is asked of Paul (the reply at the end holds the outputs, the message that was posted and the short audit). Record this step and go straight on with `run.py next`. ",
-        "1. If the folder /mnt/user-data/outputs exists, copy the PDF there first so it can be presented: cp \"{run}/out/<the PDF file>\" /mnt/user-data/outputs/ . Then send it in the chat for Paul to download (present_files / SendUserFile).",
-        "2. Save the same file into the client's 2. Fact Find folder through the Microsoft 365 connector (SharePoint upload; no permission step; the computer only if this chat is already connected).",
-        "3. List the folder back and confirm the new file's exact name, size and time.",
-        "Record it: python3 {scripts}/run.py receipt {run} --set pdf_sent_in_chat=true --set saved.tool=<the tool you used, for example sharepoint_upload_file> --set saved.folder=\"<folder>\" --set saved.filename=\"<exact file name>\" --set saved.tool_result=\"<tool result>\" --set saved.folder_listing_check=\"<the listing line showing the file>\""
+        "1. Copy the PDF to /mnt/user-data/outputs/ (cp \"{run}/out/<the PDF file>\" /mnt/user-data/outputs/) so it can be presented, then send it in the chat for Paul to download (present_files / SendUserFile).",
+        "2. Save the same file into the client's `2. Fact Find` folder ON THE COMPUTER: device_list_dir on that folder first, then device_commit_files with files=[{\"devicePath\": \"C:\\Users\\Paul\\liferisk.co.za\\<the client's 2. Fact Find folder>\\<the PDF file name>\", \"stagedPath\": \"/mnt/user-data/outputs/<the PDF file name>\"}] (no force; OneDrive uploads it by itself). Do NOT upload through Microsoft 365 or Zapier.",
+        "3. Prove the save with the computer's own eyes: device_list_dir on that folder (the file's name and size) and device_bash: sha256sum \"$HOME/mnt/liferisk.co.za/<the path>\" && stat -c %s \"$HOME/mnt/liferisk.co.za/<the same path>\". The program compares that fingerprint and size with the PDF it built.",
+        "Record it: python3 {scripts}/run.py receipt {run} --set pdf_sent_in_chat=true --set saved.tool=device_commit_files --set saved.folder=\"<folder>\" --set saved.filename=\"<exact file name>\" --set saved.tool_result=\"<tool result>\" --set saved.folder_listing_check=\"<the listing line showing the file and its size>\" --set saved.device_output=\"<the whole output of the device_bash command in 3>\""
       ],
-      "proof": "PDF sent, saved and listed back, with the real tool output recorded",
+      "proof": "PDF sent, saved on the computer and fingerprinted there, with the computer's real output recorded",
       "check": "receipt_pdf"
     },
     {

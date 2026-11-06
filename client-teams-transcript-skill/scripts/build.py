@@ -141,7 +141,7 @@ def main():
         pdf = os.path.join(out, names["pdf"])
         build["headings"] = build_pdf(content, names, pdf)
         render_pngs(pdf, out)
-        build.update(pdf=names["pdf"], pdf_sha=w.sha256_file(pdf))
+        build.update(pdf=names["pdf"], pdf_sha=w.sha256_file(pdf), pdf_size=os.path.getsize(pdf))
     st["build"] = build
     w.save_json(os.path.join(a.run, w.STATE), st)
     rjp = os.path.join(a.run, w.RUN)

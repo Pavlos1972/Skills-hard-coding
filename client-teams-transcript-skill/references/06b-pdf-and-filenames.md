@@ -46,7 +46,7 @@ Built by `build.py` with **reportlab** (not Word), navy palette, Helvetica. It a
 ## Filenames and saving (mandatory) - follow-up meetings only
 
 - Teams meeting: `Follow-Up Appointment Summary Notes - DD.MM.YY - (Surname, First Name).pdf`. WhatsApp call: `WhatsApp Call Summary - DD.MM.YY - (Surname, First Name).pdf`. Always PDF, never docx.
-- Save every time into the client's `2. Fact Find` folder through the Microsoft 365 connector (SharePoint upload; no permission step; the computer only if already connected). Confirm the folder and file name to Paul in one line. If the file is locked/open, say so plainly and retry when he confirms; never silently skip.
+- Save every time into the client's `2. Fact Find` folder ON THE COMPUTER with `device_commit_files` (list the folder first; no force; OneDrive uploads it by itself), then prove the save: `device_list_dir` for the name and size and `device_bash` for `sha256sum` and `stat -c %s` of the saved file, recorded as `saved.device_output`. The program compares that fingerprint and size with the PDF it built. Never upload through Microsoft 365 or Zapier. Confirm the folder and file name to Paul in one line. If a file of that name is already there (an earlier version of the same summary), say so plainly and ask Paul once; never overwrite silently and never silently skip.
 - Output 1 (the Planner page) is shown as the Artifact page only and is never saved into the client's folder, for every meeting type including a first/Fact Find meeting.
 
 ## WhatsApp call variant

@@ -177,7 +177,7 @@ def cmd_prep(a):
     chunks = plan_chunks(lines)
     state = {
         "source": os.path.basename(a.source), "created": w.now(),
-        "total_lines": len(lines), "sha256": w.sha256_text("\n".join(lines)),
+        "total_lines": len(lines), "sha256": w.sha256_text("\n".join(lines)), "source_file_sha256": w.sha256_file(a.source),
         "chunks": chunks, "complete": complete, "forced": forced, "notes": notes,
         "first_ts": fmt(stamps[0][1]) if stamps else None,
         "last_ts": fmt(last_ts) if stamps else None,

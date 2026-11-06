@@ -22,6 +22,33 @@ def drv(*args, env=None):
 
 
 class DriverBase(Base):
+    def setUp(self):
+        super().setUp()
+        # the computer as this chat sees it: the client's OneDrive folder mounted into the chat (the program finds it itself; here WR_COMPUTER_ROOT points at it)
+        self.comp = os.path.join(self.tmp, "computer")
+        self.comp_folder = os.path.join(self.comp, "Company - WR Clients", "Paul Kafentzis (Client Files)", "Testcase, Sam", "2. Fact Find")
+        os.makedirs(self.comp_folder, exist_ok=True)
+        os.makedirs(os.path.join(self.comp, "Company - Paul"), exist_ok=True)
+        os.makedirs(os.path.join(self.tmp, "staged"), exist_ok=True)
+        self.old_root = ENV.get("WR_COMPUTER_ROOT")
+        ENV["WR_COMPUTER_ROOT"] = self.comp
+        self.addCleanup(lambda: ENV.pop("WR_COMPUTER_ROOT", None) if self.old_root is None else ENV.__setitem__("WR_COMPUTER_ROOT", self.old_root))
+
+    def pair(self, name, text=None, src=None):
+        """A file on the computer and the staged copy of it that the chat holds: (copy, original)."""
+        orig = os.path.join(self.comp_folder, name)
+        copy = os.path.join(self.tmp, "staged", name)
+        if src:
+            shutil.copyfile(src, orig)
+        else:
+            spit(orig, text)
+        shutil.copyfile(orig, copy)
+        return copy, orig
+
+    def connect(self):
+        r = drv("computer", self.run_dir)
+        self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
+
     def start(self, mt="followup"):
         r = drv("start", self.run_dir, "--type", mt, *CLIENT)
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
@@ -33,7 +60,9 @@ class DriverBase(Base):
         return r
 
     def log_ok(self):
-        self.ok("access", self.run_dir, "--need", "transcript", "--route", "device", "--tool", "device_stage_files", "--result", "ok")
+        self.connect()
+        copy, orig = self.pair("Teams meeting transcript - 05.10.26 - (Sam Testcase).txt", src=FIXTURE)
+        self.ok("access", self.run_dir, "--need", "transcript", "--route", "device", "--tool", "device_stage_files", "--result", "ok", "--file", copy, "--original", orig)
 
     def read_pass(self, p):
         """Read each chunk, then record its entries (or acknowledge it), exactly as Claude has to."""
@@ -48,10 +77,15 @@ class DriverBase(Base):
 
     def record_sources(self):
         for ref, (kind, text) in DOCS.items():
-            tf = os.path.join(self.tmp, ref + ".txt")
-            spit(tf, text)
-            self.ok("source", self.run_dir, "--kind", kind, "--path", "C:\\Clients\\Testcase, Sam\\" + ref + ".pdf",
-                    "--date", "2026-10-01", "--read", "yes", "--ref", ref, "--text-file", tf)
+            path = "C:\\Clients\\Testcase, Sam\\" + ref + ".txt"
+            if kind == "Correspondence":                                   # an email: no file on the computer, its text is saved from Outlook
+                tf = os.path.join(self.tmp, ref + ".txt")
+                spit(tf, text)
+                self.ok("source", self.run_dir, "--kind", kind, "--path", path, "--date", "2026-10-01", "--read", "yes", "--ref", ref, "--text-file", tf)
+            else:                                                          # a client document: a whole file from the computer, proved, its text made by the program
+                copy, orig = self.pair(ref + ".txt", text=text)
+                self.ok("source", self.run_dir, "--kind", kind, "--path", path, "--date", "2026-10-01", "--read", "yes", "--ref", ref,
+                        "--file", copy, "--original", orig)
         for route in ("device", "m365"):
             self.ok("access", self.run_dir, "--need", "Application", "--route", route, "--tool", "t_" + route, "--result", "fail", "--detail", "nothing found")
         self.ok("source", self.run_dir, "--kind", "Application", "--none", "searched the Applications folder of both current transactions: none on file yet")
@@ -98,7 +132,8 @@ class DriverBase(Base):
         self.receipts("planner_page.mode=artifact", "planner_page.url=https://claude.ai/artifact/abc")
         self.ok("done", self.run_dir, "planner")
         self.receipts("pdf_sent_in_chat=true", "saved.tool=device_commit_files", "saved.folder=C:\\Clients\\Testcase, Sam\\2. Fact Find",
-                      "saved.filename=" + name, "saved.tool_result=committed 1 file", "saved.folder_listing_check=listing shows " + name)
+                      "saved.filename=" + name, "saved.tool_result=committed 1 file", "saved.folder_listing_check=listing shows " + name,
+                      "saved.device_output=" + self.device_print())
         self.ok("done", self.run_dir, "pdf")
         self.receipts("applications_handoff=n/a: no applications exist for this client",
                       "revised_quote_draft=shown to Paul: revised Tax-Free quote request to Alwyn, draft only, not sent")
@@ -379,13 +414,17 @@ class LedgerAndLogs(DriverBase):
 
     def test_a_text_copy_of_a_document_is_stored_for_checking(self):
         self.start()
-        tf = os.path.join(self.tmp, "t.txt")
-        spit(tf, "Quote CP 555555 R2,000 p.m.")
-        r = self.ok("source", self.run_dir, "--kind", "Quote", "--path", "C:\\x\\My Quote.pdf", "--date", "2026-10-01", "--read", "yes", "--text-file", tf)
-        self.assertEqual(slurp(os.path.join(self.run_dir, "docs", "My Quote.txt")), "Quote CP 555555 R2,000 p.m.")
-        r = self.ok("source", self.run_dir, "--kind", "Quote", "--path", "C:\\y\\Other.pdf", "--date", "2026-10-01", "--read", "yes")
+        self.connect()
+        copy, orig = self.pair("My Quote.txt", text="Quote CP 555555 R2,000 p.m.")
+        self.ok("source", self.run_dir, "--kind", "Quote", "--path", "C:\\x\\My Quote.txt", "--date", "2026-10-01", "--read", "yes", "--file", copy, "--original", orig)
+        self.assertEqual(slurp(os.path.join(self.run_dir, "docs", "My Quote.txt")), "Quote CP 555555 R2,000 p.m.")       # the program made the text from the proved copy
+        tf = os.path.join(self.tmp, "mail.txt")
+        spit(tf, "Sam replied: happy to go ahead.")
+        self.ok("source", self.run_dir, "--kind", "Correspondence", "--path", "Outlook: Sam's reply", "--date", "2026-10-01", "--read", "yes", "--ref", "Sam reply", "--text-file", tf)
+        r = self.ok("source", self.run_dir, "--kind", "Correspondence", "--path", "Outlook: another mail", "--date", "2026-10-01", "--read", "yes", "--ref", "Other mail")
         self.assertIn("cannot be machine-checked", r.stdout)
-        r = drv("source", self.run_dir, "--kind", "Quote", "--path", "C:\\z\\My Quote.pdf", "--date", "2026-10-01", "--read", "yes")
+        copy2, orig2 = self.pair("Other Quote.txt", text="Another quote")
+        r = drv("source", self.run_dir, "--kind", "Quote", "--path", "C:\\z\\My Quote.txt", "--date", "2026-10-01", "--read", "yes", "--file", copy2, "--original", orig2)
         self.assertNotEqual(r.returncode, 0)
         self.assertIn("already recorded", r.stderr)
 

@@ -183,6 +183,23 @@ def check_sources(run, mt, R, lines=None, content=None):
             refs[ref] = k
         else:
             fail("source %s: record read=yes with path and date, or a 'none' reason" % k)
+    comp = rj.get("computer") if isinstance(rj.get("computer"), dict) else {}
+    if not comp.get("found"):
+        fail("the computer was never connected in this run (run.py computer ...): the client's documents are whole files on it and the finished PDF is saved on it")
+    proven = {(e.get("need"), e.get("sha256")) for e in access if e.get("route") == "device" and e.get("result") == "ok" and e.get("verified") is True and S(e.get("sha256"))}
+    for e in access:
+        if e.get("route") == "device" and e.get("result") == "ok" and not (e.get("verified") is True and S(e.get("sha256")) and S(e.get("file"))):
+            fail("the copy of '%s' taken from the computer has no proof that it is identical to the original (run.py access ... --file ... --device-output ...)" % e.get("need"))
+        if e.get("route") in ("m365", "zapier") and e.get("result") == "ok" and e.get("need") in w.DOC_KINDS:
+            fail("'%s' was taken through %s, which returns a PDF or Word file cut off: take it from the computer" % (e.get("need"), e.get("route")))
+    for e in sources:
+        if e.get("read") == "yes" and e.get("kind") in w.DOC_KINDS and not (e.get("via") == "device" and (e.get("kind"), e.get("sha256")) in proven):
+            fail("source '%s' (%s) was not taken from the computer with its proof: record it with run.py source --file <copy> --device-output <the computer's fingerprint>" % (source_ref(e), e.get("kind")))
+    st_ = load(os.path.join(run, w.STATE), {})
+    tdev = {e.get("sha256") for e in access if e.get("need") == "transcript" and e.get("route") == "device" and e.get("result") == "ok" and e.get("verified") is True}
+    tother = [e for e in access if e.get("need") == "transcript" and e.get("result") == "ok" and e.get("route") != "device"]
+    if tdev and not tother and isinstance(st_, dict) and st_.get("source_file_sha256") not in tdev:
+        fail("the transcript that was prepared is not the copy proved identical to the file on the computer (prep a different file, or log the one you used)")
     have = {e.get("kind") for e in sources if e.get("read") == "yes" or len(S(e.get("none")).strip()) >= 8}
     missing = [k for k in need_kinds if k not in have]
     if missing:
@@ -1065,8 +1082,8 @@ def check_receipt(run, st, content, ledger, R, skip=()):
         else:
             R.add("ATTEST", g, "PDF sent in the chat")
         sv = rc.get("saved") if isinstance(rc.get("saved"), dict) else {}
-        if not text(sv, "tool", "folder", "filename", "tool_result", "folder_listing_check"):
-            fail("saved{tool, folder, filename, tool_result, folder_listing_check} must all be filled from the real tool output")
+        if not text(sv, "tool", "folder", "filename", "tool_result", "folder_listing_check", "device_output"):
+            fail("saved{tool, folder, filename, tool_result, folder_listing_check, device_output} must all be filled from the real tool output (device_output = the whole output of sha256sum and stat run on the computer for the saved file)")
         else:
             before = probs
             if sv["filename"] != names["pdf"]:
@@ -1075,6 +1092,17 @@ def check_receipt(run, st, content, ledger, R, skip=()):
                 fail("saved.folder_listing_check does not show the file in the folder listing")
             if "2. Fact Find" not in str(sv["folder"]):
                 fail("saved.folder is not the client's '2. Fact Find' folder")
+            if "device_commit_files" not in S(sv.get("tool")):
+                fail("saved.tool must be device_commit_files: the PDF is saved on the computer, never through Microsoft 365 or Zapier")
+            b = st.get("build") or {}
+            dsha, dsize, why = w.parse_device_output(S(sv.get("device_output")), S(b.get("pdf")))
+            if why:
+                fail("saved.device_output: " + why)
+            elif dsha != b.get("pdf_sha") or dsize != b.get("pdf_size"):
+                fail("the PDF on the computer is not the PDF built here (computer: %d bytes, %s...; built: %s bytes, %s...): commit it again and fingerprint it again"
+                     % (dsize, dsha[:12], b.get("pdf_size"), S(b.get("pdf_sha"))[:12]))
+            else:
+                R.add("PASS", g, "the PDF saved on the computer has the same fingerprint and size as the PDF built here (the computer's own output)")
             if probs == before:
                 R.add("ATTEST", g, "PDF saved to the client's 2. Fact Find folder via %s and the folder listing checked" % sv["tool"])
         if len(str(rc.get("png_visual_check") or "").strip()) < 20:
@@ -1218,6 +1246,11 @@ def summary_lines(run, st, ledger, content):
     rev = len(reviewed_lines(ledger or {}))
     out.append("Source: %s, sha256 %s..., times %s to %s, stated duration %s" % (
         st.get("source"), st.get("sha256", "")[:10], st.get("first_ts"), st.get("last_ts"), st.get("stated_duration") or "not stated"))
+    rj_ = load(os.path.join(run, w.RUN), {})
+    comp = (rj_.get("computer") or {}) if isinstance(rj_, dict) else {}
+    out.append("Computer: %s; %d file(s) copied from it and proved identical by its own fingerprint" % (
+        ("connected (%s)" % (comp.get("device") or comp.get("mode"))) if comp.get("found") else "NOT connected",
+        sum(1 for e in acc if isinstance(e, dict) and e.get("route") == "device" and e.get("verified") is True)))
     out.append("Client file: %d documents read; no document on file for: %s; access routes used: %s" % (len(read), ", ".join(none) or "nothing missing", ", ".join(routes)))
     out.append("Ledger: %d entries (%d from Pass 1, %d added in Pass 2); %d plain facts/figures left out of the report on purpose; %d keyword-scan lines dismissed with a reason"
                % (len(ents), p1, len(ents) - p1, len(excl), rev))
@@ -1293,7 +1326,7 @@ def report_short(R, st, ledger, content, stage, run=None):
         out.append("✅ %s (%d checks)%s" % (name, len(passes), ("; warning: " + _cut(warn[0][2], 120)) if warn else ""))
     fails, warns = len(R.fails), sum(1 for r in R.rows if r[0] == "WARN")
     ok = sum(1 for g in GROUP_ORDER if any(r[1] == g for r in R.rows) and not any(r[1] == g and r[0] == "FAIL" for r in R.rows))
-    out.append("Only attested (not proven): that the page, the PDF and the message were really sent, posted and saved (the folder listing size is compared and Zapier's result is read); the visual check of the page images; the independent re-check; the judgment items. Details: out_record/audit-full.txt.")
+    out.append("Only attested (not proven): that the page, the PDF and the message were really sent, posted and saved (the saved PDF is compared with the computer's own fingerprint, which the chat pastes; Zapier's result is read); the visual check of the page images; the independent re-check; the judgment items. Details: out_record/audit-full.txt.")
     out.append("RESULT: %s   (%d ✅, %d ❌, %d warnings)" % ("PASS" if not fails else "FAIL", ok, len({r[1] for r in R.fails}), warns))
     if not fails and stage == "final" and ledger and content:
         out.append("")

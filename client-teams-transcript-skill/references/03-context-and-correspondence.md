@@ -9,7 +9,7 @@ Emails back and forth with the client and the providers are part of the evidence
 
 ## Step 2: Build the context pack (mandatory, every follow-up run; not applicable at a first/Fact Find meeting)
 
-Inside the client's folder, read in this order (all PDFs; render pages as images if text extraction is empty), and record each document with `run.py source`:
+Inside the client's folder on the computer, read in this order (all PDFs; render pages as images if text extraction is empty), and record each document with `run.py source --file <the staged copy> --device-output <the computer's fingerprint>` (the program proves the copy is the whole file and makes its text itself; a document is never taken through Microsoft 365 or Zapier):
 
 1. `2. Fact Find\Fact Find Transcript - ... .pdf` and `Fact Find - ... .pdf` (the client's baseline).
 2. The Fact Find Summary PDF.
@@ -24,7 +24,7 @@ From this build two working lists (not saved anywhere):
 
 ## Step 2b: Read the applications (mandatory when applications exist; not applicable at a first/Fact Find meeting)
 
-1. In every **current** transaction folder, list `Applications` and pick the real applications. List the folders on the client's own machine/OneDrive for the real state.
-2. Stage them and read the filled field values. Note each file's last-modified date against the meeting date.
+1. In every **current** transaction folder, list `Applications` (`device_list_dir` on the computer: the real state) and pick the real applications.
+2. Stage them (`device_stage_files`), record each with `run.py source --kind Application ... --file ... --device-output ...` and read the filled field values. Note each file's last-modified date against the meeting date.
 3. Compare each application against the transcript and against each other for shared details, and against the accepted quote and meeting date.
 4. Applications are only ever compared and reported here; they are changed in Step 6 via `complete-applications-skill`.

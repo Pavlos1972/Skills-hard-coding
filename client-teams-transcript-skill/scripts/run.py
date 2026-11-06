@@ -7,8 +7,10 @@
   run.py status  <run_dir>            where the job is up to (also the recovery point after a long chat)
   run.py preflight                    the self-test on its own
 
+  run.py computer <run_dir> (--device NAME --folder F --listing L | --none WHAT_HAPPENED)    step 1: how this chat reaches the computer
   run.py access  <run_dir> --need N --route device|m365|zapier|user|passed --tool T --result ok|fail [--detail D]
-  run.py source  <run_dir> --kind K (--path P --date YYYY-MM-DD --read yes [--ref NAME] [--text-file F] | --none REASON)
+                            [--file COPY --device-output "<sha256sum + stat output from the computer>"]
+  run.py source  <run_dir> --kind K (--path P --date YYYY-MM-DD --read yes [--ref NAME] [--file COPY --device-output O] [--text-file F] | --none REASON)
   run.py ask     <run_dir> --need N --question Q --searched S [--kind file|knowledge]
   run.py ledger  <run_dir> add --line N --kind K --quote Q [--speaker S] [--meaning M]
   run.py ledger  <run_dir> cover <ledger id> <item id> [<item id> ...]
@@ -252,8 +254,13 @@ def cmd_status(a):
 
 # ------------------------------------------------------------------ proofs
 def ck_access_transcript(run, rj):
+    errs = []
+    if not (rj.get("computer") or {}).get("found"):
+        errs.append("the computer is not connected: connect first and record it (python3 %s/run.py computer %s --device ... --folder ... --listing ...), or --none \"<what happened>\" for the STOP" % (SCRIPTS, run))
     ok = [e for e in load_list(run, w.ACCESS) if e.get("need") == "transcript" and e.get("result") == "ok"]
-    return [] if ok else ["no successful access entry for 'transcript' (run.py access ... --need transcript ... --result ok)"]
+    if not ok:
+        errs.append("no successful access entry for 'transcript' (run.py access ... --need transcript ... --result ok)")
+    return errs
 
 
 def ck_prep_done(run, rj):
@@ -353,6 +360,24 @@ def ck_planner(run, rj):
     return ["planner_page.mode must be artifact or fallback_text"]
 
 
+def ck_pdf_saved(run, rj):
+    """The PDF is saved ON THE COMPUTER with device_commit_files; the computer's own fingerprint of the saved file must equal the PDF this run built."""
+    keys = ("pdf_sent_in_chat", "saved.tool", "saved.folder", "saved.filename", "saved.tool_result", "saved.folder_listing_check", "saved.device_output")
+    errs = ck_receipt(*keys)(run, rj)
+    if errs:
+        return errs
+    if "device_commit_files" not in str(rc_get(run, "saved.tool")):
+        errs.append("saved.tool must be device_commit_files: the PDF is saved on the computer, never through Microsoft 365 or Zapier")
+    b = _state(run).get("build") or {}
+    dsha, dsize, why = w.parse_device_output(str(rc_get(run, "saved.device_output")), str(b.get("pdf")))
+    if why:
+        errs.append("saved.device_output: " + why)
+    elif dsha != b.get("pdf_sha") or dsize != b.get("pdf_size"):
+        errs.append("the PDF on the computer is not the PDF built here (computer: %d bytes, %s...; built: %s bytes, %s...): commit it again and fingerprint it again"
+                    % (dsize, dsha[:12], b.get("pdf_size"), str(b.get("pdf_sha"))[:12]))
+    return errs
+
+
 def ck_teams(run, rj):
     st = rc_get(run, "teams.status")
     if st not in ("sent", "already_sent", "declined", "failed"):
@@ -366,8 +391,7 @@ CHECKS = {
     "access_transcript": ck_access_transcript, "prep_done": ck_prep_done, "sources_ok": ck_sources_ok,
     "pass1_done": ck_pass1, "pass2_done": ck_pass2, "scan_done": ck_scan, "verify_pre": ck_verify("pre"),
     "build_fresh": ck_build, "receipt_check": ck_judgment, "receipt_planner": ck_planner,
-    "receipt_pdf": ck_receipt("pdf_sent_in_chat", "saved.tool", "saved.folder", "saved.filename", "saved.tool_result",
-                              "saved.folder_listing_check"),
+    "receipt_pdf": ck_pdf_saved,
     "receipt_apps": ck_receipt("applications_handoff"), "receipt_teams": ck_teams, "verify_final": ck_verify("final"),
 }
 
@@ -483,9 +507,89 @@ def cmd_ledger(a):
 
 
 # ------------------------------------------------------------------ logs
+def cmd_computer(a):
+    """Records how this chat reaches the client's OneDrive folder on the computer. In a cloud chat the computer is a separate machine reached through the device tools
+    (the chat connects, lists the client's folder and records it here); where the folder is mounted into this machine (a test) the program finds it itself."""
+    rj = load_run(a.run)
+    if a.none:
+        if len(a.none.strip()) < 8:
+            w.die("REFUSED: say what happened to the connection (at least 8 characters).")
+        rj["computer"] = {"found": False, "t": w.now(), "detail": a.none.strip()}
+        w.save_json(p(a.run, w.RUN), rj)
+        print(w.COMPUTER_STOP)
+        print("\nYour whole reply is those words, nothing more, and no question. When Paul says to go on, connect again and run: python3 %s/run.py computer %s --device ... --folder ... --listing ..." % (SCRIPTS, a.run))
+        sys.exit(6)
+    if a.device or a.folder or a.listing:
+        if not (a.device and a.folder and a.listing):
+            w.die("REFUSED: give --device (the computer's name), --folder (the folder the connection was granted for) and --listing (the file names device_list_dir showed in the client's folder).")
+        if "liferisk.co.za" not in a.folder.lower().replace("/", "\\"):
+            w.die("REFUSED: the connected folder must be the client files' root, liferisk.co.za (it was %r)." % a.folder)
+        if len(a.listing.strip()) < 20:
+            w.die("REFUSED: --listing must be what device_list_dir showed in the client's folder (the file names), not a summary.")
+        rj["computer"] = {"found": True, "mode": "bridge", "device": a.device.strip(), "folder": a.folder.strip(), "listing": a.listing.strip()[:2000], "t": w.now()}
+        w.save_json(p(a.run, w.RUN), rj)
+        print("COMPUTER CONNECTED through the device tools (%s, folder %s). Take the transcript and every client document from it as page 01 says." % (a.device.strip(), a.folder.strip()))
+        return
+    root = w.find_computer_root()
+    if root:
+        rj["computer"] = {"found": True, "mode": "mount", "root": root, "t": w.now()}
+        w.save_json(p(a.run, w.RUN), rj)
+        print("COMPUTER FOUND: the client's OneDrive folder is mounted at %s. Copy each file with cp and log it with --original." % root)
+        return
+    print("No connection is recorded yet. Connect with the device tools (page 01: get_device_info, then device_request_folder_access for ~/liferisk.co.za if it is not connected, then device_list_dir "
+          "on the client's folder) and record it: python3 %s/run.py computer %s --device <name> --folder <granted folder> --listing \"<the file names>\"   "
+          "If the connection is refused or cannot be made: python3 %s/run.py computer %s --none \"<what happened>\"" % (SCRIPTS, a.run, SCRIPTS, a.run))
+    sys.exit(6)
+
+
+def prove_copy(a, rj, need):
+    """A file taken from the computer is accepted only when the copy is identical to the original: either the computer's own fingerprint
+    (sha256sum and stat run with device_bash, pasted whole) or, where the folder is mounted into this machine, the original itself.
+    Returns (verified, bytes, sha256, detail). Refuses when the proof is missing; a copy that differs is returned as not verified."""
+    if not (rj.get("computer") or {}).get("found"):
+        w.die("REFUSED: no computer connection is recorded in this run (run.py computer %s). A try on the computer is logged only when it is connected." % a.run)
+    if not a.file or not (a.device_output or a.original):
+        w.die("REFUSED: a file taken from the computer needs its proof: --file <your copy> with --device-output <the whole output of sha256sum and stat run on the computer with device_bash> "
+              "(or --original, where the folder is mounted into this machine). Nobody is asked for anything.")
+    if a.device_output and a.original:
+        w.die("REFUSED: give --original (a mounted folder) or --device-output (the computer's own fingerprint), not both.")
+    if not os.path.isfile(a.file):
+        w.die("MISSING: the copy %s" % a.file)
+    got, sha = os.path.getsize(a.file), w.sha256_file(a.file)
+    if a.original:
+        root = (rj.get("computer") or {}).get("root")
+        if not root or not w.under_root(a.original, root):
+            w.die("REFUSED: --original must be a file on the computer, inside %s." % root)
+        if not os.path.isfile(a.original):
+            w.die("MISSING: the original %s" % a.original)
+        same = w.sha256_file(a.original) == sha
+    else:
+        dsha, dsize, why = w.parse_device_output(a.device_output, os.path.basename(a.file))
+        if why:
+            w.die("REFUSED: " + why)
+        same = dsha == sha and dsize == got
+    if same:
+        return True, got, sha, "copy verified: identical to the file on the computer (%d bytes, sha256 %s...)" % (got, sha[:12])
+    return False, got, sha, "copy NOT identical to the file on the computer (%d bytes saved)" % got
+
+
 def cmd_access(a):
+    rj = load_run(a.run)
     log = load_list(a.run, w.ACCESS)
-    log.append({"t": w.now(), "need": a.need, "route": a.route, "tool": a.tool, "result": a.result, "detail": a.detail or ""})
+    detail, result, entry = a.detail or "", a.result, {}
+    if a.route in ("m365", "zapier") and a.result == "ok" and a.need in w.DOC_KINDS:
+        w.die("REFUSED: a %s cannot be taken through %s: a PDF or Word file arrives there cut off, as text. Take it from the computer (--route device, with --file and --device-output)."
+              % (a.need, "Microsoft 365" if a.route == "m365" else "Zapier"))
+    if a.route == "device" and a.result == "ok":
+        verified, got, sha, why = prove_copy(a, rj, a.need)
+        detail = (detail + " ").lstrip() + why
+        entry = {"verified": verified, "bytes": got, "sha256": sha, "file": os.path.basename(a.file)}
+        if not verified:
+            result = "fail"
+            print("logged as a FAIL: the copy is not identical to the file on the computer. Stage it again (device_stage_files) and compare again.")
+    elif a.file or a.device_output or a.original:
+        w.die("REFUSED: --file, --device-output and --original are for the computer route (--route device --result ok).")
+    log.append({"t": w.now(), "need": a.need, "route": a.route, "tool": a.tool, "result": result, "detail": detail, **entry})
     w.save_json(p(a.run, w.ACCESS), log)
     es = [e for e in log if e["need"] == a.need]
     if any(e["result"] == "ok" for e in es):
@@ -519,11 +623,42 @@ def cmd_source(a):
         if any(verify.source_ref(e) == ref for e in srcs if e.get("read") == "yes"):
             w.die("REFUSED: a document called %r is already recorded; give this one its own --ref." % ref)
         entry = {"kind": a.kind, "path": a.path, "date": a.date, "read": "yes", "ref": ref}
-        if a.text_file:
+        text = None
+        if a.kind in w.DOC_KINDS:
+            # a client document is a whole file on the computer: proved identical by the computer's own fingerprint, and the text is made by the program from that copy
+            rj = load_run(a.run)
+            verified, got, sha, why = prove_copy(a, rj, a.kind)
+            named = re.split(r"[\\/]", a.path.strip())[-1].lower()
+            if named != os.path.basename(a.file).lower():
+                w.die("REFUSED: --path names %r but the copy is %r: record the file you really took." % (named, os.path.basename(a.file)))
+            log = load_list(a.run, w.ACCESS)
+            log.append({"t": w.now(), "need": a.kind, "route": "device", "tool": a.tool or "device_stage_files", "result": "ok" if verified else "fail",
+                        "detail": why, "verified": verified, "bytes": got, "sha256": sha, "file": os.path.basename(a.file)})
+            w.save_json(p(a.run, w.ACCESS), log)
+            if not verified:
+                w.die("REFUSED: the copy is not identical to the file on the computer (logged as a fail). Stage it again (device_stage_files) and compare again.")
+            entry.update(via="device", bytes=got, sha256=sha, file=os.path.basename(a.file))
+            text = w.doc_text(a.file)
+            if text is None:
+                w.die("REFUSED: the program cannot read a %s file. Give a PDF, a Word file or a text file." % os.path.splitext(a.file)[1])
+            if not text.strip():
+                if not a.text_file:
+                    print("NOTE: this document holds no text the program can read (a scan). Its quotes and figures cannot be machine-checked unless you give --text-file with the text you read from the page images (Paul will be told).")
+                else:
+                    text = open(a.text_file, encoding="utf-8", errors="replace").read()
+                    entry["text_from"] = "the chat (the program found no text in the file)"
+            elif a.text_file:
+                w.die("REFUSED: --text-file is not needed: the program made the text of this document from the verified copy itself.")
+        elif a.text_file:
             if not os.path.exists(a.text_file):
                 w.die("REFUSED: text file not found: %s" % a.text_file)
+            text = open(a.text_file, encoding="utf-8", errors="replace").read()
+        elif a.file or a.device_output or a.original:
+            w.die("REFUSED: --file, --device-output and --original are for the client's documents, not for %s." % a.kind)
+        if text is not None and text.strip():
             os.makedirs(os.path.join(a.run, w.DOCS), exist_ok=True)
-            shutil.copyfile(a.text_file, os.path.join(a.run, w.DOCS, ref + ".txt"))
+            with open(os.path.join(a.run, w.DOCS, ref + ".txt"), "w", encoding="utf-8") as fh:
+                fh.write(text)
             entry["text"] = True
         srcs.append(entry)
     w.save_json(p(a.run, w.SOURCES), srcs)
@@ -596,20 +731,32 @@ def main():
     sp = sub.add_parser("preflight")
     sp.set_defaults(fn=lambda a: (lambda r: (print_preflight(r[1]), sys.exit(0 if r[0] else 4)))(preflight()))
 
+    sp = add("computer", cmd_computer, "run")
+    sp.add_argument("--device", help="the computer's name (get_device_info)")
+    sp.add_argument("--folder", help="the folder the connection was granted for (liferisk.co.za)")
+    sp.add_argument("--listing", help="the file names device_list_dir showed in the client's folder")
+    sp.add_argument("--none", help="the connection was refused or could not be made: what happened (prints the STOP)")
     sp = add("access", cmd_access, "run")
     sp.add_argument("--need", required=True)
     sp.add_argument("--route", required=True, choices=list(verify.ALLOWED_ROUTES))
     sp.add_argument("--tool", required=True)
     sp.add_argument("--result", required=True, choices=["ok", "fail"])
     sp.add_argument("--detail")
+    sp.add_argument("--file", help="your copy of the file taken from the computer (the staged copy)")
+    sp.add_argument("--device-output", dest="device_output", help="the whole output of sha256sum and stat -c %%s for that file, run on the computer with device_bash")
+    sp.add_argument("--original", help="where the client's folder is mounted into this machine: the original file (the program compares it with the copy itself)")
     sp = add("source", cmd_source, "run")
+    sp.add_argument("--tool", help="the tool used (default device_stage_files)")
+    sp.add_argument("--file", help="a client document: your copy taken from the computer (the program proves it and makes the text from it)")
+    sp.add_argument("--device-output", dest="device_output", help="the whole output of sha256sum and stat -c %%s for that file, run on the computer with device_bash")
+    sp.add_argument("--original", help="where the client's folder is mounted into this machine: the original file")
     sp.add_argument("--kind", required=True)
     sp.add_argument("--path")
     sp.add_argument("--date")
     sp.add_argument("--read", choices=["yes"])
     sp.add_argument("--none")
     sp.add_argument("--ref", help="a short name for this document; item sources cite it (default: the file name)")
-    sp.add_argument("--text-file", dest="text_file", help="a text copy of the document (for example from pdftotext) so quotes and figures can be checked")
+    sp.add_argument("--text-file", dest="text_file", help="correspondence: the text of the email or page, saved to a file, so quotes and figures can be checked (a client document needs --file instead; the program makes its text)")
     sp = add("ask", cmd_ask, "run")
     sp.add_argument("--need", required=True)
     sp.add_argument("--question", required=True)

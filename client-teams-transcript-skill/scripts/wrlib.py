@@ -28,10 +28,19 @@ DOCS = "docs"
 # Access routes in the order they must be tried (SKILL-STANDARDS.md S4).
 ROUTES = ("device", "m365", "zapier")
 ROUTE_NAMES = {
-    "device": "the computer, only if this chat is ALREADY connected to it (checked, never requested)",
-    "m365": "Microsoft 365 connector (SharePoint/OneDrive, Outlook, Teams transcripts)",
-    "zapier": "Zapier (Office 365 and Teams tools)",
+    "device": "the computer, through the device tools (this chat connects to it once, at step 1)",
+    "m365": "Microsoft 365 connector (Outlook, Teams transcripts; never a PDF or a Word file: those arrive cut off)",
+    "zapier": "Zapier (Office 365 and Teams tools; never a PDF or a Word file)",
 }
+
+# The client's documents are whole files on the computer. Each one is taken from the computer, with the computer's own
+# fingerprint (sha256 and size) compared with the copy; Microsoft 365 and Zapier return a PDF or Word file cut off, as text.
+DOC_KINDS = ["Fact Find", "Fact Find Summary", "Earlier Note", "Overview", "Quote", "Application"]
+FILE_NEEDS = ("transcript",) + tuple(DOC_KINDS)    # access entries for these are files: a copy from the computer must be proved
+# The transcript itself may come as text from the Teams transcript (Microsoft 365 or Zapier); `tx.py prep` then proves it is complete.
+TEXT_OK_NEEDS = ("transcript", "Correspondence")
+COMPUTER_STOP = ("STOP. I could not connect this chat to your computer (the connection was refused or did not go through), and the client's documents are whole files that "
+                 "Microsoft 365 returns cut off, and the finished PDF is saved on the computer. Please allow the connection to the folder liferisk.co.za, then tell me to go on.")
 
 # Kinds of client-file source and which meeting types must account for each (S3).
 SOURCE_KINDS = ["Fact Find", "Fact Find Summary", "Earlier Note", "Overview", "Quote", "Application", "Correspondence"]
@@ -247,6 +256,69 @@ def all_items(content):
     na = content.get("next_appointment")
     if isinstance(na, dict):
         yield "next_appointment", na
+
+
+def doc_text(path):
+    """The text of a whole document, made by the program from the verified copy: a PDF with pdftotext, a Word file with pandoc, a plain text file as it is.
+    Returns the text ('' for a PDF that holds no text, such as a scan) or None for a kind this cannot read."""
+    import subprocess
+    low = path.lower()
+    try:
+        if low.endswith(".pdf"):
+            r = subprocess.run(["pdftotext", "-enc", "UTF-8", path, "-"], capture_output=True, text=True, timeout=180)
+        elif low.endswith((".docx", ".doc", ".rtf", ".odt")):
+            r = subprocess.run(["pandoc", "-t", "plain", "--wrap=none", path], capture_output=True, text=True, timeout=180)
+        elif low.endswith((".txt", ".md", ".html", ".htm")):
+            with open(path, encoding="utf-8", errors="replace") as f:
+                return f.read()
+        else:
+            return None
+    except (OSError, subprocess.SubprocessError):
+        return None
+    return r.stdout if r.returncode == 0 else None
+
+
+def find_computer_root():
+    """The folder of the computer's OneDrive when it is mounted into THIS machine (a test, or a chat running on the computer), or None. WR_COMPUTER_ROOT overrides the search."""
+    env = os.environ.get("WR_COMPUTER_ROOT")
+    if env:
+        return os.path.realpath(env) if os.path.isdir(env) else None
+    for base in (os.path.expanduser("~/mnt"), "/mnt"):
+        if not os.path.isdir(base):
+            continue
+        for d, dirs, _files in os.walk(base):
+            if d[len(base):].count(os.sep) >= 3:
+                dirs[:] = []
+                continue
+            if "Company - Paul" in dirs or "Company - WR Clients" in dirs:
+                return os.path.realpath(d)
+            if os.path.basename(d) in ("Company - Paul", "Company - WR Clients"):
+                return os.path.realpath(os.path.dirname(d))
+    return None
+
+
+def under_root(path, root):
+    rp, rr = os.path.realpath(path), os.path.realpath(root)
+    return rp == rr or rp.startswith(rr.rstrip(os.sep) + os.sep)
+
+
+def parse_device_output(text, name):
+    """The output of `sha256sum FILE` and `stat -c %s FILE` run ON THE COMPUTER (device_bash), pasted whole: (sha256, size, None), or (None, None, what is wrong).
+    The file name in the sha256sum line must be the copy's own name, so a hash of another file cannot be passed off."""
+    sha, size = None, None
+    for ln in (text or "").splitlines():
+        m = re.match(r"^\s*([0-9a-fA-F]{64})\s+[*]?(.+?)\s*$", ln)
+        if m:
+            base = os.path.basename(m.group(2).replace("\\", "/"))
+            if base != name:
+                return None, None, "the sha256sum line names %r, not %r" % (base, name)
+            sha = m.group(1).lower()
+        elif re.fullmatch(r"\s*\d+\s*", ln):
+            size = int(ln)
+    if not sha or size is None:
+        return None, None, ("paste the whole output of: sha256sum \"<file>\" && stat -c %%s \"<file>\" (run with device_bash on the computer): "
+                            "a 64-character fingerprint with the file's name, and its size on its own line")
+    return sha, size, None
 
 
 def short_date(d):

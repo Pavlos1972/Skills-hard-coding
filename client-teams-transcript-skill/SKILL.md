@@ -31,7 +31,7 @@ description: "Summarize a client's Teams meeting transcript (or WhatsApp call) i
 
 This skill is a program that walks you through the job one step at a time. You do not work from memory of this page. Everything below is shown again, at the right moment, by the program.
 
-**A quiet run, and nothing is asked of Paul (Paul's rule).** Start your reply with the one version sentence the program gives you, then work. You may show ONE short progress line per step (for example "Step 4 of 14: reading the transcript, first pass"). Never write an opening recap of this skill, its rules, the files found or the information read; do not read the reference pages yourself (the program shows each page at its step). Never ask Paul for permission, to click Allow, to attach, upload or drag a file, or to say "go": find the files yourself through Microsoft 365. The reply at the end is the outputs, the message that was posted and the SHORT audit.
+**A quiet run, and nothing is asked of Paul (Paul's rule).** Start your reply with the one version sentence the program gives you, then work. You may show ONE short progress line per step (for example "Step 4 of 14: reading the transcript, first pass"). Never write an opening recap of this skill, its rules, the files found or the information read; do not read the reference pages yourself (the program shows each page at its step). Never ask Paul for permission, to attach, upload or drag a file, or to say "go": connect to his computer yourself at step 1 (the one connection request is the only click he is ever asked for) and take the files from it. The reply at the end is the outputs, the message that was posted and the SHORT audit.
 
 1. Find this skill's folder (the "Base directory" shown when the skill loaded; it contains `scripts/run.py`). If you are unsure: `find /mnt /root /home /opt /tmp -path '*client-teams-transcript-skill/scripts/run.py' 2>/dev/null | head -1`
 2. Choose a new run folder, for example `/tmp/wr-run-<Surname>-<DDMMYY>`, and start: `python3 <skill folder>/scripts/run.py start <run folder> --type followup --client "First Surname" --date DD/MM/YYYY` (use `first` for a Fact Find / first appointment, `whatsapp` for a WhatsApp call). The client and the meeting date are taken exactly from Paul's message; the program checks every later file against them. The program's first lines give you one sentence to say to Paul before anything else: which version of this skill is running. It comes from the Last updated line above, so it moves with every update.
@@ -44,7 +44,7 @@ Never rewrite, shorten or "improve" the programs during a run, and never replace
 ## What a finished run contains
 
 - The **Planner note** as a copy-ready page with a Copy note button (every meeting type): short, one-line bullets per area and only the actions for now.
-- The **PDF**: Follow-Up Appointment Summary Notes, or WhatsApp Call Summary, two pages at most. Sent in the chat, saved into the client's `2. Fact Find` folder, and listed back. Not for a first/Fact Find meeting.
+- The **PDF**: Follow-Up Appointment Summary Notes, or WhatsApp Call Summary, two pages at most. Sent in the chat, saved on the computer into the client's `2. Fact Find` folder, and fingerprinted there (the program compares it with the PDF it built). Not for a first/Fact Find meeting.
 - The **message to Sitamah** in Teams ("Teams Appointment Completed" or, for a WhatsApp call, "WhatsApp Call Completed"), POSTED AUTOMATICALLY through Zapier (Paul's standing instruction: no question) and shown in the same reply as the page and the PDF.
 - The short audit saying `RESULT: PASS`. No PASS in your reply means the job is not finished: say so.
 
@@ -52,7 +52,7 @@ Never rewrite, shorten or "improve" the programs during a run, and never replace
 
 1. Source first, never invent: every fact and every action traces to the transcript or a named document, and the program checks the quote.
 2. Read the whole transcript twice, in order, before anything is drafted. The program enforces it.
-3. Client information comes from the client's file first, found automatically through Microsoft 365 (then Zapier; the computer only if already connected, never requested). Log each try. Never ask Paul for permission, to click Allow, or to attach, upload or drag a file.
+3. Client information comes from the client's file first, taken from Paul's computer (connected once at step 1; every file proved identical by the computer's own fingerprint; the finished PDF is saved there too). Microsoft 365 and Zapier are for emails and the Teams transcript only, never for a PDF or a Word file. Log each try. If the computer cannot be connected, the program prints one STOP line and that is the whole reply. Never ask Paul to attach, upload or drag a file.
 4. Every action point is for Sitamah. Paul is never the owner of an action.
 5. Emails and invites are drafts until Paul says yes. The one exception is the message to Sitamah in Teams, which Paul made automatic: posted through Zapier, once per meeting.
 6. Never write ID, account or tax numbers.
