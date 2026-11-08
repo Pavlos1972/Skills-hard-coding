@@ -1,3 +1,5 @@
+> **SUPERSEDED 07/11/2026:** this page is replaced by Operation Skill Restructure 4.0, carried by the skill `skill-restructure` (uploaded 07/11/2026 11:27, built in the "WR Skill Fixes" chat). Read the skill's `references/OPERATION-SKILL-RESTRUCTURE-4.0.md` and `RESTRUCTURE-LOG.md` (Paul's folder `Claude Skills - New/MD Document - Skills`) first; where this page disagrees, 4.0 wins. This page stays only as history.
+
 # Operation Skill Restructure 2.0 (Paul, 06/11/2026)
 
 This replaces "Operation Skill Restructure" 1.0, which Paul had deleted. Read this before any skill work, follow it in order, and call it by this name. One skill at a time. No helpers. ONE test per skill. Ask Paul before starting the next skill. Update the Progress table after every phase.
